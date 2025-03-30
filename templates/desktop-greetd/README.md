@@ -1,0 +1,16 @@
+NOTES
+- installation? good luck, currently, old school manual `linux` install...
+  - grab a `nixos` livecd
+  - manually partition
+  - mount to `/mnt`
+  - use `nix copy...` to copy a generation to `/mnt`
+  - `chroot` into `/mnt`
+  - run `nixos-generate-config --show-hardware-config > hardware-configuration.nix`, filter out everything `finix` doesn't implement
+    - basically you just want `fileSystems` and `boot.*` options for now
+  - manually install `grub` - can run `nix run .#grub` after to generate `custom.cfg`
+    - be sure to replace `root=/dev/sda4` in `flake.nix` with your partition
+  - boot... 🤞
+- `initrd` only loads a single partition at the moment, so install must have `root`, `/boot`, `/etc`, and `/nix` on the same partition
+- to build and temporarily activate a new generation: `nix build .# && sudo ./result/activate && sudo initctl reload`
+- to add a grub entry and activate on boot: `sudo nix build --profile /nix/var/nix/profiles/system .# && sudo nix run .#grub`
+- a `grub` module and proper activation script are on the TODO list 😉

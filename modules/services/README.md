@@ -1,0 +1,9 @@
+NOTES
+- at one point or another most of these services worked, though a number of them haven't been tested in some time - so they may not anymore, given other changes in `finix`
+- my current `finix` desktop is running `seatd` instead of `logind` and `wayland` instead of `xserver` - services focused around my usage likely work
+
+QUESTIONS
+- how should `finix` [decouple services](https://discourse.nixos.org/t/pre-rfc-decouple-services-using-structured-typing/58257)?
+  - `cron` abstraction - systems need a way to execute programs at regular intervals via one of `vixie-cron`, `fcron`, `mcron`, `jobber`, etc...
+  - `sudo` abstraction - systems need a way to execute programs as different users/groups via one of `sudo`, `sudo-rs`, `doas`, `please`, `polkit`?, etc...
+  - and so on...
