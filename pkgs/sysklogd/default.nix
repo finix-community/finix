@@ -8,13 +8,13 @@
 
 stdenv.mkDerivation rec {
   pname = "sysklogd";
-  version = "2.7.1";
+  version = "2.7.2";
 
   src = fetchFromGitHub {
     owner = "troglobit";
     repo = "sysklogd";
     rev = "v${version}";
-    hash = "sha256-Y52pPzvbxKrHWKwzgnlg0j3kjqUNWbIYL0Y4Wy4ywoY=";
+    hash = "sha256-HwzqWZox5qc/TvCafx4XjA4njQhcHBS0gZthqPzONHk=";
   };
 
   nativeBuildInputs = [
