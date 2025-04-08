@@ -37,9 +37,9 @@
       ID=finix
       LOGO="nix-snowflake"
       NAME=finix
-      PRETTY_NAME="finix 25.04"
-      VERSION="25.04"
-      VERSION_ID="25.04"
+      PRETTY_NAME="finix 25.05"
+      VERSION="25.05"
+      VERSION_ID="25.05"
     '';
   };
 }
