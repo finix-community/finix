@@ -1,6 +1,6 @@
 { config, pkgs, lib, ... }:
 let
-  cfg = config.services.syslog;
+  cfg = config.services.rsyslog;
 
   configFile = pkgs.writeText "rsyslog.conf" ''
     # Load necessary modules
@@ -32,7 +32,7 @@ let
   '';
 in
 {
-  options.services.syslog = {
+  options.services.rsyslog = {
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
