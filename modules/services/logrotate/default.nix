@@ -42,10 +42,11 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    services.vixie-cron.timers.logrotate = {
-      description = "logrotate service";
-      command = "${cfg.package}/bin/logrotate ${configFile}";
-      startAt = "@hourly";
+    providers.scheduler.tasks = {
+      logrotate = {
+        interval = "hourly";
+        command = "${cfg.package}/bin/logrotate ${configFile}";
+      };
     };
   };
 }

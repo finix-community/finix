@@ -4,76 +4,13 @@ let
 
   format = pkgs.formats.keyValue { };
 
-  timers = lib.filterAttrs (_: v: v.enable) config.services.fcron.timers;
-  val = lib.concatStringsSep "\n" (lib.mapAttrsToList (k: v:
-    let
-      # cronExpr = {
-      #   "@daily" = "@1d";
-      #   "@hourly" = "@1h";
-      # }.${v.startAt} or v.startAt;
-    in
-      # "%runas(${if v.user != null then v.user else "root"}) ${cronExpr} ${v.command}"
-      "${v.startAt} ${if v.user != null then v.user else "root"} ${v.command}"
-  ) timers);
-
-  pathOrStr = with lib.types; coercedTo path (x: "${x}") str;
-  program =
-    lib.types.coercedTo (
-      lib.types.package
-      // {
-        # require mainProgram for this conversion
-        check = v: v.type or null == "derivation" && v ? meta.mainProgram;
-      }
-    ) lib.getExe pathOrStr
-    // {
-      description = "main program, path or command";
-      descriptionClass = "conjunction";
-    };
-
-  timerOpts = {
-    options = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
-        default = true;
-      };
-
-      description = lib.mkOption {
-        type = lib.types.singleLineStr;
-        default = "";
-      };
-
-      command = lib.mkOption {
-        type = program;
-      };
-
-      user = lib.mkOption {
-        type = with lib.types; nullOr str;
-        default = null;
-      };
-
-      # TODO:
-      # environment = lib.mkOption {
-      #   type = lib.type.attrsOf lib.types.str;
-      #   default = { };
-      # };
-      #
-      # randomizedDelaySec = lib.mkOption {
-      #   type = lib.types.ints.unsigned;
-      #   default = 0;
-      # };
-      #
-      # persistent = lib.mkOption {
-      #   type = lib.types.bool;
-      #   default = false;
-      # }
-
-      startAt = lib.mkOption {
-        type = lib.types.str;
-      };
-    };
-  };
+  systab = lib.concatStringsSep "\n" cfg.systab;
 in
 {
+  imports = [
+    ./providers.scheduler.nix
+  ];
+
   options.services.fcron = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -85,9 +22,9 @@ in
       default = pkgs.fcron;
     };
 
-    timers = lib.mkOption {
-      type = with lib.types; attrsOf (submodule timerOpts);
-      default = { };
+    systab = lib.mkOption {
+      type = with lib.types; listOf nonEmptyStr;
+      default = [ ];
     };
 
     # TODO: in serious need of mkField stuff
@@ -213,7 +150,7 @@ in
 
       pre = pkgs.writeShellScript "foo-pre.sh" ''
         ${config.security.wrapperDir}/fcrontab -u systab -r
-        ${config.security.wrapperDir}/fcrontab -u systab - < ${pkgs.writeText "systab" val}
+        ${config.security.wrapperDir}/fcrontab -u systab - < ${pkgs.writeText "systab" systab}
       '';
     };
 
@@ -228,5 +165,8 @@ in
     users.groups = {
       fcron.gid = config.ids.gids.fcron;
     };
+
+    # this module supplies an implementation for `providers.scheduler`
+    providers.scheduler.backend = lib.mkDefault "fcron";
   };
 }

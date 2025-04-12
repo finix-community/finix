@@ -36,7 +36,7 @@
   # base system profile
   services.atd.enable = true;
   services.chrony.enable = true;
-  services.vixie-cron.enable = true;
+  services.cron.enable = true;
   services.dbus.enable = true;
   services.dbus.package = pkgs.dbus.override { enableSystemd = false; };
   services.networkmanager.enable = true;

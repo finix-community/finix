@@ -40,11 +40,13 @@ in
     }) (lib.filterAttrs (_: v: v.enable) config.services.tmpfiles);
 
     # TODO: run once a day
-    # services.vixie-cron.timers.tmpfiles-clean = {
-    #   command = "${config.finit.package}/libexec/tmpfiles --clean";
-    #   startAt = "@daily";
+    # providers.scheduler.tasks = {
+    #   tmpfiles-clean = {
+    #     interval = "daily";
+    #     command = "${config.finit.package}/libexec/tmpfiles --clean";
+    #   };
     # };
-    #
+
     # needed for finit tmpfiles implementation: pkgs.policycoreutils
   };
 }
