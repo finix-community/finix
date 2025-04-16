@@ -11,12 +11,12 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      # default = pkgs.elogind;
       default = pkgs.elogind.overrideAttrs (old: {
-        mesonFlags = old.mesonFlags ++ [
-          (lib.mesonBool "log-trace" true)
-          (lib.mesonOption "debug-extra" "elogind")
-        ];
+        postPatch = old.postPatch + ''
+          # TODO: upstream
+          substituteInPlace ./rules.d/71-seat.rules.in \
+            --replace-fail "{{BINDIR}}/udevadm" "${pkgs.eudev}/bin/udevadm"
+        '';
       });
     };
   };
@@ -35,6 +35,9 @@ in
       conditions = [ "service/syslogd/ready" "service/dbus/ready" ];
       command = "${cfg.package}/libexec/elogind";
     };
+
+    services.dbus.packages = [ cfg.package ];
+    services.udev.packages = [ cfg.package ];
 
     environment.systemPackages = [ cfg.package ];
 

@@ -39,6 +39,9 @@ in
         session required pam_unix.so # unix (order 10200)
         session required pam_loginuid.so # loginuid (order 10300)
         session required ${pkgs.linux-pam}/lib/security/pam_lastlog.so silent # lastlog (order 10700)
+
+        ${lib.optionalString config.services.elogind.enable "session optional ${pkgs.elogind}/lib/security/pam_elogind.so"}
+        ${lib.optionalString config.services.seatd.enable "session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so"}
       '';
     };
 

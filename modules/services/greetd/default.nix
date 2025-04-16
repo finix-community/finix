@@ -77,11 +77,8 @@ in
         # https://github.com/coastalwhite/lemurs/issues/166
         # session optional pam_loginuid.so # loginuid (order 10300)
 
-        # if elogind...
-        # session optional ${pkgs.elogind}/lib/security/pam_elogind.so debug
-
-        # if seatd...
-        session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so
+        ${lib.optionalString config.services.elogind.enable "session optional ${pkgs.elogind}/lib/security/pam_elogind.so"}
+        ${lib.optionalString config.services.seatd.enable "session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so"}
 
         session required ${pkgs.linux-pam}/lib/security/pam_lastlog.so silent # lastlog (order 10700)
       '';
