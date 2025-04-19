@@ -84,12 +84,16 @@ in
       '';
     };
 
-    environment.etc."sudoers" = lib.optionalAttrs config.services.seatd.enable {
-      text = lib.mkAfter ''
-        greeter ALL = (root) NOPASSWD: /run/current-system/sw/bin/reboot
-        greeter ALL = (root) NOPASSWD: /run/current-system/sw/bin/poweroff
-      '';
-    };
+    providers.privileges.rules = [
+      { command = "/run/current-system/sw/bin/poweroff";
+        users = [ "greeter" ];
+        requirePassword = false;
+      }
+      { command = "/run/current-system/sw/bin/reboot";
+        users = [ "greeter" ];
+        requirePassword = false;
+      }
+    ];
 
 
     # regreet configuration

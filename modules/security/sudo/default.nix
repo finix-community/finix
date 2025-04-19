@@ -1,5 +1,9 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
+  imports = [
+    ./providers.privileges.nix
+  ];
+
   config = {
     security.pam.services.sudo.text = ''
       # Account management.
@@ -19,20 +23,26 @@
 
     environment.etc.sudoers = {
       mode = "0440";
-      text = ''
-        # Don't edit this file. Set the NixOS options ‘security.sudo.configFile’
-        # or ‘security.sudo.extraRules’ instead.
+      text = lib.mkMerge [
+        (lib.mkBefore ''
+          # Don't edit this file. Set the NixOS options ‘security.sudo.configFile’
+          # or ‘security.sudo.extraRules’ instead.
+        '')
 
-        root    ALL=(ALL:ALL)    SETENV: ALL
-        %wheel  ALL=(ALL:ALL)    SETENV: ALL
+        (lib.mkAfter ''
+          # extraConfig
+          Defaults:root,%wheel timestamp_timeout=60
 
-        # extraConfig
-        Defaults:root,%wheel timestamp_timeout=60
+          # Keep terminfo database for root and %wheel.
+          Defaults:root,%wheel env_keep+=TERMINFO_DIRS
+          Defaults:root,%wheel env_keep+=TERMINFO
+        '')
 
-        # Keep terminfo database for root and %wheel.
-        Defaults:root,%wheel env_keep+=TERMINFO_DIRS
-        Defaults:root,%wheel env_keep+=TERMINFO
-      '';
+        ''
+          root    ALL=(ALL:ALL)    SETENV: ALL
+          %wheel  ALL=(ALL:ALL)    SETENV: ALL
+        ''
+      ];
     };
 
     security.wrappers = let
@@ -50,5 +60,8 @@
         inherit owner group setuid permissions;
       };
     };
+
+    # this module supplies an implementation for `providers.privileges`
+    providers.privileges.backend = lib.mkDefault "sudo";
   };
 }
