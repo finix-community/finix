@@ -13,13 +13,13 @@
 
 stdenv.mkDerivation rec {
   pname = "finit";
-  version = "4.11+";
+  version = "4.12";
 
   src = fetchFromGitHub {
     owner = "troglobit";
     repo = "finit";
-    rev = "1f47718012f6239bcea774b7ca11cce032c432a4";
-    hash = "sha256-fZUaY+nc/zKlIpOV5Zcwh7HEO8rHEKh+u8nihhrRFa8=";
+    rev = version;
+    hash = "sha256-QEKnXINXh6SbeJyKdAl75S4gooTVwZ3zKk4Ota0Dxhc=";
   };
 
   postPatch = ''
