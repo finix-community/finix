@@ -167,6 +167,6 @@ in
     };
 
     # this module supplies an implementation for `providers.scheduler`
-    providers.scheduler.backend = lib.mkDefault "fcron";
+    providers.scheduler.backend = "fcron";
   };
 }

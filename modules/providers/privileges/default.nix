@@ -32,14 +32,21 @@ in
         options = {
           command = lib.mkOption {
             type = program;
+            description = ''
+              The command the user or group members are allowed to run.
+
+              ::: {.note}
+              It is best practice to specify absolute paths.
+              :::
+            '';
           };
 
           args = lib.mkOption {
             type = with lib.types; listOf str;
             default = [ ];
             description = ''
-              Arguments that must be provided to the command. When set to
-              `null`, the command must be run without any arguments.
+              Arguments that must be provided to the command. When
+              empty, the command must be run without any arguments.
             '';
           };
 
@@ -78,6 +85,7 @@ in
       });
       default = { };
       description = ''
+        A list of rules which provide a way to temporarily elevate the privileges of a command for a given user or group.
       '';
     };
   };
