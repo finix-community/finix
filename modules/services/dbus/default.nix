@@ -99,8 +99,7 @@ in
       runlevels = "S123456789";
       conditions = "service/syslogd/ready";
       command = "${cfg.package}/bin/dbus-daemon --nofork --system --syslog-only";
-
-      extraConfig = "cgroup.system";
+      cgroup.name = "system";
 
       pre = pkgs.writeShellScript "dbus-pre.sh" "${cfg.package}/bin/dbus-uuidgen --ensure";
     };

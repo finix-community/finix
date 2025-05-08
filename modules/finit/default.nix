@@ -16,6 +16,31 @@ let
       descriptionClass = "conjunction";
     };
 
+  cgroupOpts = { name, ... }: {
+    options = {
+      name = lib.mkOption {
+        type = lib.types.str; # TODO: add constraints based on finit
+        default = name;
+        description = ''
+          The name of the cgroup to create.
+        '';
+      };
+
+      settings = lib.mkOption {
+        type = (pkgs.formats.keyValue { }).type;
+        default = { };
+        example = {
+          "cpu.weight" = 100;
+        };
+        description = ''
+          Settings to apply to this cgroup.
+
+          See [kernel documentation](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html) for additional details.
+        '';
+      };
+    };
+  };
+
   runOpts = {
     options.priority = lib.mkOption {
       type = lib.types.int;
@@ -64,6 +89,26 @@ let
         description = ''
           See [upstream documentation](https://github.com/troglobit/finit?tab=readme-ov-file#runlevels) for details.
         '';
+      };
+
+      cgroup = {
+        name = lib.mkOption {
+          type = with lib.types; nullOr str; # TODO: add constraints based on finit
+          default = null;
+          description = ''
+            The name of the cgroup to place this process under.
+          '';
+        };
+
+        settings = lib.mkOption {
+          type = (pkgs.formats.keyValue { }).type;
+          default = { };
+          description = ''
+            The cgroup settings to apply to this process.
+
+            See [kernel documentation](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html) for additional details.
+          '';
+        };
       };
     };
   };
@@ -307,6 +352,11 @@ let
   };
 
   logToStr = v: if v == true then "log" else "log:${v}";
+  cgroupToStr = cgroup:
+    "cgroup" +
+    lib.optionalString (cgroup.name != null) ("." + cgroup.name) +
+    lib.optionalString (cgroup.settings != { }) (":" + (lib.concatMapAttrsStringSep "," (k: v: "${k}:${toString v}") cgroup.settings))
+  ;
 
   mkConfigFile = svcType: svc: lib.concatStringsSep " " (
     (lib.singleton svcType) ++
@@ -314,6 +364,7 @@ let
 
     (lib.optional (svc.name or null != null) "name:${svc.name}") ++
     (lib.optional (svc.id or null != null) ":${svc.id}") ++
+    (lib.optional (svc.cgroup.name or null != null || svc.cgroup.settings or { } != { }) (cgroupToStr svc.cgroup)) ++
     (lib.optional (svc.restart or false != false) "restart:${toString svc.restart}") ++
     (lib.optional (svc.restart_sec or null != null) "restart_sec:${toString svc.restart_sec}") ++
     (lib.optional (svc.user or null != null) ("@${svc.user}" + lib.optionalString (svc.group != null) ":${svc.group}")) ++
@@ -379,6 +430,16 @@ in
       default = { };
       description = ''
         Environment variables passed to *all* `finit` services.
+      '';
+    };
+
+    cgroups = lib.mkOption {
+      type = with lib.types; attrsOf (submodule [ cgroupOpts ]);
+      default = { };
+      description = ''
+        An attribute set of cgroups (v2) that will be created by `finit`.
+
+        See [upstream documentation](https://github.com/troglobit/finit/blob/master/doc/config.md#cgroups) for additional details.
       '';
     };
 
@@ -459,6 +520,8 @@ in
           value.text = mkConfigFile "task" task;
         }) (lib.filterAttrs (_: task: task.enable) cfg.tasks);
 
+        cgroup = lib.concatMapAttrsStringSep "\n" (_: cgroupOpts: ''cgroup ${cgroupOpts.name} ${lib.concatMapAttrsStringSep "," (k: v: "${k}:${toString v}") cgroupOpts.settings}'') cfg.cgroups;
+
         run = cfg.run
           |> lib.filterAttrs (_: v: v.enable)
           |> lib.attrValues
@@ -479,6 +542,9 @@ in
             ''
               readiness ${cfg.readiness}
               runlevel ${toString cfg.runlevel}
+
+              # cgroups
+              ${cgroup}
 
               # ttys
               ${tty}

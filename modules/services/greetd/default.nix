@@ -36,7 +36,7 @@ in
       runlevels = "34";
       conditions = [ "service/syslogd/ready" ] ++ lib.optionals config.services.seatd.enable [ "service/seatd/ready" ];
       command = "${pkgs.greetd.greetd}/bin/greetd";
-      extraConfig = "cgroup.user";
+      cgroup.name = "user";
     };
 
     users.users = {
