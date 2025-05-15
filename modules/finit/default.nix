@@ -401,7 +401,8 @@ in
   options.finit = {
     enable = lib.mkOption {
       type = lib.types.bool;
-      default = true;
+      default = config.boot.serviceManager == "finit";
+      defaultText = lib.literalMD ''config.boot.serviceManager == "finit"'';
       readOnly = true;
     };
 

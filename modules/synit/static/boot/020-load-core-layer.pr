@@ -1,0 +1,33 @@
+# Attenuate `$config` by rewriting plain `require-service` assertions to `require-core-service`
+# assertions. Allow all other assertions through.
+#
+let ?sys = <* $config [<or [
+  <rewrite <require-service ?s> <require-core-service $s>>
+  <accept _>
+]>]>
+
+# Give meaning to `require-core-service`: it is an ordinary `require-service`, plus a
+# declaration that the `core` milestone depends on the service.
+#
+? <require-core-service ?s> [
+  <depends-on <milestone core> <service-state $s up>>
+  <require-service $s>
+]
+
+# Load config in the `core` directory, using the wrapped `config` so that all plain services
+# required are changed to be *core* services.
+#
+let ?bootDir = scriptdir
+let ?coreDir = join "/" [ $bootDir ".." "core" ]
+let ?coreEnv = {
+  config: $sys
+  gatekeeper: $gatekeeper
+  log: $log
+}
+<require-service <config-watcher $coreDir $coreEnv>>
+<require-service <config-watcher "/etc/syndicate/core" $coreEnv>>
+<require-service <config-watcher "/run/etc/syndicate/core" $coreEnv>>
+
+# In addition, require the `core` milestone explicitly.
+#
+<require-service <milestone core>>

@@ -1,0 +1,7 @@
+let ?ds = dataspace
+<machine-dataspace $ds>
+
+$ds ? ?r [
+  $log ! <log "-" { line: "machine" |+++|: $r }>
+  ?- $log ! <log "-" { line: "machine" |---|: $r }>
+]

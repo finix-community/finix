@@ -1,0 +1,28 @@
+# Attenuate `$config` by rewriting plain `require-service` assertions to
+# `require-basic-service` assertions. Allow all other assertions through.
+#
+let ?basic = <* $config [<or [
+  <rewrite <require-service ?s> <require-basic-service $s>>
+  <accept _>
+]>]>
+
+# Give meaning to `require-basic-service`: it is an ordinary `require-service`, plus a
+# declaration that the service depends on the `core` milestone.
+#
+? <require-basic-service ?s> [
+  <depends-on $s <service-state <milestone core> up>>
+  <require-service $s>
+]
+
+# Once we see that the `core` milestone is ready, start processing the `services`
+# directory.
+#
+? <service-state <milestone core> up> [
+  let ?env = {
+    config: $basic
+    gatekeeper: $gatekeeper
+    log: $log
+  }
+  <require-service <config-watcher "/etc/syndicate/services" $env>>
+  <require-service <config-watcher "/run/etc/syndicate/services" $env>>
+]
