@@ -443,13 +443,19 @@ in
 
     environment.etc =
       let
+        # NOTE: entries under /etc/finit.d are marked as direct-symlink to avoid service reloads on every finix activation
+
         serviceTree = lib.mapAttrs' (_: service: {
           name = if service.id != null then "finit.d/available/${service.name}@.conf" else "finit.d/${service.name}.conf";
+
+          value.mode = "direct-symlink";
           value.text = mkConfigFile "service" service;
         }) (lib.filterAttrs (_: service: service.enable) cfg.services);
 
         taskTree = lib.mapAttrs' (_: task: {
           name = if task.id != null then "finit.d/available/${task.name}@.conf" else "finit.d/${task.name}.conf";
+
+          value.mode = "direct-symlink";
           value.text = mkConfigFile "task" task;
         }) (lib.filterAttrs (_: task: task.enable) cfg.tasks);
 
@@ -467,6 +473,7 @@ in
         ;
 
         configFile = {
+          "finit.conf".mode = "direct-symlink";
           "finit.conf".text = lib.mkMerge [
             (lib.mkBefore (lib.generators.toKeyValue { } cfg.environment))
             ''

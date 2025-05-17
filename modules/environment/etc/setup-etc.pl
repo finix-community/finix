@@ -89,6 +89,11 @@ open CLEAN, ">>/etc/.clean";
 my %created;
 my @copied;
 
+sub sameSymlinkTarget {
+    my ($a, $b) = @_;
+    return defined($a) && defined($b) && $a eq $b;
+}
+
 sub link {
     my $fn = substr $File::Find::name, length($etc) + 1 or next;
 
@@ -113,7 +118,13 @@ sub link {
     if (-e "$_.mode") {
         my $mode = read_file("$_.mode"); chomp $mode;
         if ($mode eq "direct-symlink") {
-            atomicSymlink readlink("$static/$fn"), $target or warn "could not create symlink $target";
+            my $srcStoreLink = readlink("$static/$fn");
+            my $dstStoreLink = readlink("$target");
+
+            # avoid replacing direct symlinks if not necessary
+            unless (-l $target && sameSymlinkTarget($srcStoreLink, $dstStoreLink)) {
+              atomicSymlink readlink("$static/$fn"), $target or warn "could not create symlink $target";
+            }
         } else {
             my $uid = read_file("$_.uid"); chomp $uid;
             my $gid = read_file("$_.gid"); chomp $gid;
