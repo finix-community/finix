@@ -302,6 +302,7 @@ let
     paths = [
       pkgs.busybox
       pkgs.eudev
+      pkgs.kmod
     ] ++ fsPackages;
     pathsToLink = [
       "/bin"
