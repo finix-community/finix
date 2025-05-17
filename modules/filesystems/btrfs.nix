@@ -29,7 +29,7 @@
   config = lib.mkIf config.boot.initrd.supportedFilesystems.btrfs.enable {
     boot.initrd.kernelModules = [ "btrfs" ];
     boot.initrd.availableKernelModules =
-      [] # [ "crc32c" ]
+      [ "crc32c" ]
       ++ lib.optionals (config.boot.kernelPackages.kernel.kernelAtLeast "5.5") [
         "xxhash_generic"
         "blake2b_generic"
