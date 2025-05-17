@@ -69,6 +69,7 @@ in
     ./ext4.nix
     ./tmpfs.nix
     ./xfs.nix
+    ./zfs.nix
   ];
 
   config = {
