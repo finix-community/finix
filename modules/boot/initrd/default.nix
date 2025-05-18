@@ -234,12 +234,13 @@ let
     udevadm trigger -c add -t subsystems
     udevadm settle -t 30
 
-    # Try to find and mount the root device.
-    # TODO: mount everything needed for boot
-    echo "root: $root"
-    mkdir -p $targetRoot
-    mount $root $targetRoot
+    ${lib.optionalString config.boot.initrd.supportedFilesystems.zfs.enable "zpool import -a"}
 
+    # mount everything needed for boot
+    ${lib.concatMapAttrsStringSep "\n" (k: v: ''
+      mkdir -p "$targetRoot${v.mountPoint}"
+      mount -t ${v.fsType} -o ${lib.concatStringsSep "," v.options} ${v.device} "$targetRoot${v.mountPoint}"
+    '') (lib.filterAttrs (_: v: v.neededForBoot) config.fileSystems)}
 
     # Stop udevd.
     udevadm control --exit
@@ -303,6 +304,7 @@ let
       pkgs.busybox
       pkgs.eudev
       pkgs.kmod
+      (lib.hiPrio pkgs.util-linux.mount)
     ] ++ fsPackages;
     pathsToLink = [
       "/bin"
