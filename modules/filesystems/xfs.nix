@@ -9,7 +9,7 @@
 
       packages = lib.mkOption {
         type = with lib.types; listOf package;
-        default = [ ];
+        default = [ pkgs.xfsprogs.bin ];
       };
     };
 
@@ -21,18 +21,15 @@
 
       packages = lib.mkOption {
         type = with lib.types; listOf package;
-        default = [ ];
+        default = [ pkgs.xfsprogs ];
       };
     };
   };
 
-  config = lib.mkIf config.boot.supportedFilesystems.xfs.enable {
+  config = {
     boot.initrd.availableKernelModules = lib.mkIf config.boot.initrd.supportedFilesystems.xfs.enable [
       "xfs"
       "crc32c"
     ];
-
-    boot.supportedFilesystems.xfs.packages = [ pkgs.xfsprogs ];
-    boot.initrd.supportedFilesystems.xfs.packages = [ pkgs.xfsprogs.bin ];
   };
 }

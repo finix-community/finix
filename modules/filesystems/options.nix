@@ -1,6 +1,27 @@
 { lib, ... }:
 let
-  specialFSTypes = [ "proc" "sysfs" "tmpfs" "ramfs" "devtmpfs" "devpts" ];
+  specialFSTypes = [
+    "proc"
+    "sysfs"
+    "tmpfs"
+    "ramfs"
+    "devtmpfs"
+    "devpts"
+  ];
+
+  # Check whenever fileSystem is needed for boot.  NOTE: Make sure
+  # pathsNeededForBoot is closed under the parent relationship, i.e. if /a/b/c
+  # is in the list, put /a and /a/b in as well.
+  pathsNeededForBoot = [
+    "/"
+    "/etc"
+    "/nix"
+    "/nix/store"
+    "/usr"
+    "/var"
+    "/var/lib"
+    "/var/log"
+  ];
 
   addCheckDesc = desc: elemType: check: lib.types.addCheck elemType check
     // { description = "${elemType.description} (with check: ${desc})"; };
@@ -74,6 +95,7 @@ let
     config = {
       mountPoint = lib.mkDefault name;
       device = lib.mkIf (lib.elem config.fsType specialFSTypes) (lib.mkDefault config.fsType);
+      neededForBoot = lib.mkIf (lib.elem config.mountPoint pathsNeededForBoot) (lib.mkForce true);
     };
 
   };
