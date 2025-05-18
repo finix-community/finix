@@ -213,6 +213,7 @@ in
       conditions = [ "net/lo/up" "service/syslogd/ready" "task/ssh-keygen/success" ];
       notify = "pid";
       command = "${cfg.package}/bin/sshd -D -f /etc/ssh/sshd_config";
+      extraConfig = "cgroup.user";
     };
 
     environment.etc."ssh/sshd_config".source = configFile;
