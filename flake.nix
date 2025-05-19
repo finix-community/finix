@@ -42,6 +42,7 @@
         pulseaudio = prev.pulseaudio.override { useSystemd = false; };
         seatd = prev.seatd.override { systemdSupport = false; };
         sway-unwrapped = prev.sway-unwrapped.override { systemdSupport = false; };
+        swayidle = prev.swayidle.override { systemdSupport = false; };
         upower = prev.upower.override { withSystemd = false; };
         util-linux = prev.util-linux.override { systemdSupport = false; };
         waybar = prev.waybar.override { systemdSupport = false; };
