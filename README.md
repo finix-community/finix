@@ -30,7 +30,7 @@ An example of defining a `finit` service in `nix`:
 }
 ```
 
-`finix` is currently running on my spare laptop:
+`finix` is currently running on my ~spare~ primary laptop:
 
 - without the excellent `systemd` init system
 - with `seatd` instead of `elogind`
