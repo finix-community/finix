@@ -16,7 +16,7 @@
       default = self.templates.desktop-greetd;
 
       desktop-greetd = {
-        path = ./templates/desktop-greetd;
+        path = ./templates/desktop-seattd;
         description = "A simple desktop running the niri scrollable-tiling wayland compositor";
       };
 
