@@ -152,6 +152,11 @@ in
         ${config.security.wrapperDir}/fcrontab -u systab -r
         ${config.security.wrapperDir}/fcrontab -u systab - < ${pkgs.writeText "systab" systab}
       '';
+
+      # TODO: now we're hijacking `env` and no one else can use it...
+      env = pkgs.writeText "fcron.env" ''
+        PATH="${lib.makeBinPath [ cfg.package ]}:$PATH"
+      '';
     };
 
     users.users = {
