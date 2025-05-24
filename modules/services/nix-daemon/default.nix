@@ -41,6 +41,7 @@ in
       description = "nix daemon";
       conditions = "service/syslogd/ready";
       command = "${cfg.package}/bin/nix-daemon --daemon";
+      nohup = true;
 
       # https://github.com/NixOS/nix/blob/81884c36a381737a438ddc5decb658446074d064/misc/systemd/nix-daemon.service.in#L12
       cgroup.settings = {
