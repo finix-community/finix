@@ -117,7 +117,7 @@ let
 
       echo "Generating hwdb database..."
       # hwdb --update doesn't return error code even on errors!
-      res="$(${pkgs.buildPackages.systemd}/bin/systemd-hwdb --root=$(pwd) update 2>&1)"
+      res="$(${pkgs.buildPackages.eudev}/bin/udevadm hwdb --update --root $(pwd) 2>&1)"
       echo "$res"
       [ -z "$(echo "$res" | egrep '^Error')" ]
       mv etc/udev/hwdb.bin $out
