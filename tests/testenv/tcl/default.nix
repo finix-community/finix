@@ -7,7 +7,7 @@ let
   finixModules = import ../../../modules;
   qemu-common = import (pkgs.path + /nixos/lib/qemu-common.nix) { inherit lib pkgs; };
 
-  mkRootImage = pkgs.callPackage ../../make-ext2-fs.nix {
+  mkRootImage = pkgs.callPackage ../make-ext2-fs.nix {
     qemu = pkgs.qemu_test;
   };
 

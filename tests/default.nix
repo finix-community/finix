@@ -1,27 +1,17 @@
-let
-  overlay = import ../overlays/default.nix;
-in
 {
-  pkgs ? import <nixpkgs> { overlays = [ overlay ]; },
+  pkgs ? import <nixpkgs> {
+    overlays = [ (import ../overlays/default.nix) ];
+  },
 }:
-
 let
   inherit (pkgs) lib;
-  driver = import ./drivers/tcl { inherit pkgs lib; };
+  testArgs.testenv = import ./testenv { inherit pkgs; };
 in
-driver.mkTest {
-  name = "first-try";
-  nodes.machine = {
-    finit.enable = true;
-    finit.runlevel = 2;
-  };
-  tclScript = ''
-    machine spawn
-    machine expect "finix - stage 1"
-    machine expect "finix - stage 2"
-    machine expect "entering runlevel S"
-    machine expect "entering runlevel 2"
-    machine expect "getty on /dev/tty1"
-    success
-  '';
-}
+with builtins;
+readDir ./.
+|> attrNames
+|> filter (x: !(elem x [ "default.nix" "testenv" ])) 
+|> map (p: {
+  name = lib.removeSuffix ".nix" p;
+  value = import ./${p} testArgs;
+}) |> listToAttrs
