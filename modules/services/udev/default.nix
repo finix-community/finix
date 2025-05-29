@@ -183,7 +183,7 @@ in
       run nowarn cgroup.init :5 [S] <service/udevd/ready> log ${cfg.package}/bin/udevadm settle -t 30                 -- waiting for udev to finish
     '';
 
-    environment.etc."udev/hwdb.bin".source = hwdbBin;
+    environment.etc."udev/hwdb.bin" = lib.mkIf (cfg.packages != []) { source = hwdbBin; };
     environment.etc."udev/rules.d".source = udevRulesFor {
       name = "udev-rules";
       udevPackages = cfg.packages;

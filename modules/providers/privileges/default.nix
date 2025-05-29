@@ -83,7 +83,7 @@ in
           };
         };
       });
-      default = { };
+      default = [ ];
       description = ''
         A list of rules which provide a way to temporarily elevate the privileges of a command for a given user or group.
       '';

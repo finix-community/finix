@@ -15,6 +15,12 @@ let
   };
 in
 {
+  options.system.topLevel = lib.mkOption {
+    type = lib.types.path;
+    description = "top-level system derivation";
+    readOnly = true;
+  };
+
   options.system.activation = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -118,5 +124,33 @@ in
       nettools # needed for hostname
       util-linux # needed for mount and mountpoint
     ];
+
+    system.topLevel = pkgs.stdenvNoCC.mkDerivation {
+      name = "finix-system";
+      preferLocalBuild = true;
+      allowSubstitutes = false;
+      buildCommand =
+        ''
+          mkdir -p $out
+
+          cp ${config.system.activation.out} $out/activate
+          cp ${config.boot.init.script} $out/init
+
+          ${pkgs.coreutils}/bin/ln -s ${config.environment.path} $out/sw
+
+          substituteInPlace $out/activate --subst-var-by systemConfig $out
+          substituteInPlace $out/init --subst-var-by systemConfig $out
+        ''
+        + lib.optionalString config.boot.kernel.enable ''
+          ${pkgs.coreutils}/bin/ln -s ${config.boot.kernelPackages.kernel}/bzImage $out/kernel
+          ${pkgs.coreutils}/bin/ln -s ${config.system.modulesTree} $out/kernel-modules
+          ${pkgs.coreutils}/bin/ln -s ${config.hardware.firmware}/lib/firmware $out/firmware
+        ''
+        + lib.optionalString config.boot.initrd.enable ''
+          ${pkgs.coreutils}/bin/ln -s ${config.boot.initrd.package}/initrd $out/initrd
+        '';
+    };
+
+    boot.kernelParams = [ "init=${config.system.topLevel}/init" ];
   };
 }
