@@ -3,8 +3,7 @@ let
   cfg = config.services.fcron;
 
   format = pkgs.formats.keyValue { };
-
-  systab = lib.concatStringsSep "\n" cfg.systab;
+  systab = pkgs.writeText "systab" (lib.concatStringsSep "\n" cfg.systab);
 in
 {
   imports = [
@@ -22,8 +21,23 @@ in
       default = pkgs.fcron;
     };
 
+    debug = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+    };
+
     systab = lib.mkOption {
       type = with lib.types; listOf nonEmptyStr;
+      default = [ ];
+    };
+
+    allow = lib.mkOption {
+      type = with lib.types; listOf str;
+      default = [ "all" ];
+    };
+
+    deny = lib.mkOption {
+      type = with lib.types; listOf str;
       default = [ ];
     };
 
@@ -34,16 +48,9 @@ in
         default = "/var/spool/fcron";
       };
 
-      # pidfile=file-path (/usr/local/var/run/fcron.pid)
-
-      suspendfile = lib.mkOption {
-        type = lib.types.path;
-        default = "/var/run/fcron.suspend";
-      };
-
       fifofile = lib.mkOption {
         type = lib.types.path;
-        default = "/var/run/fcron.fifo";
+        default = "/run/fcron.fifo";
       };
 
       fcronallow = lib.mkOption {
@@ -65,9 +72,6 @@ in
         type = lib.types.path;
         default = "${config.security.wrapperDir}/sendmail";
       };
-
-      # editor=file-path (/usr/bin/vi)
-      # maildisplayname=string ()
     };
 
     configFile = lib.mkOption {
@@ -86,13 +90,13 @@ in
     environment.etc."fcron.allow" = {
       group = "fcron";
       mode = "644";
-      text = "all";
+      text = lib.concatStringsSep "\n" cfg.allow;
     };
 
     environment.etc."fcron.deny" = {
       group = "fcron";
       mode = "644";
-      text = "";
+      text = lib.concatStringsSep "\n" cfg.deny;
     };
 
     security.pam.services.fcrontab = {
@@ -143,20 +147,23 @@ in
       };
     };
 
-    finit.services.fcron = {
-      description = "fcron daemon";
+    finit.tasks.fcrontab = {
+      description = "reload fcrontab";
       conditions = [ "service/syslogd/ready" "task/suid-sgid-wrappers/success" ];
-      command = "${cfg.package}/bin/fcron --foreground --configfile /etc/fcron.conf";
 
-      pre = pkgs.writeShellScript "foo-pre.sh" ''
-        ${config.security.wrapperDir}/fcrontab -u systab -r
-        ${config.security.wrapperDir}/fcrontab -u systab - < ${pkgs.writeText "systab" systab}
-      '';
+      # https://github.com/NixOS/nixpkgs/issues/25072
+      command = "${cfg.package}/bin/fcrontab -u systab - < ${systab}";
 
       # TODO: now we're hijacking `env` and no one else can use it...
       env = pkgs.writeText "fcron.env" ''
         PATH="${lib.makeBinPath [ cfg.package ]}:$PATH"
       '';
+    };
+
+    finit.services.fcron = {
+      description = "fcron daemon";
+      conditions = [ "service/syslogd/ready" "task/fcrontab/success" ];
+      command = "${cfg.package}/bin/fcron --foreground" + lib.optionalString cfg.debug " --debug";
     };
 
     users.users = {
