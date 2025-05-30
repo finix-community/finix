@@ -78,11 +78,11 @@ in
           virtiofsd
           xdelta
           xz
+
+          zfs
         ];
 
-        text = ''
-          exec ${cfg.package}/bin/incusd --group incus-admin --syslog ${lib.optionalString cfg.debug "--debug"}
-        '';
+        text = "exec ${cfg.package}/bin/incusd --group incus-admin --syslog" + lib.optionalString cfg.debug " --debug";
       };
     };
 
