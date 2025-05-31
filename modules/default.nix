@@ -1,4 +1,8 @@
 let
+  programModules = builtins.mapAttrs (dir: _:
+    ./programs/${dir}
+  ) (builtins.removeAttrs (builtins.readDir ./programs) [ "README.md" ]);
+
   providerModules = builtins.mapAttrs (dir: _:
     ./providers/${dir}
   ) (builtins.removeAttrs (builtins.readDir ./providers) [ "README.md" ]);
@@ -27,4 +31,4 @@ in
       ./xdg
     ];
   };
-} // providerModules // serviceModules
+} // programModules // providerModules // serviceModules

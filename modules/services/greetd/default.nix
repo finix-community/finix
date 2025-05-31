@@ -23,19 +23,14 @@ in
       terminal.vt = 7;
       default_session = {
         user = "greeter";
-
-        # regreet configuration
-        command = "env XDG_DATA_DIRS=/etc ${lib.getExe pkgs.cage} -s -m last -- ${lib.getExe pkgs.greetd.regreet} -l trace";
       };
     };
-
-    environment.etc."greetd/config.toml".source = configFile;
 
     finit.services.greetd = {
       description = "greeter daemon";
       runlevels = "34";
       conditions = [ "service/syslogd/ready" ] ++ lib.optionals config.services.seatd.enable [ "service/seatd/ready" ];
-      command = "${pkgs.greetd.greetd}/bin/greetd";
+      command = "${pkgs.greetd.greetd}/bin/greetd --config ${configFile}";
       cgroup.name = "user";
     };
 
@@ -84,49 +79,5 @@ in
         session required ${pkgs.linux-pam}/lib/security/pam_lastlog.so silent # lastlog (order 10700)
       '';
     };
-
-    providers.privileges.rules = [
-      { command = "/run/current-system/sw/bin/poweroff";
-        users = [ "greeter" ];
-        requirePassword = false;
-      }
-      { command = "/run/current-system/sw/bin/reboot";
-        users = [ "greeter" ];
-        requirePassword = false;
-      }
-    ];
-
-
-    # regreet configuration
-
-    services.tmpfiles.regreet.rules = [
-      "d /var/log/regreet 0755 greeter greeter - -"
-      "d /var/lib/regreet 0755 greeter greeter - -"
-    ];
-
-    environment.etc."greetd/regreet.toml".source = (pkgs.formats.toml { }).generate "regreet.toml" {
-      GTK = {
-        application_prefer_dark_theme = true;
-      };
-
-      commands = lib.optionalAttrs config.services.seatd.enable {
-        reboot = [ "sudo" "reboot" ];
-        poweroff = [ "sudo" "poweroff" ];
-      };
-
-      # (lib.mkIf config.services.elogind.enable {
-      #   reboot = [ "loginctl" "reboot" ];
-      #   poweroff = [ "loginctl" "poweroff" ];
-      # })
-    };
-
-    environment.etc."wayland-sessions/niri.desktop".text = ''
-      [Desktop Entry]
-      Name=Niri
-      Comment=A scrollable-tiling Wayland compositor
-      Exec=${pkgs.dbus}/bin/dbus-run-session -- ${pkgs.niri}/bin/niri --session
-      Type=Application
-      DesktopNames=niri
-    '';
   };
 }
