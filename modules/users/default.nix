@@ -31,6 +31,7 @@ let
         ;
 
       hashedPassword = opts.password;
+      hashedPasswordFile = opts.passwordFile;
       isNormal = opts.isNormalUser;
       shell = toShellPath opts.shell;
     }) cfg.users;
@@ -57,6 +58,7 @@ in
       group = "root";
       shell = pkgs.bashInteractive;
       home = "/root";
+      createHome = true;
     };
 
     users.users.nobody = {

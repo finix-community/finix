@@ -102,6 +102,17 @@ in
             '';
           };
 
+          passwordFile = lib.mkOption {
+            type = with lib.types; nullOr str;
+            default = null;
+            description = ''
+              The full path to a file that contains the hash of the user's
+              password. The password file is read on each system activation. The
+              file should contain exactly one line, which should be the password in
+              an encrypted form that is suitable for the `chpasswd -e` command.
+            '';
+          };
+
           shell = lib.mkOption {
             type = with lib.types; nullOr (either shellPackage (passwdEntry path));
             default = pkgs.shadow;
