@@ -68,6 +68,7 @@ in
     ./ext2.nix
     ./ext4.nix
     ./tmpfs.nix
+    ./vfat.nix
     ./xfs.nix
     ./zfs.nix
   ];
