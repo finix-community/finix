@@ -64,14 +64,5 @@ in
       "d /var/log/regreet 0755 greeter greeter - -"
       "d /var/lib/regreet 0755 greeter greeter - -"
     ];
-
-    environment.etc."wayland-sessions/niri.desktop".text = ''
-      [Desktop Entry]
-      Name=Niri
-      Comment=A scrollable-tiling Wayland compositor
-      Exec=${pkgs.dbus}/bin/dbus-run-session -- ${pkgs.niri}/bin/niri --session
-      Type=Application
-      DesktopNames=niri
-    '';
   };
 }
