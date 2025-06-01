@@ -63,6 +63,8 @@ in
           }
         ];
       };
+
+      wayland.wayland_sessions_path = "/etc/wayland-sessions";
     };
 
     security.pam.services.${cfg.settings.pam_service} = {
@@ -90,10 +92,6 @@ in
     };
 
     environment.etc."lemurs/config.toml".source = configFile;
-
-    environment.etc."lemurs/wayland/hypr".source = pkgs.writeShellScript "hypr" "exec ${pkgs.dbus}/bin/dbus-run-session ${pkgs.hyprland}/bin/Hyprland";
-    environment.etc."lemurs/wayland/niri".source = pkgs.writeShellScript "niri" "exec ${pkgs.dbus}/bin/dbus-run-session ${pkgs.niri}/bin/niri --session";
-    environment.etc."lemurs/wayland/sway".source = pkgs.writeShellScript "sway" "exec ${pkgs.dbus}/bin/dbus-run-session ${pkgs.sway}/bin/sway";
 
     finit.services.lemurs = {
       description = "lemurs terminal user interface display/login manager";
