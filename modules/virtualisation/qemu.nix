@@ -6,7 +6,18 @@
 }:
 
 let
-  inherit (lib) mkOption mkPackageOption types;
+  inherit (lib)
+    flatten
+    literalExpression
+    mapAttrs'
+    mapAttrsToList
+    mkIf
+    mkMerge
+    mkOption
+    mkPackageOption
+    optional
+    types
+    ;
 
   qemuCommand =
     qemuPkg:
@@ -106,6 +117,8 @@ let
 
   cfg = config.virtualisation.qemu;
 
+  useBootLoader = cfg.bootMode != "kernel";
+
   bootModeArgs = {
     kernel = [
       "-kernel"
@@ -147,10 +160,86 @@ in
         '';
       };
 
+      sharedDirectories = mkOption {
+        type = types.attrsOf (
+          types.submodule {
+            options.source = mkOption {
+              type = types.str;
+              description = "The path of the directory to share, can be a shell variable";
+            };
+            options.target = mkOption {
+              type = types.path;
+              description = "The mount point of the directory inside the virtual machine";
+            };
+            options.securityModel = mkOption {
+              type = types.enum [
+                "passthrough"
+                "mapped-xattr"
+                "mapped-file"
+                "none"
+              ];
+              default = "mapped-xattr";
+              description = ''
+                The security model to use for this share:
+
+                - `passthrough`: files are stored using the same credentials as they are created on the guest (this requires QEMU to run as root)
+                - `mapped-xattr`: some of the file attributes like uid, gid, mode bits and link target are stored as file attributes
+                - `mapped-file`: the attributes are stored in the hidden .virtfs_metadata directory. Directories exported by this security model cannot interact with other unix tools
+                - `none`: same as "passthrough" except the sever won't report failures if it fails to set file attributes like ownership
+              '';
+            };
+          }
+        );
+        default = { };
+        example = {
+          my-share = {
+            source = "/path/to/be/shared";
+            target = "/mnt/shared";
+          };
+        };
+        description = ''
+          An attributes set of directories that will be shared with the
+          virtual machine using VirtFS (9P filesystem over VirtIO).
+          The attribute name will be used as the 9P mount tag.
+        '';
+      };
+
+      mountHostNixStore = mkOption {
+        type = types.bool;
+        default = !useBootLoader;
+        defaultText = literalExpression ''config.virtualisation.qemu.bootMode == "kernel"'';
+        description = ''
+          Mount the host Nix store as a 9p mount.
+        '';
+      };
+
     };
   };
 
   config = {
+
+    fileSystems = mkMerge (
+      [
+        (mapAttrs' (tag: share: {
+          name = share.target;
+          value.device = tag;
+          value.fsType = "9p";
+          value.neededForBoot = true;
+          value.options = [
+            "trans=virtio"
+            "version=9p2000.L"
+          ] ++ lib.optional (tag == "nix-store") "cache=loose";
+        }) cfg.sharedDirectories)
+      ]
+      ++ optional cfg.mountHostNixStore {
+        "/nix/store" = {
+          device = "/nix/.ro-store";
+          fsType = "none";
+          options = [ "bind" ];
+        };
+      }
+    );
+
     virtualisation.qemu.argv =
       (qemuCommand cfg.package)
       ++ bootModeArgs.${cfg.bootMode}
@@ -159,6 +248,24 @@ in
         (toString config.virtualisation.memorySize)
         "-smp"
         (toString config.virtualisation.cores)
-      ] ++ cfg.extraArgs;
+      ]
+      ++ (flatten (
+        mapAttrsToList (tag: share: [
+          "-virtfs"
+          "local,path=${share.source},mount_tag=${tag},security_model=${share.securityModel},readonly=on"
+        ]) cfg.sharedDirectories
+      ))
+      ++ cfg.extraArgs;
+
+    virtualisation.qemu.sharedDirectories = {
+      nix-store = mkIf cfg.mountHostNixStore {
+        source = builtins.storeDir;
+        # Always mount this to /nix/.ro-store because we never want to actually
+        # write to the host Nix Store.
+        target = "/nix/.ro-store";
+        securityModel = "none";
+      };
+    };
+
   };
 }

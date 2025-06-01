@@ -64,9 +64,11 @@ in
   imports = [
     ./options.nix
 
+    ./9p.nix
     ./btrfs.nix
     ./ext2.nix
     ./ext4.nix
+    ./special.nix
     ./tmpfs.nix
     ./vfat.nix
     ./xfs.nix
