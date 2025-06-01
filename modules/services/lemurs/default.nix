@@ -3,6 +3,7 @@ let
   cfg = config.services.lemurs;
 
   format = pkgs.formats.toml { };
+  configFile = format.generate "config.toml" cfg.settings;
 in
 {
   options.services.lemurs = {
@@ -17,16 +18,15 @@ in
     };
 
     settings = lib.mkOption {
-      type = lib.types.submodule {
-        freeformType = format.type;
-      };
+      type = format.type;
       default = { };
-      description = "";
     };
   };
 
   config = lib.mkIf cfg.enable {
     services.lemurs.settings = {
+      tty = 7;
+
       # TODO: sync with pam environment variables
       initial_path = "${config.security.wrapperDir}:/run/current-system/sw/bin";
 
@@ -89,18 +89,18 @@ in
       '';
     };
 
-    environment.etc."lemurs/config.toml".source = format.generate "config.toml" cfg.settings;
+    environment.etc."lemurs/config.toml".source = configFile;
 
     environment.etc."lemurs/wayland/hypr".source = pkgs.writeShellScript "hypr" "exec ${pkgs.dbus}/bin/dbus-run-session ${pkgs.hyprland}/bin/Hyprland";
     environment.etc."lemurs/wayland/niri".source = pkgs.writeShellScript "niri" "exec ${pkgs.dbus}/bin/dbus-run-session ${pkgs.niri}/bin/niri --session";
     environment.etc."lemurs/wayland/sway".source = pkgs.writeShellScript "sway" "exec ${pkgs.dbus}/bin/dbus-run-session ${pkgs.sway}/bin/sway";
 
-    finit.ttys.lemurs = {
+    finit.services.lemurs = {
       description = "lemurs terminal user interface display/login manager";
       runlevels = "34";
       conditions = "service/syslogd/ready";
-      # TODO: fix this up... a bit hacky here
-      command = "${pkgs.util-linux}/bin/agetty ${if cfg.settings ? tty then "tty${toString cfg.settings.tty}" else "console"} -nil ${cfg.package}/bin/lemurs nowait";
+      command = "${pkgs.util-linux}/bin/agetty -nil ${cfg.package}/bin/lemurs tty${toString cfg.settings.tty}";
+      cgroup.name = "user";
     };
   };
 }
