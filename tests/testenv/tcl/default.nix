@@ -4,6 +4,9 @@
 }:
 
 let
+  inherit (lib)
+    optionalString;
+
   finixModules = import ../../../modules;
   qemu-common = import (pkgs.path + /nixos/lib/qemu-common.nix) { inherit lib pkgs; };
 
@@ -27,10 +30,16 @@ let
             boot.kernelParams = [
               "console=ttyS0,115200n8"
             ];
-            fileSystems."/" = {
-              device = "/dev/disk/by-label/${name}-test";
-              fsType = "ext2";
-            };
+            fileSystems."/" =
+              if config.testing.enableRootDisk
+              then {
+                device = "/dev/disk/by-label/${name}-test";
+                fsType = "ext2";
+              } else {
+                device = "tmpfs";
+                fsType = "tmpfs";
+                options = [ "mode=755" ];
+              };
             testing = {
               enable = true;
               driver = "tcl";
@@ -60,14 +69,17 @@ let
     in
     ''
       CreateNode ${name} {
-        exec -ignorestderr ${config.virtualisation.qemu.package}/bin/qemu-img create \
-          -f qcow2 -b {${mkRootImage' name config}/image.qcow2} \
-          -F qcow2 {${name}.root.qcow2}
         variable spawnCmd
         lappend spawnCmd ${config.virtualisation.qemu.argv |> map (s: "{${s}}") |> toString}
         lappend spawnCmd -name {${name}}
-        lappend spawnCmd -drive {file=${name}.root.qcow2}
         lappend spawnCmd -serial mon:stdio
+        ${optionalString config.testing.enableRootDisk ''
+
+          exec -ignorestderr ${config.virtualisation.qemu.package}/bin/qemu-img create \
+            -f qcow2 -b {${mkRootImage' name config}/image.qcow2} \
+            -F qcow2 {${name}.root.qcow2}
+          lappend spawnCmd -drive {file=${name}.root.qcow2}
+        ''}
       }
     '';
 

@@ -117,6 +117,14 @@ let
     inherit udevPath;
   };
 
+    mkMount = mnt: ''
+      mkdir -p "$targetRoot${mnt.mountPoint}"
+    '' + (if builtins.elem "bind" mnt.options then ''
+      mount -o ${lib.concatStringsSep "," mnt.options} "$targetRoot${mnt.device}" "$targetRoot${mnt.mountPoint}"
+    '' else ''
+      mount -t ${mnt.fsType} -o ${lib.concatStringsSep "," mnt.options} "${mnt.device}" "$targetRoot${mnt.mountPoint}"
+    '');
+
   # TODO: respect log levels, be quiet
   init = pkgs.writeScript "init" ''
     #!/bin/sh
@@ -237,10 +245,10 @@ let
     ${lib.optionalString config.boot.initrd.supportedFilesystems.zfs.enable "zpool import -a"}
 
     # mount everything needed for boot
-    ${lib.concatMapAttrsStringSep "\n" (k: v: ''
-      mkdir -p "$targetRoot${v.mountPoint}"
-      mount -t ${v.fsType} -o ${lib.concatStringsSep "," v.options} ${v.device} "$targetRoot${v.mountPoint}"
-    '') (lib.filterAttrs (_: v: v.neededForBoot) config.fileSystems)}
+    ${lib.concatMapStringsSep "\n" mkMount
+      (builtins.filter
+        (builtins.getAttr "neededForBoot")
+        (builtins.attrValues config.fileSystems))}
 
     # Stop udevd.
     udevadm control --exit

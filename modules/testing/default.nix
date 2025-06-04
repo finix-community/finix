@@ -8,6 +8,9 @@ in
   options = {
     testing.enable = mkEnableOption "test instrumentation";
 
+    testing.enableRootDisk = mkEnableOption
+      "use a root file-system on a disk image otherwise use tmpfs";
+
     testing.driver = mkOption {
       type = types.enum [ "tcl" ];
       description = "Test driver.";
