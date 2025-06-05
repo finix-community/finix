@@ -118,11 +118,12 @@ let
     options = {
       name = lib.mkOption {
         type = lib.types.str; # TODO: limit name, no : allowed, only valid chars
+        readOnly = true;
       };
 
-      id = lib.mkOption { # TODO: figure out how :%i etc... works
-        type = with lib.types; nullOr str; # TODO: limit id, only valid chars
-        default = null;
+      id = lib.mkOption {
+        type = with lib.types; nullOr str;
+        readOnly = true;
       };
 
       nohup = lib.mkOption {
@@ -275,11 +276,14 @@ let
 
     config =
       let
-        value = lib.splitString "%" name;
+        value = lib.splitString "@" name;
       in
         {
           name = lib.head value;
-          id = lib.mkIf (builtins.length value == 2) ("%" + lib.elemAt value 1);
+          id =
+            if lib.hasSuffix "@" name then "%i"
+            else if lib.hasInfix "@" name then lib.elemAt value 1
+            else null;
 
           nohup = lib.mkDefault (config.notify == "s6");
         };
@@ -506,15 +510,15 @@ in
       let
         # NOTE: entries under /etc/finit.d are marked as direct-symlink to avoid service reloads on every finix activation
 
-        serviceTree = lib.mapAttrs' (_: service: {
-          name = if service.id != null then "finit.d/available/${service.name}@.conf" else "finit.d/${service.name}.conf";
+        serviceTree = lib.mapAttrs' (name: service: {
+          name = if service.id != "%i" then "finit.d/${name}.conf" else "finit.d/available/${name}.conf";
 
           value.mode = "direct-symlink";
           value.text = mkConfigFile "service" service;
         }) (lib.filterAttrs (_: service: service.enable) cfg.services);
 
-        taskTree = lib.mapAttrs' (_: task: {
-          name = if task.id != null then "finit.d/available/${task.name}@.conf" else "finit.d/${task.name}.conf";
+        taskTree = lib.mapAttrs' (name: task: {
+          name = if task.id != "%i" then "finit.d/${name}.conf" else "finit.d/available/${name}.conf";
 
           value.mode = "direct-symlink";
           value.text = mkConfigFile "task" task;
