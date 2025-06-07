@@ -232,6 +232,15 @@ let
         type = program;
       };
 
+      kill = lib.mkOption {
+        type = with lib.types; nullOr (ints.between 1 60);
+        default = null;
+        defaultText = "3";
+        description = ''
+          The delay in seconds between `finit` sending a `SIGTERM` and a `SIGKILL`.
+        '';
+      };
+
       pre = lib.mkOption {
         type = lib.types.nullOr program;
         default = null;
@@ -374,6 +383,7 @@ let
     (lib.optional (svc.user or null != null) ("@${svc.user}" + lib.optionalString (svc.group != null) ":${svc.group}")) ++
     (lib.optional (svc.conditions or [ ] != [ ]) "<${lib.optionalString (svc.nohup or false) "!"}${lib.concatStringsSep "," svc.conditions}>") ++
     (lib.optional (svc.manual or false) "manual:yes") ++
+    (lib.optional (svc.kill or null != null) "kill:${toString svc.kill}") ++
     (lib.optional (svc.conflict or [ ] != [ ]) ("conflict:${lib.concatStringsSep "," svc.conflict}")) ++
     (lib.optional (svc.pid or null != null) "pid:${svc.pid}") ++
     (lib.optional (svc.type or null != null) "type:${svc.type}") ++
