@@ -381,7 +381,7 @@ let
     (lib.optional (svc.restart or false != false) "restart:${toString svc.restart}") ++
     (lib.optional (svc.restart_sec or null != null) "restart_sec:${toString svc.restart_sec}") ++
     (lib.optional (svc.user or null != null) ("@${svc.user}" + lib.optionalString (svc.group != null) ":${svc.group}")) ++
-    (lib.optional (svc.conditions or [ ] != [ ]) "<${lib.optionalString (svc.nohup or false) "!"}${lib.concatStringsSep "," svc.conditions}>") ++
+    (lib.optional (svc.conditions or [ ] != [ ] || svc.nohup or false == true) "<${lib.optionalString (svc.nohup or false) "!"}${lib.concatStringsSep "," svc.conditions}>") ++
     (lib.optional (svc.manual or false) "manual:yes") ++
     (lib.optional (svc.kill or null != null) "kill:${toString svc.kill}") ++
     (lib.optional (svc.conflict or [ ] != [ ]) ("conflict:${lib.concatStringsSep "," svc.conflict}")) ++
