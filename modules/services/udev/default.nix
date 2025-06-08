@@ -187,17 +187,38 @@ in
     services.udev.path = [ pkgs.coreutils pkgs.gnused pkgs.gnugrep pkgs.util-linux cfg.package ];
 
     # adapted from https://github.com/troglobit/finit/blob/master/system/10-hotplug.conf.in
-    environment.etc."finit.d/udev.conf".text = ''
-      service cgroup.system <!> name:udevd notify:s6 pid:udevd log [S12345789] ${cfg.package}/bin/udevd --ready-notify=%n ${lib.optionalString cfg.debug " -D"} -- device event daemon (${cfg.package.pname})
+    finit.services.udevd = {
+      description = "device event daemon (${cfg.package.pname})";
+      runlevels = "S12345789";
+      command = "${cfg.package}/bin/udevd --ready-notify=%n" + lib.optionalString cfg.debug " -D";
+      notify = "s6";
+      pid = "udevd";
+      log = true;
+      nohup = true;
+      cgroup.name = "system";
+    };
 
-      # Wait for udevd to start, then trigger coldplug events and module loading.
-      # The last 'settle' call waits for it to finalize processing all uevents.
-      run nowarn cgroup.init :1 [S] <service/udevd/ready> log ${cfg.package}/bin/udevadm settle -t 0                  --
-      run nowarn cgroup.init :2 [S] <service/udevd/ready> log ${cfg.package}/bin/udevadm control --reload             --
-      run nowarn cgroup.init :3 [S] <service/udevd/ready> log ${cfg.package}/bin/udevadm trigger -c add -t devices    -- requesting device events
-      run nowarn cgroup.init :4 [S] <service/udevd/ready> log ${cfg.package}/bin/udevadm trigger -c add -t subsystems -- requesting subsystem events
-      run nowarn cgroup.init :5 [S] <service/udevd/ready> log ${cfg.package}/bin/udevadm settle -t 30                 -- waiting for udev to finish
-    '';
+    # Wait for udevd to start, then trigger coldplug events and module loading.
+    # The last 'settle' call waits for it to finalize processing all uevents.
+    finit.run =
+      let
+        defaults = {
+          runlevels = "S";
+          conditions = "service/udevd/ready";
+          log = true;
+          cgroup.name = "init";
+          extraConfig = "nowarn";
+
+          priority = 1;
+        };
+      in
+        {
+          "udevadm@1" = defaults // { description = ""; command = "${cfg.package}/bin/udevadm settle -t 0"; };
+          "udevadm@2" = defaults // { description = ""; command = "${cfg.package}/bin/udevadm control --reload"; };
+          "udevadm@3" = defaults // { description = "requesting device events"; command = "${cfg.package}/bin/udevadm trigger -c add -t devices"; };
+          "udevadm@4" = defaults // { description = "requesting subsystem events"; command = "${cfg.package}/bin/udevadm trigger -c add -t subsystems"; };
+          "udevadm@5" = defaults // { description = "waiting for udev to finish"; command = "${cfg.package}/bin/udevadm settle -t 30"; };
+        };
 
     environment.etc."udev/hwdb.bin" = lib.mkIf (cfg.packages != []) { source = hwdbBin; };
     environment.etc."udev/rules.d".source = udevRulesFor {
