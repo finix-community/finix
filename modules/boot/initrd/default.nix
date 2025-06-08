@@ -2,14 +2,6 @@
 let
   cfg = config.boot.initrd;
 
-  # Udev has a 512-character limit for ENV{PATH}, so create a symlink
-  # tree to work around this.
-  udevPath = pkgs.buildEnv {
-    name = "udev-path";
-    paths = config.services.udev.path;
-    pathsToLink = [ "/bin" "/sbin" ];
-    ignoreCollisions = true;
-  };
 
   # Perform substitutions in all udev rules files.
   udevRulesFor = { name, udevPackages, udevPath, udev, binPackages }: pkgs.runCommand name
@@ -100,22 +92,6 @@ let
         exit 1
       fi
     '';
-
-  initrdUdevRules = pkgs.runCommand "initrd-udev-rules" {} ''
-    mkdir -p $out/etc/udev/rules.d
-    for f in 60-cdrom_id 60-persistent-storage 75-net-description 80-drivers; do # 80-net-setup-link; do
-      cp ${pkgs.eudev}/var/lib/udev/rules.d/$f.rules $out/etc/udev/rules.d
-    done
-  '';
-
-  udevRules = udevRulesFor {
-    name = "udev-rules";
-    udevPackages = [ initrdUdevRules ];
-    binPackages = [ initrdUdevRules ];
-    udev = pkgs.eudev;
-
-    inherit udevPath;
-  };
 
     mkMount = mnt: ''
       mkdir -p "$targetRoot${mnt.mountPoint}"
@@ -232,30 +208,50 @@ let
     ln -sfn /proc/self/fd/1 /dev/stdout
     ln -sfn /proc/self/fd/2 /dev/stderr
 
-    echo "running udev..."
+    ${
+      if config.services.udev.enable then
+        ''
+          echo "running udev..."
 
-    udevd --daemon
+          udevd --daemon
 
-    udevadm settle -t 0
-    udevadm control --reload
-    udevadm trigger -c add -t devices
-    udevadm trigger -c add -t subsystems
-    udevadm settle -t 30
+          udevadm settle -t 0
+          udevadm control --reload
+          udevadm trigger -c add -t devices
+          udevadm trigger -c add -t subsystems
+          udevadm settle -t 30
+        ''
+      else if config.services.mdevd.enable then
+        ''
+          echo "coldplugging mdevd..."
+          PATH=/bin mdevd -O 2 &
+          mdevdPid=$!
+          mdevd-coldplug -O 2
+        ''
+      else
+        throw "no device manager for coldplug events enabled"
+    }
 
     ${lib.optionalString config.boot.initrd.supportedFilesystems.zfs.enable "zpool import -a"}
 
     # mount everything needed for boot
-    ${lib.concatMapStringsSep "\n" mkMount
-      (builtins.filter
-        (builtins.getAttr "neededForBoot")
-        (builtins.attrValues config.fileSystems))}
+    ${lib.concatMapStringsSep "\n" mkMount (builtins.filter (builtins.getAttr "neededForBoot") (builtins.attrValues config.fileSystems))}
 
-    # Stop udevd.
-    udevadm control --exit
+    ${
+      if config.services.udev.enable then
+        ''
+          # Stop udevd.
+          udevadm control --exit
 
-    echo "udevadm control --exit has run"
-
-
+          echo "udevadm control --exit has run"
+        ''
+      else if config.services.mdevd.enable then
+        ''
+          kill $mdevdPid
+        ''
+      else
+        throw "no device manager for coldplug events enabled"
+    }
 
     # Reset the logging file descriptors.
     # Do this just before pkill, which will kill the tee process.
@@ -308,12 +304,18 @@ let
 
   path = pkgs.buildEnv {
     name = "initrd-path";
-    paths = [
-      pkgs.busybox
-      pkgs.eudev
-      pkgs.kmod
-      (lib.hiPrio pkgs.util-linux.mount)
-    ] ++ fsPackages;
+    paths =
+      [
+        pkgs.busybox
+        pkgs.kmod
+        (lib.hiPrio pkgs.util-linux.mount)
+      ]
+      ++ lib.optional config.services.udev.enable pkgs.eudev
+      ++ lib.optionals config.services.mdevd.enable [
+        config.services.mdevd.package
+        pkgs.execline
+      ]
+      ++ fsPackages;
     pathsToLink = [
       "/bin"
     ];
@@ -371,6 +373,23 @@ in
       description = "Arguments to pass to the compressor for the initrd image, or null to use the compressor's defaults.";
     };
 
+    contents = lib.mkOption {
+      type = with lib.types; listOf (submodule {
+        options = {
+          source = lib.mkOption {
+            type = types.path;
+          };
+          target = lib.mkOption {
+            type = with types; nullOr str;
+            default = null;
+          };
+        };
+      });
+      description = ''
+        Contents of the initrd.
+      '';
+    };
+
     package = lib.mkOption {
       type = lib.types.package;
       description = "the initrd to use for your system... use a module to build one";
@@ -384,18 +403,20 @@ in
     ;
 
     # stupid simple initrd, need a better implementation than this
-    boot.initrd.package = pkgs.makeInitrdNG {
-      name = "simple-initrd";
-      inherit (cfg) compressor compressorArgs;
-
+    boot.initrd = {
+      package = pkgs.makeInitrdNG {
+        name = "simple-initrd";
+        inherit (cfg) compressor compressorArgs;
+        contents = map
+          ({source, target}@pair:
+            if target != null then pair else { inherit source; })
+          cfg.contents;
+      };
       contents = [
         { target = "/init"; source = init; }
         { target = "/bin"; source = "${path}/bin";  }
         { target = "/sbin"; source = "${path}/bin";  }
         { target = "/lib"; source = "${modulesClosure}/lib"; }
-        # { target = "/etc/udev/rules.d"; source = "${pkgs.eudev}/var/lib/udev/rules.d"; }
-        { target = "/etc/udev/rules.d"; source = udevRules; }
-        { source = "${pkgs.eudev}/lib/udev"; }
       ];
     };
   };

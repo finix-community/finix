@@ -101,6 +101,22 @@ let
       fi
     '';
 
+  initrdUdevRules = pkgs.runCommand "initrd-udev-rules" {} ''
+    mkdir -p $out/etc/udev/rules.d
+    for f in 60-cdrom_id 60-persistent-storage 75-net-description 80-drivers; do # 80-net-setup-link; do
+      cp ${pkgs.eudev}/var/lib/udev/rules.d/$f.rules $out/etc/udev/rules.d
+    done
+  '';
+
+  udevRulesEarly = udevRulesFor {
+    name = "udev-rules";
+    udevPackages = [ initrdUdevRules ];
+    binPackages = [ initrdUdevRules ];
+    udev = pkgs.eudev;
+
+    inherit udevPath;
+  };
+
   hwdbBin = pkgs.runCommand "hwdb.bin"
     { preferLocalBuild = true;
       allowSubstitutes = false;
@@ -207,5 +223,12 @@ in
         fi
       '';
     };
+
+    boot.initrd.contents = [
+        # { target = "/etc/udev/rules.d"; source = "${pkgs.eudev}/var/lib/udev/rules.d"; }
+        { target = "/etc/udev/rules.d"; source = udevRulesEarly; }
+        { source = "${pkgs.eudev}/lib/udev"; }
+    ];
+
   };
 }
