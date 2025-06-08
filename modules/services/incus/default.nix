@@ -84,6 +84,16 @@ in
 
         text = "exec ${cfg.package}/bin/incusd --group incus-admin --syslog" + lib.optionalString cfg.debug " --debug";
       };
+
+      kill = 30;
+
+      # https://github.com/NixOS/nixpkgs/blob/92e1950ebadc72d89e7da09dd54f815c454cec0e/nixos/modules/virtualisation/incus.nix#L404-L407
+      cgroup.settings."pids.max" = "max";
+      rlimits = {
+        memlock = "unlimited";
+        nofile = 1048576;
+        nproc = "unlimited";
+      };
     };
 
     # https://github.com/lxc/incus/blob/f145309929f849b9951658ad2ba3b8f10cbe69d1/doc/reference/server_settings.md
