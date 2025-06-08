@@ -43,16 +43,10 @@ in
       command = "${cfg.package}/bin/nix-daemon --daemon";
       nohup = true;
 
-      # https://github.com/NixOS/nix/blob/81884c36a381737a438ddc5decb658446074d064/misc/systemd/nix-daemon.service.in#L12
-      cgroup.settings = {
-        "pids.max" = 1048576;
-      };
+      # https://github.com/NixOS/nix/blob/81884c36a381737a438ddc5decb658446074d064/misc/systemd/nix-daemon.service.in#L12-L13
+      cgroup.settings."pids.max" = 1048576;
+      rlimits.nofile = 1048576;
     };
-
-    # TODO: nixify finit settings for rlimit stuff
-    environment.etc."finit.d/nix-daemon.conf".text = lib.mkBefore ''
-      rlimit nofile 1048576
-    '';
 
     environment.systemPackages = [
       cfg.package

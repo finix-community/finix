@@ -16,6 +16,30 @@ let
       descriptionClass = "conjunction";
     };
 
+    rlimitsType =
+      let
+        complexType = lib.types.submodule {
+          options = {
+            soft = lib.mkOption {
+              type = lib.types.nullOr (lib.types.either (lib.types.enum [ "unlimited" ]) lib.types.int);
+              default = null;
+              description = ''
+                The value that the kernel enforces for this resource.
+              '';
+            };
+
+            hard = lib.mkOption {
+              type = lib.types.nullOr (lib.types.either (lib.types.enum [ "unlimited" ]) lib.types.int);
+              default = null;
+              description = ''
+                The ceiling for the soft limit.
+              '';
+            };
+          };
+        };
+      in
+        lib.types.attrsOf (lib.types.oneOf [ (lib.types.enum [ "unlimited" ]) lib.types.int complexType ]);
+
   cgroupOpts = { name, ... }: {
     options = {
       name = lib.mkOption {
@@ -364,6 +388,20 @@ let
     };
   };
 
+  rlimitOpts = {
+    options = {
+      rlimits = lib.mkOption {
+        type = rlimitsType;
+        default = { };
+        description = ''
+          An attribute set of resource limits that will be apply by `finit`.
+
+          See [upstream documentation](https://github.com/troglobit/finit/tree/master/doc/config.md#resource-limits) for additional details.
+        '';
+      };
+    };
+  };
+
   logToStr = v: if v == true then "log" else "log:${v}";
   cgroupToStr = cgroup:
     "cgroup" +
@@ -371,7 +409,18 @@ let
     lib.optionalString (cgroup.settings != { }) (":" + (lib.concatMapAttrsStringSep "," (k: v: "${k}:${toString v}") cgroup.settings))
   ;
 
-  mkConfigFile = svcType: svc: lib.concatStringsSep " " (
+  rlimitStr =
+    let
+      rlimitToStr = k: v:
+        if lib.isAttrs v then (lib.optionalString (v.hard != null) "rlimit hard ${k} ${toString v.hard}" + lib.optionalString (v.hard != null && v.soft != null) "\n" + lib.optionalString (v.soft != null) "rlimit soft ${k} ${toString v.soft}")
+        else "rlimit ${k} ${toString v}"
+      ;
+    in
+      values: lib.concatMapAttrsStringSep "\n" rlimitToStr values;
+
+  mkConfigFile = svcType: svc: lib.optionalString (svc.rlimits or { } != { }) "${rlimitStr svc.rlimits}\n\n" + (serviceStr svcType svc);
+
+  serviceStr = svcType: svc: lib.concatStringsSep " " (
     (lib.singleton svcType) ++
     (lib.singleton "[${svc.runlevels}]") ++
 
@@ -458,8 +507,18 @@ in
       '';
     };
 
+    rlimits = lib.mkOption {
+      type = rlimitsType;
+      default = { };
+      description = ''
+        An attribute set of resource limits that will be apply by `finit`.
+
+        See [upstream documentation](https://github.com/troglobit/finit/tree/master/doc/config.md#resource-limits) for additional details.
+      '';
+    };
+
     services = lib.mkOption {
-      type = with lib.types; attrsOf (submodule [ commonOpts serviceOpts ]);
+      type = with lib.types; attrsOf (submodule [ commonOpts serviceOpts rlimitOpts ]);
       default = { };
       description = ''
         An attribute set of services, or daemons, to be monitored and automatically
@@ -470,7 +529,7 @@ in
     };
 
     tasks = lib.mkOption {
-      type = with lib.types; attrsOf (submodule [ commonOpts serviceOpts ]);
+      type = with lib.types; attrsOf (submodule [ commonOpts serviceOpts rlimitOpts ]);
       default = { };
       description = ''
         An attribute set of one-shot commands to be executed by `finit`.
@@ -573,16 +632,17 @@ in
 
         cgroup = lib.concatMapAttrsStringSep "\n" (_: cgroupOpts: ''cgroup ${cgroupOpts.name} ${lib.concatMapAttrsStringSep "," (k: v: "${k}:${toString v}") cgroupOpts.settings}'') cfg.cgroups;
 
+        # TODO: split these out into their own files, while preserving order, and add rlimits option
         run = cfg.run
           |> lib.filterAttrs (_: v: v.enable)
           |> lib.attrValues
           |> lib.sortProperties
-          |> lib.concatMapStringsSep "\n" (mkConfigFile "run")
+          |> lib.concatMapStringsSep "\n" (serviceStr "run")
         ;
 
         tty = cfg.ttys
           |> lib.filterAttrs (_: v: v.enable)
-          |> lib.mapAttrsToList (_: mkConfigFile "tty")
+          |> lib.mapAttrsToList (_: serviceStr "tty")
           |> (lib.concatStringsSep "\n")
         ;
 
@@ -596,6 +656,9 @@ in
 
               # cgroups
               ${cgroup}
+
+              # rlimits
+              ${rlimitStr cfg.rlimits}
 
               # ttys
               ${tty}
