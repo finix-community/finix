@@ -490,7 +490,43 @@ in
     };
   };
 
-  config = {
+  config = lib.mkIf cfg.enable {
+    boot.init.pid1Argv =
+      let
+        # finit needs to mount extra file systems not covered by boot
+        fsPackages =
+          config.boot.supportedFilesystems
+          |> lib.filterAttrs (_: v: v.enable)
+          |> lib.attrValues
+          |> lib.catAttrs "packages"
+          |> lib.flatten
+          |> lib.unique;
+
+        # Sets PATH when prepended to a command-line statement.
+        # The exceline PATH is prepended as a side effect.
+        execlineSetPath = items: [
+          (lib.getExe' pkgs.execline "export")
+          "PATH"
+          (lib.makeBinPath items)
+        ];
+      in
+      {
+        # finit requires fsck, modprobe & mount commands
+        # before PATH can be read from finit.conf
+        exportPath.text = execlineSetPath (
+          [
+            pkgs.unixtools.fsck
+            pkgs.kmod
+            pkgs.util-linux.mount
+          ]
+          ++ fsPackages
+        );
+        finit = {
+          deps = [ "exportPath" ];
+          text = lib.mkDefault "${config.finit.package}/bin/finit";
+        };
+      };
+
     # TODO: decide a reasonable default here... user can override if needed
     finit.environment.PATH = lib.makeBinPath [
       pkgs.coreutils

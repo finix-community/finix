@@ -3,7 +3,6 @@
 testenv.mkTest {
   name = "finit";
   nodes.machine = {
-    finit.enable = true;
     finit.runlevel = 2;
   };
   tclScript = ''
