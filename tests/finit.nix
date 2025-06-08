@@ -3,7 +3,7 @@
 testenv.mkTest {
   name = "finit";
   nodes.machine = {
-    finit.enable = true;
+    boot.serviceManager = "finit";
     finit.runlevel = 2;
   };
   tclScript = ''

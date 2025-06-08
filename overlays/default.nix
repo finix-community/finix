@@ -1,6 +1,11 @@
 final: prev: {
+
+  lib = import ../pkgs/lib |> prev.lib.extend;
+
   # TODO: upstream in nixpkgs
   finit = prev.callPackage ../pkgs/finit { };
+
+  formats = import ../pkgs/pkgs-lib/formats { inherit (final) lib; pkgs = prev; };
 
   # see https://github.com/eudev-project/eudev/pull/290
   eudev = prev.eudev.overrideAttrs (o: {
@@ -12,6 +17,12 @@ final: prev: {
       })
     ];
   });
+
+  synit-pid1 = final.callPackage ../pkgs/synit-pid1 { };
+
+  synit-service = final.callPackage ../pkgs/synit-service { };
+
+  tclPackages = import ../pkgs/tcl-modules |> prev.tclPackages.overrideScope;
 
   # modern fork of sysklogd - same author as finit
   sysklogd = prev.callPackage ../pkgs/sysklogd { };

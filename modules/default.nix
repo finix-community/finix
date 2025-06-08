@@ -25,6 +25,7 @@ in
       ./networking
       # ./nixpkgs
       ./security
+      ./synit
       ./system/activation
       ./time
       ./users

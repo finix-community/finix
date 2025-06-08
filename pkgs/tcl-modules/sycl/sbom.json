@@ -1,0 +1,274 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "metadata": {
+    "component": {
+      "type": "application",
+      "bom-ref": "pkg:tcl/sycl",
+      "name": "sycl",
+      "description": "Syndicated tool Command Language",
+      "version": "1.0",
+      "authors": [
+        {
+          "name": "Emery Hemingway"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Unlicense"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "nim:skipExt",
+          "value": "nim"
+        },
+        {
+          "name": "nim:bin:libdataspaces.so",
+          "value": "dataspaces"
+        },
+        {
+          "name": "nim:srcDir",
+          "value": "src"
+        },
+        {
+          "name": "nim:backend",
+          "value": "c"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "pkg:nim/preserves",
+      "name": "preserves",
+      "version": "20250318",
+      "externalReferences": [
+        {
+          "url": "https://git.syndicate-lang.org/ehmry/preserves-nim/archive/db136dde9b9e6dbc24fdf553a02fa1ecbf01294f.tar.gz",
+          "type": "source-distribution"
+        },
+        {
+          "url": "https://git.syndicate-lang.org/ehmry/preserves-nim.git",
+          "type": "vcs"
+        }
+      ],
+      "properties": [
+        {
+          "name": "nix:fod:method",
+          "value": "fetchzip"
+        },
+        {
+          "name": "nix:fod:path",
+          "value": "/nix/store/5mx41ixai1dn5wszmsf31iwgsdc9hvm1-source"
+        },
+        {
+          "name": "nix:fod:rev",
+          "value": "db136dde9b9e6dbc24fdf553a02fa1ecbf01294f"
+        },
+        {
+          "name": "nix:fod:sha256",
+          "value": "1x9d9g9k5a612y89rmswgw3ihv36whi9wgs6mll8qss7y08hvyr0"
+        },
+        {
+          "name": "nix:fod:url",
+          "value": "https://git.syndicate-lang.org/ehmry/preserves-nim/archive/db136dde9b9e6dbc24fdf553a02fa1ecbf01294f.tar.gz"
+        },
+        {
+          "name": "nix:fod:ref",
+          "value": "20250318"
+        },
+        {
+          "name": "nix:fod:srcDir",
+          "value": "src"
+        },
+        {
+          "name": "nix:fod:date",
+          "value": "2024-05-23T15:58:40+03:00"
+        },
+        {
+          "name": "nix:fod:hash",
+          "value": "sha256-JvdvLdPajDgIPbLblO0LbOm0wEp530fs8LYmgH885sk="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nim/npeg",
+      "name": "npeg",
+      "version": "1.2.2",
+      "externalReferences": [
+        {
+          "url": "https://github.com/zevv/npeg/archive/ec0cc6e64ea4c62d2aa382b176a4838474238f8d.tar.gz",
+          "type": "source-distribution"
+        },
+        {
+          "url": "https://github.com/zevv/npeg.git",
+          "type": "vcs"
+        }
+      ],
+      "properties": [
+        {
+          "name": "nix:fod:method",
+          "value": "fetchzip"
+        },
+        {
+          "name": "nix:fod:path",
+          "value": "/nix/store/xpn694ibgipj8xak3j4bky6b3k0vp7hh-source"
+        },
+        {
+          "name": "nix:fod:rev",
+          "value": "ec0cc6e64ea4c62d2aa382b176a4838474238f8d"
+        },
+        {
+          "name": "nix:fod:sha256",
+          "value": "1fi9ls3xl20bmv1ikillxywl96i9al6zmmxrbffx448gbrxs86kg"
+        },
+        {
+          "name": "nix:fod:url",
+          "value": "https://github.com/zevv/npeg/archive/ec0cc6e64ea4c62d2aa382b176a4838474238f8d.tar.gz"
+        },
+        {
+          "name": "nix:fod:ref",
+          "value": "1.2.2"
+        },
+        {
+          "name": "nix:fod:srcDir",
+          "value": "src"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nim/bigints",
+      "name": "bigints",
+      "version": "20231006",
+      "externalReferences": [
+        {
+          "url": "https://github.com/ehmry/nim-bigints/archive/86ea14d31eea9275e1408ca34e6bfe9c99989a96.tar.gz",
+          "type": "source-distribution"
+        },
+        {
+          "url": "https://github.com/ehmry/nim-bigints.git",
+          "type": "vcs"
+        }
+      ],
+      "properties": [
+        {
+          "name": "nix:fod:method",
+          "value": "fetchzip"
+        },
+        {
+          "name": "nix:fod:path",
+          "value": "/nix/store/jvrm392g8adfsgf36prgwkbyd7vh5jsw-source"
+        },
+        {
+          "name": "nix:fod:rev",
+          "value": "86ea14d31eea9275e1408ca34e6bfe9c99989a96"
+        },
+        {
+          "name": "nix:fod:sha256",
+          "value": "15pcpmnk1bnw3k8769rjzcpg00nahyrypwbxs88jnwr4aczp99j4"
+        },
+        {
+          "name": "nix:fod:url",
+          "value": "https://github.com/ehmry/nim-bigints/archive/86ea14d31eea9275e1408ca34e6bfe9c99989a96.tar.gz"
+        },
+        {
+          "name": "nix:fod:ref",
+          "value": "20231006"
+        },
+        {
+          "name": "nix:fod:srcDir",
+          "value": "src"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nim/syndicate",
+      "name": "syndicate",
+      "description": "Syndicated actors for conversational concurrency",
+      "version": "trunk",
+      "authors": [
+        {
+          "name": "Emery Hemingway"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Unlicense"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "nix:fod:method",
+          "value": "fetchzip"
+        },
+        {
+          "name": "nix:fod:path",
+          "value": "/nix/store/pv755qqd73p2cw9banpwwx6krv6p7bin-source"
+        },
+        {
+          "name": "nix:fod:rev",
+          "value": "7561576d198e5322292d1bc6b817caca8c15ee6a"
+        },
+        {
+          "name": "nix:fod:sha256",
+          "value": "1wa82wwlzi0zq4pyp615abx5za77fnlvjqcajvayi87km088m3nc"
+        },
+        {
+          "name": "nix:fod:url",
+          "value": "https://git.syndicate-lang.org/ehmry/syndicate-nim/archive/7561576d198e5322292d1bc6b817caca8c15ee6a.tar.gz"
+        },
+        {
+          "name": "nix:fod:ref",
+          "value": "trunk"
+        },
+        {
+          "name": "nix:fod:srcDir",
+          "value": "src"
+        }
+      ],
+      "externalReferences": [
+        {
+          "url": "https://git.syndicate-lang.org/ehmry/syndicate-nim/archive/7561576d198e5322292d1bc6b817caca8c15ee6a.tar.gz",
+          "type": "source-distribution"
+        },
+        {
+          "url": "https://git.syndicate-lang.org/ehmry/syndicate-nim",
+          "type": "vcs"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "pkg:tcl/sycl",
+      "dependsOn": [
+        "pkg:nim/preserves",
+        "pkg:nim/syndicate"
+      ]
+    },
+    {
+      "ref": "pkg:nim/preserves",
+      "dependsOn": [
+        "pkg:nim/npeg",
+        "pkg:nim/bigints"
+      ]
+    },
+    {
+      "ref": "pkg:nim/npeg",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nim/bigints",
+      "dependsOn": []
+    }
+  ]
+}
