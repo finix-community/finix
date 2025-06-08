@@ -40,6 +40,7 @@ let
                 fsType = "tmpfs";
                 options = [ "mode=755" ];
               };
+            networking.hostName = name;
             testing = {
               enable = true;
               driver = "tcl";
