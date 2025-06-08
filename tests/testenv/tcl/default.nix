@@ -103,9 +103,6 @@ in
     }:
     let
       nodes' = lib.mapAttrs mkVm nodes;
-    in
-    rec {
-      nodes = nodes';
       script = pkgs.writeTextFile {
         name = "test-${name}.tcl";
         executable = true;
@@ -115,8 +112,8 @@ in
           set testName {${name}}
           set timout {${toString expectTimeout}}
 
-          ${lib.concatMapStrings (name: createNodeScript name nodes.${name}.config) (
-            builtins.attrNames nodes
+          ${lib.concatMapStrings (name: createNodeScript name nodes'.${name}.config) (
+            builtins.attrNames nodes'
           )}
 
           namespace import testNodes::*
@@ -127,5 +124,8 @@ in
         '';
       };
       run = pkgs.runCommand "test-${name}.log" { } script;
+    in run // {
+      nodes = nodes';
+      inherit script;
     };
 }
