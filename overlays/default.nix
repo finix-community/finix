@@ -1,6 +1,11 @@
 final: prev: {
+
+  lib = import ../pkgs/lib |> prev.lib.extend;
+
   # TODO: upstream in nixpkgs
   finit = prev.callPackage ../pkgs/finit { };
+
+  formats = import ../pkgs/pkgs-lib/formats { inherit (final) lib; pkgs = prev; };
 
   # see https://github.com/eudev-project/eudev/pull/290
   eudev = prev.eudev.overrideAttrs (o: {
