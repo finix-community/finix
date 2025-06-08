@@ -18,6 +18,8 @@ final: prev: {
     ];
   });
 
+  synit-pid1 = final.callPackage ../pkgs/synit-pid1 { };
+
   # modern fork of sysklogd - same author as finit
   sysklogd = prev.callPackage ../pkgs/sysklogd { };
 
