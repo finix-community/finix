@@ -219,6 +219,13 @@ in
 
   config = {
 
+    boot.initrd.kernelModules = [
+      "virtio_pci" # TODO: platforms without PCI.
+      "virtio_blk"
+      "virtio_console"
+      "virtio_net"
+    ] ++ lib.optional (cfg.sharedDirectories != { }) "9pnet_virtio";
+
     fileSystems = mkMerge (
       [
         (mapAttrs' (tag: share: {
@@ -256,7 +263,11 @@ in
           "local,path=${share.source},mount_tag=${tag},security_model=${share.securityModel},readonly=on"
         ]) cfg.sharedDirectories
       ))
-      ++ optionals config.testing.enable [ "-serial" "mon:stdio" ]
+      ++ optionals config.testing.enable [
+          "-serial" "mon:stdio"
+          "-netdev" "user,id=usernet"
+          "-device" "virtio-net-pci,netdev=usernet"
+        ]
       ++ cfg.extraArgs;
 
     virtualisation.qemu.sharedDirectories = {
