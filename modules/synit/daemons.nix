@@ -29,6 +29,8 @@ let
   # Sugar for creating records with < >.
   inherit (preserves) __findFile;
 
+  recordOfKey = key: builtins.tail key ++ [ { _record = builtins.head key; } ];
+
   writeExeclineScript = pkgs.execline.passthru.writeScript;
 
   # Create a logging wrapper for some arguments and a directory.
@@ -277,12 +279,12 @@ in
     environment.etc = listToAttrs (
       # Put files that describe core-level daemons into the core directory.
       # See ./static/boot/020-load-core-layer.pr
-      map (name: {
+      map (name: let daemon = cfg.core.daemons.${name}; daeRec = <daemon> [ name ]; in {
         name = "syndicate/core/daemon-${name}.pr";
         value.source = writePreservesFile "daemon-${name}.pr" ([
-          (<require-service> [ (<daemon> [ name ]) ])
-          (daemonToPreserves name cfg.core.daemons.${name})
-        ]);
+          (<require-service> [ daeRec ])
+          (daemonToPreserves name daemon)
+        ] ++ map ({ key, state }: <depends-on> [ daeRec (<service-state> [ (recordOfKey key) state ]) ]) daemon.requires);
       }) (attrNames cfg.core.daemons)
       ++
       # Put files that describe service-level daemons into the service directory.
