@@ -7,6 +7,8 @@
 
 let
   inherit (lib)
+    getExe
+    getExe'
     mkEnableOption
     mkIf
     mkOption
@@ -22,6 +24,9 @@ let
   # Insert modules for devices.
   modaliasRule = "$MODALIAS=.* 0:0 660 +importas m MODALIAS modprobe --quiet $m";
 
+  # We need symlinks in /dev/disk/{by-id,by-label,by-uuid}
+  # so we run this script for block device events.
+  # Requires blkid from util-linux be on $PATH.
   devDiskScript = writeExeclineScript "mdevd-disk.el" "" ''
     importas -S ACTION
     importas -S MDEV
@@ -55,9 +60,7 @@ let
     }
   '';
 
-  # Create symlinks in /dev/disk/.
-  # Requires blkid from util-linux be on $PATH.
-  devDiskRule = "SUBSYSTEM=block;.* 0:${gidOf "disk"} 660 &${devDiskScript}";
+  devDiskRule = "-SUBSYSTEM=block;.* 0:${gidOf "disk"} 660 &${devDiskScript}";
 in
 {
   options.services.mdevd = {
@@ -83,6 +86,8 @@ in
   };
 
   config = mkIf cfg.enable {
+
+    # Populate with boot rules.
     services.mdevd = {
       hotplugRules = [
         modaliasRule
@@ -93,6 +98,9 @@ in
         devDiskRule
       ];
     };
+
+    # Mdevd coldplugs the system during the stage-1 init in initramfs.
+    # See ../../boot/initrd/default.nix
     boot.initrd.contents = [
         { target = "/etc/mdev.conf";
           source = pkgs.writeText "mdev.conf"
@@ -102,5 +110,24 @@ in
           target = "/etc/dev-disk.el";
         }
     ];
+
+    # Start a hotpluging mdevd after the stage-2 init.
+    synit.core.daemons.mdevd = {
+      argv = [
+        (getExe cfg.package)
+        "-O" "2"
+        "-f" (config.services.mdevd.hotplugRules
+          |> lib.concatLines
+          |> pkgs.writeText "mdev.conf")
+      ];
+      path = with pkgs; [ coreutils execline kmod util-linux ];
+    };
+
+    # Hold core back until another coldplug completes.
+    synit.core.daemons.mdevd-coldplug = {
+      argv = [ (getExe' cfg.package "mdevd-coldplug") "-O" "2" ];
+      restart = "on-error";
+      requires = [ { key = [ "daemon" "mdevd" ]; } ];
+    };
   };
 }
