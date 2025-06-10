@@ -100,6 +100,7 @@ in
       pkgs.synit-service
     ];
 
+    # Only tested with mdevd.
     services.mdevd.enable = mkDefault true;
 
     system.activation.scripts.synit-config = {

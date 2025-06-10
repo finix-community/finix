@@ -275,6 +275,8 @@ in
   config = mkIfSynit {
 
     environment.etc = listToAttrs (
+      # Put files that describe core-level daemons into the core directory.
+      # See ./static/boot/020-load-core-layer.pr
       map (name: {
         name = "syndicate/core/daemon-${name}.pr";
         value.source = writePreservesFile "daemon-${name}.pr" ([
@@ -282,7 +284,10 @@ in
           (daemonToPreserves name cfg.core.daemons.${name})
         ]);
       }) (attrNames cfg.core.daemons)
-      ++ map (name: {
+      ++
+      # Put files that describe service-level daemons into the service directory.
+      # See ./static/boot/030-load-services.pr
+      map (name: {
         name = "syndicate/services/daemon-${name}.pr";
         value.source = writePreservesFile "daemon-${name}.pr" [
           (daemonToPreserves name cfg.daemons.${name})
@@ -290,6 +295,8 @@ in
       }) (attrNames cfg.daemons)
     );
 
+    # Accumulate `requires` and `provides` from all daemons
+    # into a top-level collection.
     synit.depends = foldl' (depends: name:
       let
         daemon = cfg.daemons.${name};
