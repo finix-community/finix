@@ -73,7 +73,6 @@ let
         variable spawnCmd
         lappend spawnCmd ${config.virtualisation.qemu.argv |> map (s: "{${s}}") |> toString}
         lappend spawnCmd -name {${name}}
-        lappend spawnCmd -serial mon:stdio
         ${optionalString config.testing.enableRootDisk ''
 
           exec -ignorestderr ${config.virtualisation.qemu.package}/bin/qemu-img create \
