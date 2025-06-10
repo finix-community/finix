@@ -85,6 +85,7 @@ let
 
 in
 {
+  inherit lib pkgs;
   mkTest =
     {
       # Name of test.
