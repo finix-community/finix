@@ -22,6 +22,7 @@ in
     ./dependencies.nix
     ./filesystems.nix
     ./logging.nix
+    ./networking.nix
   ];
 
   options.synit = {
@@ -105,7 +106,7 @@ in
 
     system.activation.scripts.synit-config = {
       deps = [ "specialfs" ];
-      text = "install --mode=644 --directory /run/etc/syndicate/{core,system,services}";
+      text = "install --mode=644 --directory {,/run}/etc/syndicate/{core,system,services,machine,network}";
     };
 
   };

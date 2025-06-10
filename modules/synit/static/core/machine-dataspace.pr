@@ -5,3 +5,6 @@ $ds ? ?r [
   $log ! <log "-" { line: "machine" |+++|: $r }>
   ?- $log ! <log "-" { line: "machine" |---|: $r }>
 ]
+
+# Assert into this dataspace by writing files into this directory.
+<require-service <config-watcher "/run/etc/syndicate/machine" { config: $ds log: $log }>>
