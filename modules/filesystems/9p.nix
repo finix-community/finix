@@ -21,15 +21,7 @@
   };
 
   config =
-    let
-      modsIf =
-        v:
-        lib.mkIf v [
-          "9p"
-          "9pnet_virtio"
-          "virtio_pci"
-        ];
-    in
+    let modsIf = v: lib.mkIf v [ "9p" ]; in
     {
       boot.kernelModules = modsIf config.boot.supportedFilesystems."9p".enable;
       boot.initrd.kernelModules = modsIf config.boot.initrd.supportedFilesystems."9p".enable;

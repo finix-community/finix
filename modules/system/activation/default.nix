@@ -13,6 +13,7 @@ let
       };
     };
   };
+  checkAssertWarn = lib.asserts.checkAssertWarn config.assertions config.warnings;
 in
 {
   options.system.topLevel = lib.mkOption {
@@ -125,7 +126,7 @@ in
       util-linux # needed for mount and mountpoint
     ];
 
-    system.topLevel = pkgs.stdenvNoCC.mkDerivation {
+    system.topLevel =  checkAssertWarn (pkgs.stdenvNoCC.mkDerivation {
       name = "finix-system";
       preferLocalBuild = true;
       allowSubstitutes = false;
@@ -149,7 +150,7 @@ in
         + lib.optionalString config.boot.initrd.enable ''
           ${pkgs.coreutils}/bin/ln -s ${config.boot.initrd.package}/initrd $out/initrd
         '';
-    };
+    });
 
     boot.kernelParams = [ "init=${config.system.topLevel}/init" ];
   };

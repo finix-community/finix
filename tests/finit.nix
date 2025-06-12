@@ -5,6 +5,7 @@ testenv.mkTest {
   nodes.machine = {
     boot.serviceManager = "finit";
     finit.runlevel = 2;
+    services.dhcpcd.enable = true;
   };
   tclScript = ''
     machine spawn

@@ -18,6 +18,14 @@ in
   options.services.dhcpcd = {
     enable = lib.mkEnableOption "dhcpd";
 
+    package = lib.mkOption {
+      type = lib.types.package;
+      default = if config.services.udev.enable
+        then pkgs.dhcpcd
+        else pkgs.dhcpcd.override { udev = null; };
+      defaultText = lib.literalExpression "pkgs.dhcpcd";
+    };
+
     settings = lib.mkOption {
       type = lib.types.submodule {
         freeformType = format.type; # FIXME: types.record { }
@@ -167,7 +175,22 @@ in
     # NOTE: temporarily disable this because it wasn't working properly
     finit.services.dhcpcd = {
       description = "dhcp client";
-      command = "${pkgs.dhcpcd}/bin/dhcpcd -f ${cfg.configFile}";
+      command = "${lib.getExe cfg.package} -f ${cfg.configFile}";
+    };
+
+    synit.daemons.dhcpcd = let
+      # TODO: This should be handled by tmpfiles.
+      script = pkgs.execline.passthru.writeScript "dhcpcd-dirs.el" "-s0" ''
+        foreground { ln -s /run /var/run }
+        foreground { install --directory --owner=dhcpcd /var/db/dhcpcd }
+        foreground { install --directory --owner=dhcpcd --group=dhcpcd /var/lib/dhcpcd }
+        $@
+      '';
+    in {
+      argv = [ script (lib.getExe cfg.package) "--config" cfg.configFile ];
+      provides = [ [ "milestone" "network" ] ];
+      restart = "on-error";
+      logging.enable = false; # Logs to syslog unfortunately.
     };
 
     services.tmpfiles.dhcpd.rules = [

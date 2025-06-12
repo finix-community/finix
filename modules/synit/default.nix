@@ -22,6 +22,7 @@ in
     ./dependencies.nix
     ./filesystems.nix
     ./logging.nix
+    ./networking.nix
   ];
 
   options.synit = {
@@ -100,11 +101,12 @@ in
       pkgs.synit-service
     ];
 
+    # Only tested with mdevd.
     services.mdevd.enable = mkDefault true;
 
     system.activation.scripts.synit-config = {
       deps = [ "specialfs" ];
-      text = "install --mode=644 --directory /run/etc/syndicate/{core,system,services}";
+      text = "install --mode=644 --directory {,/run}/etc/syndicate/{core,system,services,machine,network}";
     };
 
   };

@@ -37,6 +37,8 @@ let
     '';
   };
 
+  # TODO: This format of relations makes for
+  # a lot of brackets and is awkward to read.
   dependeeType = types.submodule {
     options = {
       key = keyOption;
@@ -62,7 +64,7 @@ in
             key = keyOption // {
               default = rootDependerKey;
               defaultText = literalMD ''
-                [ "milestone" "nixos-''${config.name}-''${config.nixos.label}" ];
+                [ "milestone" "system-${config.networking.hostName}" ];
               '';
             };
             dependee = mkOption {
@@ -103,8 +105,10 @@ in
 
     environment.etc =
       let
+        # Make Preserves `<foo bar>` out of Nix `[ "foo" "bar" ]`.
         recordOfKey = key: tail key ++ [ { _record = head key; } ];
 
+        # <depends-on <${recordOfKey key}> <service-state ${state}>>
         dependsOn = { key, dependee }: [
           (recordOfKey key) [
               (recordOfKey dependee.key)
@@ -114,21 +118,34 @@ in
             { _record = "depends-on"; }
           ];
 
+        # Create a closure of dependencies for a given service.
+        # This isn't strictly necessary because the syndicate-server
+        # does this internally. By doing it in Nix we get a static
+        # description of the dependency graph which can be analysed
+        # before booting.
         serviceClosure =
           root:
           map (getAttr "node") (
+            # Encapsulate a relation with a unique key
+            # for insertion into the closure set.
             let idx = node: {
               inherit node;
               key = node.key ++ node.dependee.key ++ [ node.dependee.state ];
             }; in
+            # The evaluator provides builtin.genericClosure
+            # for these sorts of tasks.
             genericClosure {
               startSet = [ (idx root) ];
+              # Collect all relations for each
+              # node inserted in the set.
               operator = { node, ... }:
                 config.synit.depends
                 |> filter ({ key, ... }: key == node.dependee.key)
                 |> map idx;
             });
 
+        # Generate a file that asserts the dependency graph
+        # for a given service.
         writeRequires =
           topReq:
           let
@@ -140,27 +157,38 @@ in
             );
           };
 
+        # Collect the services that system milestone depends on.
         systemRequires = filter ({ key, ... }: key == rootDependerKey) config.synit.depends;
       in
+      # Each immediate dependency of the system milestone
+      # has a file that asserts its dependency graph.
+      # The intention is that if this files is removed
+      # at runtime then its exclusive dependencies are
+      # retracted but the graphs of other services are
+      # unaffected.
       mkMerge (
         (map writeRequires systemRequires)
-        ++ [
-          {
-            "syndicate/services/require-nixos.pr".source = writePreservesFile "require-nixos.pr" [
-              [
-                (recordOfKey rootDependerKey)
-                { _record = "require-service"; }
-              ]
-            ];
-          }
-        ]
+        ++ [ {
+          # The system milestone is a tautological dependency.
+          "syndicate/services/require-nixos.pr".source = writePreservesFile "require-nixos.pr" [
+            [
+              (recordOfKey rootDependerKey)
+              { _record = "require-service"; }
+            ]
+          ];
+        }]
       );
 
-    # Create the initial system requirements.
+    # Declare the initial milestones.
+    # If no further relations are declared for
+    # these then they will be immediately
+    # asserted as ready.
     synit.milestones.system.requires = map
       (name: { key = [ "milestone" name ]; })
       [ "network" "login" ];
 
+    # Accumulate all milestones into the top-level
+    # collection of relations.
     synit.depends = foldl' (
       depends:
       { name, value }:

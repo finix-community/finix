@@ -29,6 +29,8 @@ let
   # Sugar for creating records with < >.
   inherit (preserves) __findFile;
 
+  recordOfKey = key: builtins.tail key ++ [ { _record = builtins.head key; } ];
+
   writeExeclineScript = pkgs.execline.passthru.writeScript;
 
   # Create a logging wrapper for some arguments and a directory.
@@ -275,14 +277,19 @@ in
   config = mkIfSynit {
 
     environment.etc = listToAttrs (
-      map (name: {
+      # Put files that describe core-level daemons into the core directory.
+      # See ./static/boot/020-load-core-layer.pr
+      map (name: let daemon = cfg.core.daemons.${name}; daeRec = <daemon> [ name ]; in {
         name = "syndicate/core/daemon-${name}.pr";
         value.source = writePreservesFile "daemon-${name}.pr" ([
-          (<require-service> [ (<daemon> [ name ]) ])
-          (daemonToPreserves name cfg.core.daemons.${name})
-        ]);
+          (<require-service> [ daeRec ])
+          (daemonToPreserves name daemon)
+        ] ++ map ({ key, state }: <depends-on> [ daeRec (<service-state> [ (recordOfKey key) state ]) ]) daemon.requires);
       }) (attrNames cfg.core.daemons)
-      ++ map (name: {
+      ++
+      # Put files that describe service-level daemons into the service directory.
+      # See ./static/boot/030-load-services.pr
+      map (name: {
         name = "syndicate/services/daemon-${name}.pr";
         value.source = writePreservesFile "daemon-${name}.pr" [
           (daemonToPreserves name cfg.daemons.${name})
@@ -290,6 +297,8 @@ in
       }) (attrNames cfg.daemons)
     );
 
+    # Accumulate `requires` and `provides` from all daemons
+    # into a top-level collection.
     synit.depends = foldl' (depends: name:
       let
         daemon = cfg.daemons.${name};

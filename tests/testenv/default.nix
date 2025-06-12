@@ -3,9 +3,7 @@
     overlays = [ (import ../../overlays/default.nix) ];
   }
 }:
-{
-  inherit (import ./tcl {
-    inherit (pkgs) lib;
-    inherit pkgs;
-  }) mkTest;
+import ./tcl {
+  inherit (pkgs) lib;
+  inherit pkgs;
 }
