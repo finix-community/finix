@@ -24,7 +24,7 @@ in
     finit.services.ddccontrol = {
       description = "control monitor parameters, like brightness, contrast, and other...";
       command = "${pkgs.ddccontrol}/libexec/ddccontrol/ddccontrol_service";
-			conditions = [ "service/dbus/ready" ];
+      conditions = [ "service/dbus/ready" ];
     };
   };
 }
