@@ -14,7 +14,7 @@ let
         else throw "unsupported type ${builtins.typeOf v}: ${(lib.generators.toPretty {}) v}";
 
       base = pkgs.formats.keyValue {
-        mkKeyValue = lib.generators.mkKeyValueDefault { inherit mkValueString; } " ";
+        mkKeyValue = k: v: "${k} ${mkValueString v}";
       };
       # OpenSSH is very inconsistent with options that can take multiple values.
       # For some of them, they can simply appear multiple times and are appended, for others the
@@ -50,6 +50,22 @@ in
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.openssh;
+    };
+
+    sftp = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+      };
+
+      executable = lib.mkOption {
+        type = lib.types.str;
+      };
+
+      flags = lib.mkOption {
+        type = with lib.types; listOf str;
+        default = [ ];
+      };
     };
 
     settings = lib.mkOption {
@@ -192,10 +208,12 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    services.openssh.sftp.executable = lib.mkDefault "${cfg.package}/libexec/sftp-server";
     services.openssh.settings = {
       # TODO: fixup host key generation
       HostKey = [ "/var/lib/sshd/ssh_host_ed25519_key" ];
-      # Subsystem sftp ${pkgs.openssh}/libexec/sftp-server
+
+      "Subsystem sftp" = lib.mkIf cfg.sftp.enable "${cfg.sftp.executable} ${lib.concatStringsSep " " cfg.sftp.flags}";
     };
 
     finit.tasks.ssh-keygen = {
