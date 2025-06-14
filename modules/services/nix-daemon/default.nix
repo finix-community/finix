@@ -24,15 +24,13 @@ in
 
     nrBuildUsers = lib.mkOption {
       type = lib.types.int;
+      default = 8;
       description = ''
         Number of `nixbld` user accounts created to
         perform secure concurrent builds.  If you receive an error
-        message saying that “all build users are currently in use”,
+        message saying that "all build users are currently in use",
         you should increase this value.
       '';
-
-      # TODO: set this based on nix.settings
-      default = 8;
     };
   };
 
@@ -74,7 +72,7 @@ in
         group = "nixbld";
         extraGroups = [ "nixbld" ];
       };
-    }) (lib.range 1 32));
+    }) (lib.range 1 cfg.nrBuildUsers));
 
     users.groups = {
       nixbld.gid = config.ids.gids.nixbld;
