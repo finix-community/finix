@@ -3,6 +3,7 @@
   fetchFromGitea,
   buildNimSbom,
   tcl,
+  enableDebug ? false
 }:
 
 buildNimSbom {
@@ -22,6 +23,11 @@ buildNimSbom {
   buildInputs = [
     tcl
   ];
+
+  postPatch = lib.optionalString enableDebug ''
+    substituteInPlace src/syndicate.tcl \
+      --replace-fail ' # puts stderr ' ' puts stderr '
+  '';
 
   installPhase = ''
     runHook preInstall
