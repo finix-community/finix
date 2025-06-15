@@ -18,6 +18,8 @@ final: prev: {
     ];
   });
 
+  syndicate-server = final.callPackage ../pkgs/syndicate-server { };
+
   synit-pid1 = final.callPackage ../pkgs/synit-pid1 { };
 
   synit-service = final.callPackage ../pkgs/synit-service { };
