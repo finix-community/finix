@@ -268,6 +268,25 @@ in
       "d /var/lib/sshd 0755"
     ];
 
+    synit.daemons.sshd = {
+      argv = let
+        keygenScript = pkgs.execline.passthru.writeScript "ssh-keygen.el" "-s0" ''
+          foreground { s6-mkdir -m 0755 -p /var/lib/sshd }
+          foreground {
+            if -n { eltest -s "/var/lib/sshd/ssh_host_ed25519_key" }
+            ssh-keygen -t ed25519 -f "/var/lib/sshd/ssh_host_ed25519_key" -N ""
+          }
+          $@
+        '';
+      in [
+        keygenScript
+        "${cfg.package}/bin/sshd" "-D" "-e" "-f" "/etc/ssh/sshd_config"
+      ];
+      path = [ cfg.package ];
+      provides = [ [ "milestone" "login" ] ];
+      requires = [ { key = [ "milestone" "network" ]; } ];
+    };
+
     users.users.sshd = {
       group = "sshd";
       description = "SSH privilege separation user";
