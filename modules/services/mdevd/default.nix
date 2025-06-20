@@ -35,26 +35,28 @@ let
       add {
         # Udev compatibility hack.
         foreground { mkdir -p /dev/disk/by-id }
-        foreground { ln -s ../../$MDEV /dev/disk/by-id/$MDEV }
+        foreground { ln -sf ../../$MDEV /dev/disk/by-id/$MDEV }
 
         forbacktickx -pE LINE { blkid --output export /dev/$MDEV }
         case -N $LINE {
           ^LABEL=(.*) {
             foreground { mkdir -p /dev/disk/by-label }
-            ln -s ../../$MDEV /dev/disk/by-label/$1
+            importas -S $1
+            ln -sf ../../$MDEV /dev/disk/by-label/$1
           }
-           ^UUID=(.*) {
+          ^UUID=(.*) {
             foreground { mkdir -p /dev/disk/by-uuid }
-             ln -s ../../$MDEV /dev/disk/by-uuid/$1
-           }
+            importas -S $1
+            ln -sf ../../$MDEV /dev/disk/by-uuid/$1
+          }
         }
       }
       remove {
         foreground { rm -f /dev/disk/by-id/$MDEV }
         forbacktickx -pE LINE { blkid --output export /dev/$MDEV }
         case -N $LINE {
-          ^LABEL=(.*) { rm -f /dev/disk/by-label/$1 }
-           ^UUID=(.*) { rm -f /dev/disk/by-uuid/$1  }
+          ^LABEL=(.*) { importas -S $1 rm -f /dev/disk/by-label/$1 }
+           ^UUID=(.*) { importas -S $1 rm -f /dev/disk/by-uuid/$1  }
         }
       }
     }
