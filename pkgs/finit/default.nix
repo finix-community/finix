@@ -11,15 +11,15 @@
   procps,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation {
   pname = "finit";
-  version = "4.12";
+  version = "4.13-alpha";
 
   src = fetchFromGitHub {
     owner = "troglobit";
     repo = "finit";
-    rev = version;
-    hash = "sha256-QEKnXINXh6SbeJyKdAl75S4gooTVwZ3zKk4Ota0Dxhc=";
+    rev = "8be7a462e0e8cae4afabe1482dd03f8aba39c59d";
+    hash = "sha256-RsoXcEmhro0YigYXF/jO5yG6YMBtX2ePekUX8e7rFII=";
   };
 
   postPatch = ''
