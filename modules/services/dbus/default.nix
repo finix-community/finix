@@ -103,5 +103,12 @@ in
 
       pre = pkgs.writeShellScript "dbus-pre.sh" "${cfg.package}/bin/dbus-uuidgen --ensure";
     };
+
+    # TODO: add finit.services.reloadTriggers option
+    environment.etc."finit.d/dbus.conf".text = lib.mkAfter ''
+
+      # reload trigger
+      # ${config.environment.etc."dbus-1".source}
+    '';
   };
 }
