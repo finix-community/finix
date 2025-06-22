@@ -27,17 +27,30 @@ in
 
   config = {
     # TODO: improve finit so tmpfiles can cleanup aged files
-    # TODO: improve finit so it can call tmpfiles as a service once in a while?
 
-    environment.etc = lib.mapAttrs' (k: v: {
-      name = "tmpfiles.d/${k}.conf";
-      value.text = ''
-        # This file is created automatically and should not be modified.
-        # Please change the option ‘services.tmpfiles.${k}.rules’ instead.
+    environment.etc =
+      let
+        etcTree = lib.mapAttrs' (k: v: {
+          name = "tmpfiles.d/${k}.conf";
+          value.text = ''
+            # This file is created automatically and should not be modified.
+            # Please change the option ‘services.tmpfiles.${k}.rules’ instead.
 
-        ${lib.concatStringsSep "\n" v.rules}
-      '';
-    }) (lib.filterAttrs (_: v: v.enable) config.services.tmpfiles);
+            ${lib.concatStringsSep "\n" v.rules}
+          '';
+        }) (lib.filterAttrs (_: v: v.enable) config.services.tmpfiles);
+
+        reload = {
+          "finit.d/tmpfiles-setup.conf".text = lib.mkAfter ''
+
+            # force a restart on configuration change
+            ${lib.concatMapAttrsStringSep "\n" (k: v: "# " + config.environment.etc."tmpfiles.d/${k}.conf".source) (lib.filterAttrs (_: v: v.enable) config.services.tmpfiles)}
+          '';
+        };
+      in
+        lib.mkMerge [ etcTree reload ];
+
+    finit.tasks.tmpfiles-setup.command = "${config.finit.package}/libexec/finit/tmpfiles --create";
 
     # TODO: run once a day
     # providers.scheduler.tasks = {
