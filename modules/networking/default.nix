@@ -24,6 +24,11 @@ in
   };
 
   config = {
+    boot.kernel.sysctl = {
+      # allow all users to do ICMP echo requests (ping)
+      "net.ipv4.ping_group_range" = lib.mkDefault "0 2147483647";
+    };
+
     networking.hosts = {
       localhost = [ "127.0.0.1" ];
       ${config.networking.hostName} = [ "127.0.0.2" ];
