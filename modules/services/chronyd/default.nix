@@ -12,6 +12,13 @@ in
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.chrony;
+
+      apply = package: if cfg.debug then package.overrideAttrs (o: { configureFlags = o.configureFlags ++ [ "--enable-debug" ]; }) else package;
+    };
+
+    debug = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
     };
 
     configFile = lib.mkOption {
@@ -38,8 +45,8 @@ in
     finit.services.chronyd = {
       description = "chrony ntp daemon";
       conditions = [ "service/syslogd/ready" ];
-      command = "${cfg.package}/bin/chronyd -n -u chrony -f ${cfg.configFile}";
-      notify = "pid";
+      command = "${cfg.package}/bin/chronyd -n -u chrony -f ${cfg.configFile}" + lib.optionalString cfg.debug " -L -1";
+      nohup = true;
 
       # TODO: add "if" to finit.services
       extraConfig = "if:<!int/container>";
