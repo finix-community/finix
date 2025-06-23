@@ -115,11 +115,13 @@ in
     synit.core.daemons.mdevd = {
       argv = [
         (getExe cfg.package)
+        "-D" "3"
         "-O" "2"
         "-f" (config.services.mdevd.hotplugRules
           |> lib.concatLines
           |> pkgs.writeText "mdev.conf")
       ];
+      readyOnNotify = 3;
       path = with pkgs; [ coreutils execline kmod util-linux ];
     };
 
