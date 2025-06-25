@@ -24,9 +24,36 @@
         default = [ pkgs.zfs ];
       };
     };
+
+    boot.zfs = {
+      importPools = lib.mkOption {
+        type = with lib.types; listOf str;
+        description = ''
+          List of ZFS pools to import at boot.
+          Defaults to the pools necessary for booting.
+        '';
+        example = [ "jug" "bucket" ];
+      };
+      loadKeys = lib.mkOption {
+        type = with lib.types; listOf str;
+        default = [ ];
+        description = ''
+          List of ZFS dataset names to load keys for during boot.
+        '';
+      };
+    };
   };
 
   config = lib.mkMerge [
+    {
+      boot.zfs.importPools = with builtins; config.fileSystems
+        |> attrValues
+        |> filter ({ neededForBoot, fsType, ... }: neededForBoot && fsType == "zfs")
+        |> map ({ device, ... }:
+          let pool = device |> lib.splitString "/" |> head;
+          in if pool == "" then device else pool)
+        |> lib.unique;
+    }
     (lib.mkIf config.boot.supportedFilesystems.zfs.enable {
       boot.kernelModules = [ "zfs" ];
 
@@ -36,7 +63,13 @@
     })
 
     (lib.mkIf config.boot.initrd.supportedFilesystems.zfs.enable {
-      boot.initrd.kernelModules = [ "zfs" ];
+      boot.initrd = {
+        kernelModules = [ "zfs" ];
+        fileSystemImportCommands =
+          map (name: "zpool import -f ${name}") config.boot.zfs.importPools ++
+          map (name: "zfs load-key ${name}") config.boot.zfs.loadKeys |>
+          (lib.concatStringsSep "\n");
+      };
     })
   ];
 }

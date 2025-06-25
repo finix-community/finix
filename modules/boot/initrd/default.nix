@@ -232,7 +232,7 @@ let
         throw "no device manager for coldplug events enabled"
     }
 
-    ${lib.optionalString config.boot.initrd.supportedFilesystems.zfs.enable "zpool import -a"}
+    ${cfg.fileSystemImportCommands}
 
     # mount everything needed for boot
     ${lib.concatMapStringsSep "\n" mkMount (builtins.filter (builtins.getAttr "neededForBoot") (builtins.attrValues config.fileSystems))}
@@ -387,6 +387,18 @@ in
       });
       description = ''
         Contents of the initrd.
+      '';
+    };
+
+    fileSystemImportCommands = lib.mkOption {
+      description = ''
+        Lines of shell commands that are run after coldbooting
+        the device-manager and before mounting file-systems.
+      '';
+      type = lib.types.lines;
+      default = "";
+      example = ''
+        vgimport --all
       '';
     };
 
