@@ -2,6 +2,7 @@
 
 let
   inherit (lib)
+    mkBefore
     mkEnableOption
     mkIf
     mkOption
@@ -25,7 +26,12 @@ in
 
   config = mkIf cfg.enable {
     synit.logging.logToFileSystem = false;
-    virtualisation.qemu.extraArgs = lib.optional (!cfg.graphics.enable) "-nographic";
-
+    virtualisation.qemu = {
+      extraArgs = lib.optional (!cfg.graphics.enable) "-nographic";
+      nics.eth0.args = mkBefore [
+        "user"
+        "model=virtio-net-pci"
+      ];
+    };
   };
 }

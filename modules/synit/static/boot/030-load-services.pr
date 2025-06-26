@@ -18,11 +18,15 @@ let ?basic = <* $config [<or [
 # directory.
 #
 ? <service-state <milestone core> up> [
-  let ?env = {
-    config: $basic
-    gatekeeper: $gatekeeper
-    log: $log
-  }
-  <require-service <config-watcher "/etc/syndicate/services" $env>>
-  <require-service <config-watcher "/run/etc/syndicate/services" $env>>
+  # Pass on the machine dataspace in the environment.
+  ? <machine-dataspace ?machine> [
+    let ?env = {
+      config: $basic
+      gatekeeper: $gatekeeper
+      log: $log
+      machine: $machine
+    }
+    <require-service <config-watcher "/etc/syndicate/services" $env>>
+    <require-service <config-watcher "/run/etc/syndicate/services" $env>>
+  ]
 ]

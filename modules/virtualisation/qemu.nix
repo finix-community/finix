@@ -7,6 +7,7 @@
 
 let
   inherit (lib)
+    concatStringsSep
     flatten
     literalExpression
     mapAttrs'
@@ -103,10 +104,10 @@ let
         let
           supportedSystems = [ "linux" ] ++ (lib.attrNames otherHostGuestMatrix);
         in
-        throw "Unsupported host system ${hostSystem}, supported: ${lib.concatStringsSep ", " supportedSystems}";
+        throw "Unsupported host system ${hostSystem}, supported: ${concatStringsSep ", " supportedSystems}";
       throwUnsupportedGuestSystem =
         guestMap:
-        throw "Unsupported guest system ${guestSystem} for host ${hostSystem}, supported: ${lib.concatStringsSep ", " (lib.attrNames guestMap)}";
+        throw "Unsupported guest system ${guestSystem} for host ${hostSystem}, supported: ${concatStringsSep ", " (lib.attrNames guestMap)}";
     in
     if hostStdenv.hostPlatform.isLinux then
       linuxHostGuestMatrix.${guestSystem} or "${qemuPkg}/bin/qemu-kvm"
@@ -205,6 +206,18 @@ in
         '';
       };
 
+      nics = mkOption {
+        type = types.attrsOf (types.submodule {
+          options = {
+            args = mkOption {
+              type = with types; listOf str;
+              default = [ ];
+              example = [ "model=virtio-net-pci" ];
+            };
+          };
+        });
+      };
+
       mountHostNixStore = mkOption {
         type = types.bool;
         default = !useBootLoader;
@@ -265,9 +278,10 @@ in
       ))
       ++ optionals config.testing.enable [
           "-serial" "mon:stdio"
-          "-netdev" "user,id=usernet"
-          "-device" "virtio-net-pci,netdev=usernet"
         ]
+      ++ flatten (mapAttrsToList
+        (name: { args }: [ "-nic" (concatStringsSep "," (args ++ [ "id=${name}" ])) ])
+        cfg.nics)
       ++ cfg.extraArgs;
 
     virtualisation.qemu.sharedDirectories = {

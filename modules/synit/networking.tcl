@@ -1,17 +1,24 @@
 #!/usr/bin/env -S tclsh
 
+# This script observes the assertion of
+# <network-dataspace ?network ?machine>.
+# It reconfigures the kernel IP stack from
+# observations of $network using iproute2
+# and it asserts the actual configuration
+# reported by the kernel into $machine.
+
 package require syndicate
 namespace import preserves::*
 
 # Evaluate a body when a named attribute is present.
 proc forattr {name attrs body} {
-  preserves::project -unpreserve $attrs ". $name" $name
-  if {$name != ""} $body
+  set items [preserves::project -unpreserve $attrs ". \"$name\""]
+  uplevel 1 [list foreach $name $items $body ]
 }
 
 proc projectAttr {attrs name} {
   upvar $name val
-  preserves::project -unpreserve $attrs ". $name" val
+  preserves::project -unpreserve $attrs ". \"$name\"" val
 }
 
 syndicate::spawn actor {
@@ -43,18 +50,29 @@ syndicate::spawn actor {
 
     during {<address @ifname #? @family #? @attrs #({ })>} {
       # Modify interface addresses.
-      projectAttr $attrs address
-      projectAttr $attrs prefixLength
+      projectAttr $attrs local
+      projectAttr $attrs prefixlen
 
-      set ifaddr "${address}/$prefixLength"
+      set ifaddr "${local}/$prefixlen"
       lappend cmdAdd exec ip -echo --json address add local $ifaddr dev $ifname
+
+      forattr life_time $attrs {
+        lappend cmdAdd valid_lft $life_time preferred_lft $life_time
+      }
 
       # Add address.
       catch {
         # Get information back from the kernel and assert that to the machine dataspace.
         set result [{*}$cmdAdd]
+        # Assert the address information reported by the kernel into the machine dataspace.
         foreach info [preserves::project $result /] {
           assert "<address $ifname $family $info>" [machineDataspace]
+        }
+        # Assert the route information reported by the kernel
+        # for this address into the machine dataspace.
+        set result [exec ip --json route show $ifaddr dev $ifname]
+        foreach info [preserves::project $result /] {
+          assert "<route $ifname $family $info>" [machineDataspace]
         }
       } err
       if {$err != ""} { puts stderr "failed to add address $ifaddr to $ifname: $err" }
@@ -67,16 +85,18 @@ syndicate::spawn actor {
 
     during {<route @ifname #? @family #? @attrs #({ })>} {
       # Modify routing table.
+      lappend cmdAdd exec ip --json route add
       projectAttr $attrs address
-      projectAttr $attrs prefixLength
+      projectAttr $attrs prefixlen
 
-      set prefix "$address/$prefixLength"
-      lappend cmdAdd exec ip -echo --json route add to
+      set dst "$address/$prefixlen"
+      # If no address or prefix is present then assume the "default".
+      if {$dst eq "/"} { set dst default } else { lappend cmdAdd to }
 
       forattr type $attrs { lappend cmdAdd $type }
-      lappend cmdAdd $prefix dev $ifname
+      lappend cmdAdd $dst dev $ifname
 
-      forattr via $attrs { lappend cmdAdd via $via }
+      forattr gateway $attrs { lappend cmdAdd via $gateway }
 
       foreach options [preserves::project $attrs {. options}] {
         foreach key [preserves::project -unpreserve $options {.keys}] {
@@ -87,16 +107,19 @@ syndicate::spawn actor {
 
       # Add route.
       catch {
-        # Get information back from the kernel and assert that to the machine dataspace.
-        set result [{*}$cmdAdd]
+        {*}$cmdAdd
+        # Get route information back from the kernel
+        # and assert that to the machine dataspace.
+        set cmdShow [lreplace $cmdAdd 4 4 show]
+        set result [{*}$cmdShow]
         foreach info [preserves::project $result /] {
           assert "<route $ifname $family $info>" [machineDataspace]
         }
       } err
-      if {$err != ""} { puts stderr "failed to add route $prefix to $ifname: $err" }
+      if {$err != ""} { puts stderr "failed to add route $dst to $ifname: $err" }
 
       # Delete route.
-      set cmdDel [lreplace $cmdAdd 5 5 delete]
+      set cmdDel [lreplace $cmdAdd 3 3 delete]
       onStop [list catch $cmdDel]
 
     } $networkDataspace

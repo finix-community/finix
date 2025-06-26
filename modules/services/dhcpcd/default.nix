@@ -187,7 +187,21 @@ in
         $@
       '';
     in {
-      argv = [ script (lib.getExe cfg.package) "--config" cfg.configFile ];
+      argv = [
+        script
+        (lib.getExe cfg.package)
+        "--nobackground"
+        "--config" cfg.configFile
+
+        # Disable dhcpcd from applying configuation
+        # and use a hooks script that communicates
+        # with ../../synit/networking.tcl instead.
+        "--noconfigure"
+        "--script" (pkgs.writeScript "synit-dhcp-hook.tcl" ''
+            #! ${pkgs.tcl}/bin/tclsh
+            ${builtins.readFile ./synit-dhcp-hook.tcl}
+          '')
+      ];
       provides = [ [ "milestone" "network" ] ];
       restart = "on-error";
       logging.enable = false; # Logs to syslog unfortunately.

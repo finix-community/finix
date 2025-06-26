@@ -97,6 +97,8 @@ in
       # Script to run in the Expect interpreter.
       tclScript,
 
+      runAttrs ? { },
+
       # Timeout for expect commands.
       expectTimeout ? 10,
       ...
@@ -123,7 +125,7 @@ in
           fail "test script fell thru"
         '';
       };
-      run = pkgs.runCommand "test-${name}.log" { } script;
+      run = pkgs.runCommand "test-${name}.log" runAttrs script;
     in run // {
       nodes = nodes';
       inherit script;

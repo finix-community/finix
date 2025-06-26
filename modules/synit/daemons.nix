@@ -3,7 +3,9 @@
 let
   inherit (lib)
     attrNames
+    concatStringsSep
     escapeShellArgs
+    flatten
     foldl'
     listToAttrs
     literalMD
@@ -12,6 +14,7 @@ let
     mkEnableOption
     mkIf
     mkOption
+    optional
     optionals
     optionalAttrs
     types
@@ -133,6 +136,16 @@ let
           type = types.bool;
           default = true;
         };
+        readyOnNotify = mkOption {
+          description = ''
+            When non-null enable s6 readiness notification for
+            this daemon using the specified file-descriptor.
+            Setting a file-descriptor here disables readyOnStart.
+          '';
+          type = with types; nullOr int;
+          default = null;
+          example = 3;
+        };
         restart = mkOption {
           description = ''
             Daemon restart policy.
@@ -222,32 +235,62 @@ let
     }
   );
 
+  # A hack for translating s6 notifications to Syndicate protocol.
+  # TODO: This adds an additional process that consumes resources
+  # for the lifetime of the service. If this overhead is worthwhile then
+  # s6 notification support should be added to the syndicate server
+  # instead.
+  readyOnNotifyScript = writeExeclineScript "readyOnNotify.el" "-s1" ''
+    piperw 3 4
+    background {
+      fdclose 4
+      readyonnotify
+    }
+    fdclose 0
+    fdclose 1
+    fdmove -c 1 2
+    fdmove $1 4
+    $@
+  '';
+
+  # Produce a list of Syndicate assertions from a daemon declaration.
   daemonToPreserves =
     name: attrs:
-    <daemon> [
+    let hasReadyOnNotify = attrs.readyOnNotify != null; in [
+    (<daemon> [
       name
       {
         argv = builtins.toJSON (
           optionals attrs.logging.enable (
-            makeLogger attrs.logging.args attrs.logging.dir
-            ++ optionals (attrs.protocol == "none") [ "fdmove" "-c" "1" "2" ])
-          ++ attrs.argv
+            makeLogger attrs.logging.args attrs.logging.dir) ++
+          optionals hasReadyOnNotify [ readyOnNotifyScript (toString attrs.readyOnNotify) ] ++
+          attrs.argv
         );
         env =
-          let env' = optionalAttrs (attrs.env != null) attrs.env;
+          let
+            env' = optionalAttrs (attrs.env != null) attrs.env;
           in mapAttrs (_: v: if v == null then false else builtins.toJSON v) (
             env' // {
-              PATH = env'.PATH or "${config.security.wrapperDir}:${makeBinPath attrs.path}";
+              PATH = concatStringsSep ":" (flatten [
+                (env'.PATH or [])
+                config.security.wrapperDir
+                (makeBinPath (attrs.path ++ optional hasReadyOnNotify pkgs.syndicate_utils))
+              ]);
             });
-        inherit (attrs)
-          dir
-          clearEnv
-          readyOnStart
-          restart
-          protocol
-          ;
+        readyOnStart = attrs.readyOnStart && !hasReadyOnNotify;
+        protocol =
+          if hasReadyOnNotify
+          then assert attrs.protocol == "none"; "application/syndicate"
+          else attrs.protocol;
+        inherit (attrs) dir clearEnv restart;
       }
-    ];
+    ])] ++ optional hasReadyOnNotify ''
+      ? <service-object <daemon ${name}> ?obj> [
+        $obj += <Observe <bind <=_>> <* $config [
+          <rewrite [?s] <service-state <daemon ${name}> $s>>
+        ]>>
+      ]
+    '';
 
 in
 {
@@ -283,17 +326,16 @@ in
         name = "syndicate/core/daemon-${name}.pr";
         value.source = writePreservesFile "daemon-${name}.pr" ([
           (<require-service> [ daeRec ])
-          (daemonToPreserves name daemon)
-        ] ++ map ({ key, state }: <depends-on> [ daeRec (<service-state> [ (recordOfKey key) state ]) ]) daemon.requires);
+       ] ++ (daemonToPreserves name daemon)
+         ++ map ({ key, state }: <depends-on> [ daeRec (<service-state> [ (recordOfKey key) state ]) ]) daemon.requires);
       }) (attrNames cfg.core.daemons)
       ++
       # Put files that describe service-level daemons into the service directory.
       # See ./static/boot/030-load-services.pr
       map (name: {
         name = "syndicate/services/daemon-${name}.pr";
-        value.source = writePreservesFile "daemon-${name}.pr" [
-          (daemonToPreserves name cfg.daemons.${name})
-        ];
+        value.source = writePreservesFile "daemon-${name}.pr"
+          (daemonToPreserves name cfg.daemons.${name});
       }) (attrNames cfg.daemons)
     );
 

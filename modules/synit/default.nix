@@ -9,6 +9,7 @@ let
     mkPackageOption
     mkIf
     mkOption
+    optionals
     ;
 
   writeExeclineScript = pkgs.execline.passthru.writeScript;
@@ -65,20 +66,16 @@ in
       };
       logger = {
         deps = [ "synit-pid1" ];
-        text = mkDefault (if cfg.logging.logToFileSystem then
-          let
-            logDir = "/var/log/synit";
-          in
-          toString (
-            writeExeclineScript "logger.el" "-s1" ''
-              if { ${lib.getExe' pkgs.s6-portable-utils "s6-mkdir"} -p "${logDir}" }
+        text = mkDefault (optionals cfg.logging.logToFileSystem [
+            (writeExeclineScript "logger.el" "-s1" ''
+              if { ${lib.getExe' pkgs.s6-portable-utils "s6-mkdir"} -p $1 }
               fdswap 1 2
-              pipeline -w { ${lib.getExe' pkgs.s6 "s6-log"} "${logDir}" }
+              pipeline -w { ${lib.getExe' pkgs.s6 "s6-log"} $1 }
               fdswap 1 2
               $@
-            ''
-          )
-        else []);
+            '')
+          "/var/log/synit"
+        ]);
       };
       syndicate-server = {
         deps = [ "logger" ];

@@ -11,8 +11,9 @@ testenv.mkTest {
     machine expect {synit_pid1: Awaiting signals...}
     machine expect {syndicate_server: inferior server instance}
     machine expect {<milestone system-machine>*{state: up}}
-    machine expect {eth0: carrier acquired}
-    machine expect {eth0: adding default route via 10.0.2.2}
+    machine expect {eth0: soliciting a DHCP lease}
+    set timeout 20
+    machine expect {*"machine"*+++*route eth0 ipv4*"10.0.2.0/24"*}
     success
   '';
 }
