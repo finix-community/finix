@@ -21,6 +21,16 @@ let
 
   cfg = config.services.mdevd;
 
+  # Rules for the special standalone devices to be created at boot.
+  specialRules = ''
+    null      0:0 666
+    zero      0:0 666
+    full      0:0 666
+    random    0:0 444
+    urandom   0:0 444
+    hwrandom  0:0 444
+  '';
+
   # Insert modules for devices.
   modaliasRule = "$MODALIAS=.* 0:0 660 +importas m MODALIAS modprobe --quiet $m";
 
@@ -96,6 +106,7 @@ in
         devDiskRule
       ];
       coldplugRules = [
+        specialRules
         modaliasRule
         devDiskRule
       ];
@@ -125,6 +136,9 @@ in
       ];
       readyOnNotify = 3;
       path = with pkgs; [ coreutils execline kmod util-linux ];
+      # Upstream claims mdevd is terse enough to run
+      # without a dedicated logging destination.
+      logging.enable = false;
     };
 
     # Hold core back until another coldplug completes.
@@ -132,6 +146,7 @@ in
       argv = [ (getExe' cfg.package "mdevd-coldplug") "-O" "2" ];
       restart = "on-error";
       requires = [ { key = [ "daemon" "mdevd" ]; } ];
+      logging.enable = false;
     };
   };
 }
