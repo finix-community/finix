@@ -38,6 +38,10 @@ case $reason {
                <route @ifname ipv4 { "gateway": "@gateway" } >
              }
      }
+     EXPIRE {
+         # Retract the BOUND assertions.
+         file delete "$assDir/BOUND.pr"
+     }
      default {
        puts stderr "unhandled dhcpcd event «$reason»"
      }
