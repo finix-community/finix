@@ -16,7 +16,7 @@ in
         netScript = pkgs.execline.passthru.writeScript "mdevd-net.el" [] ''
           importas -S ACTION
           importas -S INTERFACE
-          define ASSERTION /run/etc/syndicate/machine/interface-''${INTERFACE}.pr
+          define ASSERTION /run/synit/config/machine/interface-''${INTERFACE}.pr
           case $ACTION {
             remove { rm -f $ASSERTION }
           }
@@ -41,5 +41,6 @@ in
         path = [ pkgs.iproute2 ];
         protocol = "text/syndicate";
       };
+      synit.profile.config = [ (builtins.readFile ./networking.pr) ];
   };
 }

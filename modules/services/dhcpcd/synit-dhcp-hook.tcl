@@ -4,7 +4,7 @@
 
 set reason $env(reason)
 set iface $env(interface)
-set assDir "/run/etc/syndicate/network/$iface"
+set assDir "/run/synit/config/network/$iface"
 set assFile "$assDir/$reason.pr"
 file mkdir $assDir
 

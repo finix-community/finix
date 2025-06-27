@@ -5,7 +5,7 @@ let
   sycl = pkgs.tclPackages.sycl;
 in
 testenv.mkTest {
-  name = "synit";
+  name = "synit-control";
 
   nodes.machine = { lib, ... }: {
     boot.serviceManager = "synit";
@@ -15,13 +15,13 @@ testenv.mkTest {
       "hostfwd=tcp:127.0.0.1:2424-:24"
     ];
 
-    environment.etc."/syndicate/services/config-tcp-relay.pr".text = ''
+    synit.profile.config = [''
       # Add a listener that exposes the synit service dataspace to any
       # IP address present on eth0.
       $machine ? <address eth0 _ { "local": ?addr }> [
         $config += <require-service  <relay-listener <tcp $addr 24> $config>>
       ]
-    '';
+    ''];
   };
 
   runAttrs = {
@@ -29,7 +29,7 @@ testenv.mkTest {
     TCLLIBPATH = [ "${sycl}/lib/${sycl.name}" ];
   };
 
-  tclScript = ''
+  tclScript = { nodes }: ''
     package require syndicate
 
     machine spawn
@@ -48,7 +48,7 @@ testenv.mkTest {
           onAssert {<service-state <milestone @milestone #?> up>} {
             puts stderr "milestone is up: $milestone"
           } $guest
-          onAssert {<service-state <milestone system-machine> up>} {
+          onAssert {<service-state <milestone "${nodes.machine.config.synit.profile.name}"> up>} {
             # Test complete.
             success
           } $guest

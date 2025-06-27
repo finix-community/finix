@@ -1,0 +1,145 @@
+# Initial configuration for the syndicate-server acting as the Synit system bus.
+
+# Sending <exec/restart SOMECOMMAND RESTARTPOLICY> causes the command to be run.
+#
+?? <exec/restart ?argv ?restartPolicy> [
+  let ?id = timestamp
+  let ?facet = facet
+  let ?d = <temporary-exec $id $argv>
+  <run-service <daemon $d>>
+  <daemon $d {
+    argv: $argv,
+    readyOnStart: #f,
+    restart: $restartPolicy,
+  }>
+  ? <service-state <daemon $d> complete> [$facet ! stop]
+  ? <service-state <daemon $d> failed>   [$facet ! stop]
+]
+
+# If the restart policy is not specified, it is defaulted to `on-error`.
+#
+?? <exec ?argv> ! <exec/restart $argv on-error>
+
+
+# Create the directory that additional configuration is loaded from.
+#
+<exec "s6-mkdir -p /run/synit/config">
+
+
+# Define the mechanics of milestone services.
+#
+# To "run" a milestone service,
+#  - assert that it is both started and ready
+#  - that's it!
+#
+? <run-service <milestone ?m>> [
+  <service-state <milestone $m> started>
+  <service-state <milestone $m> ready>
+  $log ! <log "-" { service: <milestone $m> state: up }>
+  ?- <log "-" { service: <milestone $m> state: down }>
+]
+
+# To the usual suite of service states we add `up`, meaning "either `ready` or `complete`".
+#
+? <service-state ?x ready> <service-state $x up>
+? <service-state ?x complete> <service-state $x up>
+
+
+# The machine dataspace contains the active extensional configuration of the system.
+#
+let ?machineDataspace = dataspace
+$machineDataspace ? ?ass [
+  $log ! <log "-" { line: "machine" |+++|: $ass }>
+  ?- $log ! <log "-" { line: "machine" |---|: $ass }>
+]
+<exec "s6-mkdir /run/synit/config/machine">
+<run-service <config-watcher "/run/synit/config/machine" {
+  config: $machineDataspace
+  log: $log
+}>>
+
+
+# The network dataspace contains intentional configuration.
+#
+let ?networkDataspace = dataspace
+$networkDataspace ? ?x [
+  $log ! <log "-" { line: "network" |+++|: $x }>
+  ?- $log ! <log "-" { line: "network" |---|: $x }>
+]
+<run-service <config-watcher "/run/synit/config/network" {
+  config: $networkDataspace
+  log: $log
+}>>
+
+
+# The core dataspace contains daemons that are required by and are
+# presistent across profile transitions.
+
+# Attenuate `$config` by rewriting plain `require-service` assertions to `require-core-service`
+# assertions. Allow all other assertions through.
+#
+let ?coreConfig = <* $config [<or [
+  <rewrite <require-service ?s> <require-core-service $s>>
+  <accept _>
+]>]>
+
+# Give meaning to `require-core-service`: it is an ordinary `require-service`, plus a
+# declaration that the `core` milestone depends on the service.
+#
+? <require-core-service ?s> [
+  <depends-on <milestone core> <service-state $s up>>
+  <require-service $s>
+]
+
+# Load config in the `core` directory, using the wrapped `config` so that all plain services
+# required are changed to be *core* services.
+#
+<exec "s6-mkdir -p /etc/syndicate/core">
+<require-core-service <config-watcher "/etc/syndicate/core" {
+  config: $coreConfig
+  gatekeeper: $gatekeeper
+  log: $log
+  machine: $machineDataspace
+  network: $networkDataspace
+}>>
+
+# Load the system profile when the core configuration is complete.
+#
+<exec "s6-mkdir /run/synit/config/profile">
+let ?profileWatcher = <config-watcher "/run/synit/config/profile" {
+  config: $config
+  gatekeeper: $gatekeeper
+  log: $log
+  machine: $machineDataspace
+  network: $networkDataspace
+}>
+<depends-on $profileWatcher <service-state <milestone core> up>>
+<require-service $profileWatcher>
+
+# Logic for loading Synit configuration profiles.
+#
+? <synit-profile ?name load ?path> [
+  let ?profileConfig = <* $config [ <or [
+    <rewrite <require-service ?s> <synit-profile $name require-service $s> >
+    <accept _>
+  ]> ]>
+  <require-service <config-watcher $path {
+    config: $profileConfig
+    gatekeeper: $gatekeeper
+    log: $log
+    machine: $machineDataspace
+    network: $networkDataspace
+  }>>
+]
+
+# Profile activation.
+? <synit-profile ?name activate> [
+  $log ! <log "synit-profile activate" { line: $name }>
+  <depends-on <milestone $name> <service-state <milestone core> up>>
+  <require-service <milestone $name>>
+  ? <synit-profile $name require-service ?s> [
+    <depends-on <milestone $name> <service-state $s up>>
+    <depends-on $s <service-state <milestone core> up>>
+    <require-service $s>
+  ]
+]

@@ -1,0 +1,9 @@
+# When the network-configurator daemon is ready
+# pass it the network and machine dataspaces.
+? <service-object <daemon network-configurator> ?obj> [
+  # The configurator can only observe $network and
+  # only assert <address> or <route> into $machine.
+  $obj += <network-dataspace
+    <* $network [ <reject <not <rec Observe>>> ]>
+    <* $machine [ <reject <and <not<rec address>> <not<rec route>>>> ]>>
+]

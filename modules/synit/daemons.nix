@@ -3,6 +3,7 @@
 let
   inherit (lib)
     attrNames
+    concatMap
     concatStringsSep
     escapeShellArgs
     flatten
@@ -257,6 +258,7 @@ let
   daemonToPreserves =
     name: attrs:
     let hasReadyOnNotify = attrs.readyOnNotify != null; in [
+    (<require-service> [ (<daemon> [ name ]) ])
     (<daemon> [
       name
       {
@@ -324,19 +326,12 @@ in
       # See ./static/boot/020-load-core-layer.pr
       map (name: let daemon = cfg.core.daemons.${name}; daeRec = <daemon> [ name ]; in {
         name = "syndicate/core/daemon-${name}.pr";
-        value.source = writePreservesFile "daemon-${name}.pr" ([
-          (<require-service> [ daeRec ])
-       ] ++ (daemonToPreserves name daemon)
-         ++ map ({ key, state }: <depends-on> [ daeRec (<service-state> [ (recordOfKey key) state ]) ]) daemon.requires);
+        value.source = writePreservesFile "daemon-${name}.pr" (
+          (daemonToPreserves name daemon)
+          ++ map
+            ({ key, state }: <depends-on> [ daeRec (<service-state> [ (recordOfKey key) state ]) ])
+            daemon.requires);
       }) (attrNames cfg.core.daemons)
-      ++
-      # Put files that describe service-level daemons into the service directory.
-      # See ./static/boot/030-load-services.pr
-      map (name: {
-        name = "syndicate/services/daemon-${name}.pr";
-        value.source = writePreservesFile "daemon-${name}.pr"
-          (daemonToPreserves name cfg.daemons.${name});
-      }) (attrNames cfg.daemons)
     );
 
     # Accumulate `requires` and `provides` from all daemons
@@ -351,6 +346,8 @@ in
       ++ map (dependee: { inherit key dependee; }) daemon.requires
     ) [ ] (attrNames cfg.daemons);
 
+    synit.profile.config = cfg.daemons
+      |> attrNames |> concatMap (name: daemonToPreserves name cfg.daemons.${name});
   };
 
   meta = {
