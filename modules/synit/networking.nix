@@ -11,7 +11,9 @@ in
 
     # Collect information on network devices when triggered
     # by uevent and assert it into the machine dataspace.
-    synit.core.daemons.mdevd.path = with pkgs; [ iproute2 jq ];
+    synit.core.daemons.mdevd = mkIf
+      config.services.mdevd.enable
+      { path = with pkgs; [ iproute2 jq ]; };
     services.mdevd.hotplugRules = let
         netScript = pkgs.execline.passthru.writeScript "mdevd-net.el" [] ''
           importas -S ACTION
@@ -34,13 +36,16 @@ in
     # the machine dataspaces.
     # See ./static/core/network-config.pr for the routing
     # of assertions.
-    synit.core.daemons.network-configurator =
+    synit.daemons.network-configurator =
       let inherit (pkgs.tclPackages) tcl sycl; in {
         argv = [ (getExe' tcl "tclsh") ./networking.tcl ];
         env.TCLLIBPATH = "${sycl}/lib/${sycl.name}";
         path = [ pkgs.iproute2 ];
         protocol = "text/syndicate";
+        provides = [ [ "milestone" "network" ] ];
+        logging.enable = false; # Errors only.
+        # TODO: disable readyOnStart.
       };
-      synit.profile.config = [ (builtins.readFile ./networking.pr) ];
+    synit.profile.config = [ (builtins.readFile ./networking.pr) ];
   };
 }
