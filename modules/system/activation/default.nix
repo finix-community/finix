@@ -112,7 +112,8 @@ in
 
     system.activation.scripts.specialfs = ''
       echo "specialfs stub here..."
-      mkdir -p /bin /etc /run /tmp /usr /var
+      mkdir -p /bin /etc /run /tmp /usr /var/{cache,db,empty,lib,log,spool}
+      ln -s -n /run/ var/run
     '';
 
     system.activation.path = with pkgs; map lib.getBin [
