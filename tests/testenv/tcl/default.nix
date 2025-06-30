@@ -120,7 +120,10 @@ in
 
           namespace import testNodes::*
 
-          ${tclScript}
+          ${if builtins.isFunction tclScript
+            then tclScript { nodes = nodes'; }
+            else tclScript
+          }
 
           fail "test script fell thru"
         '';
