@@ -143,3 +143,9 @@ let ?profileWatcher = <config-watcher "/run/synit/config/profile" {
     <require-service $s>
   ]
 ]
+
+
+# Self-declared service states.
+<run-service <config-watcher "/run/synit/config/state" {
+  config: <* $config [ <reject <not <rec service-state { }>>> ]>
+}>>

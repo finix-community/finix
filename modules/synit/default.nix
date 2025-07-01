@@ -114,7 +114,7 @@ in
 
     system.activation.scripts.synit-config = {
       deps = [ "specialfs" ];
-      text = "install --mode=644 --directory /run/synit/config/{core,machine,network,profile}";
+      text = "install --mode=644 --directory /run/synit/config/{core,machine,network,profile,state}";
     };
 
   };
