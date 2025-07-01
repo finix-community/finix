@@ -4,6 +4,7 @@ testenv.mkTest {
   name = "synit";
   nodes.machine = {
     boot.serviceManager = "synit";
+    security.wrapperMethod = "s6-sudo";
     services.dhcpcd.enable = true;
   };
   tclScript = ''
