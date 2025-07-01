@@ -13,15 +13,20 @@ in
     };
 
     settings = lib.mkOption {
+      description = ''
+        Contents of the greetd configuration file.
+        See the greetd(5) man page.
+      '';
       type = format.type;
-      default = { };
     };
   };
 
   config = lib.mkIf cfg.enable {
+
     services.greetd.settings = {
-      terminal.vt = 7;
+      terminal.vt = lib.mkDefault "next";
       default_session = {
+        command = lib.mkDefault "${pkgs.greetd.greetd}/bin/agreety";
         user = "greeter";
       };
     };
@@ -32,6 +37,14 @@ in
       conditions = [ "service/syslogd/ready" ] ++ lib.optionals config.services.seatd.enable [ "service/seatd/ready" ];
       command = "${pkgs.greetd.greetd}/bin/greetd --config ${configFile}";
       cgroup.name = "user";
+    };
+
+    synit.daemons.greetd = {
+      argv = [ "${pkgs.greetd.greetd}/bin/greetd" "--config" configFile ];
+      provides = [ [ "milestone" "login" ] ];
+      requires = [ { key = [ "milestone" "wrappers" ]; } ]
+        ++ lib.optional config.services.seatd.enable
+          { key = [ "daemon" "seatd" ]; state = "ready"; };
     };
 
     users.users = {
