@@ -7,3 +7,12 @@
     <* $network [ <reject <not <rec Observe>>> ]>
     <* $machine [ <reject <and <not<rec address>> <not<rec route>>>> ]>>
 ]
+
+# Re-assert addresses and routes as service-state.
+let ?reflectServiceState = <* $config [ <rewrite [?x] <service-state $x up>> ]>
+$machine += <Observe <bind <group <rec address> {}>> $reflectServiceState>
+$machine += <Observe <bind <group <rec route> {}>> $reflectServiceState>
+
+# Bring up the network milestone after acquiring an address and route.
+<depends-on <milestone network> <service-state <address> up>>
+<depends-on <milestone network> <service-state <route> up>>
