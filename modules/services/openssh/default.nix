@@ -249,7 +249,7 @@ in
         password sufficient pam_unix.so nullok yescrypt debug # unix (order 10200)
 
         # Session management.
-        session required pam_env.so conffile=/etc/pam/environment readenv=0 debug # env (order 10100)
+        session required pam_env.so readenv=0 debug # env (order 10100)
         session required pam_unix.so debug # unix (order 10200)
 
         ${lib.optionalString config.services.elogind.enable "session optional ${pkgs.elogind}/lib/security/pam_elogind.so"}
