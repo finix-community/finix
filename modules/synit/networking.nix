@@ -11,20 +11,19 @@ in
 
     # Collect information on network devices when triggered
     # by uevent and assert it into the machine dataspace.
-    synit.core.daemons.mdevd.path = with pkgs; [ iproute2 jq ];
     services.mdevd.hotplugRules = let
         netScript = pkgs.execline.passthru.writeScript "mdevd-net.el" [] ''
           importas -S ACTION
           importas -S INTERFACE
-          define ASSERTION /run/etc/syndicate/machine/interface-''${INTERFACE}.pr
+          define ASSERTION /run/synit/config/machine/interface-''${INTERFACE}.pr
           case $ACTION {
             remove { rm -f $ASSERTION }
           }
           pipeline -w {
             redirfd -w 1 $ASSERTION
-            jq --raw-output "\"<interface ''${INTERFACE} \\(.[0])>\""
+            ${pkgs.jq}/bin/jq --raw-output "\"<interface ''${INTERFACE} \\(.[0])>\""
           }
-          ip --json link show $INTERFACE
+          ${pkgs.iproute2}/bin/ip --json link show $INTERFACE
         '';
       in [ "-SUBSYSTEM=net;DEVPATH=.*/net/*;.* 0:0 600 &${netScript}" ];
 
@@ -34,12 +33,16 @@ in
     # the machine dataspaces.
     # See ./static/core/network-config.pr for the routing
     # of assertions.
-    synit.core.daemons.network-configurator =
+    synit.daemons.network-configurator =
       let inherit (pkgs.tclPackages) tcl sycl; in {
         argv = [ (getExe' tcl "tclsh") ./networking.tcl ];
         env.TCLLIBPATH = "${sycl}/lib/${sycl.name}";
         path = [ pkgs.iproute2 ];
         protocol = "text/syndicate";
+        provides = [ [ "milestone" "network" ] ];
+        logging.enable = false; # Errors only.
+        # TODO: disable readyOnStart.
       };
+    synit.profile.config = [ (builtins.readFile ./networking.pr) ];
   };
 }

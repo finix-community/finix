@@ -4,6 +4,7 @@ let
   inherit (lib)
     getExe
     getExe'
+    makeBinPath
     mkDefault
     mkEnableOption
     mkPackageOption
@@ -24,6 +25,7 @@ in
     ./filesystems.nix
     ./logging.nix
     ./networking.nix
+    ./profile.nix
   ];
 
   options.synit = {
@@ -64,13 +66,23 @@ in
         deps = [ "mallocConf" ];
         text = mkDefault [ (getExe cfg.pid1.package) ];
       };
-      logger = {
+      path = {
         deps = [ "synit-pid1" ];
+        text = mkDefault [
+          (getExe' pkgs.execline "export")
+          "PATH"
+          (makeBinPath [
+            pkgs.s6-portable-utils
+          ])
+        ];
+      };
+      logger = {
+        deps = [ "path" ];
         text = mkDefault (optionals cfg.logging.logToFileSystem [
             (writeExeclineScript "logger.el" "-s1" ''
-              if { ${lib.getExe' pkgs.s6-portable-utils "s6-mkdir"} -p $1 }
+              if { s6-mkdir -p $1 }
               fdswap 1 2
-              pipeline -w { ${lib.getExe' pkgs.s6 "s6-log"} $1 }
+              pipeline -w { ${getExe' pkgs.s6 "s6-log"} $1 }
               fdswap 1 2
               $@
             '')
@@ -87,14 +99,15 @@ in
       syndicate-server-config = {
         deps = [ "syndicate-server" ];
         text = mkDefault [
-          "--config"
-          "${./static}/boot"
+          "--config" "${./boot.pr}"
         ];
       };
     };
 
     environment.systemPackages = [
       cfg.syndicate-server.package
+      pkgs.s6-linux-utils
+      pkgs.s6-portable-utils
       pkgs.synit-service
     ];
 
@@ -103,7 +116,7 @@ in
 
     system.activation.scripts.synit-config = {
       deps = [ "specialfs" ];
-      text = "install --mode=644 --directory {,/run}/etc/syndicate/{core,system,services,machine,network}";
+      text = "install --mode=644 --directory /run/synit/config/{core,machine,network,profile,state}";
     };
 
   };

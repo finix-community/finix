@@ -3,6 +3,7 @@
 let
   inherit (lib)
     attrNames
+    concatMap
     concatStringsSep
     escapeShellArgs
     flatten
@@ -106,10 +107,11 @@ let
               path
               package
             ]);
-          default = [ pkgs.coreutils ];
-          defaultText = literalMD "{option}`config.security.wrapperDir` and GNU coreutils";
+          default = [ ];
           description = ''
             List of directories to compose into the PATH environmental variable.
+            If `env.PATH` is set then this value is ignored. Otherwise it will be
+            appended with execline and s6 packages.
           '';
         };
         protocol = mkOption {
@@ -256,33 +258,42 @@ let
   # Produce a list of Syndicate assertions from a daemon declaration.
   daemonToPreserves =
     name: attrs:
-    let hasReadyOnNotify = attrs.readyOnNotify != null; in [
+    let
+      hasReadyOnNotify = attrs.readyOnNotify != null;
+      protocol =
+        if hasReadyOnNotify
+        then assert attrs.protocol == "none"; "application/syndicate"
+        else attrs.protocol;
+    in [
+    (<require-service> [ (<daemon> [ name ]) ])
     (<daemon> [
       name
       {
         argv = builtins.toJSON (
-          optionals attrs.logging.enable (
-            makeLogger attrs.logging.args attrs.logging.dir) ++
+          # Inject logging script.
+          optionals attrs.logging.enable (makeLogger attrs.logging.args attrs.logging.dir) ++
+          # Inject notification script.
           optionals hasReadyOnNotify [ readyOnNotifyScript (toString attrs.readyOnNotify) ] ++
+          # Move stderr over stdout.
+          optionals (protocol == "none") [ "fdmove" "-c" "1" "2" ] ++
           attrs.argv
         );
         env =
-          let
-            env' = optionalAttrs (attrs.env != null) attrs.env;
+          let env' = optionalAttrs (attrs.env != null) attrs.env;
           in mapAttrs (_: v: if v == null then false else builtins.toJSON v) (
             env' // {
-              PATH = concatStringsSep ":" (flatten [
-                (env'.PATH or [])
-                config.security.wrapperDir
-                (makeBinPath (attrs.path ++ optional hasReadyOnNotify pkgs.syndicate_utils))
-              ]);
+              PATH = env'.PATH or (makeBinPath (attrs.path ++ [
+                  (dirOf config.security.wrapperDir)
+                  # TODO: merge into a symlink tree?
+                  pkgs.execline
+                  pkgs.s6
+                  pkgs.s6-linux-utils
+                  pkgs.s6-portable-utils
+                ] ++ optional hasReadyOnNotify pkgs.syndicate_utils));
             });
         readyOnStart = attrs.readyOnStart && !hasReadyOnNotify;
-        protocol =
-          if hasReadyOnNotify
-          then assert attrs.protocol == "none"; "application/syndicate"
-          else attrs.protocol;
         inherit (attrs) dir clearEnv restart;
+        inherit protocol;
       }
     ])] ++ optional hasReadyOnNotify ''
       ? <service-object <daemon ${name}> ?obj> [
@@ -324,19 +335,12 @@ in
       # See ./static/boot/020-load-core-layer.pr
       map (name: let daemon = cfg.core.daemons.${name}; daeRec = <daemon> [ name ]; in {
         name = "syndicate/core/daemon-${name}.pr";
-        value.source = writePreservesFile "daemon-${name}.pr" ([
-          (<require-service> [ daeRec ])
-       ] ++ (daemonToPreserves name daemon)
-         ++ map ({ key, state }: <depends-on> [ daeRec (<service-state> [ (recordOfKey key) state ]) ]) daemon.requires);
+        value.source = writePreservesFile "daemon-${name}.pr" (
+          (daemonToPreserves name daemon)
+          ++ map
+            ({ key, state }: <depends-on> [ daeRec (<service-state> [ (recordOfKey key) state ]) ])
+            daemon.requires);
       }) (attrNames cfg.core.daemons)
-      ++
-      # Put files that describe service-level daemons into the service directory.
-      # See ./static/boot/030-load-services.pr
-      map (name: {
-        name = "syndicate/services/daemon-${name}.pr";
-        value.source = writePreservesFile "daemon-${name}.pr"
-          (daemonToPreserves name cfg.daemons.${name});
-      }) (attrNames cfg.daemons)
     );
 
     # Accumulate `requires` and `provides` from all daemons
@@ -351,6 +355,8 @@ in
       ++ map (dependee: { inherit key dependee; }) daemon.requires
     ) [ ] (attrNames cfg.daemons);
 
+    synit.profile.config = cfg.daemons
+      |> attrNames |> concatMap (name: daemonToPreserves name cfg.daemons.${name});
   };
 
   meta = {

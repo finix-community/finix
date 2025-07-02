@@ -45,7 +45,8 @@ syndicate::spawn actor {
         }
       } err
       if {$err != ""} { puts stderr "failed to bring up $ifname: $err" }
-      onStop [list catch exec ip link set $ifname down]
+      lappend cmdDown exec ip link set $ifname down
+      onStop [list catch $cmdDown]
     } $networkDataspace
 
     during {<address @ifname #? @family #? @attrs #({ })>} {

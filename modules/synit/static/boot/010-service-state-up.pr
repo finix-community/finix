@@ -1,4 +1,0 @@
-# To the usual suite of service states we add `up`, meaning "either `ready` or `complete`".
-#
-? <service-state ?x ready> <service-state $x up>
-? <service-state ?x complete> <service-state $x up>

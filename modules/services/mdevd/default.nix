@@ -21,6 +21,16 @@ let
 
   cfg = config.services.mdevd;
 
+  # Rules for the special standalone devices to be created at boot.
+  specialRules = ''
+    -null      0:0 666 +importas -S MDEV s6-chmod 666 $MDEV
+    -zero      0:0 666 +importas -S MDEV s6-chmod 666 $MDEV
+    -full      0:0 666 +importas -S MDEV s6-chmod 666 $MDEV
+    -random    0:0 444 +importas -S MDEV s6-chmod 444 $MDEV
+    -urandom   0:0 444 +importas -S MDEV s6-chmod 444 $MDEV
+    -hwrandom  0:0 444 +importas -S MDEV s6-chmod 444 $MDEV
+  '';
+
   # Insert modules for devices.
   modaliasRule = "$MODALIAS=.* 0:0 660 +importas m MODALIAS modprobe --quiet $m";
 
@@ -34,29 +44,29 @@ let
     {
       add {
         # Udev compatibility hack.
-        foreground { mkdir -p /dev/disk/by-id }
-        foreground { ln -sf ../../$MDEV /dev/disk/by-id/$MDEV }
+        foreground { s6-mkdir -p /dev/disk/by-id }
+        foreground { s6-ln -s ../../$MDEV /dev/disk/by-id/$MDEV }
 
         forbacktickx -pE LINE { blkid --output export /dev/$MDEV }
         case -N $LINE {
           ^LABEL=(.*) {
-            foreground { mkdir -p /dev/disk/by-label }
+            foreground { s6-mkdir -p /dev/disk/by-label }
             importas -S $1
-            ln -sf ../../$MDEV /dev/disk/by-label/$1
+            s6-ln -s ../../$MDEV /dev/disk/by-label/$1
           }
           ^UUID=(.*) {
-            foreground { mkdir -p /dev/disk/by-uuid }
+            foreground { s6-mkdir -p /dev/disk/by-uuid }
             importas -S $1
-            ln -sf ../../$MDEV /dev/disk/by-uuid/$1
+            s6-ln -s ../../$MDEV /dev/disk/by-uuid/$1
           }
         }
       }
       remove {
-        foreground { rm -f /dev/disk/by-id/$MDEV }
+        foreground { s6-rmrf /dev/disk/by-id/$MDEV }
         forbacktickx -pE LINE { blkid --output export /dev/$MDEV }
         case -N $LINE {
-          ^LABEL=(.*) { importas -S $1 rm -f /dev/disk/by-label/$1 }
-           ^UUID=(.*) { importas -S $1 rm -f /dev/disk/by-uuid/$1  }
+          ^LABEL=(.*) { importas -S $1 s6-rmrf /dev/disk/by-label/$1 }
+           ^UUID=(.*) { importas -S $1 s6-rmrf /dev/disk/by-uuid/$1  }
         }
       }
     }
@@ -96,6 +106,7 @@ in
         devDiskRule
       ];
       coldplugRules = [
+        specialRules
         modaliasRule
         devDiskRule
       ];
@@ -124,7 +135,10 @@ in
           |> pkgs.writeText "mdev.conf")
       ];
       readyOnNotify = 3;
-      path = with pkgs; [ coreutils execline kmod util-linux ];
+      path = with pkgs; [ kmod util-linux ];
+      # Upstream claims mdevd is terse enough to run
+      # without a dedicated logging destination.
+      logging.enable = false;
     };
 
     # Hold core back until another coldplug completes.
@@ -132,6 +146,7 @@ in
       argv = [ (getExe' cfg.package "mdevd-coldplug") "-O" "2" ];
       restart = "on-error";
       requires = [ { key = [ "daemon" "mdevd" ]; } ];
+      logging.enable = false;
     };
   };
 }

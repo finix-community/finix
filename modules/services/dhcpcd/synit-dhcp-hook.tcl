@@ -4,7 +4,7 @@
 
 set reason $env(reason)
 set iface $env(interface)
-set assDir "/run/etc/syndicate/network/$iface"
+set assDir "/run/synit/config/network/$iface"
 set assFile "$assDir/$reason.pr"
 file mkdir $assDir
 
@@ -37,6 +37,10 @@ case $reason {
                <address @ifname ipv4 { "local": "@address" "prefixlen": @prefixLen "life_time": @lease_time }>
                <route @ifname ipv4 { "gateway": "@gateway" } >
              }
+     }
+     EXPIRE {
+         # Retract the BOUND assertions.
+         file delete "$assDir/BOUND.pr"
      }
      default {
        puts stderr "unhandled dhcpcd event «$reason»"
