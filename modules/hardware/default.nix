@@ -12,7 +12,7 @@ let
         else firmware;
 in
 {
-  imports = [ ./graphics.nix ];
+  imports = [ ./console.nix ./graphics.nix ];
 
   options = {
     hardware.firmware = lib.mkOption {

@@ -25,6 +25,7 @@ in
   };
 
   config = mkIf cfg.enable {
+    hardware.console.keyMap = "us";
     synit.logging.logToFileSystem = false;
     virtualisation.qemu = {
       extraArgs = lib.optional (!cfg.graphics.enable) "-nographic";
