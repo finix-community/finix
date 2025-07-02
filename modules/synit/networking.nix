@@ -11,9 +11,6 @@ in
 
     # Collect information on network devices when triggered
     # by uevent and assert it into the machine dataspace.
-    synit.core.daemons.mdevd = mkIf
-      config.services.mdevd.enable
-      { path = with pkgs; [ iproute2 jq ]; };
     services.mdevd.hotplugRules = let
         netScript = pkgs.execline.passthru.writeScript "mdevd-net.el" [] ''
           importas -S ACTION
@@ -24,9 +21,9 @@ in
           }
           pipeline -w {
             redirfd -w 1 $ASSERTION
-            jq --raw-output "\"<interface ''${INTERFACE} \\(.[0])>\""
+            ${pkgs.jq}/bin/jq --raw-output "\"<interface ''${INTERFACE} \\(.[0])>\""
           }
-          ip --json link show $INTERFACE
+          ${pkgs.iproute2}/bin/ip --json link show $INTERFACE
         '';
       in [ "-SUBSYSTEM=net;DEVPATH=.*/net/*;.* 0:0 600 &${netScript}" ];
 

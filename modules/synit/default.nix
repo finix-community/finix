@@ -106,6 +106,8 @@ in
 
     environment.systemPackages = [
       cfg.syndicate-server.package
+      pkgs.s6-linux-utils
+      pkgs.s6-portable-utils
       pkgs.synit-service
     ];
 

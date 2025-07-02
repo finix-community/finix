@@ -107,10 +107,11 @@ let
               path
               package
             ]);
-          default = [ pkgs.coreutils ];
-          defaultText = literalMD "{option}`config.security.wrapperDir` and GNU coreutils";
+          default = [ ];
           description = ''
             List of directories to compose into the PATH environmental variable.
+            If `env.PATH` is set then this value is ignored. Otherwise it will be
+            appended with execline and s6 packages.
           '';
         };
         protocol = mkOption {
@@ -269,15 +270,17 @@ let
           attrs.argv
         );
         env =
-          let
-            env' = optionalAttrs (attrs.env != null) attrs.env;
+          let env' = optionalAttrs (attrs.env != null) attrs.env;
           in mapAttrs (_: v: if v == null then false else builtins.toJSON v) (
             env' // {
-              PATH = concatStringsSep ":" (flatten [
-                (env'.PATH or [])
-                config.security.wrapperDir
-                (makeBinPath (attrs.path ++ optional hasReadyOnNotify pkgs.syndicate_utils))
-              ]);
+              PATH = env'.PATH or (makeBinPath (attrs.path ++ [
+                  (dirOf config.security.wrapperDir)
+                  # TODO: merge into a symlink tree?
+                  pkgs.execline
+                  pkgs.s6
+                  pkgs.s6-linux-utils
+                  pkgs.s6-portable-utils
+                ] ++ optional hasReadyOnNotify pkgs.syndicate_utils));
             });
         readyOnStart = attrs.readyOnStart && !hasReadyOnNotify;
         protocol =

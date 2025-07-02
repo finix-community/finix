@@ -135,7 +135,7 @@ in
           |> pkgs.writeText "mdev.conf")
       ];
       readyOnNotify = 3;
-      path = with pkgs; [ coreutils execline kmod util-linux ];
+      path = with pkgs; [ kmod util-linux ];
       # Upstream claims mdevd is terse enough to run
       # without a dedicated logging destination.
       logging.enable = false;

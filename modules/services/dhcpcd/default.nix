@@ -178,18 +178,13 @@ in
       command = "${lib.getExe cfg.package} -f ${cfg.configFile}";
     };
 
-    synit.daemons.dhcpcd = let
-      # TODO: This should be handled by tmpfiles.
-      script = pkgs.execline.passthru.writeScript "dhcpcd-dirs.el" "-s0" ''
-        foreground { ln -s /run /var/run }
-        foreground { install --directory --owner=dhcpcd /var/db/dhcpcd }
-        foreground { install --directory --owner=dhcpcd --group=dhcpcd /var/lib/dhcpcd }
-        $@
-      '';
-    in {
+    synit.daemons.dhcpcd = {
       argv = [
-        script
-        (lib.getExe cfg.package)
+        "s6-envuidgid" "dhcpcd"
+        "foreground" "s6-mkdir" "-p" "-m" "750" "/var/db/dhcpcd" "/var/lib/dhcpcd" ""
+        "foreground" "s6-chown" "-U" "/var/db/dhcpcd" "/var/lib/dhcpcd" ""
+
+        "dhcpcd"
         "--nobackground"
         "--config" cfg.configFile
 
@@ -202,6 +197,7 @@ in
             ${builtins.readFile ./synit-dhcp-hook.tcl}
           '')
       ];
+      path = [ cfg.package ];
       provides = [ [ "milestone" "network" ] ];
       restart = "on-error";
       logging.enable = false; # Logs to syslog unfortunately.
