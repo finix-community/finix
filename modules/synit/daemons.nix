@@ -258,15 +258,24 @@ let
   # Produce a list of Syndicate assertions from a daemon declaration.
   daemonToPreserves =
     name: attrs:
-    let hasReadyOnNotify = attrs.readyOnNotify != null; in [
+    let
+      hasReadyOnNotify = attrs.readyOnNotify != null;
+      protocol =
+        if hasReadyOnNotify
+        then assert attrs.protocol == "none"; "application/syndicate"
+        else attrs.protocol;
+    in [
     (<require-service> [ (<daemon> [ name ]) ])
     (<daemon> [
       name
       {
         argv = builtins.toJSON (
-          optionals attrs.logging.enable (
-            makeLogger attrs.logging.args attrs.logging.dir) ++
+          # Inject logging script.
+          optionals attrs.logging.enable (makeLogger attrs.logging.args attrs.logging.dir) ++
+          # Inject notification script.
           optionals hasReadyOnNotify [ readyOnNotifyScript (toString attrs.readyOnNotify) ] ++
+          # Move stderr over stdout.
+          optionals (protocol == "none") [ "fdmove" "-c" "1" "2" ] ++
           attrs.argv
         );
         env =
@@ -283,11 +292,8 @@ let
                 ] ++ optional hasReadyOnNotify pkgs.syndicate_utils));
             });
         readyOnStart = attrs.readyOnStart && !hasReadyOnNotify;
-        protocol =
-          if hasReadyOnNotify
-          then assert attrs.protocol == "none"; "application/syndicate"
-          else attrs.protocol;
         inherit (attrs) dir clearEnv restart;
+        inherit protocol;
       }
     ])] ++ optional hasReadyOnNotify ''
       ? <service-object <daemon ${name}> ?obj> [
