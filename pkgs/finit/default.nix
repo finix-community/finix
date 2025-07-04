@@ -18,8 +18,8 @@ stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner = "troglobit";
     repo = "finit";
-    rev = "77404a2ea09764c3e38ba35d1e34c46e0a031819";
-    hash = "sha256-UTuLEm4b2M8PQ+4Yv1n/vxD+1I+yw4IEOfMUMfz6WuQ=";
+    rev = "dedb56a9d0f1254b5de511b15e22e39be8f6b5de";
+    hash = "sha256-Y2j5sBvc4/BEe80NzW2tsUGfcdC69o/TFqwelDGqLSM=";
   };
 
   postPatch = ''
