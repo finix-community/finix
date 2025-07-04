@@ -113,7 +113,8 @@ in
       description = "mariadb database service";
       conditions = [ "service/syslogd/ready" "task/mariadb-init/success" ];
       command = "${cfg.package}/bin/mysqld --defaults-file=/etc/my.cnf ${mysqldOptions}";
-      # notify = "systemd";
+      notify = "systemd";
+      log = true;
     };
 
     environment.systemPackages = [
