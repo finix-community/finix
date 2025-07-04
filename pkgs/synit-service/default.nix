@@ -27,7 +27,7 @@ stdenvNoCC.mkDerivation {
     # Generate a custom wrapper because
     # the binary wrapper breaks somehow.
     cat << EOF > service
-    #!${lib.getExe execline} -s0
+    #!${execline}/bin/execlineb -s0
     export TCLLIBPATH "''${TCLLIBPATH}"
     export PATH "${lib.makeBinPath [ socat ]}"
     ${tcl}/bin/tclsh ${./service.tcl} \$@
