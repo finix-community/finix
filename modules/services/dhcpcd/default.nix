@@ -20,9 +20,9 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = if config.services.udev.enable
-        then pkgs.dhcpcd
-        else pkgs.dhcpcd.override { udev = null; };
+      default = pkgs.dhcpcd.override {
+        withUdev = config.services.udev.enable;
+      };
       defaultText = lib.literalExpression "pkgs.dhcpcd";
     };
 
