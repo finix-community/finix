@@ -158,7 +158,7 @@ in
     # Start a hotpluging mdevd after the stage-2 init.
     synit.core.daemons.mdevd = {
       argv = [
-        (getExe cfg.package)
+        "${cfg.package}/bin/mdevd"
         "-D" "3"
         "-O" "2"
         "-f" (config.services.mdevd.hotplugRules
