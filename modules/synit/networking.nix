@@ -13,17 +13,28 @@ in
     # by uevent and assert it into the machine dataspace.
     services.mdevd.hotplugRules = let
         netScript = pkgs.execline.passthru.writeScript "mdevd-net.el" [] ''
-          importas -S ACTION
           importas -S INTERFACE
           define ASSERTION /run/synit/config/machine/interface-''${INTERFACE}.pr
+          importas -S ACTION
           case $ACTION {
-            remove { rm -f $ASSERTION }
+            remove { s6-rmrf $ASSERTION }
+            add {
+              foreground {
+                pipeline -w {
+                  redirfd -a 1 $ASSERTION
+                  ${pkgs.jq}/bin/jq --raw-output "\"<interface ''${INTERFACE} \\(.[0])>\""
+                }
+                ${pkgs.iproute2}/bin/ip --json link show $INTERFACE
+              }
+              importas -S -D "" DEVTYPE
+              case $DEVTYPE {
+                wlan {
+                  redirfd -a 1 $ASSERTION
+                  s6-echo <wlan ''${INTERFACE}>
+                }
+              }
+            }
           }
-          pipeline -w {
-            redirfd -w 1 $ASSERTION
-            ${pkgs.jq}/bin/jq --raw-output "\"<interface ''${INTERFACE} \\(.[0])>\""
-          }
-          ${pkgs.iproute2}/bin/ip --json link show $INTERFACE
         '';
       in "-SUBSYSTEM=net;DEVPATH=.*/net/*;.* 0:0 600 &${netScript}";
 
