@@ -11,6 +11,8 @@ let
     name = "graphics-drivers-32bit";
     paths = [ cfg.package32 ] ++ cfg.extraPackages32;
   };
+
+  gidOf = name: toString config.ids.gids.${name};
 in
 {
   options.hardware.graphics = {
@@ -95,6 +97,8 @@ in
         message = "`hardware.graphics.enable32Bit` requires a kernel that supports 32-bit emulation";
       }
     ];
+
+    services.mdevd.hotplugRules = "dri/* 0:${gidOf "video"} 660";
 
     services.tmpfiles.graphics.rules = [
       "L+ /run/opengl-driver - - - - ${driversEnv}"
