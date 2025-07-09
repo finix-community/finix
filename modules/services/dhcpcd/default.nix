@@ -199,7 +199,6 @@ in
       ];
       path = [ cfg.package ];
       provides = [ [ "milestone" "network" ] ];
-      restart = "on-error";
       logging.enable = false; # Logs to syslog unfortunately.
     };
 
