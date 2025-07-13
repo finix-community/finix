@@ -256,6 +256,36 @@ let
         type = program;
       };
 
+      reload = lib.mkOption {
+        type = with lib.types; nullOr str;
+        default = null;
+        example = "kill -HUP $MAINPID";
+        description = ''
+          Some services do not support `SIGHUP` but may have other ways to update the configuration of a running daemon. When
+          `reload` is defined it is preferred over `SIGHUP`. Like `systemd`, `finit` sets ``$MAINPID` as a convenience to scripts,
+          which in effect also allow setting `reload` to `kill -HUP $MAINPID`.
+
+          ::: {.note}
+          `reload` is called as PID 1, without any timeout! Meaning, it is up to you to ensure the script is not blocking for
+          seconds at a time or never terminates.
+          :::
+        '';
+      };
+
+      stop = lib.mkOption {
+        type = with lib.types; nullOr str;
+        default = null;
+        description = ''
+          Some services may require alternate methods to be stopped. If `stop` is defined it is preferred over `SIGTERM`. Similar
+          to `reload`, `finit` sets `$MAINPID`.
+
+          ::: {.note}
+          `stop` is called as PID 1, without any timeout! Meaning, it is up to you to ensure the script is not blocking for
+          seconds at a time or never terminates.
+          :::
+        '';
+      };
+
       kill = lib.mkOption {
         type = with lib.types; nullOr (ints.between 1 60);
         default = null;
@@ -439,6 +469,8 @@ let
     (lib.optional (svc.notify or null != null) "notify:${svc.notify}") ++
     (lib.optional (svc.env or null != null) "env:${svc.env}") ++
     (lib.optional (svc.log or false != false) (logToStr svc.log)) ++
+    (lib.optional (svc.reload or null != null) "reload:${svc.reload}")++
+    (lib.optional (svc.stop or null != null) "stop:${svc.stop}")++
     (lib.optional (svc.pre or null != null) "pre:${svc.pre}") ++
     (lib.optional (svc.post or null != null) "post:${svc.post}") ++
     (lib.optional (svc.oncrash or null != null) "oncrash:${svc.oncrash}") ++
