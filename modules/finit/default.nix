@@ -259,6 +259,7 @@ let
       reload = lib.mkOption {
         type = with lib.types; nullOr str;
         default = null;
+        apply = value: if value != null then "'" + (value |> lib.removePrefix "'" |> lib.removeSuffix "'") + "'" else null;
         example = "kill -HUP $MAINPID";
         description = ''
           Some services do not support `SIGHUP` but may have other ways to update the configuration of a running daemon. When
@@ -275,6 +276,7 @@ let
       stop = lib.mkOption {
         type = with lib.types; nullOr str;
         default = null;
+        apply = value: if value != null then "'" + (value |> lib.removePrefix "'" |> lib.removeSuffix "'") + "'" else null;
         description = ''
           Some services may require alternate methods to be stopped. If `stop` is defined it is preferred over `SIGTERM`. Similar
           to `reload`, `finit` sets `$MAINPID`.
@@ -434,10 +436,13 @@ let
 
   logToStr = v: if v == true then "log" else "log:${v}";
   cgroupToStr = cgroup:
-    "cgroup" +
-    lib.optionalString (cgroup.name != null) ("." + cgroup.name) +
-    lib.optionalString (cgroup.settings != { }) (":" + (lib.concatMapAttrsStringSep "," (k: v: "${k}:${toString v}") cgroup.settings))
-  ;
+    let
+      mkValueString = value: if lib.isString value then "'" + (value |> lib.removePrefix "'" |> lib.removeSuffix "'") + "'" else toString value;
+    in
+      "cgroup" +
+      lib.optionalString (cgroup.name != null) ("." + cgroup.name) +
+      lib.optionalString (cgroup.settings != { }) (":" + (lib.concatMapAttrsStringSep "," (k: v: "${k}:${mkValueString v}") cgroup.settings))
+    ;
 
   rlimitStr =
     let
