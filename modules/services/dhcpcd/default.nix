@@ -179,10 +179,10 @@ in
     };
 
     synit.daemons.dhcpcd = {
-      argv = [
+      argv = lib.quoteExecline [
         "s6-envuidgid" "dhcpcd"
-        "foreground" "s6-mkdir" "-p" "-m" "750" "/var/db/dhcpcd" "/var/lib/dhcpcd" ""
-        "foreground" "s6-chown" "-U" "/var/db/dhcpcd" "/var/lib/dhcpcd" ""
+        "foreground" [ "s6-mkdir" "-p" "-m" "750" "/var/db/dhcpcd" "/var/lib/dhcpcd" ]
+        "foreground" [ "s6-chown" "-U" "/var/db/dhcpcd" "/var/lib/dhcpcd" ]
 
         "dhcpcd"
         "--nobackground"

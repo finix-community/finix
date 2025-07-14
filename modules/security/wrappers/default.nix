@@ -254,8 +254,8 @@ in
     synit.milestones.wrappers = { };
 
     synit.daemons.suid-sgid-wrappers = {
-      argv = [
-        "if" wrappersScript ""
+      argv = lib.quoteExecline [
+        "if" [ wrappersScript ]
         "redirfd" "-w" "1" "/run/synit/config/state/suid-sgid-wrappers.pr"
         "echo" "<service-state <daemon suid-sgid-wrappers> ready>"
       ];

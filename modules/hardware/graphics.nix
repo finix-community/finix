@@ -105,11 +105,11 @@ in
     ];
 
     synit.daemons.opengl-driver = {
-      argv = lib.optionals cfg.enable32Bit [
-        "foreground" "s6-ln" "-sf" driversEnv32 "/run/opengl-driver-32" ""
+      argv = lib.quoteExecline (lib.optionals cfg.enable32Bit [
+        "foreground" [ "s6-ln" "-sf" driversEnv32 "/run/opengl-driver-32" ]
       ] ++ [
         "s6-ln" "-sf" driversEnv "/run/opengl-driver"
-      ];
+      ]);
       restart = "on-error";
       logging.enable = lib.mkDefault false;
       provides = [ [ "milestone" "graphics" ] ];
