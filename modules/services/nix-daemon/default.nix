@@ -300,9 +300,8 @@ in
     ];
 
     synit.daemons.nix-daemon = {
-      argv = [ "${cfg.package}/bin/nix-daemon" "--daemon" ];
+      argv = [ "nix-daemon" "--daemon" ];
       path = [ pkgs.openssh cfg.package ];
-      requires = [ { key = [ "milestone" "network" ]; } ];
     };
 
     users.users = lib.listToAttrs (map (nr: {
