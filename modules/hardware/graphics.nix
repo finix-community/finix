@@ -98,8 +98,6 @@ in
       }
     ];
 
-    services.mdevd.hotplugRules = "dri/* 0:${gidOf "video"} 660";
-
     services.tmpfiles.graphics.rules = [
       "L+ /run/opengl-driver - - - - ${driversEnv}"
     ] ++ lib.optionals cfg.enable32Bit [

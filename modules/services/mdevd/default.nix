@@ -34,10 +34,13 @@ let
     pty.*       0:${tty} 660
     tty[0-9]*   0:${tty} 660
 
-    vcsa*[0-9]* 0:${tty} 660
+    vcsa[0-9]*  0:${tty} 660
     ttyS[0-9]*  0:${gidOf "uucp"} 660
 
     snd/.*      0:${gidOf "audio"} 660
+
+    dri/.*      0:${gidOf "video"} 660
+    video[0-9]+ 0:${gidOf "video"} 660
   '';
 
   # Insert modules for devices.
