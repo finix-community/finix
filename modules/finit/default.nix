@@ -257,7 +257,7 @@ let
       };
 
       reload = lib.mkOption {
-        type = with lib.types; nullOr str;
+        type = lib.types.nullOr program;
         default = null;
         apply = value: if value != null then "'" + (value |> lib.removePrefix "'" |> lib.removeSuffix "'") + "'" else null;
         example = "kill -HUP $MAINPID";
@@ -274,7 +274,7 @@ let
       };
 
       stop = lib.mkOption {
-        type = with lib.types; nullOr str;
+        type = lib.types.nullOr program;
         default = null;
         apply = value: if value != null then "'" + (value |> lib.removePrefix "'" |> lib.removeSuffix "'") + "'" else null;
         description = ''
