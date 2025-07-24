@@ -11,49 +11,29 @@ in
 
     # Collect information on network devices when triggered
     # by uevent and assert it into the machine dataspace.
-    services.mdevd.hotplugRules = let
-        netScript = pkgs.execline.passthru.writeScript "mdevd-net.el" [] ''
-          importas -S INTERFACE
-          define ASSERTION /run/synit/config/machine/interface-''${INTERFACE}.pr
-          importas -S ACTION
-          case $ACTION {
-            remove { s6-rmrf $ASSERTION }
-            add {
-              foreground {
-                pipeline -w {
-                  redirfd -a 1 $ASSERTION
-                  ${pkgs.jq}/bin/jq --raw-output "\"<interface ''${INTERFACE} \\(.[0])>\""
-                }
-                ${pkgs.iproute2}/bin/ip --json link show $INTERFACE
-              }
-              importas -S -D "" DEVTYPE
-              case $DEVTYPE {
-                wlan {
-                  redirfd -a 1 $ASSERTION
-                  s6-echo <wlan ''${INTERFACE}>
-                }
-              }
-            }
-          }
-        '';
-      in "-SUBSYSTEM=net;DEVPATH=.*/net/*;.* 0:0 600 &${netScript}";
+    services.mdevd.hotplugRules =
+      "-SUBSYSTEM=net;DEVPATH=.*/net/*;.* 0:0 600 &${pkgs.synit-network-utils}/lib/mdev-hook.el";
 
     # A Tcl script responds to assertions in the 
     # network dataspace by executing iproute2 commands
     # and relaying actually existing configuration into
     # the machine dataspaces.
-    # See ./static/core/network-config.pr for the routing
-    # of assertions.
     synit.daemons.network-configurator =
-      let inherit (pkgs.tclPackages) tcl sycl; in {
-        argv = [ (getExe' tcl "tclsh") ./networking.tcl ];
-        env.TCLLIBPATH = "${sycl}/lib/${sycl.name}";
-        path = [ pkgs.iproute2 ];
+      let inherit (pkgs.tclPackages) sycl; in {
+        argv = lib.quoteExecline [
+          "if" [ "resolvconf" "-I" ]
+          "network-configurator"
+        ];
+        path = builtins.attrValues {
+          inherit (pkgs) iproute2 openresolv synit-network-utils;
+        };
         protocol = "text/syndicate";
         provides = [ [ "milestone" "network" ] ];
-        logging.enable = false; # Errors only.
-        # TODO: disable readyOnStart.
+        requires = [ { key = [ "daemon" "sysctl" ]; state = "complete"; } ];
+        logging.enable = lib.mkDefault false; # Errors only.
+        readyOnStart = false;
       };
-    synit.profile.config = [ (builtins.readFile ./networking.pr) ];
+
+    synit.profile.config = [ (builtins.readFile "${pkgs.synit-network-utils.src}/network.pr") ];
   };
 }
