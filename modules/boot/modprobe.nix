@@ -14,11 +14,13 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    environment.etc."modules-load.d/finix.conf".text = ''
-      set modprobe = ${pkgs.kmod}/bin/modprobe
+    environment.etc."modules-load.d/finix.conf" = lib.mkIf config.finit.enable {
+      text = ''
+        set modprobe = ${pkgs.kmod}/bin/modprobe
 
-      ${lib.concatStringsSep "\n" config.boot.kernelModules}
-    '';
+        ${lib.concatStringsSep "\n" config.boot.kernelModules}
+      '';
+    };
 
     environment.etc."modprobe.d/ubuntu.conf".source = "${pkgs.kmod-blacklist-ubuntu}/modprobe.conf";
     environment.etc."modprobe.d/debian.conf".source = pkgs.kmod-debian-aliases;
@@ -26,6 +28,16 @@ in
     environment.systemPackages = [
       pkgs.kmod
     ];
+
+    synit.daemons.modprobe = {
+      argv = [
+        "${pkgs.kmod}/bin/modprobe"
+        "--all"
+      ] ++ config.boot.kernelModules;
+      restart = "on-error";
+      requires = lib.optional config.services.mdevd.enable
+        { key = [ "daemon" "mdevd" ]; state = "ready"; };
+    };
 
     system.activation.scripts.modprobe = lib.stringAfter ["specialfs"] ''
       # Allow the kernel to find our wrapped modprobe (which searches
