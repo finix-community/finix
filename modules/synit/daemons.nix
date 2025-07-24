@@ -35,22 +35,6 @@ let
 
   recordOfKey = key: builtins.tail key ++ [ { _record = builtins.head key; } ];
 
-  writeExeclineScript = pkgs.execline.passthru.writeScript;
-
-  # Create a logging wrapper for some arguments and a directory.
-  # This could be decomposed further to a list of command-line
-  # arguments without calling execlineb.
-  makeLogger = args: dir: [
-    (writeExeclineScript "logger.el" "-s1" ''
-      if { ${lib.getExe' pkgs.s6-portable-utils "s6-mkdir"} -p "$1" }
-      fdswap 1 2
-      pipeline -w { ${lib.getExe' pkgs.s6 "s6-log"} ${escapeShellArgs args} "$1" }
-      fdswap 1 2
-      $@
-    '')
-    dir
-  ];
-
   cfg = config.synit;
 
   mkIfSynit = mkIf cfg.enable;
@@ -237,23 +221,43 @@ let
     }
   );
 
+  loggerArgs = { reserveStdio, dir, args }:
+    # Stash the original stdout if it is used for Syndicate protocol.
+    optionals reserveStdio [ "fdmove" "3" "1" ] ++
+    [
+      "if" [ "s6-mkdir" "-p" dir ]
+      # Replace stdout with s6-log.
+      "pipeline" "-d" "-w"
+        ([ (lib.getExe' pkgs.s6 "s6-log") ] ++ args ++ [ dir ])
+    ] ++
+    # If speaking the Syndicate protocol
+    # then move s6-log to stderr and restore stdout to the parent
+    # then duplicate the s6-log stdin to both stdout and stderr
+    (if reserveStdio then [ "fdmove" "2" "1" "fdmove" "1" "3" ] else [ "fdmove" "-c" "2" "1" ])
+    |> lib.quoteExecline;
+
+
   # A hack for translating s6 notifications to Syndicate protocol.
   # TODO: This adds an additional process that consumes resources
   # for the lifetime of the service. If this overhead is worthwhile then
   # s6 notification support should be added to the syndicate server
   # instead.
-  readyOnNotifyScript = writeExeclineScript "readyOnNotify.el" "-s1" ''
-    piperw 3 4
-    background {
-      fdclose 4
-      readyonnotify
-    }
-    fdclose 0
-    fdclose 1
-    fdmove -c 1 2
-    fdmove $1 4
-    $@
-  '';
+  readyOnNotifyArgs = fd: lib.quoteExecline [
+    # Create a pipe.
+    "piperw" "3" "4"
+    # Run `readyonnotify` in the background with fd 1 2 3 but not 4.
+    "background" [
+      "fdclose" "4"
+      "readyonnotify"
+    ]
+    # Close stdin and stdout.
+    "fdclose" "0"
+    "fdclose" "1"
+    # Duplicate stderr onto stdout.
+    "fdmove" "-c" "1" "2"
+    # Move the pipe writer to the requested fd.
+    "fdmove" (toString fd) "4"
+    ];
 
   # Produce a list of Syndicate assertions from a daemon declaration.
   daemonToPreserves =
@@ -269,15 +273,21 @@ let
     (<daemon> [
       name
       {
-        argv = builtins.toJSON (
-          # Inject logging script.
-          optionals attrs.logging.enable (makeLogger attrs.logging.args attrs.logging.dir) ++
+        argv =
+          # Inject logging.
+          optionals attrs.logging.enable (loggerArgs {
+	      reserveStdio = protocol != "none";
+	      inherit (attrs.logging) dir args;
+	    }) ++
           # Inject notification script.
-          optionals hasReadyOnNotify [ readyOnNotifyScript (toString attrs.readyOnNotify) ] ++
-          # Move stderr over stdout.
-          optionals (protocol == "none") [ "fdmove" "-c" "1" "2" ] ++
+          optionals hasReadyOnNotify (readyOnNotifyArgs attrs.readyOnNotify) ++
+          # Empty execline noise from environment.
+          optionals (attrs.logging.enable || hasReadyOnNotify) [ "emptyenv" "-c" ] ++
+          # Execute the daemon argv.
           attrs.argv
-        );
+          # Double-quote the list of strings.
+          # This is quoting for Preserves rather than a shell.
+          |> builtins.toJSON;
         env =
           let env' = optionalAttrs (attrs.env != null) attrs.env;
           in mapAttrs (_: v: if v == null then false else builtins.toJSON v) (
