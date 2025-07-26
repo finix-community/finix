@@ -2,8 +2,7 @@
   lib,
   fetchFromGitea,
   stdenvNoCC,
-  tcl-9_0,
-  tclPackages,
+  tcl9Packages,
   execline,
   iproute2,
   jq,
@@ -11,37 +10,37 @@
 }:
 
 let
-  # Nixpkgs is using Tcl-8 instead of Tcl-9.
-  tclPackages' = tclPackages.overrideScope (_: _: { tcl = tcl-9_0; });
-  inherit (tclPackages') tcl sycl;
+  inherit (tcl9Packages) tcl sycl;
 in
 stdenvNoCC.mkDerivation {
   pname = "synit-network-utils";
-  version = "1";
+  version = "0.20250726";
 
   src = fetchFromGitea {
     domain = "git.syndicate-lang.org";
     owner = "synit";
     repo = "synit-network-utils";
-    rev = "a9361461ef525ba0082d770adb31455273df1d3d";
-    hash = "sha256-394+8w/WVG/GXMXreBsQeGkCfY2hnzGkgmnXmloWRiI=";
+    rev = "8514df527ab107d4f88d2b205802492cdb007cd4";
+    hash = "sha256-9jrrpmhekhyZxhTcGbpdbA3B2sE0ZMfiuNZzioLEkCc=";
   };
 
-  buildInputs = [ sycl ];
+  buildInputs = [ tcl sycl ];
+
+  buildPhase = ''
+    runHook preBuild
+    sed '2i lappend auto_path ${sycl}/lib/${sycl.name}' \
+      <network-configurator.tcl \
+      >network-configurator
+    runHook postBuild
+  '';
 
   installPhase = ''
     runHook preInstall
 
     mkdir -p $out/{bin,etc,lib}
 
-    # Install the network-configurator actor with a wrapper script
-    # that exports the TCLLIBPATH of the build environment.
-    cp $src/network-configurator.tcl $out/lib/network-configurator.tcl
-    cat << EOF > $out/bin/network-configurator
-    #!${execline}/bin/execlineb -s0
-    export TCLLIBPATH "''${TCLLIBPATH}"
-    ${tcl}/bin/tclsh $out/lib/network-configurator.tcl \$@
-    EOF
+    # Install the configurator.
+    install -m755 -D -t $out/bin network-configurator
 
     # Install the mdev hook.
     substitute "$src/mdev-hook.el" "$out/lib/mdev-hook.el" \
