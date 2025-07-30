@@ -52,6 +52,9 @@ $machineDataspace ? ?ass [
   $log ! <log "-" { line: "machine" |+++|: $ass }>
   ?- $log ! <log "-" { line: "machine" |---|: $ass }>
 ]
+$machineDataspace ?? ?msg [
+  $log ! <log "-" { line: "machine" |!!!|: $msg }>
+]
 <exec "s6-mkdir /run/synit/config/machine">
 <run-service <config-watcher "/run/synit/config/machine" {
   config: $machineDataspace
@@ -65,6 +68,9 @@ let ?networkDataspace = dataspace
 $networkDataspace ? ?x [
   $log ! <log "-" { line: "network" |+++|: $x }>
   ?- $log ! <log "-" { line: "network" |---|: $x }>
+]
+$networkDataspace ?? ?msg [
+  $log ! <log "-" { line: "network" |!!!|: $msg }>
 ]
 <run-service <config-watcher "/run/synit/config/network" {
   config: $networkDataspace

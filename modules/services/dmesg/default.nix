@@ -35,9 +35,9 @@ in
   config = mkIf cfg.enable {
 
     synit.daemons.dmesg = {
-      argv = [
+      argv = lib.quoteExecline [
         # Disable printing to console.
-        "foreground" "dmesg" "--console-off" ""
+        "foreground" [ "dmesg" "--console-off" ]
         "dmesg" "--follow"
       ] ++ cfg.extraArgs;
       path = [ pkgs.util-linux ];

@@ -68,6 +68,7 @@ in
     ./btrfs.nix
     ./ext2.nix
     ./ext4.nix
+    ./fuse.nix
     ./special.nix
     ./tmpfs.nix
     ./vfat.nix

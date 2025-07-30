@@ -27,6 +27,9 @@ in
     boot.kernel.sysctl = {
       # allow all users to do ICMP echo requests (ping)
       "net.ipv4.ping_group_range" = lib.mkDefault "0 2147483647";
+
+      # Generate link-local addresses.
+      "net.ipv6.conf.all.addr_gen_mode" = lib.mkDefault 3;
     };
 
     networking.hosts = {

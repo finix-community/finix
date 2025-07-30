@@ -22,23 +22,25 @@ let
   cfg = config.services.mdevd;
 
   # Rules for the special standalone devices to be created at boot.
-  specialRules = let audio = gidOf "audio"; tty = gidOf "tty"; in ''
-    null      0:0 666 +importas -S MDEV s6-chmod 666 /dev/$MDEV
-    zero      0:0 666 +importas -S MDEV s6-chmod 666 /dev/$MDEV
-    full      0:0 666 +importas -S MDEV s6-chmod 666 /dev/$MDEV
-    random    0:0 444 +importas -S MDEV s6-chmod 444 /dev/$MDEV
-    urandom   0:0 444 +importas -S MDEV s6-chmod 444 /dev/$MDEV
-    hwrandom  0:0 444 +importas -S MDEV s6-chmod 444 /dev/$MDEV
+  specialRules = let tty = gidOf "tty"; in ''
+    null      0:0 666
+    zero      0:0 666
+    full      0:0 666
+    random    0:0 444
+    urandom   0:0 444
+    hwrandom  0:0 444
 
     ptmx        0:${tty} 666
     pty.*       0:${tty} 660
-    tty         0:${tty} 666
     tty[0-9]*   0:${tty} 660
 
-    vcsa*[0-9]* 0:${tty} 660
+    vcsa[0-9]*  0:${tty} 660
     ttyS[0-9]*  0:${gidOf "uucp"} 660
 
-    snd/*       0:${audio} 660
+    snd/.*      0:${gidOf "audio"} 660
+
+    dri/.*      0:${gidOf "video"} 660
+    video[0-9]+ 0:${gidOf "video"} 660
   '';
 
   # Insert modules for devices.
@@ -48,8 +50,10 @@ let
   # so we run this script for block device events.
   # Requires blkid from util-linux be on $PATH.
   devDiskScript = writeExeclineScript "mdevd-disk.el" "" ''
-    importas -S ACTION
-    importas -S MDEV
+    multisubstitute {
+      importas -S ACTION
+      importas -S MDEV
+    }
     case $ACTION
     {
       add {
@@ -173,7 +177,7 @@ in
         "${cfg.package}/bin/mdevd"
         "-D" "3"
         "-O" "2"
-	# TODO: reload on SIGHUP.
+        # TODO: reload on SIGHUP.
         "-f" "/etc/mdev.conf"
       ];
       readyOnNotify = 3;
@@ -185,7 +189,7 @@ in
 
     # Hold core back until another coldplug completes.
     synit.core.daemons.mdevd-coldplug = {
-      argv = [ (getExe' cfg.package "mdevd-coldplug") "-O" "2" ];
+      argv = [ "${cfg.package}/bin/mdevd-coldplug" "-O" "2" ];
       restart = "on-error";
       requires = [ { key = [ "daemon" "mdevd" ]; } ];
       logging.enable = false;

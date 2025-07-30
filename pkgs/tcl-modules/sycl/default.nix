@@ -8,13 +8,14 @@
 
 buildNimSbom {
   pname = "sycl";
+  version = "2.1";
 
   src = fetchFromGitea {
     domain = "git.syndicate-lang.org";
     owner = "ehmry";
     repo = "sycl";
-    rev = "501afd7cbada77ba1912065efb98b5de9d46e8de";
-    hash = "sha256-YSBt7V+8uVEMZtwiNIHJ55tFss2El7daYbSpKMALryI=";
+    rev = "16d3fc3e991e260391ffdaad96e0a6c6f9c12019";
+    hash = "sha256-yx1QZ+dNc99AtfZgL3DIcN43G+DudwLmJylXWUG8cHQ=";
   };
 
   nativeBuildInputs = [

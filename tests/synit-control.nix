@@ -13,12 +13,13 @@ testenv.mkTest {
 
     virtualisation.qemu.nics.eth0.args = [
       "hostfwd=tcp:127.0.0.1:2424-:24"
+      "dnssearch=home.arpa"
     ];
 
     synit.profile.config = [''
       # Add a listener that exposes the synit service dataspace to any
       # IP address present on eth0.
-      $machine ? <address eth0 _ { "local": ?addr }> [
+      $machine ? <ip address _ _ { "local": ?addr }> [
         $config += <require-service  <relay-listener <tcp $addr 24> $config>>
       ]
     ''];
@@ -35,13 +36,16 @@ testenv.mkTest {
     machine spawn
     machine expect {synit_pid1: Awaiting signals...}
     machine expect {syndicate_server: inferior server instance}
-    set timeout 20
+    set timeout 25
     machine expect {syndicate_server::services::tcp_relay_listener: listening}
 
     puts stderr "\nspawning host-side Syndicate actor"
     syndicate::spawn actor {
       # Connect via TCP to the guest and monitor service-states.
       connect {<route [<tcp "127.0.0.1" 2424>]>} guest {
+          onAssert {<service-state @info #(<ip>) up>} {
+            puts stderr "IP config: $info"
+          } $guest
           onAssert {<service-state <daemon @daemon #?> up>} {
             puts stderr "daemon is up: $daemon"
           } $guest

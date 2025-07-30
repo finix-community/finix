@@ -61,12 +61,14 @@ in
     ];
 
     synit.daemons.chronyd = {
-      argv = [
-        "s6-envuidgid" "chrony"
-        "foreground" "s6-mkdir" "-m" "750" "/var/lib/chrony" ""
-        "foreground" "s6-chown" "-U" "/var/lib/chrony" ""
+      argv = lib.quoteExecline ([
+        "if" [ "s6-mkdir" "-p" "-m" "750" "/var/lib/chrony" ]
+        "if" [
+          "s6-envuidgid" "chrony"
+          "s6-chown" "-U" "/var/lib/chrony"
+        ]
         "chronyd" "-d" "-u" "chrony" "-f" cfg.configFile
-      ];
+      ]);
       path = [ cfg.package ];
       requires = [ { key = [ "milestone" "network" ]; } ];
     };

@@ -179,10 +179,10 @@ in
     };
 
     synit.daemons.dhcpcd = {
-      argv = [
+      argv = lib.quoteExecline [
         "s6-envuidgid" "dhcpcd"
-        "foreground" "s6-mkdir" "-p" "-m" "750" "/var/db/dhcpcd" "/var/lib/dhcpcd" ""
-        "foreground" "s6-chown" "-U" "/var/db/dhcpcd" "/var/lib/dhcpcd" ""
+        "foreground" [ "s6-mkdir" "-p" "-m" "750" "/var/db/dhcpcd" "/var/lib/dhcpcd" ]
+        "foreground" [ "s6-chown" "-U" "/var/db/dhcpcd" "/var/lib/dhcpcd" ]
 
         "dhcpcd"
         "--nobackground"
@@ -192,14 +192,13 @@ in
         # and use a hooks script that communicates
         # with ../../synit/networking.tcl instead.
         "--noconfigure"
-        "--script" (pkgs.writeScript "synit-dhcp-hook.tcl" ''
-            #! ${pkgs.tcl}/bin/tclsh
-            ${builtins.readFile ./synit-dhcp-hook.tcl}
-          '')
+        "--script" "${pkgs.synit-network-utils}/lib/dhcpcd-hook.tcl"
       ];
       path = [ cfg.package ];
       provides = [ [ "milestone" "network" ] ];
-      logging.enable = false; # Logs to syslog unfortunately.
+      requires = [
+        { key = [ "daemon" "network-configurator"  ]; state = "ready"; }
+      ];
     };
 
     services.tmpfiles.dhcpd.rules = [
