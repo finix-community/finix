@@ -1,6 +1,9 @@
 {
   pkgs ? import <nixpkgs> {
-    overlays = [ (import ../../overlays/default.nix) ];
+    overlays = map (_: import _) [
+      ../../overlays/default.nix
+      ../../overlays/modular-services.nix
+    ];
   }
 }:
 import ./tcl {
