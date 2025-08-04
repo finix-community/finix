@@ -64,6 +64,8 @@ in
       { assertion = config.system.activation.enable; message = "this etc implementation requires an activatable system"; }
     ];
 
+    environment.etc.mtab.source = "/proc/mounts";
+
     # TODO: create an alternative implementation with... https://github.com/Gerg-L/linker
     system.activation.scripts.etc = lib.stringAfter [ "users" ] ''
       echo "setting up /etc..."
