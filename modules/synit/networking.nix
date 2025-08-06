@@ -1,6 +1,9 @@
 { lib, config, pkgs, ... }:
 
 let
+  cfg = config.networking;
+
+  inherit (builtins) toJSON;
   inherit (lib)
     mkIf
     getExe'
@@ -34,6 +37,12 @@ in
         readyOnStart = false;
       };
 
-    synit.profile.config = [ (builtins.readFile "${pkgs.synit-network-utils.src}/network.pr") ];
+    synit.profile.config = [
+      (builtins.readFile "${pkgs.synit-network-utils.src}/network.pr")
+      ''
+        <hostname ${toJSON cfg.hostName}>
+        ! <exec ${toJSON [ (lib.getExe pkgs.hostname) cfg.hostName ]}>
+      ''
+    ];
   };
 }
