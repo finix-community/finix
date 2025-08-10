@@ -18,6 +18,8 @@ final: prev: {
     ];
   });
 
+  preserves = final.callPackage ../pkgs/preserves { };
+
   syndicate-server = final.callPackage ../pkgs/syndicate-server { };
 
   syndicate_utils = final.callPackage ../pkgs/syndicate_utils { };
