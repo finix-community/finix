@@ -40,10 +40,6 @@ in
 
   config = {
 
-    boot.kernelParams = [
-      "init=${cfg.init.script}"
-    ];
-
     boot.init.script = pkgs.writeScript "init" ''
       #!${pkgs.runtimeShell}
 
