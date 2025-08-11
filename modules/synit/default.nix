@@ -5,7 +5,6 @@ let
     attrValues
     getExe
     getExe'
-    makeBinPath
     mkDefault
     mkEnableOption
     mkPackageOption
@@ -42,6 +41,16 @@ in
       readOnly = true;
     };
 
+    basePath = mkOption {
+      description = "PATH used to boot the system bus.";
+      readOnly = true;
+      defaultText  = "The packages execline, s6, syndicate-server, and security wrappers.";
+      default = "${pkgs.buildEnv {
+            name = "synit-base-env";
+            paths = synitPackages;
+          }}/bin:${config.security.wrapperDir}";
+    };
+
     logging = {
       logToFileSystem = mkEnableOption "logging to the file-system by default" // {
         default = true;
@@ -64,7 +73,7 @@ in
         # takes about 15MB in the same state. There is a performance penalty on being so aggressive
         # about heap size, but it's more important to stay small in this circumstance right now. - tonyg
         "_RJEM_MALLOC_CONF" = "narenas:1,tcache:false,dirty_decay_ms:0,muzzy_decay_ms:0";
-        PATH = makeBinPath synitPackages;
+        PATH = cfg.basePath;
       };
       argv = {
         pid1 = {

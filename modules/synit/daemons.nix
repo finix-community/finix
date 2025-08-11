@@ -4,16 +4,14 @@ let
   inherit (builtins) toJSON;
   inherit (lib)
     attrNames
-    attrValues
     concatMap
-    concatStringsSep
-    escapeShellArgs
-    flatten
     foldl'
     listToAttrs
     literalMD
+    getExe'
     makeBinPath
     mapAttrs
+    mapAttrs'
     mkEnableOption
     mkIf
     mkOption
@@ -240,7 +238,7 @@ let
       "if" [ "s6-mkdir" "-p" dir ]
       # Replace stdout with s6-log.
       "pipeline" "-d" "-w"
-        ([ (lib.getExe' pkgs.s6 "s6-log") ] ++ args ++ [ dir ])
+        ([ "s6-log" ] ++ args ++ [ dir ])
     ] ++
     # If speaking the Syndicate protocol
     # then move s6-log to stderr and restore stdout to the parent
@@ -299,17 +297,12 @@ let
           # This is quoting for Preserves rather than a shell.
           |> builtins.toJSON;
         env =
-          let env' = optionalAttrs (attrs.env != null) attrs.env;
+          let
+            env' = optionalAttrs (attrs.env != null) attrs.env;
+            path' = attrs.path ++ optional hasReadyOnNotify pkgs.syndicate_utils;
           in mapAttrs (_: v: if v == null then false else builtins.toJSON v) (
-            env' // {
-              PATH = env'.PATH or (makeBinPath (attrs.path ++ [
-                  (dirOf config.security.wrapperDir)
-                  # TODO: merge into a symlink tree?
-                  pkgs.execline
-                  pkgs.s6
-                  pkgs.s6-linux-utils
-                  pkgs.s6-portable-utils
-                ] ++ optional hasReadyOnNotify pkgs.syndicate_utils));
+            env' // lib.optionalAttrs (path' != []) {
+              PATH = env'.PATH or "${makeBinPath path'}:${config.synit.basePath}";
             });
         readyOnStart = attrs.readyOnStart && !hasReadyOnNotify;
         inherit (attrs) dir clearEnv restart;
@@ -334,11 +327,8 @@ let
             ? <run-service <daemon ${name}>> [
               ! <exec ${
                 let dst = "/run/synit/config/persistent/daemon-${name}.pr"; in [
-                "if" "-n" "-t" [
+                "if" "-t" "-n" [
                   "eltest" "-e" dst
-                ]
-                "foreground" [
-                  "s6-mkdir" "-p" "/run/synit/config/persistent"
                 ]
                 "s6-ln" "-s"
                   (writePreservesFile "daemon-${name}" daemonAssertions)
