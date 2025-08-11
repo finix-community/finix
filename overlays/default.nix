@@ -28,7 +28,10 @@ final: prev: {
 
   synit-service = final.callPackage ../pkgs/synit-service { };
 
-  tclPackages = import ../pkgs/tcl-modules |> prev.tclPackages.overrideScope;
+  tcl9Packages = (prev.tclPackages.override {
+    tcl = final.tcl-9_0;
+    tk = final.tk-9_0;
+  }).overrideScope (import ../pkgs/tcl-modules);
 
   # modern fork of sysklogd - same author as finit
   sysklogd = prev.callPackage ../pkgs/sysklogd { };
