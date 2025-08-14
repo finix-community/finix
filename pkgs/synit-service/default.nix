@@ -1,41 +1,45 @@
 {
   lib,
   stdenvNoCC,
-  tclPackages,
+  fetchFromGitea,
+  tcl9Packages,
   installShellFiles,
-  socat,
-  execline,
 }:
 
 let
-  inherit (tclPackages) tcl sycl;
+  inherit (tcl9Packages) tcl sycl;
 in
-stdenvNoCC.mkDerivation {
+stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "synit-service";
-  version = "1.0";
+  version = "0.1";
 
-  dontUnpack = true;
+  src = fetchFromGitea {
+    domain = "git.syndicate-lang.org";
+    owner = "synit";
+    repo = "synit-service";
+    rev = finalAttrs.version;
+    hash = "sha256-kZRGzNmTyRTzYmZGXtdIf6qC8CyoOCDRg4mQvvXbdzM=";
+  };
 
-  buildInputs = [ sycl ];
+  buildInputs = [
+    tcl
+    sycl
+  ];
+
   nativeBuildInputs = [
     installShellFiles
   ];
 
+  buildPhase = ''
+    runHook preBuild
+    sed '2i lappend auto_path ${sycl}/lib/${sycl.name}' <service.tcl >service
+    runHook postBuild
+  '';
+
   installPhase = ''
     runHook preInstall
-
-    # Generate a custom wrapper because
-    # the binary wrapper breaks somehow.
-    cat << EOF > service
-    #!${lib.getExe execline} -s0
-    export TCLLIBPATH "''${TCLLIBPATH}"
-    export PATH "${lib.makeBinPath [ socat ]}"
-    ${tcl}/bin/tclsh ${./service.tcl} \$@
-    EOF
-
-
     install -m755 -D -t $out/bin service
-    installShellCompletion --fish --cmd service ${./completions.fish}
+    installShellCompletion --fish --cmd service completions/service.fish
     runHook postInstall
   '';
 
@@ -45,4 +49,4 @@ stdenvNoCC.mkDerivation {
     mainProgram = "service";
     license = lib.licenses.unlicense;
   };
-}
+})
