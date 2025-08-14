@@ -44,7 +44,6 @@ stdenv.mkDerivation rec {
     "--enable-modprobe-plugin=yes"
     "--enable-modules-load-plugin=yes"
     "--enable-hotplug-plugin=no"
-    "--enable-urandom-plugin=no" # FIXME: causing segfault, haven't looked into why
   ];
 
   env.NIX_CFLAGS_COMPILE = toString [
