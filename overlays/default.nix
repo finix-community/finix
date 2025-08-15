@@ -1,4 +1,5 @@
 final: prev: {
+  __toString = _: "${prev.__toString or (_: "nixpkgs") prev}:Finix";
 
   lib = import ../pkgs/lib |> prev.lib.extend;
 

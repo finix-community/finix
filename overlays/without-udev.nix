@@ -13,6 +13,7 @@ let
     |> ({ override, ... }: override { ${name} = final.libudev-zero; })
     |> ({ overrideAttrs, ... }: overrideAttrs { doCheck = false; });
 in {
+  __toString = _: "${prev.__toString or (_: "nixpkgs") prev}:without-udev";
   libgudev = udevZero "udev" prev.libgudev;
   libinput = udevZero "udev" prev.libinput;
   niri = udevZero "eudev" prev.niri;
