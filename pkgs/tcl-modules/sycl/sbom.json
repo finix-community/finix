@@ -7,7 +7,7 @@
       "bom-ref": "pkg:tcl/sycl",
       "name": "sycl",
       "description": "Syndicated tool Command Language",
-      "version": "2.0",
+      "version": "2.2",
       "authors": [
         {
           "name": "Emery Hemingway"
@@ -45,10 +45,10 @@
       "type": "library",
       "bom-ref": "pkg:nim/preserves",
       "name": "preserves",
-      "version": "20250318",
+      "version": "20250813",
       "externalReferences": [
         {
-          "url": "https://git.syndicate-lang.org/ehmry/preserves-nim/archive/db136dde9b9e6dbc24fdf553a02fa1ecbf01294f.tar.gz",
+          "url": "https://git.syndicate-lang.org/ehmry/preserves-nim/archive/ded3ee565d4fdf3dc6ed1f9bac8741a3a13eea75.tar.gz",
           "type": "source-distribution"
         },
         {
@@ -63,23 +63,23 @@
         },
         {
           "name": "nix:fod:path",
-          "value": "/nix/store/5mx41ixai1dn5wszmsf31iwgsdc9hvm1-source"
+          "value": "/nix/store/b8rb5fcs4nz2sw6mxp9wi5pnmpz57jsy-source"
         },
         {
           "name": "nix:fod:rev",
-          "value": "db136dde9b9e6dbc24fdf553a02fa1ecbf01294f"
+          "value": "ded3ee565d4fdf3dc6ed1f9bac8741a3a13eea75"
         },
         {
           "name": "nix:fod:sha256",
-          "value": "1x9d9g9k5a612y89rmswgw3ihv36whi9wgs6mll8qss7y08hvyr0"
+          "value": "0lr0xmp5xcpb1xgh6a4kyp3x7mwmnqns7h068wlbds9kdqzk9f8r"
         },
         {
           "name": "nix:fod:url",
-          "value": "https://git.syndicate-lang.org/ehmry/preserves-nim/archive/db136dde9b9e6dbc24fdf553a02fa1ecbf01294f.tar.gz"
+          "value": "https://git.syndicate-lang.org/ehmry/preserves-nim/archive/ded3ee565d4fdf3dc6ed1f9bac8741a3a13eea75.tar.gz"
         },
         {
           "name": "nix:fod:ref",
-          "value": "20250318"
+          "value": "20250813"
         },
         {
           "name": "nix:fod:srcDir",

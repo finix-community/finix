@@ -16,10 +16,13 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = [ cfg.package ];
-    environment.shells = [
-      "/run/current-system/sw/bin/bash"
-      (lib.getExe cfg.package)
-    ];
+    environment = {
+      pathsToLink = [ "/share/fish" ];
+      systemPackages = [ cfg.package ];
+      shells = [
+        "/run/current-system/sw/bin/bash"
+        (lib.getExe cfg.package)
+      ];
+    };
   };
 }

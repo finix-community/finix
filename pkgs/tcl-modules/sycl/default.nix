@@ -1,38 +1,51 @@
 {
   lib,
+  stdenv,
   fetchFromGitea,
   buildNimSbom,
-  tcl,
-  enableDebug ? false
+  pkg-config,
+  tcl-9_0,
+  preserves,
 }:
-
-buildNimSbom {
-  pname = "sycl";
-  version = "2.1";
-
+let
+  tcl = tcl-9_0;
+in
+buildNimSbom (finalAttrs: {
   src = fetchFromGitea {
     domain = "git.syndicate-lang.org";
     owner = "ehmry";
     repo = "sycl";
-    rev = "16d3fc3e991e260391ffdaad96e0a6c6f9c12019";
-    hash = "sha256-yx1QZ+dNc99AtfZgL3DIcN43G+DudwLmJylXWUG8cHQ=";
+    tag = finalAttrs.version;
+    hash = "sha256-LQLTSZucGrIVzUwVGVNfolOsbaCERWqlwZCMvVW36WU=";
   };
 
   nativeBuildInputs = [
+    pkg-config
     tcl.tclPackageHook
   ];
+
   buildInputs = [
     tcl
   ];
 
-  postPatch = lib.optionalString enableDebug ''
-    substituteInPlace src/syndicate.tcl \
-      --replace-fail ' # puts stderr ' ' puts stderr '
+  env.NIX_CFLAGS_COMPILE = lib.optionalString stdenv.cc.isGNU "-Wno-error=incompatible-pointer-types";
+
+  postBuild = "mv *.so src/";
+
+  doCheck = true;
+  checkPhase = ''
+    runHook preCheck
+    export TCLLIBPATH="$(realpath src) $TCLLIBPATH"
+    pushd tests
+    ${tcl}/bin/tclsh preserves.test -verbose bps <${preserves}/tests/samples.bin
+    ${tcl}/bin/tclsh syndicate.test -verbose bps
+    popd
+    runHook postCheck
   '';
 
   installPhase = ''
     runHook preInstall
-    install -D -t $out/lib/$name src/*.tcl libdataspaces.so
+    install -D -t $out/lib/$name src/*.tcl src/*.so
     install -D -t $out/share/man/mann *.n.gz
     runHook postInstall
   '';
@@ -43,4 +56,4 @@ buildNimSbom {
     license = lib.licenses.unlicense;
     maintainers = with lib.maintainers; [ ehmry ];
   };
-} ./sbom.json
+}) ./sbom.json
