@@ -76,14 +76,15 @@
 
   config = {
 
+    # Boot with a locale set as early as practical.
+    boot.init.pid1.env = {
+      LANG = config.i18n.defaultLocale;
+      LOCALE_ARCHIVE = "/run/current-system/sw/lib/locale/locale-archive";
+    } // config.i18n.extraLocaleSettings;
+
     environment.systemPackages =
       # We increase the priority a little, so that plain glibc in systemPackages can't win.
       lib.optional (config.i18n.supportedLocales != []) (lib.setPrio (-1) config.i18n.glibcLocales);
-
-    # environment.sessionVariables =
-    #   { LANG = config.i18n.defaultLocale;
-    #     LOCALE_ARCHIVE = "/run/current-system/sw/lib/locale/locale-archive";
-    #   } // config.i18n.extraLocaleSettings;
 
     finit.environment = lib.mkIf (config.i18n.supportedLocales != []) {
       LOCALE_ARCHIVE = "${config.i18n.glibcLocales}/lib/locale/locale-archive";
@@ -94,5 +95,11 @@
       LANG=${config.i18n.defaultLocale}
       ${lib.concatStringsSep "\n" (lib.mapAttrsToList (n: v: "${n}=${v}") config.i18n.extraLocaleSettings)}
     '';
+
+    # Populate /etc/security/pam_env.conf.
+    security.pam.env = lib.mapAttrs (_: v: { override = v; }) ({
+      LANG = config.i18n.defaultLocale;
+      LOCALE_ARCHIVE = "/run/current-system/sw/lib/locale/locale-archive";
+    } // config.i18n.extraLocaleSettings);
   };
 }
