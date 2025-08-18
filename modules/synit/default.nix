@@ -77,9 +77,9 @@ in
         logger = {
           deps = [  "pid1" ];
           text = mkDefault (optionals cfg.logging.logToFileSystem (quoteExecline [
-            "foreground" [ "s6-mkdir" "-p" "/var/log/synit" ]
+            "foreground" [ "s6-mkdir" "-p" "/var/log/system-bus" ]
             "fdswap" "1" "2"
-            "pipeline" "-w" [ "s6-log" "/var/log/synit" ]
+            "pipeline" "-w" [ "s6-log" "/var/log/system-bus" ]
             "fdswap" "1" "2"
           ]));
         };
