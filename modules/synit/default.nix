@@ -2,6 +2,7 @@
 
 let
   inherit (lib)
+    attrValues
     getExe
     getExe'
     makeBinPath
@@ -16,6 +17,11 @@ let
   writeExeclineScript = pkgs.execline.passthru.writeScript;
 
   cfg = config.synit;
+
+  synitPackages = attrValues {
+    inherit (pkgs) execline s6 s6-linux-utils s6-portable-utils;
+    inherit (cfg.syndicate-server) package;
+  };
 
 in
 {
@@ -49,65 +55,47 @@ in
 
   config = mkIf cfg.enable {
 
-    boot.init.pid1Argv = {
-      # This tells Rust programs built with jemallocator to be very aggressive about keeping their
-      # heaps small. Synit currently targets small machines. Without this, I have seen the system
-      # syndicate-server take around 300MB of heap when doing not particularly much; with this, it
-      # takes about 15MB in the same state. There is a performance penalty on being so aggressive
-      # about heap size, but it's more important to stay small in this circumstance right now. - tonyg
-      mallocConf = {
-        text = mkDefault [
-          (getExe' pkgs.execline "export")
-          "_RJEM_MALLOC_CONF"
-          "narenas:1,tcache:false,dirty_decay_ms:0,muzzy_decay_ms:0"
-        ];
+    boot.init.pid1 = {
+      env = {
+        # This tells Rust programs built with jemallocator to be very aggressive about keeping their
+        # heaps small. Synit currently targets small machines. Without this, I have seen the system
+        # syndicate-server take around 300MB of heap when doing not particularly much; with this, it
+        # takes about 15MB in the same state. There is a performance penalty on being so aggressive
+        # about heap size, but it's more important to stay small in this circumstance right now. - tonyg
+        "_RJEM_MALLOC_CONF" = "narenas:1,tcache:false,dirty_decay_ms:0,muzzy_decay_ms:0";
+        PATH = makeBinPath synitPackages;
       };
-      synit-pid1 = {
-        deps = [ "mallocConf" ];
-        text = mkDefault [ (getExe cfg.pid1.package) ];
-      };
-      path = {
-        deps = [ "synit-pid1" ];
-        text = mkDefault [
-          (getExe' pkgs.execline "export")
-          "PATH"
-          (makeBinPath [
-            pkgs.s6-portable-utils
-          ])
-        ];
-      };
-      logger = {
-        deps = [ "path" ];
-        text = mkDefault (optionals cfg.logging.logToFileSystem [
-            (writeExeclineScript "logger.el" "-s1" ''
-              if { s6-mkdir -p $1 }
-              fdswap 1 2
-              pipeline -w { ${getExe' pkgs.s6 "s6-log"} $1 }
-              fdswap 1 2
-              $@
-            '')
-          "/var/log/synit"
-        ]);
-      };
-      syndicate-server = {
-        deps = [ "logger" ];
-        text = mkDefault [
-          (getExe cfg.syndicate-server.package)
-          "--inferior"
-        ];
-      };
-      syndicate-server-config = {
-        deps = [ "syndicate-server" ];
-        text = mkDefault [
-          "--config" "${./boot.pr}"
-        ];
-      };
+      argv = {
+        synit-pid1 = {
+          deps = [ "env" ];
+          text = getExe cfg.pid1.package;
+        };
+        logger = {
+          deps = [ "synit-pid1" ];
+          text = mkDefault (optionals cfg.logging.logToFileSystem (lib.quoteExecline [
+            "foreground" [ "s6-mkdir" "-p" "/var/log/synit" ]
+            "fdswap" "1" "2"
+            "pipeline" "-w" [ "s6-log" "/var/log/synit" ]
+            "fdswap" "1" "2"
+          ]));
+        };
+        syndicate-server = {
+          deps = [ "logger" ];
+          text = mkDefault [
+            "syndicate-server"
+            "--inferior"
+          ];
+        };
+        syndicate-server-config = {
+          deps = [ "syndicate-server" ];
+          text = mkDefault [
+            "--config" "${./boot.pr}"
+          ];
+        };
+        };
     };
 
-    environment.systemPackages = [
-      cfg.syndicate-server.package
-      pkgs.s6-linux-utils
-      pkgs.s6-portable-utils
+    environment.systemPackages = synitPackages ++ [
       pkgs.synit-service
     ];
 
