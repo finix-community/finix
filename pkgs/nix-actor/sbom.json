@@ -1,0 +1,548 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "metadata": {
+    "component": {
+      "type": "application",
+      "bom-ref": "pkg:nim/nix_actor",
+      "name": "nix-actor",
+      "description": "Syndicated Nix Actor",
+      "version": "20250819",
+      "authors": [
+        {
+          "name": "Emery Hemingway"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Unlicense"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "nim:skipExt",
+          "value": "nim"
+        },
+        {
+          "name": "nim:bin:nix-actor",
+          "value": "nix_actor"
+        },
+        {
+          "name": "nim:bin:nix-build-hook-syndicate",
+          "value": "nix_actor/build_hook"
+        },
+        {
+          "name": "nim:srcDir",
+          "value": "src"
+        },
+        {
+          "name": "nim:backend",
+          "value": "c"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "pkg:nim/syndicate",
+      "name": "syndicate",
+      "version": "20250722",
+      "externalReferences": [
+        {
+          "url": "https://git.syndicate-lang.org/ehmry/syndicate-nim/archive/77be05131371f464d80dfd279c27a9a3848e7f9a.tar.gz",
+          "type": "source-distribution"
+        },
+        {
+          "url": "https://git.syndicate-lang.org/ehmry/syndicate-nim",
+          "type": "vcs"
+        }
+      ],
+      "properties": [
+        {
+          "name": "nix:fod:method",
+          "value": "fetchzip"
+        },
+        {
+          "name": "nix:fod:path",
+          "value": "/nix/store/2gkzq8ng6cx2gxcfh1qf2w06rmw8z71s-source"
+        },
+        {
+          "name": "nix:fod:rev",
+          "value": "77be05131371f464d80dfd279c27a9a3848e7f9a"
+        },
+        {
+          "name": "nix:fod:sha256",
+          "value": "0ga8sxalkq8lv0685r9ss6rjk360gh0l5s27zl89h0bmz7mykjwm"
+        },
+        {
+          "name": "nix:fod:url",
+          "value": "https://git.syndicate-lang.org/ehmry/syndicate-nim/archive/77be05131371f464d80dfd279c27a9a3848e7f9a.tar.gz"
+        },
+        {
+          "name": "nix:fod:ref",
+          "value": "20250722"
+        },
+        {
+          "name": "nix:fod:srcDir",
+          "value": "src"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nim/nimcrypto",
+      "name": "nimcrypto",
+      "version": "485f7b3cfa83c1beecc0e31be0e964d697aa74d7",
+      "externalReferences": [
+        {
+          "url": "https://github.com/cheatfate/nimcrypto/archive/485f7b3cfa83c1beecc0e31be0e964d697aa74d7.tar.gz",
+          "type": "source-distribution"
+        },
+        {
+          "url": "https://github.com/cheatfate/nimcrypto",
+          "type": "vcs"
+        }
+      ],
+      "properties": [
+        {
+          "name": "nix:fod:method",
+          "value": "fetchzip"
+        },
+        {
+          "name": "nix:fod:path",
+          "value": "/nix/store/fkrcpp8lzj2yi21na79xm63xk0ggnqsp-source"
+        },
+        {
+          "name": "nix:fod:rev",
+          "value": "485f7b3cfa83c1beecc0e31be0e964d697aa74d7"
+        },
+        {
+          "name": "nix:fod:sha256",
+          "value": "1h3dzdbc9kacwpi10mj73yjglvn7kbizj1x8qc9099ax091cj5xn"
+        },
+        {
+          "name": "nix:fod:url",
+          "value": "https://github.com/cheatfate/nimcrypto/archive/485f7b3cfa83c1beecc0e31be0e964d697aa74d7.tar.gz"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nim/preserves",
+      "name": "preserves",
+      "version": "20250813",
+      "externalReferences": [
+        {
+          "url": "https://git.syndicate-lang.org/ehmry/preserves-nim/archive/ded3ee565d4fdf3dc6ed1f9bac8741a3a13eea75.tar.gz",
+          "type": "source-distribution"
+        },
+        {
+          "url": "https://git.syndicate-lang.org/ehmry/preserves-nim.git",
+          "type": "vcs"
+        }
+      ],
+      "properties": [
+        {
+          "name": "nix:fod:method",
+          "value": "fetchzip"
+        },
+        {
+          "name": "nix:fod:path",
+          "value": "/nix/store/b8rb5fcs4nz2sw6mxp9wi5pnmpz57jsy-source"
+        },
+        {
+          "name": "nix:fod:rev",
+          "value": "ded3ee565d4fdf3dc6ed1f9bac8741a3a13eea75"
+        },
+        {
+          "name": "nix:fod:sha256",
+          "value": "0lr0xmp5xcpb1xgh6a4kyp3x7mwmnqns7h068wlbds9kdqzk9f8r"
+        },
+        {
+          "name": "nix:fod:url",
+          "value": "https://git.syndicate-lang.org/ehmry/preserves-nim/archive/ded3ee565d4fdf3dc6ed1f9bac8741a3a13eea75.tar.gz"
+        },
+        {
+          "name": "nix:fod:ref",
+          "value": "20250813"
+        },
+        {
+          "name": "nix:fod:srcDir",
+          "value": "src"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nim/sys",
+      "name": "sys",
+      "version": "4ef3b624db86e331ba334e705c1aa235d55b05e1",
+      "externalReferences": [
+        {
+          "url": "https://github.com/ehmry/nim-sys/archive/4ef3b624db86e331ba334e705c1aa235d55b05e1.tar.gz",
+          "type": "source-distribution"
+        },
+        {
+          "url": "https://github.com/ehmry/nim-sys.git",
+          "type": "vcs"
+        }
+      ],
+      "properties": [
+        {
+          "name": "nix:fod:method",
+          "value": "fetchzip"
+        },
+        {
+          "name": "nix:fod:path",
+          "value": "/nix/store/syhxsjlsdqfap0hk4qp3s6kayk8cqknd-source"
+        },
+        {
+          "name": "nix:fod:rev",
+          "value": "4ef3b624db86e331ba334e705c1aa235d55b05e1"
+        },
+        {
+          "name": "nix:fod:sha256",
+          "value": "1q4qgw4an4mmmcbx48l6xk1jig1vc8p9cq9dbx39kpnb0890j32q"
+        },
+        {
+          "name": "nix:fod:url",
+          "value": "https://github.com/ehmry/nim-sys/archive/4ef3b624db86e331ba334e705c1aa235d55b05e1.tar.gz"
+        },
+        {
+          "name": "nix:fod:srcDir",
+          "value": "src"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nim/taps",
+      "name": "taps",
+      "version": "20241008",
+      "externalReferences": [
+        {
+          "url": "https://git.sr.ht/~ehmry/nim_taps/archive/4a977054eec37cb19d5f74cd90201024d9eea638.tar.gz",
+          "type": "source-distribution"
+        },
+        {
+          "url": "https://git.sr.ht/~ehmry/nim_taps",
+          "type": "vcs"
+        }
+      ],
+      "properties": [
+        {
+          "name": "nix:fod:method",
+          "value": "fetchzip"
+        },
+        {
+          "name": "nix:fod:path",
+          "value": "/nix/store/hi4v99f8lxjasimvzfy190x4hjjzxxg9-source"
+        },
+        {
+          "name": "nix:fod:rev",
+          "value": "4a977054eec37cb19d5f74cd90201024d9eea638"
+        },
+        {
+          "name": "nix:fod:sha256",
+          "value": "15jan7dsnmk2zl0rsp61zmfl1cgqyj4vcbrsgpdzd096zanp3051"
+        },
+        {
+          "name": "nix:fod:url",
+          "value": "https://git.sr.ht/~ehmry/nim_taps/archive/4a977054eec37cb19d5f74cd90201024d9eea638.tar.gz"
+        },
+        {
+          "name": "nix:fod:ref",
+          "value": "20241008"
+        },
+        {
+          "name": "nix:fod:srcDir",
+          "value": "src"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nim/npeg",
+      "name": "npeg",
+      "version": "1.2.2",
+      "externalReferences": [
+        {
+          "url": "https://github.com/zevv/npeg/archive/ec0cc6e64ea4c62d2aa382b176a4838474238f8d.tar.gz",
+          "type": "source-distribution"
+        },
+        {
+          "url": "https://github.com/zevv/npeg.git",
+          "type": "vcs"
+        }
+      ],
+      "properties": [
+        {
+          "name": "nix:fod:method",
+          "value": "fetchzip"
+        },
+        {
+          "name": "nix:fod:path",
+          "value": "/nix/store/xpn694ibgipj8xak3j4bky6b3k0vp7hh-source"
+        },
+        {
+          "name": "nix:fod:rev",
+          "value": "ec0cc6e64ea4c62d2aa382b176a4838474238f8d"
+        },
+        {
+          "name": "nix:fod:sha256",
+          "value": "1fi9ls3xl20bmv1ikillxywl96i9al6zmmxrbffx448gbrxs86kg"
+        },
+        {
+          "name": "nix:fod:url",
+          "value": "https://github.com/zevv/npeg/archive/ec0cc6e64ea4c62d2aa382b176a4838474238f8d.tar.gz"
+        },
+        {
+          "name": "nix:fod:ref",
+          "value": "1.2.2"
+        },
+        {
+          "name": "nix:fod:srcDir",
+          "value": "src"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nim/bigints",
+      "name": "bigints",
+      "version": "20231006",
+      "externalReferences": [
+        {
+          "url": "https://github.com/ehmry/nim-bigints/archive/86ea14d31eea9275e1408ca34e6bfe9c99989a96.tar.gz",
+          "type": "source-distribution"
+        },
+        {
+          "url": "https://github.com/ehmry/nim-bigints.git",
+          "type": "vcs"
+        }
+      ],
+      "properties": [
+        {
+          "name": "nix:fod:method",
+          "value": "fetchzip"
+        },
+        {
+          "name": "nix:fod:path",
+          "value": "/nix/store/jvrm392g8adfsgf36prgwkbyd7vh5jsw-source"
+        },
+        {
+          "name": "nix:fod:rev",
+          "value": "86ea14d31eea9275e1408ca34e6bfe9c99989a96"
+        },
+        {
+          "name": "nix:fod:sha256",
+          "value": "15pcpmnk1bnw3k8769rjzcpg00nahyrypwbxs88jnwr4aczp99j4"
+        },
+        {
+          "name": "nix:fod:url",
+          "value": "https://github.com/ehmry/nim-bigints/archive/86ea14d31eea9275e1408ca34e6bfe9c99989a96.tar.gz"
+        },
+        {
+          "name": "nix:fod:ref",
+          "value": "20231006"
+        },
+        {
+          "name": "nix:fod:srcDir",
+          "value": "src"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nim/cps",
+      "name": "cps",
+      "version": "0.10.4",
+      "externalReferences": [
+        {
+          "url": "https://github.com/nim-works/cps/archive/2a4d771a715ba45cfba3a82fa625ae7ad6591c8b.tar.gz",
+          "type": "source-distribution"
+        },
+        {
+          "url": "https://github.com/nim-works/cps",
+          "type": "vcs"
+        }
+      ],
+      "properties": [
+        {
+          "name": "nix:fod:method",
+          "value": "fetchzip"
+        },
+        {
+          "name": "nix:fod:path",
+          "value": "/nix/store/m9vpcf3dq6z2h1xpi1vlw0ycxp91s5p7-source"
+        },
+        {
+          "name": "nix:fod:rev",
+          "value": "2a4d771a715ba45cfba3a82fa625ae7ad6591c8b"
+        },
+        {
+          "name": "nix:fod:sha256",
+          "value": "0c62k5wpq9z9mn8cd4rm8jjc4z0xmnak4piyj5dsfbyj6sbdw2bf"
+        },
+        {
+          "name": "nix:fod:url",
+          "value": "https://github.com/nim-works/cps/archive/2a4d771a715ba45cfba3a82fa625ae7ad6591c8b.tar.gz"
+        },
+        {
+          "name": "nix:fod:ref",
+          "value": "0.10.4"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nim/stew",
+      "name": "stew",
+      "version": "3c91b8694e15137a81ec7db37c6c58194ec94a6a",
+      "externalReferences": [
+        {
+          "url": "https://github.com/status-im/nim-stew/archive/3c91b8694e15137a81ec7db37c6c58194ec94a6a.tar.gz",
+          "type": "source-distribution"
+        },
+        {
+          "url": "https://github.com/status-im/nim-stew",
+          "type": "vcs"
+        }
+      ],
+      "properties": [
+        {
+          "name": "nix:fod:method",
+          "value": "fetchzip"
+        },
+        {
+          "name": "nix:fod:path",
+          "value": "/nix/store/mqg8qzsbcc8xqabq2yzvlhvcyqypk72c-source"
+        },
+        {
+          "name": "nix:fod:rev",
+          "value": "3c91b8694e15137a81ec7db37c6c58194ec94a6a"
+        },
+        {
+          "name": "nix:fod:sha256",
+          "value": "17lfhfxp5nxvld78xa83p258y80ks5jb4n53152cdr57xk86y07w"
+        },
+        {
+          "name": "nix:fod:url",
+          "value": "https://github.com/status-im/nim-stew/archive/3c91b8694e15137a81ec7db37c6c58194ec94a6a.tar.gz"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nim/getdns",
+      "name": "getdns",
+      "version": "20230806",
+      "externalReferences": [
+        {
+          "url": "https://git.sr.ht/~ehmry/getdns-nim/archive/e4ae0992ed7c5540e6d498f3074d06c8f454a0b6.tar.gz",
+          "type": "source-distribution"
+        },
+        {
+          "url": "https://git.sr.ht/~ehmry/getdns-nim",
+          "type": "vcs"
+        }
+      ],
+      "properties": [
+        {
+          "name": "nix:fod:method",
+          "value": "fetchzip"
+        },
+        {
+          "name": "nix:fod:path",
+          "value": "/nix/store/j8i20k9aarzppg4p234449140nnnaycq-source"
+        },
+        {
+          "name": "nix:fod:rev",
+          "value": "e4ae0992ed7c5540e6d498f3074d06c8f454a0b6"
+        },
+        {
+          "name": "nix:fod:sha256",
+          "value": "1dp53gndr6d9s9601dd5ipkiq94j53hlx46mxv8gpr8nd98bqysg"
+        },
+        {
+          "name": "nix:fod:url",
+          "value": "https://git.sr.ht/~ehmry/getdns-nim/archive/e4ae0992ed7c5540e6d498f3074d06c8f454a0b6.tar.gz"
+        },
+        {
+          "name": "nix:fod:ref",
+          "value": "20230806"
+        },
+        {
+          "name": "nix:fod:srcDir",
+          "value": "src"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "pkg:nim/nix_actor",
+      "dependsOn": [
+        "pkg:nim/syndicate"
+      ]
+    },
+    {
+      "ref": "pkg:nim/syndicate",
+      "dependsOn": [
+        "pkg:nim/nimcrypto",
+        "pkg:nim/preserves",
+        "pkg:nim/sys",
+        "pkg:nim/taps"
+      ]
+    },
+    {
+      "ref": "pkg:nim/nimcrypto",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nim/preserves",
+      "dependsOn": [
+        "pkg:nim/npeg",
+        "pkg:nim/bigints"
+      ]
+    },
+    {
+      "ref": "pkg:nim/sys",
+      "dependsOn": [
+        "pkg:nim/cps",
+        "pkg:nim/stew"
+      ]
+    },
+    {
+      "ref": "pkg:nim/taps",
+      "dependsOn": [
+        "pkg:nim/getdns",
+        "pkg:nim/sys",
+        "pkg:nim/cps"
+      ]
+    },
+    {
+      "ref": "pkg:nim/npeg",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nim/bigints",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nim/cps",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nim/stew",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nim/getdns",
+      "dependsOn": []
+    }
+  ]
+}
