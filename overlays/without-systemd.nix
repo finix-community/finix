@@ -1,4 +1,5 @@
 final: prev: {
+  __toString = _: "${prev.__toString or (_: "nixpkgs") prev}:without-systemd";
   dbus = prev.dbus.override { enableSystemd = false; };
   htop = prev.htop.override { systemdSupport = false; };
   hyprland = prev.hyprland.override { withSystemd = false; };
