@@ -17,6 +17,8 @@ let
       };
     };
   };
+
+  cfg = config.security.pam;
 in
 {
   options.security.pam = {
@@ -34,6 +36,21 @@ in
       type = with lib.types; attrsOf (submodule pamOpts);
       default = { };
     };
+
+    env = lib.mkOption {
+      description = "Set of rules for pam_env.";
+      type = lib.types.submodule {
+          options = let
+              opt = lib.mkOption {
+                type = with lib.types; nullOr str;
+                default = null;
+              };
+            in {
+              default = opt;
+              override = opt;
+            };
+        } |> lib.types.attrsOf;
+    };
   };
 
   config = {
@@ -47,20 +64,24 @@ in
           "pam_debug".text = "";
         };
 
-        env = {
-          "security/pam_env.conf".text = ''
-            PATH                        DEFAULT="${config.security.wrapperDir}:/run/current-system/sw/bin"
-            NIX_REMOTE                  DEFAULT="daemon"
-            EDITOR                      DEFAULT="micro"
+        pam_env."security/pam_env.conf".text =
+          let toField = key: val: lib.optionalString (val != null) " ${key}=${lib.escapeShellArg val}";
+          in lib.concatMapAttrsStringSep "\n" (
+            var: { default, override }: "${var}${toField "DEFAULT" default}${toField "OVERRIDE" override}"
+          ) cfg.env;
 
-            NIX_XDG_DESKTOP_PORTAL_DIR  DEFAULT="/run/current-system/sw/share/xdg-desktop-portal/portals"
-            XCURSOR_PATH                DEFAULT="/run/current-system/sw/share/icons:/run/current-system/sw/share/pixmaps"
-            XDG_DATA_DIRS               DEFAULT="/run/current-system/sw/share"
-            XDG_CONFIG_DIRS             DEFAULT="/etc/xdg:/run/current-system/sw/etc/xdg"
-          '';
-        };
       in
-        lib.mkMerge [ debug env etcTree ];
+        lib.mkMerge [ debug pam_env etcTree ];
+
+    security.pam.env = lib.mapAttrs (_: v: { default = lib.mkDefault v; }) {
+      EDITOR = "micro";
+      NIX_REMOTE = "daemon";
+      NIX_XDG_DESKTOP_PORTAL_DIR = "/run/current-system/sw/share/xdg-desktop-portal/portals";
+      PATH = "${config.security.wrapperDir}:/run/current-system/sw/bin";
+      XCURSOR_PATH = "/run/current-system/sw/share/icons:/run/current-system/sw/share/pixmaps";
+      XDG_CONFIG_DIRS = "/etc/xdg:/run/current-system/sw/etc/xdg";
+      XDG_DATA_DIRS = "/run/current-system/sw/share";
+    };
 
     security.pam.services.other = {
       text = ''
