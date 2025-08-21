@@ -142,7 +142,7 @@ in
       ++ map (dependee: { inherit key dependee; }) value.requires
     ) [ ] (attrsToList cfg.milestones);
 
-    synit.profile.config = map dependsOn cfg.depends;
+    synit.plan.config.dependencies = map dependsOn cfg.depends;
 
   };
 

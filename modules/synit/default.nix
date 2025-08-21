@@ -31,7 +31,7 @@ in
     ./filesystems.nix
     ./logging.nix
     ./networking.nix
-    ./profile.nix
+    ./plans.nix
   ];
 
   options.synit = {
@@ -98,11 +98,17 @@ in
           deps = [ "logger" "pid1" ];
           text = quoteExecline [
             "foreground" [
-              # Stdio is reserved for communication
-              # between PID 1 and the system-bus.
+              # Stdio is reserved for syndicate-protocol.
               "fdclose" "0"
               "fdmove" "-c" "1" "2"
-              "@systemConfig@/activate"
+              "foreground" [
+                # Run the activation script.
+                "@systemConfig@/activate"
+              ]
+              # Start an actor responsible for the plan set by the activation script.
+              "redirfd" "-w" "1" "/run/synit/config/plans/boot.pr"
+              # The use dummy activation script because the real script already ran.
+              "s6-echo" ''! <activate <plan "default" "${cfg.plan.file}" [ "s6-true" ]>>''
             ]
           ];
         };
@@ -133,7 +139,7 @@ in
     system.activation.scripts.synit-config = {
       deps = [ "specialfs" ];
       text = ''
-        for D in /etc/syndicate/core /run/synit/{,config/{,core,machine,network,persistent,profile,state},locks}; do
+        for D in /etc/syndicate/core /run/synit/{,config/{,core,machine,network,persistent,plans,state},locks}; do
           s6-mkdir -m 750 -p $D
           s6-chown -g 1 $D
         done

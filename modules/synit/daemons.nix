@@ -394,8 +394,9 @@ in
       ++ map (dependee: { inherit key dependee; }) daemon.requires
     ) [ ] (attrNames cfg.daemons);
 
-    synit.profile.config = cfg.daemons
-      |> attrNames |> concatMap (name: daemonToPreserves name cfg.daemons.${name});
+    synit.plan.config = mapAttrs' (name: value: {
+        name = "daemon-${name}"; value = daemonToPreserves name value;
+      }) cfg.daemons;
   };
 
   meta = {

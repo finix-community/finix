@@ -73,7 +73,7 @@ $networkDataspace ?? ?msg [
 
 
 # The core dataspace contains daemons that are required by and are
-# persistent across profile transitions.
+# persistent across plans.
 
 # Attenuate `$config` by rewriting plain `require-service` assertions to `require-core-service`
 # assertions. Allow all other assertions through.
@@ -102,47 +102,6 @@ let ?coreConfig = <* $config [<or [
   network: $networkDataspace
 }>>
 
-# Load the system profile when the core configuration is complete.
-#
-let ?profileWatcher = <config-watcher "/run/synit/config/profile" {
-  config: $config
-  gatekeeper: $gatekeeper
-  log: $log
-  machine: $machineDataspace
-  network: $networkDataspace
-}>
-<depends-on $profileWatcher <service-state <milestone core> up>>
-<require-service $profileWatcher>
-
-# Logic for loading Synit configuration profiles.
-#
-? <synit-profile ?name load ?path> [
-  let ?profileConfig = <* $config [ <or [
-    <rewrite <require-service ?s> <synit-profile $name require-service $s> >
-    <accept _>
-  ]> ]>
-  <require-service <config-watcher $path {
-    config: $profileConfig
-    gatekeeper: $gatekeeper
-    log: $log
-    machine: $machineDataspace
-    network: $networkDataspace
-  }>>
-]
-
-# Profile activation.
-#
-? <synit-profile ?name activate> [
-  $log ! <log "synit-profile activate" { line: $name }>
-  <depends-on <milestone $name> <service-state <milestone core> up>>
-  <require-service <milestone $name>>
-  ? <synit-profile $name require-service ?s> [
-    <depends-on <milestone $name> <service-state $s up>>
-    <depends-on $s <service-state <milestone core> up>>
-    <require-service $s>
-  ]
-]
-
 
 # Self-declared service states.
 #
@@ -169,3 +128,90 @@ let ?profileWatcher = <config-watcher "/run/synit/config/profile" {
     ]> ]>
   log: $log
 }>>
+
+
+# Answer question $a with the aswer to question $b.
+? <chain-q-a ?a ?b> [
+  <q $a>
+  ? <a $a ?resp> [
+    <a $b $resp>
+  ]
+]
+
+# Plans.
+
+# Any service required in a plan requires the core
+# and is required by the plan milestone.
+? <require-plan-service ?plan ?service> [
+  <depends-on $plan <service-state $service up>>
+  <depends-on $service <service-state <milestone core> up>>
+]
+
+# Activate a plan by a message.
+?? <activate <plan ?planName ?planPath ?script>> [
+  let ?plan = <plan $planName $planPath $script>
+
+  # Deactivate the plan by an assertion.
+  let ?planFacet = facet
+  ? <deactivate $plan> [ $planFacet ! stop ]
+
+  # Assert deactivation of this plan when prompted by a message.
+  ?? <deactivate <plan $planName> ?cap> [
+    $cap += <deactivate $plan>
+  ]
+
+  # When the activation script completes send
+  # the deactivation message.
+  # The message contains a an attenuation of $config
+  # that prevents this plan from deactivation itself.
+  ? <service-state <daemon $plan> complete> [
+    let ?att = <* $config [ <reject <deactivate $plan> > ]>
+    ! <deactivate <plan $planName> $att>
+  ]
+
+  # The plan configuration is loaded into the system-bus
+  # with the caveat that any <require-service> becomes
+  # a <require-plan-service $plan> at $config.
+  let ?planConfig = <* $config [ <or [
+      <rewrite <require-service ?service> <require-plan-service $plan $service>>
+      <accept _>
+    ]> ]>
+
+  # A service to watch the configuration at the $planPath.
+  let ?planWatcher = <config-watcher $planPath {
+      config: $planConfig
+      gatekeeper: $gatekeeper
+      log: $log
+      machine: $machineDataspace
+      network: $networkDataspace
+    }>
+
+  # The plan <depends-on> <config-watcher $planPath>.
+  $planConfig += <require-service $planWatcher>
+
+  # The config-watcher depends on activation succeding.
+  <depends-on $planWatcher <service-state <daemon $plan> complete>>
+  <depends-on <daemon $plan> <service-state <milestone core> up>>
+
+  <daemon $plan {
+      argv: $script
+      restart: never
+    }>
+
+  # Require the plan.
+  <require-service $plan>
+]
+
+# Plans reuse the semantics of milestones.
+? <run-service <plan ?name ?path ?script>> [
+  let ?plan = <plan $name $path $script>
+  <service-state $plan started>
+  <service-state $plan ready>
+  $log ! <log "plans" { service: $plan state: up }>
+  ?- <log "plans" { service: $plan state: down }>
+]
+
+# Watch for plans to activate.
+<require-service <config-watcher "/run/synit/config/plans" {
+    config: <* $config [ <accept <activate <plan _ _ _>> > ]>
+  }>>

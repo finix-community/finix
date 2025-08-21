@@ -467,7 +467,7 @@ in
     # then start an instance of wpa_supplicant for
     # each device asserted at runtime.
     #
-    synit.profile.config = lib.optional (cfg.interfaces == []) ''
+    synit.plan.config.wpa_suplicant = lib.mkIf (cfg.interfaces == []) [ ''
       $machine ? <wlan ?iface> [
         let ?name = join "-" [ "wpa_supplicant" $iface ]
         let ?ifaceArg = join "" [ "-i" $iface ]
@@ -484,7 +484,7 @@ in
             ) |> map builtins.toJSON |> toString} $ifaceArg ]
         }>
       ]
-    '';
+    '' ];
 
     # If interfaces are explicitly configured then instantiate
     # a singe instance of wpa_supplicant over all of them.
