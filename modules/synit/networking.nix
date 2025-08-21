@@ -36,12 +36,8 @@ in
         readyOnStart = false;
       };
 
-    synit.profile.config = [
-      (builtins.readFile "${pkgs.synit-network-utils.src}/network.pr")
-      ''
-        <hostname ${toJSON cfg.hostName}>
-        ! <exec ${toJSON [ (lib.getExe pkgs.hostname) cfg.hostName ]}>
-      ''
-    ];
+    synit.plan.config = {
+      network = [ (builtins.readFile "${pkgs.synit-network-utils.src}/network.pr") ];
+    };
   };
 }

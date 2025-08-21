@@ -151,6 +151,10 @@ in
         ''
         + lib.optionalString config.boot.initrd.enable ''
           ${pkgs.coreutils}/bin/ln -s ${config.boot.initrd.package}/initrd $out/initrd
+        ''
+        + lib.optionalString config.synit.enable ''
+          cp ${config.synit.plan.activatePlan} $out/activatePlan
+          substituteInPlace $out/activatePlan --subst-var-by systemConfig $out
         '';
     });
 

@@ -13,8 +13,6 @@ let
 
   toRecord = fields: builtins.toJSON "<${toString fields}>";
 
-  profileName = config.synit.profile.name;
-
   milestone = s: toRecord [ "milestone" s ];
   daemon = s: toRecord [ "daemon" s ];
 
@@ -27,9 +25,9 @@ let
   '');
 
 in
-pkgs.writeText "${profileName}.dot"
+pkgs.writeText "synit.dot"
 ''
-digraph ${builtins.toJSON profileName} {
+digraph ${builtins.toJSON "synit"} {
 ${dependsEdges}
 ${coreToDaemons}
 }
