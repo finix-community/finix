@@ -124,7 +124,7 @@ in
     system.activation.scripts.synit-config = {
       deps = [ "specialfs" ];
       text = ''
-        for D in /etc/syndicate/core /run/synit/{,config/{,core,machine,network,persistent,profile,state}}; do
+        for D in /etc/syndicate/core /run/synit/{,config/{,core,machine,network,persistent,profile,state},locks}; do
           s6-mkdir -m 750 -p $D
           s6-chown -g 1 $D
         done

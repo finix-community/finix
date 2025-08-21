@@ -283,6 +283,7 @@ let
       attrs' =
       {
         argv =
+          [ "s6-setlock" "/run/synit/locks/daemon-${name}" ] ++
           # Inject logging.
           optionals attrs.logging.enable (loggerArgs {
 	      reserveStdio = protocol != "none";
