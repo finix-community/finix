@@ -14,14 +14,14 @@ let
 in
 stdenvNoCC.mkDerivation {
   pname = "synit-network-utils";
-  version = "0.20250726";
+  version = "0.20250826";
 
   src = fetchFromGitea {
     domain = "git.syndicate-lang.org";
     owner = "synit";
     repo = "synit-network-utils";
-    rev = "8514df527ab107d4f88d2b205802492cdb007cd4";
-    hash = "sha256-9jrrpmhekhyZxhTcGbpdbA3B2sE0ZMfiuNZzioLEkCc=";
+    rev = "e829cbfd0690ff9c1bb7677149a6f8a3336e5a1f";
+    hash = "sha256-Q+WpN/Nf0VXXbPDxxg7B+RtGD6k9EJIkoEqxnIzLpIY=";
   };
 
   buildInputs = [ tcl sycl ];
