@@ -33,7 +33,6 @@ in
         protocol = "text/syndicate";
         provides = [ [ "milestone" "network" ] ];
         requires = [ { key = [ "daemon" "sysctl" ]; state = "complete"; } ];
-        logging.enable = lib.mkDefault false; # Errors only.
         readyOnStart = false;
       };
 
