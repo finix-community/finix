@@ -20,12 +20,6 @@
 #
 ?? <exec ?argv> ! <exec/restart $argv on-error>
 
-
-# Create the directory that additional configuration is loaded from.
-#
-<exec "s6-mkdir -p /run/synit/config">
-
-
 # Define the mechanics of milestone services.
 #
 # To "run" a milestone service,
@@ -55,7 +49,7 @@ $machineDataspace ? ?ass [
 $machineDataspace ?? ?msg [
   $log ! <log "-" { line: "machine" |!!!|: $msg }>
 ]
-<exec "s6-mkdir /run/synit/config/machine">
+
 <run-service <config-watcher "/run/synit/config/machine" {
   config: $machineDataspace
   log: $log
@@ -100,7 +94,6 @@ let ?coreConfig = <* $config [<or [
 # Load config in the `core` directory, using the wrapped `config` so that all plain services
 # required are changed to be *core* services.
 #
-<exec "s6-mkdir -p /etc/syndicate/core">
 <require-core-service <config-watcher "/etc/syndicate/core" {
   config: $coreConfig
   gatekeeper: $gatekeeper
@@ -111,7 +104,6 @@ let ?coreConfig = <* $config [<or [
 
 # Load the system profile when the core configuration is complete.
 #
-<exec "s6-mkdir /run/synit/config/profile">
 let ?profileWatcher = <config-watcher "/run/synit/config/profile" {
   config: $config
   gatekeeper: $gatekeeper
