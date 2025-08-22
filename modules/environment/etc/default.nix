@@ -70,20 +70,15 @@ in
       ${pkgs.perl.withPackages (p: [ p.FileSlurp ])}/bin/perl ${./setup-etc.pl} ${buildEtc}/etc
     '';
 
-    system.activation.scripts.usrbinenv = ''
-      mkdir -p /usr/bin
-      chmod 0755 /usr/bin
-      ln -sfn ${pkgs.coreutils}/bin/env /usr/bin/.env.tmp
-      mv /usr/bin/.env.tmp /usr/bin/env # atomically replace /usr/bin/env
-    '';
+    system.activation.scripts.shebangCompatibility = ''
+      s6-mkdir -m 0755 -p /usr/bin /bin
 
-    system.activation.scripts.binsh = ''
+      # Create /usr/bin/env for shebangs.
+      s6-ln -s -f -n ${pkgs.coreutils}/bin/env /usr/bin/env
+
       # Create the required /bin/sh symlink; otherwise lots of things
       # (notably the system() function) won't work.
-      mkdir -p /bin
-      chmod 0755 /bin
-      ln -sfn "${pkgs.bashInteractive}/bin/sh" /bin/.sh.tmp
-      mv /bin/.sh.tmp /bin/sh # atomically replace /bin/sh
+      s6-ln -s -f -n "${pkgs.bashInteractive}/bin/sh" /bin/sh
     '';
   };
 }

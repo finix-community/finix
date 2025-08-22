@@ -113,7 +113,7 @@ in
     system.activation.scripts.specialfs = ''
       echo "specialfs stub here..."
       mkdir -p /bin /etc /run /tmp /usr /var/{cache,db,empty,lib,log,spool}
-      [ ! -e /var/run ] && ln -s -n /run/ var/run
+      s6-ln -s -f -n /run /var/run
     '';
 
     system.activation.path = with pkgs; map lib.getBin [
@@ -125,6 +125,7 @@ in
       shadow
       nettools # needed for hostname
       util-linux # needed for mount and mountpoint
+      s6-portable-utils # s6-ln
     ];
 
     system.topLevel =  checkAssertWarn (pkgs.stdenvNoCC.mkDerivation {
