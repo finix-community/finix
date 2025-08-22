@@ -95,7 +95,7 @@ in
         '';
       };
 
-    services.tmpfiles.nzbegt.rules = [
+    services.tmpfiles.nzbget.rules = [
       "d ${stateDir} 0750 ${cfg.user} ${cfg.group}"
       "d ${logDir} 0750 ${cfg.user} ${cfg.group}"
     ];
