@@ -37,19 +37,20 @@ in
       default = { };
     };
 
-    env = lib.mkOption {
+    environment = lib.mkOption {
       description = "Set of rules for pam_env.";
       type = lib.types.submodule {
-          options = let
-              opt = lib.mkOption {
-                type = with lib.types; nullOr str;
-                default = null;
-              };
-            in {
-              default = opt;
-              override = opt;
+        options =
+          let
+            opt = lib.mkOption {
+              type = with lib.types; nullOr str;
+              default = null;
             };
-        } |> lib.types.attrsOf;
+          in {
+            default = opt;
+            override = opt;
+          };
+      } |> lib.types.attrsOf;
     };
   };
 
@@ -65,15 +66,15 @@ in
         };
 
         pam_env."security/pam_env.conf".text =
-          let toField = key: val: lib.optionalString (val != null) " ${key}=${lib.escapeShellArg val}";
+          let
+            toField = key: val: lib.optionalString (val != null) " ${key}=${lib.escapeShellArg val}";
           in lib.concatMapAttrsStringSep "\n" (
             var: { default, override }: "${var}${toField "DEFAULT" default}${toField "OVERRIDE" override}"
-          ) cfg.env;
-
+          ) cfg.environment;
       in
         lib.mkMerge [ debug pam_env etcTree ];
 
-    security.pam.env = lib.mapAttrs (_: v: { default = lib.mkDefault v; }) {
+    security.pam.environment = lib.mapAttrs (_: v: { default = lib.mkDefault v; }) {
       EDITOR = "micro";
       NIX_REMOTE = "daemon";
       NIX_XDG_DESKTOP_PORTAL_DIR = "/run/current-system/sw/share/xdg-desktop-portal/portals";

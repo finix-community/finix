@@ -97,7 +97,7 @@
     '';
 
     # Populate /etc/security/pam_env.conf.
-    security.pam.env = lib.mapAttrs (_: v: { override = v; }) ({
+    security.pam.environment = lib.mapAttrs (_: v: { override = v; }) ({
       LANG = config.i18n.defaultLocale;
       LOCALE_ARCHIVE = "/run/current-system/sw/lib/locale/locale-archive";
     } // config.i18n.extraLocaleSettings);
