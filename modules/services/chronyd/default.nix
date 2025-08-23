@@ -71,6 +71,9 @@ in
       ]);
       path = [ cfg.package ];
       requires = [ { key = [ "milestone" "network" ]; } ];
+
+      # Suppress the default timestamping behavior.
+      logging.args = [ ];
     };
 
     users.users = {

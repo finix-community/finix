@@ -155,9 +155,12 @@ let
           };
           args = mkOption {
             type = types.listOf types.str;
-            default = [ ];
+            default = [ "t" ];
             description = ''
               Command-line arguments passed to s6-log before the logging directory.
+              The default arguments prepend logged lines with a
+              [TAI64N](https://skarnet.org/software/skalibs/libstddjb/tai.html) timestamp.
+              Override args to `[ ]` if this information would be redundant.
             '';
           };
           dir = mkOption {
