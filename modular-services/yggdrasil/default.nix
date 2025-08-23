@@ -160,6 +160,12 @@ in
         "${cfg.package}/bin/yggdrasil" "-useconf"
       ] ++ cfg.extraArgs;
     };
+
+    synit.daemon = {
+      # Suppress the default timestamping behavior
+      # because yggdrasil provides it's own.
+      logging.args = [ ];
+    };
   };
 
 }
