@@ -9,26 +9,27 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "syndicate-server";
-  version = "0.51.0-rc.1";
+  version = "0.51.0-rc.1-8-g0b66d4c";
   src = fetchFromGitea {
     domain = "git.syndicate-lang.org";
-    owner = "syndicate-lang";
+    owner = "ehmry";
     repo = "syndicate-rs";
-    rev = "${pname}-v${version}";
-    hash = "sha256-D8VYdo86ukPQXNnkZYXoDmBJuUXa4OEtHyDgD9otGlU=";
+    rev = "0b66d4c8b9a0189aca681014196e69a80cd313ac";
+    hash = "sha256-d2WdNeyK2pNras3ijwREr18gRlpnfi27EM3u/nEmH5g=";
   };
-  useFetchCargoVendor = true;
-  cargoHash = "sha256-7RIioEOKa4pmJHaxugs8CJXu+aL1cRpdBfLm+tb2hwQ=";
+  cargoHash = "sha256-buUTej9fR0DdQKVKgQK/3kpkcw/C//CqZS37C5cClH0=";
+
   nativeBuildInputs = [
     pkg-config
     versionCheckHook
   ];
+
   buildInputs = [ openssl ];
 
   RUSTC_BOOTSTRAP = 1;
 
-  doCheck = false;
-  doInstallCheck = true;
+  # Renable the check when back on a release.
+  doInstallCheck = false;
 
   meta = {
     description = "Syndicate broker server";
