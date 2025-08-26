@@ -4,31 +4,34 @@
   fetchFromGitea,
   buildNimSbom,
   pkg-config,
-  tcl-9_0,
+  tcl,
   preserves,
 }:
-let
-  tcl = tcl-9_0;
-in
+
 buildNimSbom (finalAttrs: {
+  outputs = [ "out" "man" ];
+
   src = fetchFromGitea {
     domain = "git.syndicate-lang.org";
     owner = "ehmry";
     repo = "sycl";
-    tag = finalAttrs.version;
-    hash = "sha256-LQLTSZucGrIVzUwVGVNfolOsbaCERWqlwZCMvVW36WU=";
+    rev = finalAttrs.version;
+    hash = "sha256-zp2EnIY6iL3FwwmVMP8JZd5jjZ7RcBKuCQoziBTQpe8=";
   };
 
   nativeBuildInputs = [
     pkg-config
-    tcl.tclPackageHook
   ];
 
   buildInputs = [
     tcl
+    tcl.tclPackageHook
   ];
 
+  nimFlags = lib.optional (lib.versionOlder tcl.version "9.0") "--define:tcl8";
+
   env.NIX_CFLAGS_COMPILE = lib.optionalString stdenv.cc.isGNU "-Wno-error=incompatible-pointer-types";
+  env.PRESERVES_SAMPLES = "${preserves}/tests/samples.bin";
 
   postBuild = "mv *.so src/";
 
@@ -37,8 +40,7 @@ buildNimSbom (finalAttrs: {
     runHook preCheck
     export TCLLIBPATH="$(realpath src) $TCLLIBPATH"
     pushd tests
-    ${tcl}/bin/tclsh preserves.test -verbose bps <${preserves}/tests/samples.bin
-    ${tcl}/bin/tclsh syndicate.test -verbose bps
+    ${tcl}/bin/tclsh test.tcl
     popd
     runHook postCheck
   '';
@@ -46,7 +48,7 @@ buildNimSbom (finalAttrs: {
   installPhase = ''
     runHook preInstall
     install -D -t $out/lib/$name src/*.tcl src/*.so
-    install -D -t $out/share/man/mann *.n.gz
+    install -D -t $man/share/man/mann *.n.gz
     runHook postInstall
   '';
 
