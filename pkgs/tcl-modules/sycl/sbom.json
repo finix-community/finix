@@ -7,7 +7,7 @@
       "bom-ref": "pkg:tcl/sycl",
       "name": "sycl",
       "description": "Syndicated tool Command Language",
-      "version": "2.2",
+      "version": "2.3",
       "authors": [
         {
           "name": "Emery Hemingway"
