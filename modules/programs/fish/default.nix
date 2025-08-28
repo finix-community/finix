@@ -20,7 +20,7 @@ in
       pathsToLink = [ "/share/fish" ];
       systemPackages = [ cfg.package ];
       shells = [
-        "/run/current-system/sw/bin/bash"
+        "/run/current-system/sw/bin/fish"
         (lib.getExe cfg.package)
       ];
     };
