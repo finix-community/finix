@@ -133,12 +133,12 @@ in
     # Mdevd coldplugs the system during the stage-1 init in initramfs.
     # See ../../boot/initrd/default.nix
     boot.initrd.contents = [
-        { target = "/etc/mdev.conf";
-          source = pkgs.writeText "mdev.conf" config.services.mdevd.coldplugRules;
-        }
-        { source = devDiskScript;
-          target = "/etc/dev-disk.el";
-        }
+      { target = "/etc/mdev.conf";
+        source = pkgs.writeText "mdev.conf" config.services.mdevd.coldplugRules;
+      }
+      { source = devDiskScript;
+        target = "/etc/dev-disk.el";
+      }
     ];
 
     environment.etc."mdev.conf".text = config.services.mdevd.hotplugRules;
