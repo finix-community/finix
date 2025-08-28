@@ -92,6 +92,11 @@ in
 
     package = mkPackageOption pkgs [ "mdevd" ] { };
 
+    debug = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+    };
+
     hotplugRules = mkOption {
       type = types.lines;
       description = ''
@@ -140,7 +145,7 @@ in
 
     finit.services.mdevd = {
       description = "device event daemon (mdevd)";
-      command = "${cfg.package}/bin/mdevd -D %n -O 2 -F /run/current-system/firmware -f ${config.environment.etc."mdev.conf".source}";
+      command = "${cfg.package}/bin/mdevd -D %n -O 2 -F /run/current-system/firmware -f ${config.environment.etc."mdev.conf".source}" + lib.optionalString cfg.debug " -v 3";
       runlevels = "S12345789";
       cgroup.name = "init";
       notify = "s6";
@@ -153,7 +158,7 @@ in
 
     finit.run.coldplug = {
       description = "cold plugging system";
-      command = "${cfg.package}/bin/mdevd-coldplug -O 2";
+      command = "${cfg.package}/bin/mdevd-coldplug -O 2" + lib.optionalString cfg.debug " -v 3";
       runlevels = "S";
       conditions = "service/mdevd/ready";
       cgroup.name = "init";
@@ -188,6 +193,8 @@ in
         "-F" "/run/current-system/firmware"
         # TODO: reload on SIGHUP.
         "-f" "/etc/mdev.conf"
+      ] ++ lib.optionals cfg.debug [
+        "-v" "3"
       ];
       readyOnNotify = 3;
       path = with pkgs; [ kmod util-linux ];
@@ -198,7 +205,7 @@ in
 
     # Hold core back until another coldplug completes.
     synit.core.daemons.mdevd-coldplug = {
-      argv = [ "${cfg.package}/bin/mdevd-coldplug" "-O" "2" ];
+      argv = [ "${cfg.package}/bin/mdevd-coldplug" "-O" "2" ] ++ lib.optionals cfg.debug [ "-v" "3" ];
       restart = "on-error";
       requires = [ { key = [ "daemon" "mdevd" ]; } ];
       logging.enable = false;
