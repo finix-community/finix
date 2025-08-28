@@ -1,11 +1,6 @@
-{
-  pkgs ? import <nixpkgs> {
-    overlays = [ (import ../overlays/default.nix) ];
-  },
-}:
 let
-  inherit (pkgs) lib;
-  testArgs.testenv = import ./testenv { inherit pkgs; };
+  testArgs.testenv = import ./testenv { };
+  inherit (testArgs.testenv.pkgs) lib;
 in
 with builtins;
 readDir ./.

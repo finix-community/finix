@@ -41,6 +41,7 @@ in
 
     synit.daemons.greetd = {
       argv = [ "${pkgs.greetd.greetd}/bin/greetd" "--config" configFile ];
+      persistent = true;
       provides = [ [ "milestone" "login" ] ];
       requires = [ { key = [ "milestone" "wrappers" ]; } ]
         ++ lib.optional config.services.seatd.enable

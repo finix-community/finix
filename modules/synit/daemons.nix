@@ -1,8 +1,10 @@
 { lib, config, pkgs, ... }:
 
 let
+  inherit (builtins) toJSON;
   inherit (lib)
     attrNames
+    attrValues
     concatMap
     concatStringsSep
     escapeShellArgs
@@ -217,6 +219,16 @@ let
             [ "milestone" "network" ]
           ];
         };
+
+        persistent = mkOption {
+          type = types.bool;
+          default = false;
+          description = ''
+            Whether this daemon should persist and never
+            be replaced or removed.
+          '';
+        };
+
       };
     }
   );
@@ -268,12 +280,10 @@ let
         if hasReadyOnNotify
         then assert attrs.protocol == "none"; "application/syndicate"
         else attrs.protocol;
-    in [
-    (<require-service> [ (<daemon> [ name ]) ])
-    (<daemon> [
-      name
+      attrs' =
       {
         argv =
+          [ "s6-setlock" "/run/synit/locks/daemon-${name}" ] ++
           # Inject logging.
           optionals attrs.logging.enable (loggerArgs {
 	      reserveStdio = protocol != "none";
@@ -304,14 +314,39 @@ let
         readyOnStart = attrs.readyOnStart && !hasReadyOnNotify;
         inherit (attrs) dir clearEnv restart;
         inherit protocol;
-      }
-    ])] ++ optional hasReadyOnNotify ''
-      ? <service-object <daemon ${name}> ?obj> [
-        $obj += <Observe <bind <=_>> <* $config [
-          <rewrite [?s] <service-state <daemon ${name}> $s>>
-        ]>>
-      ]
-    '';
+      };
+      daemonAssertions = [
+        (<daemon> [ name attrs' ])
+      ] ++ optional hasReadyOnNotify ''
+        ? <service-object <daemon ${name}> ?obj> [
+          $obj += <Observe <bind <=_>> <* $config [
+            <rewrite [?s] <service-state <daemon ${name}> $s>>
+          ]>>
+        ]
+      '';
+    in
+    [ (<require-service> [ (<daemon> [ name ]) ]) ] ++
+        (if attrs.persistent
+        then
+          # Symlinks the daemon definition into the persistent
+          # config directory when the daemon is requested to start.
+          [ ''
+            ? <run-service <daemon ${name}>> [
+              ! <exec ${
+                let dst = "/run/synit/config/persistent/daemon-${name}.pr"; in [
+                "if" "-n" "-t" [
+                  "eltest" "-e" dst
+                ]
+                "foreground" [
+                  "s6-mkdir" "-p" "/run/synit/config/persistent"
+                ]
+                "s6-ln" "-s"
+                  (writePreservesFile "daemon-${name}" daemonAssertions)
+                  dst
+              ] |> lib.quoteExecline |> toJSON }>
+            ]
+          '' ]
+        else daemonAssertions);
 
 in
 {
@@ -343,14 +378,15 @@ in
     environment.etc = listToAttrs (
       # Put files that describe core-level daemons into the core directory.
       # See ./static/boot/020-load-core-layer.pr
-      map (name: let daemon = cfg.core.daemons.${name}; daeRec = <daemon> [ name ]; in {
-        name = "syndicate/core/daemon-${name}.pr";
-        value.source = writePreservesFile "daemon-${name}.pr" (
-          (daemonToPreserves name daemon)
-          ++ map
-            ({ key, state }: <depends-on> [ daeRec (<service-state> [ (recordOfKey key) state ]) ])
-            daemon.requires);
-      }) (attrNames cfg.core.daemons)
+      map (label: let daemon = cfg.core.daemons.${label}; in
+        rec {
+          name = "syndicate/core/${value.source.name}";
+          value.source = writePreservesFile "daemon-${label}" (
+            (daemonToPreserves label daemon)
+            ++ map
+              ({ key, state }: <depends-on> [ (<daemon> [ label ]) (<service-state> [ (recordOfKey key) state ]) ])
+              daemon.requires);
+        }) (attrNames cfg.core.daemons)
     );
 
     # Accumulate `requires` and `provides` from all daemons

@@ -20,12 +20,6 @@
 #
 ?? <exec ?argv> ! <exec/restart $argv on-error>
 
-
-# Create the directory that additional configuration is loaded from.
-#
-<exec "s6-mkdir -p /run/synit/config">
-
-
 # Define the mechanics of milestone services.
 #
 # To "run" a milestone service,
@@ -55,7 +49,7 @@ $machineDataspace ? ?ass [
 $machineDataspace ?? ?msg [
   $log ! <log "-" { line: "machine" |!!!|: $msg }>
 ]
-<exec "s6-mkdir /run/synit/config/machine">
+
 <run-service <config-watcher "/run/synit/config/machine" {
   config: $machineDataspace
   log: $log
@@ -79,7 +73,7 @@ $networkDataspace ?? ?msg [
 
 
 # The core dataspace contains daemons that are required by and are
-# presistent across profile transitions.
+# persistent across profile transitions.
 
 # Attenuate `$config` by rewriting plain `require-service` assertions to `require-core-service`
 # assertions. Allow all other assertions through.
@@ -100,7 +94,6 @@ let ?coreConfig = <* $config [<or [
 # Load config in the `core` directory, using the wrapped `config` so that all plain services
 # required are changed to be *core* services.
 #
-<exec "s6-mkdir -p /etc/syndicate/core">
 <require-core-service <config-watcher "/etc/syndicate/core" {
   config: $coreConfig
   gatekeeper: $gatekeeper
@@ -111,7 +104,6 @@ let ?coreConfig = <* $config [<or [
 
 # Load the system profile when the core configuration is complete.
 #
-<exec "s6-mkdir /run/synit/config/profile">
 let ?profileWatcher = <config-watcher "/run/synit/config/profile" {
   config: $config
   gatekeeper: $gatekeeper
@@ -139,6 +131,7 @@ let ?profileWatcher = <config-watcher "/run/synit/config/profile" {
 ]
 
 # Profile activation.
+#
 ? <synit-profile ?name activate> [
   $log ! <log "synit-profile activate" { line: $name }>
   <depends-on <milestone $name> <service-state <milestone core> up>>
@@ -152,6 +145,27 @@ let ?profileWatcher = <config-watcher "/run/synit/config/profile" {
 
 
 # Self-declared service states.
+#
 <run-service <config-watcher "/run/synit/config/state" {
   config: <* $config [ <reject <not <rec service-state { }>>> ]>
+}>>
+
+
+# Persistent daemons.
+#
+? <persist <daemon ?label ?attrs>> [
+  # Assert the daemon specification.
+  $config += <daemon $label $attrs>
+  # Run the daemon immediately irregardless of dependencies.
+  $config += <run-service <daemon $label>>
+]
+# Watch a directory for persistent daemons.
+<run-service <config-watcher "/run/synit/config/persistent" {
+  config: <* $config [ <or [
+      # Rewrite daemon assertions and handle them in $config.
+      <rewrite <daemon ?label ?attrs> <persist <daemon $label $attrs>> >
+      # Everything else is asserted as-is.
+      <accept _>
+    ]> ]>
+  log: $log
 }>>
