@@ -144,6 +144,11 @@ in
       runlevels = "S12345789";
       cgroup.name = "init";
       notify = "s6";
+
+      # TODO: now we're hijacking `env` and no one else can use it...
+      env = pkgs.writeText "mdevd.env" ''
+        PATH="${lib.makeBinPath [ pkgs.execline ]}:$PATH"
+      '';
     };
 
     finit.run.coldplug = {
@@ -152,6 +157,11 @@ in
       runlevels = "S";
       conditions = "service/mdevd/ready";
       cgroup.name = "init";
+
+      # TODO: now we're hijacking `env` and no one else can use it...
+      env = pkgs.writeText "mdevd.env" ''
+        PATH="${lib.makeBinPath [ pkgs.execline ]}:$PATH"
+      '';
     };
 
     # TODO: share between udev and mdevd
