@@ -270,7 +270,7 @@ in
 
     synit.daemons.sshd = {
       argv = let
-        keygenScript = pkgs.execline.passthru.writeScript "ssh-keygen.el" "-s0" ''
+        keygenScript = pkgs.execline.writeScript "ssh-keygen.el" "-s0" ''
           foreground { s6-mkdir -m 0755 -p /var/lib/sshd }
           foreground {
             if -n { eltest -s "/var/lib/sshd/ssh_host_ed25519_key" }

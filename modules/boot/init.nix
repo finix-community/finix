@@ -59,7 +59,7 @@ in
       activation.deps = [ "env" ];
     };
 
-    boot.init.script = pkgs.execline.passthru.writeScript "init" "-P" ''
+    boot.init.script = pkgs.execline.writeScript "init" "-P" ''
       background {
         ${pkgs.s6-portable-utils}/bin/s6-echo "\n[1;32m<<< finix - stage 2 >>>[0m\n"
       }

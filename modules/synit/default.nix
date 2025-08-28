@@ -15,7 +15,7 @@ let
     quoteExecline
     ;
 
-  writeExeclineScript = pkgs.execline.passthru.writeScript;
+  writeExeclineScript = pkgs.execline.writeScript;
 
   cfg = config.synit;
 

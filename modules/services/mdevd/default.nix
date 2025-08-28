@@ -14,7 +14,7 @@ let
     types
     ;
 
-  writeExeclineScript = pkgs.execline.passthru.writeScript;
+  writeExeclineScript = pkgs.execline.writeScript;
   gidOf = name: toString config.ids.gids.${name};
 
   cfg = config.services.mdevd;
