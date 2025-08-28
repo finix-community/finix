@@ -142,7 +142,7 @@ in
 
     finit.services.mdevd = {
       description = "device event daemon (mdevd)";
-      command = "${getExe cfg.package} -O 4 -D %n -f /etc/mdev.conf";
+      command = "${getExe cfg.package} -O 4 -D %n -f ${config.environment.etc."mdev.conf".source}";
       runlevels = "S12345789";
       cgroup.name = "init";
       notify = "s6";
