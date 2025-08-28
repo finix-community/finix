@@ -140,7 +140,7 @@ in
 
     finit.services.mdevd = {
       description = "device event daemon (mdevd)";
-      command = "${cfg.package}/bin/mdevd -D %n -O 2 -f ${config.environment.etc."mdev.conf".source}";
+      command = "${cfg.package}/bin/mdevd -D %n -O 2 -F /run/current-system/firmware -f ${config.environment.etc."mdev.conf".source}";
       runlevels = "S12345789";
       cgroup.name = "init";
       notify = "s6";
@@ -175,6 +175,7 @@ in
         "${cfg.package}/bin/mdevd"
         "-D" "3"
         "-O" "2"
+        "-F" "/run/current-system/firmware"
         # TODO: reload on SIGHUP.
         "-f" "/etc/mdev.conf"
       ];
