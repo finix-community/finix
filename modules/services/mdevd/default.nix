@@ -7,8 +7,6 @@
 
 let
   inherit (lib)
-    getExe
-    getExe'
     mkEnableOption
     mkIf
     mkOption
@@ -142,7 +140,7 @@ in
 
     finit.services.mdevd = {
       description = "device event daemon (mdevd)";
-      command = "${getExe cfg.package} -O 4 -D %n -f ${config.environment.etc."mdev.conf".source}";
+      command = "${cfg.package}/bin/mdevd -D %n -O 2 -f ${config.environment.etc."mdev.conf".source}";
       runlevels = "S12345789";
       cgroup.name = "init";
       notify = "s6";
@@ -150,7 +148,7 @@ in
 
     finit.run.coldplug = {
       description = "cold plugging system";
-      command = getExe' cfg.package "mdevd-coldplug";
+      command = "${cfg.package}/bin/mdevd-coldplug -O 2";
       runlevels = "S";
       conditions = "service/mdevd/ready";
       cgroup.name = "init";
