@@ -149,6 +149,7 @@ in
       runlevels = "S12345789";
       cgroup.name = "init";
       notify = "s6";
+      log = true;
 
       # TODO: now we're hijacking `env` and no one else can use it...
       env = pkgs.writeText "mdevd.env" ''
@@ -162,6 +163,7 @@ in
       runlevels = "S";
       conditions = "service/mdevd/ready";
       cgroup.name = "init";
+      log = true;
 
       # TODO: now we're hijacking `env` and no one else can use it...
       env = pkgs.writeText "mdevd.env" ''
