@@ -15,10 +15,10 @@ let
   };
 
   mkVm =
-    name: nodeConfig:
+    nodes: name: nodeConfig:
     lib.evalModules {
       specialArgs = {
-        inherit pkgs;
+        inherit pkgs nodes;
       };
       modules = [
         ../../../modules/testing
@@ -104,7 +104,7 @@ in
       ...
     }:
     let
-      nodes' = lib.mapAttrs mkVm nodes;
+      nodes' = lib.mapAttrs (mkVm nodes') nodes;
       script = pkgs.writeTextFile {
         name = "test-${name}.tcl";
         executable = true;
