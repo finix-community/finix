@@ -1,6 +1,16 @@
 { config, pkgs, lib, ... }:
 let
   cfg = config.programs.labwc;
+
+  sessionFile = pkgs.writeTextDir "share/wayland-sessions/labwc.desktop" ''
+    [Desktop Entry]
+    Comment=A wayland stacking compositor
+    DesktopNames=labwc;wlroots
+    Exec=${pkgs.dbus}/bin/dbus-run-session -- ${lib.getExe cfg.package}
+    Icon=labwc
+    Name=labwc
+    Type=Application
+  '';
 in
 {
   options.programs.labwc = {
@@ -16,17 +26,11 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = [ cfg.package ];
+    environment.systemPackages = [
+      cfg.package
 
-    environment.etc."wayland-sessions/labwc.desktop".source = (pkgs.formats.ini { }).generate "labwc.desktop" {
-      "Desktop Entry" = {
-        Name = "labwc";
-        Comment = "A wayland stacking compositor";
-        Exec = "${pkgs.dbus}/bin/dbus-run-session -- ${lib.getExe cfg.package}";
-        Icon = "labwc";
-        Type = "Application";
-        DesktopNames = "labwc;wlroots";
-      };
-    };
+      # override wayland session with one that includes absolute paths + dbus-run-session invocation
+      (lib.hiPrio sessionFile)
+    ];
   };
 }

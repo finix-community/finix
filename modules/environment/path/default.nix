@@ -67,6 +67,8 @@
         # NOTE: We need `/lib' to be among `pathsToLink' for NSS modules to work.
         "/lib" # FIXME: remove and update debug-info.nix
         "/sbin"
+
+        # TODO: trim this list down
         "/share/emacs"
         "/share/hunspell"
         "/share/org"
@@ -76,6 +78,7 @@
         "/share/kservicetypes5"
         "/share/kxmlgui5"
         "/share/thumbnailers"
+        "/share/wayland-sessions"
       ];
 
     environment.path = pkgs.buildEnv {
