@@ -192,7 +192,8 @@
   };
 
   config = lib.mkIf config.boot.kernel.enable {
-    system.modulesTree = [ config.boot.kernelPackages.kernel ] ++ config.boot.extraModulePackages;
+    # use split output for modules, when available
+    system.modulesTree = [ (config.boot.kernelPackages.kernel.modules or config.boot.kernelPackages.kernel) ] ++ config.boot.extraModulePackages;
 
     boot.kernelModules = [ "loop" "atkbd" ];
 
