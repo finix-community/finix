@@ -1,6 +1,15 @@
 { config, pkgs, lib, ... }:
 let
   cfg = config.programs.niri;
+
+  sessionFile = pkgs.writeTextDir "share/wayland-sessions/niri.desktop" ''
+    [Desktop Entry]
+    Comment=A scrollable-tiling Wayland compositor
+    DesktopNames=niri
+    Exec=${pkgs.dbus}/bin/dbus-run-session -- ${lib.getExe cfg.package} --session
+    Name=Niri
+    Type=Application
+  '';
 in
 {
   options.programs.niri = {
@@ -16,16 +25,11 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = [ cfg.package ];
+    environment.systemPackages = [
+      cfg.package
 
-    environment.etc."wayland-sessions/niri.desktop".source = (pkgs.formats.ini { }).generate "niri.desktop" {
-      "Desktop Entry" = {
-        Name = "Niri";
-        Comment = "A scrollable-tiling Wayland compositor";
-        Exec = "${pkgs.dbus}/bin/dbus-run-session -- ${lib.getExe cfg.package} --session";
-        Type = "Application";
-        DesktopNames = "niri";
-      };
-    };
+      # override wayland session with one that includes absolute paths + dbus-run-session invocation
+      (lib.hiPrio sessionFile)
+    ];
   };
 }

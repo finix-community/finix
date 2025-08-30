@@ -1,6 +1,16 @@
 { config, pkgs, lib, ... }:
 let
   cfg = config.programs.hyprland;
+
+  sessionFile = pkgs.writeTextDir "share/wayland-sessions/hyprland.desktop" ''
+    [Desktop Entry]
+    Name=Hyprland
+    Comment=An intelligent dynamic tiling Wayland compositor
+    Exec=${pkgs.dbus}/bin/dbus-run-session -- ${lib.getExe cfg.package}
+    Type=Application
+    DesktopNames=Hyprland
+    Keywords=tiling;wayland;compositor;
+  '';
 in
 {
   options.programs.hyprland = {
@@ -16,17 +26,11 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = [ cfg.package ];
+    environment.systemPackages = [
+      cfg.package
 
-    environment.etc."wayland-sessions/hyprland.desktop".source = (pkgs.formats.ini { }).generate "hyprland.desktop" {
-      "Desktop Entry" = {
-        Name = "Hyprland";
-        Comment = "An intelligent dynamic tiling Wayland compositor";
-        Exec = "${pkgs.dbus}/bin/dbus-run-session -- ${lib.getExe cfg.package}";
-        Type = "Application";
-        DesktopNames = "Hyprland";
-        Keywords = "tiling;wayland;compositor;";
-      };
-    };
+      # override wayland session with one that includes absolute paths + dbus-run-session invocation
+      (lib.hiPrio sessionFile)
+    ];
   };
 }
