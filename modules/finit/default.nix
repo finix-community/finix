@@ -289,7 +289,7 @@ let
       };
 
       kill = lib.mkOption {
-        type = with lib.types; nullOr (ints.between 1 60);
+        type = with lib.types; nullOr (ints.between 1 300);
         default = null;
         defaultText = "3";
         description = ''
