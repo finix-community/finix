@@ -109,7 +109,7 @@ in
         # Warning : fcron has no way to prompt user for a password !
         auth		required	pam_permit.so
         #auth		required	pam_unix.so nullok
-        #auth		required	pam_env.so
+        #auth		required	pam_env.so conffile=/etc/security/pam_env.conf
         session		required	pam_permit.so
         #session		required	pam_unix.so
         session         required        pam_loginuid.so
