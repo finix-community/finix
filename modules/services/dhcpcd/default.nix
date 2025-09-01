@@ -183,7 +183,7 @@ in
         "if" [
           "s6-envuidgid" "dhcpcd"
           "forx" "-E" "-p" "DIR" [ "/var/db/dhcpcd" "/var/lib/dhcpcd" ]
-          "if " [ "s6-mkdir" "-p" "-m" "750" "$DIR" ]
+          "if" [ "s6-mkdir" "-p" "-m" "750" "$DIR" ]
           "s6-chown" "-U" "$DIR"
         ]
 
