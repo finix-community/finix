@@ -1,10 +1,11 @@
 { lib, config, pkgs, ... }:
 
 let
-  inherit (builtins) toJSON;
+  inherit (builtins) any length toJSON;
   inherit (lib)
     attrNames
     concatMap
+    concatStringsSep
     foldl'
     listToAttrs
     literalMD
@@ -18,6 +19,7 @@ let
     optional
     optionals
     optionalAttrs
+    quoteExecline
     types
     ;
 
@@ -230,6 +232,31 @@ let
           '';
         };
 
+        syd = {
+          enable = mkEnableOption "Syd sandboxing";
+          allowPackages = mkOption {
+            description = ''
+              List of Nix store paths that can be read or executed.
+            '';
+          };
+          profiles = mkOption {
+            description = ''
+              List of predefined Syd profiles to apply.
+              See `syd(5)` for list of common profiles.
+            '';
+            type = with types; listOf str;
+            default = [ ];
+            example = [ "readonly" "nomem" ];
+          };
+          rules = mkOption {
+            description = "Syd sandboxing commands.";
+            type = types.lines;
+            example = ''
+              allow/read+/etc/secrets/foo
+              allow/net/bind+127.0.0.1!8080
+            '';
+          };
+        };
       };
     }
   );
@@ -272,6 +299,22 @@ let
     "fdmove" (toString fd) "4"
     ];
 
+  # Generate a Syd profile.
+  sydProfile = name: { allowPackages, rules, ... }:
+    pkgs.runCommand "${name}.syd-3" {
+      exportReferencesGraph = foldl'
+        (acc: p: acc ++ [ "graph.${acc |> length |> toString}" p])
+        [] allowPackages;
+    } ''
+      cat graph.* | sort -u | awk '/nix\/store/ {
+          print "allow/exec,read,stat+" $1 "/***"
+        }' >>$out
+      cat << EOF >> $out
+      ${rules}
+
+      EOF
+    '';
+
   # Produce a list of Syndicate assertions from a daemon declaration.
   daemonToPreserves =
     name: attrs:
@@ -294,6 +337,33 @@ let
           optionals hasReadyOnNotify (readyOnNotifyArgs attrs.readyOnNotify) ++
           # Empty execline noise from environment.
           optionals (attrs.logging.enable || hasReadyOnNotify) [ "emptyenv" "-c" ] ++
+          optionals (attrs.logging.enable || hasReadyOnNotify) [ "emptyenv" "-c" ] ++
+          optionals (attrs.logging.enable && attrs.syd.enable) (quoteExecline [
+            "fdreserve" "1"
+            "importas" "-i" "SYD_LOG_FD" "FD0"
+            "fdmove" "$SYD_LOG_FD" "1"
+            "pipeline" "-w" ([ "s6-log" ] ++ attrs.logging.args ++ [ "${attrs.logging.dir}.syd" ])
+            "fdswap" "1" "$SYD_LOG_FD"
+            "export" "SYD_LOG_FD" "$SYD_LOG_FD"
+          ]) ++
+          optionals (attrs.syd.enable) (
+            let
+              cmd =
+                [ "${pkgs.sydbox}/bin/syd" "-pnopie" ] ++
+                (map (p: "-p${p}") attrs.syd.profiles) ++
+                [
+                  "-P${sydProfile name attrs.syd}"
+                  "-mlock:on"
+                  "--"
+                ];
+            in
+            if (any (w: w == "$SYD") attrs.argv)
+            # Replace $SYD within the argv,
+            # presumably after some setup commands.
+            then [ "define" "-s" "SYD" (concatStringsSep "\n" cmd) ]
+            # Prepend argv with Syd.
+            else cmd
+          ) ++
           # Execute the daemon argv.
           attrs.argv
           # Double-quote the list of strings.
