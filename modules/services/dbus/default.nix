@@ -24,7 +24,14 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.dbus.override { enableSystemd = false; };
+      default = pkgs.dbus;
+
+      apply = package: if cfg.debug then package.overrideAttrs (o: { configureFlags = o.configureFlags ++ [ "--enable-verbose-mode" ]; }) else package;
+    };
+
+    debug = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
     };
 
     packages = mkOption {
@@ -99,9 +106,13 @@ in
       runlevels = "S123456789";
       conditions = "service/syslogd/ready";
       command = "${cfg.package}/bin/dbus-daemon --nofork --system --syslog-only";
+      notify = "systemd";
       cgroup.name = "system";
 
       pre = pkgs.writeShellScript "dbus-pre.sh" "${cfg.package}/bin/dbus-uuidgen --ensure";
+      env = lib.mkIf cfg.debug (pkgs.writeText "dbus.env" ''
+        DBUS_VERBOSE=1
+      '');
     };
 
     # TODO: add finit.services.reloadTriggers option
