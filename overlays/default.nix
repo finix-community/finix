@@ -19,6 +19,8 @@ final: prev: {
     ];
   });
 
+  nix-actor = final.callPackage ../pkgs/nix-actor { };
+
   preserves = final.callPackage ../pkgs/preserves { };
 
   syndicate-server = final.callPackage ../pkgs/syndicate-server { };
