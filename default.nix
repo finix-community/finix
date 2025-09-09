@@ -1,9 +1,7 @@
 {...}@args:
 let
   self = {
-    sources = {
-      nixpkgs = import <nixpkgs>;
-    };
+    sources = import ./npins;
 
     modules = import ./modules;
 
@@ -21,7 +19,7 @@ let
       withoutUdev = import ./overlays/without-udev.nix;
     };
 
-    pkgs = self.sources.nixpkgs {
+    pkgs = import self.sources.nixpkgs {
       config = { };
       overlays = with self.overlays; [
           default
