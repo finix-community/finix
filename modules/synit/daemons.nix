@@ -25,7 +25,7 @@ let
 
   strOrPath = with types; either str path;
 
-  preserves = pkgs.formats.preserves {
+  preserves = pkgs.sampkgs.formats.preserves {
     ignoreNulls = true;
     rawStrings = true;
   };
@@ -372,8 +372,8 @@ let
         env =
           let
             env' = optionalAttrs (attrs.env != null) attrs.env;
-            path' = attrs.path ++ optional hasReadyOnNotify pkgs.syndicate_utils;
-          in mapAttrs (_: v: if v == null then false else builtins.toJSON v) (
+            path' = attrs.path ++ optional hasReadyOnNotify pkgs.sampkgs.syndicate-utils;
+          in mapAttrs (_: v: if v == null then false else toJSON v) (
             env' // lib.optionalAttrs (path' != []) {
               PATH = env'.PATH or "${makeBinPath path'}:${config.synit.basePath}";
             });

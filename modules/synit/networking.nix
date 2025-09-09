@@ -8,6 +8,7 @@ let
     mkIf
     getExe'
     ;
+  inherit (pkgs.sampkgs) synit-network-utils;
 in
 {
   config = mkIf config.synit.enable {
@@ -15,7 +16,7 @@ in
     # Collect information on network devices when triggered
     # by uevent and assert it into the machine dataspace.
     services.mdevd.hotplugRules =
-      "-SUBSYSTEM=net;DEVPATH=.*/net/*;.* 0:0 600 &${pkgs.synit-network-utils}/lib/mdev-hook.el";
+      "-SUBSYSTEM=net;DEVPATH=.*/net/*;.* 0:0 600 &${synit-network-utils}/lib/mdev-hook.el";
 
     # A Tcl script responds to assertions in the 
     # network dataspace by executing iproute2 commands
@@ -28,7 +29,8 @@ in
           "network-configurator"
         ];
         path = builtins.attrValues {
-          inherit (pkgs) iproute2 openresolv synit-network-utils;
+          inherit (pkgs) iproute2 openresolv;
+          inherit synit-network-utils;
         };
         protocol = "text/syndicate";
         provides = [ [ "milestone" "network" ] ];
@@ -37,7 +39,7 @@ in
       };
 
     synit.plan.config = {
-      network = [ (builtins.readFile "${pkgs.synit-network-utils.src}/network.pr") ];
+      network = [ (builtins.readFile "${synit-network-utils.src}/network.pr") ];
     };
   };
 }

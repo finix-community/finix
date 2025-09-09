@@ -6,8 +6,6 @@ final: prev: {
   # TODO: upstream in nixpkgs
   finit = prev.callPackage ./finit { };
 
-  formats = import ./pkgs-lib/formats { inherit (final) lib; pkgs = prev; };
-
   # see https://github.com/eudev-project/eudev/pull/290
   eudev = prev.eudev.overrideAttrs (o: {
     patches = (o.patches or [ ]) ++ [
@@ -18,31 +16,6 @@ final: prev: {
       })
     ];
   });
-
-  nix-actor = final.callPackage ./nix-actor { };
-
-  preserves = final.callPackage ./preserves { };
-
-  syndicate-server = final.callPackage ./syndicate-server { };
-
-  syndicate_utils = final.callPackage ./syndicate_utils { };
-
-  synit-network-utils = final.callPackage ./synit-network-utils { };
-
-  synit-pid1 = final.callPackage ./synit-pid1 { };
-
-  synit-service = final.callPackage ./synit-service { };
-
-  tclPackages =
-    prev.tclPackages.overrideScope
-      (import ./tcl-modules);
-
-  tcl9Packages =
-    (prev.tclPackages.override {
-      tcl = final.tcl-9_0;
-      tk = final.tk-9_0;
-    }).overrideScope
-      (import ./tcl-modules);
 
   # modern fork of sysklogd - same author as finit
   sysklogd = prev.callPackage ./sysklogd { };

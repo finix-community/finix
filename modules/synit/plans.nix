@@ -17,7 +17,7 @@ let
     types
     ;
 
-  preserves = pkgs.formats.preserves {
+  preserves = pkgs.sampkgs.formats.preserves {
     ignoreNulls = true;
     rawStrings = true;
   };

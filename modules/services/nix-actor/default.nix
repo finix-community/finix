@@ -16,7 +16,7 @@ in
   options = {
     services.nix-actor = {
       enable = mkEnableOption "the Nix Syndicate actor";
-      package = mkPackageOption pkgs [ "nix-actor" ] { };
+      package = mkPackageOption pkgs [ "sampkgs" "nix-actor" ] { };
     };
   };
   config = mkIf cfg.enable {

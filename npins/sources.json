@@ -12,6 +12,20 @@
       "revision": "b599843bad24621dcaa5ab60dac98f9b0eb1cabe",
       "url": "https://github.com/nixos/nixpkgs/archive/b599843bad24621dcaa5ab60dac98f9b0eb1cabe.tar.gz",
       "hash": "1jkbwvljz9b05zjnxwgj8aadri3sd4wzamp620ywd7lp5s869dxl"
+    },
+    "sampkgs": {
+      "type": "Git",
+      "repository": {
+        "type": "Forgejo",
+        "server": "https://git.syndicate-lang.org/",
+        "owner": "ehmry",
+        "repo": "syndicate-flake"
+      },
+      "branch": "sampkgs",
+      "submodules": false,
+      "revision": "7a67da538fcbabdb4582b31b9fa9426697f1aa8d",
+      "url": "https://git.syndicate-lang.org/ehmry/syndicate-flake/archive/7a67da538fcbabdb4582b31b9fa9426697f1aa8d.tar.gz",
+      "hash": "1wl5agjba2y876hxyldkq65z5z1kkxzlhddh5m4p1jgh1z1841yn"
     }
   },
   "version": 5

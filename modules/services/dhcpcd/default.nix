@@ -195,7 +195,7 @@ in
         # and use a hooks script that communicates
         # with ../../synit/networking.tcl instead.
         "--noconfigure"
-        "--script" "${pkgs.synit-network-utils}/lib/dhcpcd-hook.tcl"
+        "--script" "${pkgs.sampkgs.synit-network-utils}/lib/dhcpcd-hook.tcl"
       ];
       path = [ cfg.package ];
       provides = [ [ "milestone" "network" ] ];

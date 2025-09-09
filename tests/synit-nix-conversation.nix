@@ -2,7 +2,7 @@
 
 let
   inherit (testenv) lib pkgs;
-  inherit (pkgs.tclPackages) sycl;
+  inherit (pkgs.sampkgs.tclPackages) sycl;
 in
 testenv.mkTest {
   name = "synit-nix-conversation";

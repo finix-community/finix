@@ -57,9 +57,9 @@ in
       };
     };
 
-    syndicate-server.package = mkPackageOption pkgs "syndicate-server" { };
+    syndicate-server.package = mkPackageOption pkgs [ "sampkgs" "syndicate-server" ] { };
 
-    pid1.package = mkPackageOption pkgs "synit-pid1" { };
+    pid1.package = mkPackageOption pkgs [ "sampkgs" "synit-pid1" ] { };
 
   };
 
@@ -131,7 +131,7 @@ in
     };
 
     environment.systemPackages = synitPackages ++ [
-      pkgs.synit-service
+      pkgs.sampkgs.synit-service
     ];
 
     # Only tested with mdevd.

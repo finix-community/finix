@@ -12,6 +12,14 @@ let
       # apply modular services to packages for convenience
       modularServices = import ./overlays/modular-services.nix;
 
+      # packages only needed by Synit
+      sampkgs = final: prev: {
+        # use an indirection to lazy load this overlay
+        sampkgs = builtins.trace
+          "loading sampkgs overlay"
+          ((import self.sources.sampkgs).overlay final prev).sampkgs;
+      };
+
       # work in progress overlay to build software in nixpkgs without systemd
       withoutSystemd = import ./overlays/without-systemd.nix;
 
@@ -24,6 +32,7 @@ let
       overlays = with self.overlays; [
           default
           modularServices
+          sampkgs
         ];
     };
 
