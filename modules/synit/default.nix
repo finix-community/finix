@@ -74,6 +74,7 @@ in
         # about heap size, but it's more important to stay small in this circumstance right now. - tonyg
         "_RJEM_MALLOC_CONF" = "narenas:1,tcache:false,dirty_decay_ms:0,muzzy_decay_ms:0";
         PATH = cfg.basePath;
+        SYNDICATE_LOG_TIMESTAMP = "tai64n";
       };
       argv = {
         pid1 = {
