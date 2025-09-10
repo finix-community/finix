@@ -26,6 +26,7 @@ in
 
   config = mkIf cfg.enable {
     hardware.console.keyMap = "us";
+    boot.init.pid1.env.NO_COLOR = "1";
     synit.logging.logToFileSystem = false;
     virtualisation.qemu = {
       extraArgs = lib.optional (!cfg.graphics.enable) "-nographic";
