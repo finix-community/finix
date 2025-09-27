@@ -111,6 +111,15 @@ in
       "vm.max_map_count" = 262144;
     };
 
+    boot.kernelModules = [
+      "br_netfilter"
+      "veth"
+      "xt_comment"
+      "xt_CHECKSUM"
+      "xt_MASQUERADE"
+      "vhost_vsock"
+    ];
+
     # waiting on resolution from https://github.com/nikstur/userborn/issues/7
     users.users.root = {
       # match documented default ranges https://linuxcontainers.org/incus/docs/main/userns-idmap/#allowed-ranges
