@@ -526,6 +526,14 @@ in
       '';
     };
 
+    path = lib.mkOption {
+      type = with lib.types; listOf (either path str);
+      default = [ ];
+      description = ''
+        Packages added to the `finit` PATH environment variable.
+      '';
+    };
+
     environment = lib.mkOption {
       type = with lib.types; attrsOf str;
       default = { };
@@ -636,7 +644,7 @@ in
     };
 
     # TODO: decide a reasonable default here... user can override if needed
-    finit.environment.PATH = lib.makeBinPath [
+    finit.path = [
       pkgs.coreutils
       pkgs.findutils
       pkgs.gnugrep
@@ -649,6 +657,10 @@ in
       # for finit log rotation
       pkgs.gzip
     ];
+
+    finit.environment = lib.mkIf (cfg.path != [ ]) {
+      PATH = lib.makeBinPath cfg.path;
+    };
 
     environment.etc =
       let
