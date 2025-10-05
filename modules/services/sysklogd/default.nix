@@ -16,6 +16,11 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    # finit has explicit sysklogd support, requires `logger` to be available in `PATH`
+    finit.path = [
+      cfg.package
+    ];
+
     finit.services.syslogd = {
       description = "system logging daemon";
       runlevels = "S0123456789";
