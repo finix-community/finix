@@ -153,7 +153,7 @@ in
 
       # TODO: now we're hijacking `env` and no one else can use it...
       env = pkgs.writeText "mdevd.env" ''
-        PATH="${lib.makeBinPath [ pkgs.execline ]}:$PATH"
+        PATH="${lib.makeBinPath [ pkgs.coreutils pkgs.execline pkgs.kmod ]}:$PATH"
       '';
     };
 
@@ -164,11 +164,6 @@ in
       conditions = "service/mdevd/ready";
       cgroup.name = "init";
       log = true;
-
-      # TODO: now we're hijacking `env` and no one else can use it...
-      env = pkgs.writeText "mdevd.env" ''
-        PATH="${lib.makeBinPath [ pkgs.execline ]}:$PATH"
-      '';
     };
 
     # TODO: share between udev and mdevd
