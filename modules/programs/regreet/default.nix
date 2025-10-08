@@ -12,6 +12,11 @@ in
       default = false;
     };
 
+    package = lib.mkOption {
+      type = lib.types.package;
+      default = pkgs.regreet;
+    };
+
     debug = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -27,7 +32,7 @@ in
     services.greetd.enable = true;
     services.greetd.settings = {
       default_session = {
-        command = "${lib.getExe pkgs.cage} -s -m last -- ${lib.getExe pkgs.regreet} --config ${configFile}" + lib.optionalString cfg.debug " --log-level debug";
+        command = "${lib.getExe pkgs.cage} -s -m last -- ${lib.getExe cfg.package} --config ${configFile}" + lib.optionalString cfg.debug " --log-level debug";
       };
     };
 
