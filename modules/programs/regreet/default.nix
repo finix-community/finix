@@ -27,7 +27,7 @@ in
     services.greetd.enable = true;
     services.greetd.settings = {
       default_session = {
-        command = "${lib.getExe pkgs.cage} -s -m last -- ${lib.getExe pkgs.greetd.regreet} --config ${configFile}" + lib.optionalString cfg.debug " --log-level debug";
+        command = "${lib.getExe pkgs.cage} -s -m last -- ${lib.getExe pkgs.regreet} --config ${configFile}" + lib.optionalString cfg.debug " --log-level debug";
       };
     };
 

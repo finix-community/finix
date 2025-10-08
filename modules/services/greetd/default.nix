@@ -26,7 +26,7 @@ in
     services.greetd.settings = {
       terminal.vt = lib.mkDefault "next";
       default_session = {
-        command = lib.mkDefault "${pkgs.greetd.greetd}/bin/agreety";
+        command = lib.mkDefault "${pkgs.greetd}/bin/agreety";
         user = "greeter";
       };
     };
