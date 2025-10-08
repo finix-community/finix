@@ -30,7 +30,8 @@ let
 
     ptmx        0:${tty} 666
     pty.*       0:${tty} 660
-    tty[0-9]*   0:${tty} 660
+    tty         0:${tty} 666
+    tty[0-9]+   0:${tty} 660
 
     vcsa[0-9]*  0:${tty} 660
     ttyS[0-9]*  0:${gidOf "uucp"} 660
