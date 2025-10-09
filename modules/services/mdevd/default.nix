@@ -98,6 +98,19 @@ in
       default = false;
     };
 
+    nlgroups = lib.mkOption {
+      type = with lib.types; nullOr ints.unsigned;
+      default = null;
+      description = ''
+        After `mdevd` has handled the uevents, rebroadcast them to the netlink groups identified
+        by the mask {option}`nlgroups`.
+
+        ::: {.note}
+        A value of `4` will make the daemon rebroadcast kernel uevents to `libudev-zero`.
+        :::
+      '';
+    };
+
     hotplugRules = mkOption {
       type = types.lines;
       description = ''
@@ -146,7 +159,7 @@ in
 
     finit.services.mdevd = {
       description = "device event daemon (mdevd)";
-      command = "${cfg.package}/bin/mdevd -D %n -O 2 -F /run/current-system/firmware -f ${config.environment.etc."mdev.conf".source}" + lib.optionalString cfg.debug " -v 3";
+      command = "${cfg.package}/bin/mdevd -D %n -F /run/current-system/firmware -f ${config.environment.etc."mdev.conf".source}" + lib.optionalString (cfg.nlgroups != null) " -O ${toString cfg.nlgroups}" + lib.optionalString cfg.debug " -v 3";
       runlevels = "S12345789";
       cgroup.name = "init";
       notify = "s6";
@@ -160,7 +173,7 @@ in
 
     finit.run.coldplug = {
       description = "cold plugging system";
-      command = "${cfg.package}/bin/mdevd-coldplug -O 2" + lib.optionalString cfg.debug " -v 3";
+      command = "${cfg.package}/bin/mdevd-coldplug" + lib.optionalString (cfg.nlgroups != null) " -O ${toString cfg.nlgroups}" + lib.optionalString cfg.debug " -v 3";
       runlevels = "S";
       conditions = "service/mdevd/ready";
       cgroup.name = "init";
@@ -187,10 +200,11 @@ in
       argv = [
         "${cfg.package}/bin/mdevd"
         "-D" "3"
-        "-O" "2"
         "-F" "/run/current-system/firmware"
         # TODO: reload on SIGHUP.
         "-f" "/etc/mdev.conf"
+      ] ++ lib.optionals (cfg.nlgroups != null) [
+        "-O" (toString cfg.nlgroups)
       ] ++ lib.optionals cfg.debug [
         "-v" "3"
       ];
@@ -203,7 +217,7 @@ in
 
     # Hold core back until another coldplug completes.
     synit.core.daemons.mdevd-coldplug = {
-      argv = [ "${cfg.package}/bin/mdevd-coldplug" "-O" "2" ] ++ lib.optionals cfg.debug [ "-v" "3" ];
+      argv = [ "${cfg.package}/bin/mdevd-coldplug" ] ++ lib.optionals (cfg.nlgroups != null) [ "-O" (toString cfg.nlgroups) ] ++ lib.optionals cfg.debug [ "-v" "3" ];
       restart = "on-error";
       requires = [ { key = [ "daemon" "mdevd" ]; } ];
       logging.enable = false;
