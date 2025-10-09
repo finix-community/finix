@@ -35,12 +35,12 @@ in
       description = "greeter daemon";
       runlevels = "34";
       conditions = [ "service/syslogd/ready" ] ++ lib.optionals config.services.seatd.enable [ "service/seatd/ready" ];
-      command = "${pkgs.greetd.greetd}/bin/greetd --config ${configFile}";
+      command = "${pkgs.greetd}/bin/greetd --config ${configFile}";
       cgroup.name = "user";
     };
 
     synit.daemons.greetd = {
-      argv = [ "${pkgs.greetd.greetd}/bin/greetd" "--config" configFile ];
+      argv = [ "${pkgs.greetd}/bin/greetd" "--config" configFile ];
       persistent = true;
       provides = [ [ "milestone" "login" ] ];
       requires = [ { key = [ "milestone" "wrappers" ]; } ]
