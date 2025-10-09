@@ -154,7 +154,7 @@ in
 
       # TODO: now we're hijacking `env` and no one else can use it...
       env = pkgs.writeText "mdevd.env" ''
-        PATH="${lib.makeBinPath [ pkgs.coreutils pkgs.execline pkgs.kmod ]}:$PATH"
+        PATH="${lib.makeBinPath [ pkgs.s6-portable-utils pkgs.coreutils pkgs.execline pkgs.kmod pkgs.util-linux ]}:$PATH"
       '';
     };
 

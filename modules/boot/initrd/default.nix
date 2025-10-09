@@ -313,8 +313,10 @@ let
       ++ lib.optional config.services.udev.enable pkgs.eudev
       ++ lib.optionals config.services.mdevd.enable [
         config.services.mdevd.package
+
         pkgs.execline
         pkgs.s6-portable-utils
+        pkgs.util-linux
       ]
       ++ fsPackages;
     pathsToLink = [
