@@ -410,7 +410,7 @@ in
       dbusControlled = mkOption {
         type = types.bool;
         default = lib.length cfg.interfaces < 2;
-        defaultText = literalExpression "length config.${opt.interfaces} < 2";
+        defaultText = literalExpression "length config.services.wpa_supplicant.interfaces < 2";
         description = ''
           Whether to enable the DBus control interface.
           This is only needed when using NetworkManager or connman.
