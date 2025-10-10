@@ -728,8 +728,5 @@ in
     services.tmpfiles.finit.rules = [
       "d /etc/finit.d/enabled 0755"
     ];
-
-    # Only tested with udev.
-    services.udev.enable = true;
   };
 }
