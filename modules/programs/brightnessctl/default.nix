@@ -30,12 +30,12 @@ in
     environment.systemPackages = [ cfg.package ];
 
     services.udev.packages = [ cfg.package ];
-    services.mdevd.hotplugRules = ''
+    services.mdevd.hotplugRules = lib.mkBefore ''
       -SUBSYSTEM=backlight;.* root:root 0600 @chgrp video /sys/class/backlight/$MDEV/brightness
-      SUBSYSTEM=backlight;.* root:root 0600 @chmod g+w /sys/class/backlight/$MDEV/brightness
+      -SUBSYSTEM=backlight;.* root:root 0600 @chmod g+w /sys/class/backlight/$MDEV/brightness
 
       -SUBSYSTEM=leds;.* root:root 0600 @chgrp input /sys/class/leds/$MDEV/brightness
-      SUBSYSTEM=leds;.* root:root 0600 @chmod g+w /sys/class/leds/$MDEV/brightness
+      -SUBSYSTEM=leds;.* root:root 0600 @chmod g+w /sys/class/leds/$MDEV/brightness
     '';
   };
 }
