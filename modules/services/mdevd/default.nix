@@ -132,10 +132,11 @@ in
 
     # Populate with boot rules.
     services.mdevd = {
-      hotplugRules = lib.concatLines [
-        modaliasRule
+      hotplugRules = lib.mkMerge [
+        # fallthrough rules at the top
+        (lib.mkOrder 250 modaliasRule)
+        (lib.mkBefore devDiskRule)
         specialRules
-        devDiskRule
       ];
       coldplugRules = lib.concatLines [
         modaliasRule
