@@ -1,6 +1,35 @@
 { config, pkgs, lib, ... }:
 let
   cfg = config.services.dropbear;
+
+  stateDir = "/var/lib/dropbear";
+
+  keyOpts = { config, ... }: {
+    options = {
+      type = lib.mkOption {
+        type = lib.types.enum [ "rsa" "ecdsa" "ed25519" ];
+        default = "ed25519";
+      };
+
+      path = lib.mkOption {
+        type = lib.types.path;
+      };
+
+      bits = lib.mkOption {
+        type = with lib.types; nullOr int;
+        default = null;
+      };
+
+      comment = lib.mkOption {
+        type = with lib.types; nullOr str;
+        default = null;
+      };
+    };
+
+    config = {
+      path = lib.mkDefault "${stateDir}/dropbear_${config.type}_host_key";
+    };
+  };
 in
 {
   options.services.dropbear = {
@@ -14,6 +43,11 @@ in
       default = pkgs.dropbear;
     };
 
+    hostKeys = lib.mkOption {
+      type = with lib.types; listOf (submodule keyOpts);
+      default = [ { /* default */ } ];
+    };
+
     extraArgs = lib.mkOption {
       type = with lib.types; listOf str;
       default = [ ];
@@ -21,6 +55,11 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    services.dropbear.extraArgs = config.services.dropbear.hostKeys
+      |> map (key: [ "-r" key.path ])
+      |> lib.flatten
+    ;
+
     environment.systemPackages = [
       cfg.package
     ];
@@ -28,17 +67,22 @@ in
     finit.tasks.dropbear-keygen = {
       description = "generate ssh host keys";
       log = true;
-      command = pkgs.writeShellScript "ssh-keygen.sh" ''
-        if ! [ -s "/var/lib/dropbear/dropbear_ed25519_host_key" ]; then
-          ${cfg.package}/bin/dropbearkey -t ed25519 -f "/var/lib/dropbear/dropbear_ed25519_host_key"
-        fi
-      '';
+      command =
+        let
+          script = lib.concatMapStringsSep "\n" (key: ''
+            if ! [ -s "${key.path}" ]; then
+              ${cfg.package}/bin/dropbearkey -t ${key.type} -f "${key.path}" ${lib.optionalString (key.bits != null) "-s ${toString key.bits}"} ${lib.optionalString (key.comment != null) "-C \"${key.comment}\""}
+            fi
+          '') config.services.dropbear.hostKeys;
+        in
+          pkgs.writeShellScript "ssh-keygen.sh" script;
     };
+
 
     finit.services.dropbear = {
       description = "dropbear ssh daemon";
       conditions = [ "net/lo/up" "service/syslogd/ready" "task/dropbear-keygen/success" ];
-      command = "${pkgs.dropbear}/bin/dropbear -F -r /var/lib/dropbear/dropbear_ed25519_host_key" + lib.escapeShellArgs cfg.extraArgs;
+      command = "${pkgs.dropbear}/bin/dropbear -F " + lib.escapeShellArgs cfg.extraArgs;
       cgroup.name = "user";
       log = true;
       nohup = true;
@@ -51,7 +95,7 @@ in
     };
 
     services.tmpfiles.dropbear.rules = [
-      "d /var/lib/dropbear 0755"
+      "d ${stateDir} 0755"
     ];
   };
 }
