@@ -87,7 +87,7 @@ in
         session optional pam_loginuid.so # loginuid (order 10300)
         # session optional ${pkgs.elogind}/lib/security/pam_elogind.so debug # need this i think
         session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so
-        session required ${pkgs.linux-pam}/lib/security/pam_lastlog.so silent # lastlog (order 10700)
+        session required ${config.security.pam.package}/lib/security/pam_lastlog.so silent # lastlog (order 10700)
       '';
     };
 

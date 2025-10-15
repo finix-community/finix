@@ -27,6 +27,11 @@ in
       default = true;
     };
 
+    package = lib.mkOption {
+      type = lib.types.package;
+      default = pkgs.pam;
+    };
+
     debug = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -102,7 +107,7 @@ in
         setuid = true;
         owner = "root";
         group = "root";
-        source = "${pkgs.pam}/bin/unix_chkpwd";
+        source = "${cfg.package}/bin/unix_chkpwd";
       };
     };
   };
