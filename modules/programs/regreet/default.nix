@@ -26,13 +26,38 @@ in
       type = format.type;
       default = { };
     };
+
+    compositor = {
+      package = lib.mkOption {
+        type = lib.types.package;
+        default = pkgs.cage;
+      };
+
+      args = lib.mkOption {
+        type = with lib.types; listOf str;
+        default = [ "-s" ];
+
+        # https://github.com/cage-kiosk/cage/blob/master/cage.1.scd#options
+      };
+
+      environment = lib.mkOption {
+        type = with lib.types; attrsOf str;
+        default = { };
+        example = {
+          XKB_DEFAULT_LAYOUT = "us";
+          XKB_DEFAULT_VARIANT = "dvorak";
+        };
+
+        # https://github.com/cage-kiosk/cage/blob/master/cage.1.scd#environment
+      };
+    };
   };
 
   config = lib.mkIf cfg.enable {
     services.greetd.enable = true;
     services.greetd.settings = {
       default_session = {
-        command = "${lib.getExe pkgs.cage} -s -m last -- ${lib.getExe cfg.package} --config ${configFile}" + lib.optionalString cfg.debug " --log-level debug";
+        command = "env ${lib.concatMapAttrsStringSep " " (k: v: "${k}=${toString v}") cfg.compositor.environment} ${lib.getExe cfg.compositor.package} ${toString cfg.compositor.args} -- ${lib.getExe cfg.package} --config ${configFile}" + lib.optionalString cfg.debug " --log-level debug";
       };
     };
 
