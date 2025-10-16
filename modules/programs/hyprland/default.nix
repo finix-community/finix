@@ -11,6 +11,12 @@ let
     DesktopNames=Hyprland
     Keywords=tiling;wayland;compositor;
   '';
+
+  # libudev-zero is a hard requirement when running mdevd
+  libinput = pkgs.libinput.override (lib.optionalAttrs config.services.mdevd.enable {
+    udev = pkgs.libudev-zero;
+    wacomSupport = false;
+  });
 in
 {
   options.programs.hyprland = {
@@ -21,7 +27,12 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.hyprland;
+      default = pkgs.hyprland.override {
+        inherit libinput;
+
+        # since we're recompiling anyways we may as well disable systemd since it isn't used
+        withSystemd = !config.services.mdevd.enable;
+      };
     };
   };
 

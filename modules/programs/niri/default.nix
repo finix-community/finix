@@ -10,6 +10,12 @@ let
     Name=Niri
     Type=Application
   '';
+
+  # libudev-zero is a hard requirement when running mdevd
+  libinput = pkgs.libinput.override (lib.optionalAttrs config.services.mdevd.enable {
+    udev = pkgs.libudev-zero;
+    wacomSupport = false;
+  });
 in
 {
   options.programs.niri = {
@@ -20,7 +26,12 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.niri;
+      default = pkgs.niri.override {
+        inherit libinput;
+
+        # since we're recompiling anyways we may as well disable systemd since it isn't used
+        withSystemd = !config.services.mdevd.enable;
+      };
     };
   };
 
