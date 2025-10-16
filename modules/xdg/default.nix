@@ -1,10 +1,10 @@
-{ pkgs, ... }:
+{ modulesPath, ... }:
 {
   imports = [
     ./portal.nix
 
-    (pkgs.path + "/nixos/modules/config/xdg/autostart.nix")
-    (pkgs.path + "/nixos/modules/config/xdg/mime.nix")
-    (pkgs.path + "/nixos/modules/config/xdg/terminal-exec.nix")
+    "${modulesPath}/config/xdg/autostart.nix"
+    "${modulesPath}/config/xdg/mime.nix"
+    "${modulesPath}/config/xdg/terminal-exec.nix"
   ];
 }

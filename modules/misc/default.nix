@@ -1,8 +1,9 @@
-{ pkgs, ... }:
+{ modulesPath, ... }:
 {
   imports = [
     ./assertions.nix
-    (pkgs.path + "/nixos/modules/misc/ids.nix")
-    (pkgs.path + "/nixos/modules/misc/meta.nix")
+
+    "${modulesPath}/misc/ids.nix"
+    "${modulesPath}/misc/meta.nix"
   ];
 }

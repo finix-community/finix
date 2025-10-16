@@ -1,8 +1,8 @@
-{ pkgs, ... }:
+{ modulesPath, ... }:
 {
   imports = [
     ./fontconfig.nix
 
-    (pkgs.path + "/nixos/modules/config/fonts/packages.nix")
+    "${modulesPath}/config/fonts/packages.nix"
   ];
 }

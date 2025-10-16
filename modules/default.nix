@@ -23,7 +23,7 @@ in
       ./i18n
       ./misc
       ./networking
-      # ./nixpkgs
+      ./nixpkgs
       ./security
       ./synit
       ./system/activation

@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ modulesPath, ... }:
 {
   imports = [
     ./pam
@@ -6,6 +6,6 @@
     ./sudo
     ./wrappers
 
-    (pkgs.path + "/nixos/modules/security/ca.nix")
+    "${modulesPath}/security/ca.nix"
   ];
 }
