@@ -18,7 +18,9 @@ let
     nodes: name: nodeConfig:
     lib.evalModules {
       specialArgs = {
-        inherit pkgs nodes;
+        inherit nodes;
+
+        modulesPath = toString (pkgs.path + "/nixos/modules");
       };
       modules = [
         ../../../modules/testing
@@ -27,6 +29,9 @@ let
         (
           { config, ... }:
           {
+            # TODO: option should provide a default
+            nixpkgs.pkgs = pkgs;
+
             boot.kernelParams = [
               "console=ttyS0,115200n8"
             ];

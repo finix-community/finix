@@ -5,9 +5,12 @@ testenv.mkTest {
   nodes.machine = {
     boot.serviceManager = "finit";
     finit.runlevel = 2;
+    services.mdevd.enable = true;
     services.dhcpcd.enable = true;
   };
   tclScript = ''
+    set timeout 20
+
     machine spawn
     machine expect "finix - stage 1"
     machine expect "finix - stage 2"
