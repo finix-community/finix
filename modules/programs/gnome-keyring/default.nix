@@ -6,6 +6,9 @@ in
   options.programs.gnome-keyring.enable = lib.mkOption {
     type = lib.types.bool;
     default = false;
+    description = ''
+      Whether to enable [gnome-keyring](${pkgs.gnome-keyring.meta.homepage}).
+    '';
   };
 
   config = lib.mkIf cfg.enable {

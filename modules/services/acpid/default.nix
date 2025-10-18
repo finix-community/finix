@@ -27,6 +27,9 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [acpid](${pkgs.acpid.meta.homepage}) as a system service.
+      '';
     };
 
     handlers = lib.mkOption {

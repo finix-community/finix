@@ -10,14 +10,18 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [greetd](${pkgs.greetd.meta.homepage}) as a system service.
+      '';
     };
 
     settings = lib.mkOption {
-      description = ''
-        Contents of the greetd configuration file.
-        See the greetd(5) man page.
-      '';
       type = format.type;
+      default = { };
+      description = ''
+        `greetd` configuration. See {manpage}`greetd(5)`
+        for additional details.
+      '';
     };
   };
 

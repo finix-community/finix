@@ -7,16 +7,26 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [system76-scheduler](${pkgs.system76-scheduler.meta.homepage}) as a system service.
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.system76-scheduler;
+      defaultText = lib.literalExpression "pkgs.system76-scheduler";
+      description = ''
+        The package to use for `system76-scheduler`.
+      '';
     };
 
     debug = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable debug logging.
+      '';
     };
 
     configFile = lib.mkOption {

@@ -7,11 +7,18 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [fish](${pkgs.fish.meta.homepage}).
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.fish;
+      defaultText = lib.literalExpression "pkgs.fish";
+      description = ''
+        The package to use for `fish`.
+      '';
     };
   };
 

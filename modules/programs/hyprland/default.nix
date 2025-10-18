@@ -17,11 +17,18 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [hyprland](${pkgs.hyprland.meta.homepage}).
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.hyprland;
+      defaultText = lib.literalExpression "pkgs.hyprland";
+      description = ''
+        The package to use for `hyprland`.
+      '';
     };
   };
 

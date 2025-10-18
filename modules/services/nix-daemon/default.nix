@@ -64,8 +64,11 @@ in
       type = lib.types.bool;
       default = false;
       description = ''
-        Whether to enable Nix.
-        Disabling Nix makes the system hard to modify and the Nix programs and configuration will not be made available by NixOS itself.
+        Whether to enable [nix](${pkgs.nix.meta.homepage}) as a system service.
+
+        ::: {.warning}
+        Disabling `nix` makes the system hard to modify and the Nix programs and configuration will not be made available by NixOS itself.
+        :::
       '';
     };
 
@@ -74,7 +77,7 @@ in
       default = pkgs.nix;
       defaultText = lib.literalExpression "pkgs.nix";
       description = ''
-        This option specifies the Nix package instance to use throughout the system.
+        The package to use for `nix`.
       '';
     };
 

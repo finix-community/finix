@@ -7,18 +7,27 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [chrony](${pkgs.chrony.meta.homepage}) as a system service.
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.chrony;
-
+      defaultText = lib.literalExpression "pkgs.chrony";
       apply = package: if cfg.debug then package.overrideAttrs (o: { configureFlags = o.configureFlags ++ [ "--enable-debug" ]; }) else package;
+      description = ''
+        The package to use for `chrony`.
+      '';
     };
 
     debug = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable debug logging.
+      '';
     };
 
     configFile = lib.mkOption {

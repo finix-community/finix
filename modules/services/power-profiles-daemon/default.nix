@@ -8,14 +8,17 @@ in
       type = lib.types.bool;
       default = false;
       description = ''
-        Whether to enable power-profiles-daemon, a DBus daemon that allows
-        changing system behavior based upon user-selected power profiles.
+        Whether to enable [power-profiles-daemon](${pkgs.power-profiles-daemon.meta.homepage}) as a system service.
       '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.power-profiles-daemon;
+      defaultText = lib.literalExpression "pkgs.power-profiles-daemon";
+      description = ''
+        The package to use for `power-profiles-daemon`.
+      '';
     };
   };
 

@@ -500,13 +500,18 @@ in
       default = config.boot.serviceManager == "finit";
       defaultText = lib.literalMD ''config.boot.serviceManager == "finit"'';
       readOnly = true;
+      description = ''
+        Whether to enable [finit](${pkgs.finit.meta.homepage}) as the system service manager and pid `1`.
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.finit;
       defaultText = lib.literalExpression "pkgs.finit";
-      description = "The `finit` package to use.";
+      description = ''
+        The package to use for `finit`.
+      '';
     };
 
     readiness = lib.mkOption {

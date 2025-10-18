@@ -6,7 +6,9 @@ in
   options.services.atd.enable = lib.mkOption {
     type = lib.types.bool;
     default = false;
-    description = "atd";
+    description = ''
+      Whether to enable [atd](${pkgs.at.meta.homepage}) as a system service.
+    '';
   };
 
   config = lib.mkIf cfg.enable {

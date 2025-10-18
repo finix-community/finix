@@ -7,11 +7,18 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [zerotierone](${pkgs.zerotierone.meta.homepage}) as a system service.
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.zerotierone;
+      defaultText = lib.literalExpression "pkgs.zerotierone";
+      description = ''
+        The package to use for `zerotierone`.
+      '';
     };
 
     stateDir = lib.mkOption {

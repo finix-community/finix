@@ -16,11 +16,18 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [sway](${pkgs.sway.meta.homepage}).
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.sway;
+      defaultText = lib.literalExpression "pkgs.sway";
+      description = ''
+        The package to use for `sway`.
+      '';
     };
   };
 

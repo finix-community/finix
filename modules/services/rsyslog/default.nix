@@ -36,6 +36,9 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [rsyslog](${pkgs.rsyslog.meta.homepage}) as a system service.
+      '';
     };
   };
 

@@ -14,16 +14,26 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [fcron](${pkgs.fcron.meta.homepage}) as a system service.
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.fcron;
+      defaultText = lib.literalExpression "pkgs.fcron";
+      description = ''
+        The package to use for `fcron`.
+      '';
     };
 
     debug = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable debug logging.
+      '';
     };
 
     systab = lib.mkOption {

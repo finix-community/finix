@@ -17,11 +17,18 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [labwc](${pkgs.labwc.meta.homepage}).
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.labwc;
+      defaultText = lib.literalExpression "pkgs.labwc";
+      description = ''
+        The package to use for `labwc`.
+      '';
     };
   };
 

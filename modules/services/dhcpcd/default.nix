@@ -16,14 +16,27 @@ let
 in
 {
   options.services.dhcpcd = {
-    enable = lib.mkEnableOption "dhcpd";
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to enable [dhcpcd](${pkgs.dhcpcd.meta.homepage}) as a system service.
+      '';
+    };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.dhcpcd.override {
         withUdev = config.services.udev.enable;
       };
-      defaultText = lib.literalExpression "pkgs.dhcpcd";
+      defaultText = lib.literalExpression ''
+        pkgs.dhcpcd.override {
+          withUdev = config.services.udev.enable;
+        }
+      '';
+      description = ''
+        The package to use for `dhcpcd`.
+      '';
     };
 
     settings = lib.mkOption {

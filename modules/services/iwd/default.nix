@@ -8,21 +8,35 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [iwd](${pkgs.iwd.meta.homepage}) as a system service.
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.iwd;
+      defaultText = lib.literalExpression "pkgs.iwd";
+      description = ''
+        The package to use for `iwd`.
+      '';
     };
 
     debug = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable debug logging.
+      '';
     };
 
     settings = lib.mkOption {
       type = format.type;
       default = { };
+      description = ''
+        `iwd` configuration. See {manpage}`iwd.config(5)`
+        for additional details.
+      '';
     };
   };
 

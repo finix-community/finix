@@ -10,6 +10,9 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [gdm](${pkgs.gdm.meta.homepage}) as a system service.
+      '';
     };
 
     settings = lib.mkOption {

@@ -242,7 +242,7 @@ let
           profiles = mkOption {
             description = ''
               List of predefined Syd profiles to apply.
-              See `syd(5)` for list of common profiles.
+              See {manpage}`syd(5)` for list of common profiles.
             '';
             type = with types; listOf str;
             default = [ ];

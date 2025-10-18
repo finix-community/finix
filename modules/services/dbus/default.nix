@@ -17,21 +17,26 @@ in
       type = types.bool;
       default = false;
       description = ''
-        Whether to start the D-Bus message bus daemon, which is
-        required by many other system services and applications.
+        Whether to enable [dbus](${pkgs.dbus.meta.homepage}) as a system service.
       '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.dbus;
-
+      defaultText = lib.literalExpression "pkgs.dbus";
       apply = package: if cfg.debug then package.overrideAttrs (o: { configureFlags = o.configureFlags ++ [ "--enable-verbose-mode" ]; }) else package;
+      description = ''
+        The package to use for `dbus`.
+      '';
     };
 
     debug = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable debug logging.
+      '';
     };
 
     packages = mkOption {

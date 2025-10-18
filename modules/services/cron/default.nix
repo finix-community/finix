@@ -16,6 +16,9 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [cron](${pkgs.cron.meta.homepage}) as a system service.
+      '';
     };
 
     systab = lib.mkOption {

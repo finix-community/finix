@@ -9,6 +9,9 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [brightnessctl](${pkgs.brightnessctl.meta.homepage}).
+      '';
     };
 
     package = lib.mkOption {
@@ -22,6 +25,9 @@ in
           logindSupport = config.services.elogind.enable;
           udevSupport = config.services.udev.enable;
         }
+      '';
+      description = ''
+        The package to use for `brightnessctl`.
       '';
     };
   };

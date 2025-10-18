@@ -39,6 +39,9 @@ in
       default = config.boot.serviceManager == "synit";
       defaultText = ''config.boot.serviceManager == "synit"'';
       readOnly = true;
+      description = ''
+        Whether to enable [synit](${pkgs.synit-pid1.meta.homepage}) as the system service manager and pid `1`.
+      '';
     };
 
     basePath = mkOption {

@@ -9,21 +9,35 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [bluez](${pkgs.bluez.meta.homepage}) as a system service.
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.bluez;
+      defaultText = lib.literalExpression "pkgs.bluez";
+      description = ''
+        The package to use for `bluez`.
+      '';
     };
 
     debug = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable debug logging.
+      '';
     };
 
     settings = lib.mkOption {
       type = format.type;
       default = { };
+      description = ''
+        `bluez` configuration. See [upstream documentation](https://github.com/bluez/bluez/blob/master/src/main.conf)
+        for additional details.
+      '';
     };
   };
 

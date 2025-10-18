@@ -7,17 +7,30 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [polkit](${pkgs.polkit.meta.homepage}) as a system service.
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.polkit;
+      defaultText = lib.literalExpression "pkgs.polkit";
+      description = ''
+        The package to use for `polkit`.
+      '';
     };
 
     debug = lib.mkOption {
       type = lib.types.bool;
       default = false;
-      description = "Whether to enable debug logs from polkit. This is required in order to see log messages from rule definitions.";
+      description = ''
+        Whether to enable debug logging.
+
+        ::: {.note}
+        This is required in order to see log messages from rule definitions.
+        :::
+      '';
     };
 
     extraConfig = lib.mkOption {

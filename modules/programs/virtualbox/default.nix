@@ -24,11 +24,23 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [virtualbox](${pkgs.virtualbox.meta.homepage}).
+
+        ::: {.note}
+        In order to pass USB devices from the host to guests, a user
+        needs to be added to the `vboxusers` group.
+        :::
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.virtualbox;
+      defaultText = lib.literalExpression "pkgs.virtualbox";
+      description = ''
+        The package to use for `virtualbox`.
+      '';
     };
   };
 

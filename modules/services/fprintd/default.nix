@@ -7,16 +7,26 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [fprintd](${pkgs.fprintd.meta.homepage}) as a system service.
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.fprintd;
+      defaultText = lib.literalExpression "pkgs.fprintd";
+      description = ''
+        The package to use for `fprintd`.
+      '';
     };
 
     debug = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable debug logging.
+      '';
     };
   };
 

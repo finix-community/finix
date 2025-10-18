@@ -7,6 +7,9 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [illum](${pkgs.illum.meta.homepage}) as a system service.
+      '';
     };
   };
 

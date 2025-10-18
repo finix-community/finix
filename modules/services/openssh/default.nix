@@ -45,11 +45,18 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [openssh](${pkgs.openssh.meta.homepage}) as a system service.
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.openssh;
+      defaultText = lib.literalExpression "pkgs.openssh";
+      description = ''
+        The package to use for `openssh`.
+      '';
     };
 
     sftp = {
@@ -76,7 +83,7 @@ in
             type = lib.types.enum [ "any" "inet" "inet6" ];
             default = "any";
             description = ''
-              Specifies which address family should be used by sshd(8).
+              Specifies which address family should be used by {manpage}`sshd(8)`.
             '';
           };
 
@@ -99,7 +106,7 @@ in
             type = lib.types.enum [ "QUIET" "FATAL" "ERROR" "INFO" "VERBOSE" "DEBUG" "DEBUG1" "DEBUG2" "DEBUG3" ];
             default = "INFO"; # upstream default
             description = ''
-              Gives the verbosity level that is used when logging messages from sshd(8). Logging with a DEBUG level
+              Gives the verbosity level that is used when logging messages from {manpage}`sshd(8)`. Logging with a `DEBUG` level
               violates the privacy of users and is not recommended.
             '';
           };
@@ -129,7 +136,7 @@ in
             type = with lib.types; listOf port;
             default = [ 22 ];
             description = ''
-              Specifies the port number that sshd(8) listens on.
+              Specifies the port number that {manpage}`sshd(8)` listens on.
             '';
           };
 
@@ -203,7 +210,10 @@ in
         };
       };
       default = { };
-      description = "Configuration for `sshd_config(5)`.";
+      description = ''
+        `openssh` configuration. See {manpage}`sshd_config(5)`
+        for additional details.
+      '';
     };
   };
 

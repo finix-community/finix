@@ -12,11 +12,18 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [networkmanager](${pkgs.networkmanager.meta.homepage}) as a system service.
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.networkmanager;
+      defaultText = lib.literalExpression "pkgs.networkmanager";
+      description = ''
+        The package to use for `networkmanager`.
+      '';
     };
   };
 

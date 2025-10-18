@@ -7,6 +7,9 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [elogind](${pkgs.elogind.meta.homepage}) as a system service.
+      '';
     };
 
     package = lib.mkOption {
@@ -18,6 +21,10 @@ in
             --replace-fail "{{BINDIR}}/udevadm" "${pkgs.eudev}/bin/udevadm"
         '';
       });
+      defaultText = lib.literalExpression "pkgs.elogind";
+      description = ''
+        The package to use for `elogind`.
+      '';
     };
   };
 

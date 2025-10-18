@@ -12,26 +12,50 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
-    };
-
-    user = lib.mkOption {
-      type = lib.types.str;
-      default = "mariadb";
-    };
-
-    group = lib.mkOption {
-      type = lib.types.str;
-      default = "mariadb";
-    };
-
-    dataDir = lib.mkOption {
-      type = lib.types.path;
-      default = "/var/lib/mariadb";
+      description = ''
+        Whether to enable [mariadb](${pkgs.mariadb.meta.homepage}) as a system service.
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.mariadb;
+      description = ''
+        The package to use for `mariadb`.
+      '';
+    };
+
+    user = lib.mkOption {
+      type = lib.types.str;
+      default = "mariadb";
+      description = ''
+        User account under which `mariadb` runs.
+
+        ::: {.note}
+        If left as the default value this user will automatically be created
+        on system activation, otherwise you are responsible for
+        ensuring the user exists before the `mariadb` service starts.
+        :::
+      '';
+    };
+
+    group = lib.mkOption {
+      type = lib.types.str;
+      default = "mariadb";
+      description = ''
+        Group account under which `mariadb` runs.
+
+        ::: {.note}
+        If left as the default value this group will automatically be created
+        on system activation, otherwise you are responsible for
+        ensuring the group exists before the `mariadb` service starts.
+        :::
+      '';
+    };
+
+    dataDir = lib.mkOption {
+      type = lib.types.path;
+      default = "/var/lib/mariadb";
     };
 
     settings = lib.mkOption {

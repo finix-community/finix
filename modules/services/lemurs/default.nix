@@ -10,16 +10,27 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [lemurs](${pkgs.lemurs.meta.homepage}) as a system service.
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.lemurs;
+      defaultText = lib.literalExpression "pkgs.lemurs";
+      description = ''
+        The package to use for `lemurs`.
+      '';
     };
 
     settings = lib.mkOption {
       type = format.type;
       default = { };
+      description = ''
+        `lemurs` configuration. See [upstream documentation](https://github.com/coastalwhite/lemurs/blob/main/extra/config.toml)
+        for additional details.
+      '';
     };
   };
 

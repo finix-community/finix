@@ -10,14 +10,17 @@ in
       type = lib.types.bool;
       default = false;
       description = ''
-        Whether to enable Upower, a DBus service that provides power
-        management support to applications.
+        Whether to enable [upower](${pkgs.upower.meta.homepage}) as a system service.
       '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.upower;
+      defaultText = lib.literalExpression "pkgs.upower";
+      description = ''
+        The package to use for `upower`.
+      '';
     };
 
     settings = lib.mkOption {
@@ -25,6 +28,10 @@ in
         freeformType = format.type;
       };
       default = { };
+      description = ''
+        `upower` configuration. See [upstream documentation](https://gitlab.freedesktop.org/upower/upower/-/blob/master/etc/UPower.conf)
+        for additional details.
+      '';
     };
   };
 

@@ -7,10 +7,8 @@
 
 let
   inherit (lib)
-    mkEnableOption
     mkIf
     mkOption
-    mkPackageOption
     types
     ;
 
@@ -89,13 +87,29 @@ let
 in
 {
   options.services.mdevd = {
-    enable = mkEnableOption "the mdevd device hotplug manager";
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to enable [mdevd](${pkgs.mdevd.meta.homepage}) as a system service.
+      '';
+    };
 
-    package = mkPackageOption pkgs [ "mdevd" ] { };
+    package = lib.mkOption {
+      type = lib.types.package;
+      default = pkgs.mdevd;
+      defaultText = lib.literalExpression "pkgs.mdevd";
+      description = ''
+        The package to use for `mdevd`.
+      '';
+    };
 
     debug = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable debug logging.
+      '';
     };
 
     nlgroups = lib.mkOption {

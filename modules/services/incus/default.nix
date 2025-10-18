@@ -7,16 +7,26 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
-    };
-
-    debug = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
+      description = ''
+        Whether to enable [incus](${pkgs.incus.meta.homepage}) as a system service.
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.incus-lts;
+      defaultText = lib.literalExpression "pkgs.incus-lts";
+      description = ''
+        The package to use for `incus`.
+      '';
+    };
+
+    debug = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to enable debug logging.
+      '';
     };
   };
 

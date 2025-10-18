@@ -12,16 +12,26 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [fwupd](${pkgs.fwupd.meta.homepage}) as a system service.
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.fwupd;
+      defaultText = lib.literalExpression "pkgs.fwupd";
+      description = ''
+        The package to use for `fwupd`.
+      '';
     };
 
     debug = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable debug logging.
+      '';
     };
 
     settings = lib.mkOption {
@@ -37,6 +47,10 @@ in
         };
       };
       default = { };
+      description = ''
+        `fwupd` configuration. See {manpage}`fwupd.conf(5)`
+        for additional details.
+      '';
     };
   };
 

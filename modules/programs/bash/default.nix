@@ -7,11 +7,18 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [bash](${pkgs.bash.meta.homepage}).
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.bashInteractive;
+      defaultText = lib.literalExpression "pkgs.bashInteractive";
+      description = ''
+        The package to use for `bash`.
+      '';
     };
   };
 

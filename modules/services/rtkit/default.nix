@@ -7,16 +7,26 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [rtkit](${pkgs.rtkit.meta.homepage}) as a system service.
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.rtkit;
+      defaultText = lib.literalExpression "pkgs.rtkit";
+      description = ''
+        The package to use for `rtkit`.
+      '';
     };
 
     debug = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable debug logging.
+      '';
     };
   };
 

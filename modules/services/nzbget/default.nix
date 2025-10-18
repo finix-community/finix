@@ -10,30 +10,54 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [nzbget](${pkgs.nzbget.meta.homepage}) as a system service.
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.nzbget;
+      defaultText = lib.literalExpression "pkgs.nzbget";
+      description = ''
+        The package to use for `nzbget`.
+      '';
     };
 
     user = lib.mkOption {
       type = lib.types.str;
       default = "nzbget";
+      description = ''
+        User account under which `nzbget` runs.
+
+        ::: {.note}
+        If left as the default value this user will automatically be created
+        on system activation, otherwise you are responsible for
+        ensuring the user exists before the `nzbget` service starts.
+        :::
+      '';
     };
 
     group = lib.mkOption {
       type = lib.types.str;
       default = "nzbget";
+      description = ''
+        Group account under which `nzbget` runs.
+
+        ::: {.note}
+        If left as the default value this group will automatically be created
+        on system activation, otherwise you are responsible for
+        ensuring the group exists before the `nzbget` service starts.
+        :::
+      '';
     };
 
     settings = lib.mkOption {
       type = with lib.types; attrsOf (oneOf [ bool int str ]);
       default = { };
       description = ''
-        NZBGet configuration, passed via command line using switch -o. Refer to
-        <https://github.com/nzbget/nzbget/blob/master/nzbget.conf>
-        for details on supported values.
+        `nzbget` configuration. See [upstream documentation](https://nzbget.com/documentation/command-line-reference)
+        for additional details.
       '';
       example = {
         MainDir = "/data";

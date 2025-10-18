@@ -10,34 +10,59 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [regreet](${pkgs.regreet.meta.homepage}).
+
+        ::: {.note}
+        `regreet` will be run using [cage](${pkgs.cage.meta.homepage}) as a compositor
+        and can be configured using the `programs.regreet.compositor.*` options.
+        :::
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.regreet;
+      defaultText = lib.literalExpression "pkgs.regreet";
+      description = ''
+        The package to use for `regreet`.
+      '';
     };
 
     debug = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable debug logging.
+      '';
     };
 
     settings = lib.mkOption {
       type = format.type;
       default = { };
+      description = ''
+        `regreet` configuration. See [upstream documentation](https://github.com/rharish101/ReGreet/blob/main/regreet.sample.toml)
+        for additional details.
+      '';
     };
 
     compositor = {
       package = lib.mkOption {
         type = lib.types.package;
         default = pkgs.cage;
+        defaultText = lib.literalExpression "pkgs.cage";
+        description = ''
+          The package to use for `cage`.
+        '';
       };
 
       extraArgs = lib.mkOption {
         type = with lib.types; listOf str;
         default = [ "-s" ];
-
-        # https://github.com/cage-kiosk/cage/blob/master/cage.1.scd#options
+        description = ''
+          Additional arguments to pass to `cage`. See [upstream documentation](https://github.com/cage-kiosk/cage/blob/master/cage.1.scd#options)
+          for additional details.
+        '';
       };
 
       environment = lib.mkOption {
@@ -47,8 +72,10 @@ in
           XKB_DEFAULT_LAYOUT = "us";
           XKB_DEFAULT_VARIANT = "dvorak";
         };
-
-        # https://github.com/cage-kiosk/cage/blob/master/cage.1.scd#environment
+        description = ''
+          Environment variables to pass to `cage`. See [upstream documentation](https://github.com/cage-kiosk/cage/blob/master/cage.1.scd#environment)
+          for additional details.
+        '';
       };
     };
   };

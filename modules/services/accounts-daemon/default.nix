@@ -5,11 +5,9 @@
       type = lib.types.bool;
       default = false;
       description = ''
-        Whether to enable AccountsService, a DBus service for accessing
-        the list of user accounts and information attached to those accounts.
+        Whether to enable [accountsservice](${pkgs.accountsservice.meta.homepage}) as a system service.
       '';
     };
-
   };
 
   config = lib.mkIf config.services.accounts-daemon.enable {

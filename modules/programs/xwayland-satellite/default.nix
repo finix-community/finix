@@ -7,11 +7,18 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable [xwayland-satellite](${pkgs.xwayland-satellite.meta.homepage}).
+      '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.xwayland-satellite;
+      defaultText = lib.literalExpression "pkgs.xwayland-satellite";
+      description = ''
+        The package to use for `xwayland-satellite`.
+      '';
     };
   };
 
