@@ -1,0 +1,18 @@
+{
+  "cap_from_text(3)": "https://man.archlinux.org/man/cap_from_text.3",
+  "capabilities(7)": "https://man.archlinux.org/man/capabilities.7",
+  "crontab(5)": "https://man.archlinux.org/man/crontab.5",
+  "dropbear(8)": "https://man.archlinux.org/man/dropbear.8",
+  "dropbearkey(1)": "https://man.archlinux.org/man/dropbearkey.1",
+  "fwupd.conf(5)": "https://man.archlinux.org/man/fwupd.conf.5",
+  "greetd(5)": "https://man.archlinux.org/man/greetd.5",
+  "iwd.config(5)": "https://man.archlinux.org/man/iwd.config.5",
+  "mount(8)": "https://man.archlinux.org/man/mount.8",
+  "nix.conf(5)": "https://man.archlinux.org/man/nix.conf.5",
+  "sshd(8)": "https://man.archlinux.org/man/sshd.8",
+  "sshd_config(5)": "https://man.archlinux.org/man/sshd_config.5",
+  "syd(5)": "https://man.archlinux.org/man/syd.5",
+  "sysctl(8)": "https://man.archlinux.org/man/sysctl.8",
+  "tmpfiles.d(5)": "https://man.archlinux.org/man/tmpfiles.d.5",
+  "wpa_supplicant.conf(5)": "https://man.archlinux.org/man/wpa_supplicant.conf.5"
+}

@@ -1,6 +1,16 @@
 {
   "version": "1",
   "sources": {
+    "ndg": {
+      "type": "GitHub",
+      "fetchType": "tarball",
+      "owner": "feel-co",
+      "repo": "ndg",
+      "branch": "main",
+      "revision": "0c898318cdb7b8288a58f6393b1d8ba0dd6b0a09",
+      "url": "https://github.com/feel-co/ndg/archive/0c898318cdb7b8288a58f6393b1d8ba0dd6b0a09.tar.gz",
+      "hash": "sha256-BedBcz5+dDHhNWMY4JndabYUMSOMusKzFGLV1PxvwBQ="
+    },
     "nixpkgs": {
       "type": "GitHub",
       "fetchType": "tarball",
