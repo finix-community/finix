@@ -33,7 +33,7 @@ in
         default = pkgs.cage;
       };
 
-      args = lib.mkOption {
+      extraArgs = lib.mkOption {
         type = with lib.types; listOf str;
         default = [ "-s" ];
 
@@ -57,7 +57,7 @@ in
     services.greetd.enable = true;
     services.greetd.settings = {
       default_session = {
-        command = "env ${lib.concatMapAttrsStringSep " " (k: v: "${k}=${toString v}") cfg.compositor.environment} ${lib.getExe cfg.compositor.package} ${toString cfg.compositor.args} -- ${lib.getExe cfg.package} --config ${configFile}" + lib.optionalString cfg.debug " --log-level debug";
+        command = "env ${lib.concatMapAttrsStringSep " " (k: v: "${k}=${toString v}") cfg.compositor.environment} ${lib.getExe cfg.compositor.package} ${toString cfg.compositor.extraArgs} -- ${lib.getExe cfg.package} --config ${configFile}" + lib.optionalString cfg.debug " --log-level debug";
       };
     };
 
