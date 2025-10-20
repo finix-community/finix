@@ -24,14 +24,16 @@
         ];
       };
 
-      os = lib.evalModules {
+      os = pkgs.lib.evalModules {
         specialArgs = {
           inherit pkgs;
+          lib = pkgs.lib;
+          modulesPath = "${nixpkgs}/nixos/modules";
         };
 
         modules = [
           ./configuration.nix
-        ] ++ lib.attrValues finix.nixosModules;
+        ] ++ pkgs.lib.attrValues finix.nixosModules;
       };
     in
     {
