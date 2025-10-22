@@ -37,21 +37,24 @@
   finit.runlevel = 3;
 
   # base system profile
+  programs.bash.enable = true;
+
   services.atd.enable = true;
   services.chrony.enable = true;
   services.cron.enable = true;
   services.dbus.enable = true;
-  services.dbus.package = pkgs.dbus.override { enableSystemd = false; };
   services.networkmanager.enable = true;
   services.nix-daemon.enable = true;
   services.openssh.enable = true;
-  services.syslog.enable = true;
+  services.sysklogd.enable = true;
   services.logrotate.enable = true;
   services.udev.enable = true;
 
   # graphical desktop system profile
+  programs.regreet.enable = true;
+
   services.bluetooth.enable = true;
-  services.greetd.enable = true; # TODO: find a login manager that supports reload on SIGHUP + running without logind :'-(
+  services.greetd.enable = true;
   services.seatd.enable = true;
 
   hardware.graphics.enable = true;

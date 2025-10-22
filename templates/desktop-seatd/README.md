@@ -7,8 +7,8 @@ NOTES
   - `chroot` into `/mnt`
   - run `nixos-generate-config --show-hardware-config > hardware-configuration.nix`, filter out everything `finix` doesn't implement
     - basically you just want `fileSystems` and `boot.*` options for now
-  - manually install `grub` - can run `nix run .#grub` after to generate `custom.cfg`
+  - manually install `grub` - can run `sudo ./update-grub-entries.sh` after to generate `custom.cfg`
   - boot...
 - to build and temporarily activate a new generation: `nix build .# && sudo ./result/activate && sudo initctl reload`
-- to add a grub entry and activate on boot: `sudo nix build --profile /nix/var/nix/profiles/system .# && sudo nix run .#grub`
+- to add a grub entry and activate on boot: `sudo nix build --profile /nix/var/nix/profiles/system .# && sudo ./update-grub-entries.sh`
 - a `grub` module and proper activation script are on the TODO list 😉
