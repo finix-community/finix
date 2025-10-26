@@ -19,11 +19,15 @@ in
       default = package.override {
         logindSupport = config.services.elogind.enable;
         udevSupport = config.services.udev.enable;
+
+        systemdLibs = config.services.elogind.package;
       };
       defaultText = lib.literalExpression ''
         pkgs.brightnessctl.override {
           logindSupport = config.services.elogind.enable;
           udevSupport = config.services.udev.enable;
+
+          systemdLibs = config.services.elogind.package;
         }
       '';
       description = ''

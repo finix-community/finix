@@ -4,11 +4,14 @@
   fetchFromGitHub,
   pkg-config,
   logindSupport ? true,
-  systemd,
+  systemdLibs,
   coreutils,
   udevSupport ? true,
   udevCheckHook,
 }:
+
+# NOTE: to build with elogind instead of systemd:
+# pkgs.brightnessctl.override { systemdLibs = pkgs.elogind; }
 
 stdenv.mkDerivation rec {
   pname = "brightnessctl";
@@ -28,10 +31,9 @@ stdenv.mkDerivation rec {
 
   configureFlags = [
     "--install-mode=0755"
-  ] ++ lib.optionals (!logindSupport) [
-    "--disable-logind"
-  ] ++ lib.optionals (!udevSupport) [
-    "--disable-udev"
+
+    (lib.enableFeature logindSupport "logind")
+    (lib.enableFeature udevSupport "udev")
   ];
 
   makeFlags = [
@@ -45,7 +47,7 @@ stdenv.mkDerivation rec {
     udevCheckHook
   ];
 
-  buildInputs = lib.optionals logindSupport [ systemd ];
+  buildInputs = lib.optionals logindSupport [ systemdLibs ];
 
   doInstallCheck = true;
 
