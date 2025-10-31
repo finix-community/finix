@@ -12,7 +12,11 @@ let
         else firmware;
 in
 {
-  imports = [ ./console.nix ./graphics.nix ];
+  imports = [
+    ./console.nix
+    ./graphics.nix
+    ./i2c.nix
+  ];
 
   options = {
     hardware.firmware = lib.mkOption {

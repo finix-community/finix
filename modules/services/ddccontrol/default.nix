@@ -14,7 +14,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    boot.kernelModules = [ "i2c_dev" ];
+    hardware.i2c.enable = true;
 
     environment.systemPackages = [
       pkgs.ddccontrol
