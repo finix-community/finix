@@ -14,6 +14,10 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    boot.kernelModules = [
+      "ddcci_backlight"
+    ];
+
     hardware.i2c.enable = true;
 
     environment.systemPackages = [
