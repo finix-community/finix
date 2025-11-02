@@ -7,9 +7,11 @@
   };
 
   config = lib.mkIf (config.providers.privileges.backend == "sudo") {
-    providers.scheduler.supportedFeatures = {
+    providers.privileges.supportedFeatures = {
       # TODO:
     };
+
+    providers.privileges.command = "/run/wrappers/bin/sudo";
 
     environment.etc.sudoers = {
       text = lib.concatMapStringsSep "\n" (rule:

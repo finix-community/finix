@@ -27,6 +27,14 @@ in
       '';
     };
 
+    command = lib.mkOption {
+      type = program;
+      example = "/run/wrappers/bin/sudo";
+      description = ''
+        The command to be used by modules requiring privilege escalation.
+      '';
+    };
+
     rules = lib.mkOption {
       type = lib.types.listOf (lib.types.submodule {
         options = {

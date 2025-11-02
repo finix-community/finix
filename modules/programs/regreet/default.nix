@@ -95,8 +95,8 @@ in
 
       commands = lib.mkMerge [
         (lib.mkIf config.services.seatd.enable {
-          reboot = [ "sudo" "reboot" ];
-          poweroff = [ "sudo" "poweroff" ];
+          reboot = [ config.providers.privileges.command "/run/current-system/sw/bin/reboot" ];
+          poweroff = [ config.providers.privileges.command "/run/current-system/sw/bin/poweroff" ];
         })
 
         (lib.mkIf config.services.elogind.enable {
@@ -107,11 +107,11 @@ in
     };
 
     providers.privileges.rules = lib.mkIf config.services.seatd.enable [
-      { command = "/run/current-system/sw/bin/poweroff";
+      { command = "/run/current-system/sw/bin/reboot";
         users = [ "greeter" ];
         requirePassword = false;
       }
-      { command = "/run/current-system/sw/bin/reboot";
+      { command = "/run/current-system/sw/bin/poweroff";
         users = [ "greeter" ];
         requirePassword = false;
       }
