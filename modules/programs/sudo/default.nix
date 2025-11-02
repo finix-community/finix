@@ -69,6 +69,18 @@ in
           %wheel  ALL=(ALL:ALL)    SETENV: ALL
         ''
       ];
+
+      source =
+        let
+          value = pkgs.runCommand "sudoers.in"
+            {
+              src = pkgs.writeText "sudoers.in" config.environment.etc."sudoers".text;
+              preferLocalBuild = true;
+            }
+            # Make sure that the sudoers file is syntactically valid.
+            "${pkgs.buildPackages.sudo}/sbin/visudo -f $src -c && cp $src $out";
+        in
+          lib.mkForce value;
     };
 
     security.wrappers = let
