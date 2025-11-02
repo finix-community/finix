@@ -4,7 +4,6 @@
   inputs = {
     finix.url = "github:finix-community/finix";
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs = { finix, nixpkgs, ... }:
@@ -20,8 +19,7 @@
 
       os = pkgs.lib.evalModules {
         specialArgs = {
-          inherit pkgs;
-          # inherit (pkgs) lib;
+          inherit (pkgs) lib;
           modulesPath = "${nixpkgs}/nixos/modules";
         };
 
