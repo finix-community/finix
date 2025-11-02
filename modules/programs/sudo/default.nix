@@ -1,10 +1,36 @@
-{ pkgs, lib, ... }:
+{ config, pkgs, lib, ... }:
+let
+  cfg = config.programs.sudo;
+in
 {
   imports = [
     ./providers.privileges.nix
   ];
 
-  config = {
+  options.programs.sudo = {
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to enable [sudo](${pkgs.sudo.meta.homepage}).
+      '';
+    };
+
+    package = lib.mkOption {
+      type = lib.types.package;
+      default = pkgs.sudo;
+      defaultText = lib.literalExpression "pkgs.sudo";
+      description = ''
+        The package to use for `sudo`.
+      '';
+    };
+  };
+
+  config = lib.mkIf cfg.enable {
+    environment.systemPackages = [
+      cfg.package
+    ];
+
     security.pam.services.sudo.text = ''
       # Account management.
       account required pam_unix.so # unix (order 10900)
@@ -52,11 +78,11 @@
       permissions = "u+rx,g+x,o+x";
     in {
       sudo = {
-        source = "${pkgs.sudo.out}/bin/sudo";
+        source = lib.getExe cfg.package;
         inherit owner group setuid permissions;
       };
-      sudoedit = { # TODO: really? but the file is immutable...
-        source = "${pkgs.sudo.out}/bin/sudoedit";
+      sudoedit = {
+        source = "${cfg.package}/bin/sudoedit";
         inherit owner group setuid permissions;
       };
     };
