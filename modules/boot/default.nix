@@ -1,6 +1,7 @@
 { config, lib, pkgs, ... }:
 {
   imports = [
+    ./bootspec.nix
     ./initrd
     ./init.nix
     ./kernel.nix

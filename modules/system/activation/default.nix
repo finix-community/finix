@@ -155,9 +155,13 @@ in
         + lib.optionalString config.synit.enable ''
           cp ${config.synit.plan.activatePlan} $out/activatePlan
           substituteInPlace $out/activatePlan --subst-var-by systemConfig $out
+        ''
+        + lib.optionalString config.boot.bootspec.enable ''
+          ${config.boot.bootspec.writer}
+        ''
+        + lib.optionalString (config.boot.bootspec.enable && config.boot.bootspec.enableValidation) ''
+          ${config.boot.bootspec.validator} "$out/${config.boot.bootspec.filename}"
         '';
     });
-
-    boot.kernelParams = [ "init=${config.system.topLevel}/init" ];
   };
 }
