@@ -66,6 +66,7 @@ in
 
     ./9p.nix
     ./btrfs.nix
+    ./efivarfs.nix
     ./ext2.nix
     ./ext4.nix
     ./fuse.nix
