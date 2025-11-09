@@ -134,7 +134,7 @@ in
       allowSubstitutes = false;
       buildCommand =
         ''
-          mkdir -p $out
+          mkdir -p $out $out/bin
 
           cp ${config.system.activation.out} $out/activate
           cp ${config.boot.init.script} $out/init
@@ -152,9 +152,22 @@ in
         + lib.optionalString config.boot.initrd.enable ''
           ${pkgs.coreutils}/bin/ln -s ${config.boot.initrd.package}/initrd $out/initrd
         ''
+        + lib.optionalString config.finit.enable ''
+          cp ${../../finit/switch-to-configuration.sh} $out/bin/switch-to-configuration
+          substituteInPlace $out/bin/switch-to-configuration \
+            --subst-var out \
+            --subst-var-by bash ${pkgs.bash} \
+            --subst-var-by distroId finix \
+            --subst-var-by finit ${config.finit.package} \
+            --subst-var-by installHook ${config.system.installBootLoader}
+        ''
         + lib.optionalString config.synit.enable ''
           cp ${config.synit.plan.activatePlan} $out/activatePlan
           substituteInPlace $out/activatePlan --subst-var-by systemConfig $out
+
+          cp ${../../synit/switch-to-configuration.sh} $out/bin/switch-to-configuration
+          substituteInPlace $out/bin/switch-to-configuration \
+            --subst-var-by bash ${pkgs.bash}
         ''
         + lib.optionalString config.boot.bootspec.enable ''
           ${config.boot.bootspec.writer}
