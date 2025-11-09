@@ -159,7 +159,7 @@ in
             --subst-var-by bash ${pkgs.bash} \
             --subst-var-by distroId finix \
             --subst-var-by finit ${config.finit.package} \
-            --subst-var-by installHook ${config.system.installBootLoader}
+            --subst-var-by installHook ${config.providers.bootloader.installHook}
         ''
         + lib.optionalString config.synit.enable ''
           cp ${config.synit.plan.activatePlan} $out/activatePlan

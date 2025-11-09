@@ -5,7 +5,6 @@
     ./initrd
     ./init.nix
     ./kernel.nix
-    ./limine
     ./modprobe.nix
     ./sysctl.nix
   ];

@@ -1,38 +1,16 @@
 { config, pkgs, lib, ... }:
 let
-  cfg = config.boot.loader.limine;
+  cfg = config.programs.limine;
 
   format = pkgs.formats.keyValue { };
 
-  limineInstallConfig = pkgs.writeText "limine-install.json" (
-    builtins.toJSON {
-      inherit (cfg)
-        additionalFiles
-        biosDevice
-        biosSupport
-        efiSupport
-        enrollConfig
-        extraEntries
-        force
-        partitionIndex
-        settings
-        validateChecksums
-      ;
-
-      nixPath = config.services.nix-daemon.package;
-      efiBootMgrPath = pkgs.efibootmgr;
-      liminePath = cfg.package;
-      efiMountPoint = config.boot.loader.efi.efiSysMountPoint;
-      fileSystems = config.fileSystems;
-      canTouchEfiVariables = config.boot.loader.efi.canTouchEfiVariables;
-      efiRemovable = cfg.efiInstallAsRemovable;
-      maxGenerations = if cfg.maxGenerations == null then 0 else cfg.maxGenerations;
-      hostArchitecture = pkgs.stdenv.hostPlatform.parsed.cpu;
-    }
-  );
   defaultWallpaper = pkgs.nixos-artwork.wallpapers.simple-dark-gray-bootloader.gnomeFilePath;
 in
 {
+  imports = [
+    ./providers.bootloader.nix
+  ];
+
   options.boot.loader.efi = {
     canTouchEfiVariables = lib.mkOption {
       default = false;
@@ -65,7 +43,7 @@ in
     type = with lib.types; either str package;
   };
 
-  options.boot.loader.limine = {
+  options.programs.limine = {
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -216,7 +194,7 @@ in
 
     biosSupport = lib.mkEnableOption null // {
       default = !cfg.efiSupport && pkgs.stdenv.hostPlatform.isx86;
-      defaultText = lib.literalExpression "!config.boot.loader.limine.efiSupport && pkgs.stdenv.hostPlatform.isx86";
+      defaultText = lib.literalExpression "!config.programs.limine.efiSupport && pkgs.stdenv.hostPlatform.isx86";
       description = ''
         Whether or not to install limine for BIOS.
       '';
@@ -240,7 +218,7 @@ in
 
     enrollConfig = lib.mkEnableOption null // {
       default = cfg.settings.hash_mismatch_panic;
-      defaultText = lib.literalExpression "boot.loader.limine.settings.hash_mismatch_panic";
+      defaultText = lib.literalExpression "programs.limine.settings.hash_mismatch_panic";
       description = ''
         Whether or not to enroll the config.
         Only works on EFI!
@@ -272,7 +250,7 @@ in
       options = [ "defaults" "nofail" ];
     };
 
-    boot.loader.limine.settings = {
+    programs.limine.settings = {
       graphics = true;
       verbose = lib.mkIf cfg.debug true;
 
@@ -281,13 +259,7 @@ in
       wallpaper_style = lib.mkDefault "streched";
     };
 
-    system.installBootLoader = pkgs.replaceVarsWith {
-      src = ./limine-install.py;
-      isExecutable = true;
-      replacements = {
-        python3 = pkgs.python3.withPackages (python-packages: [ python-packages.psutil ]);
-        configPath = limineInstallConfig;
-      };
-    };
+    # this module supplies an implementation for `providers.bootloader`
+    providers.bootloader.backend = "limine";
   };
 }
