@@ -42,9 +42,6 @@ final: prev: {
     }).overrideScope
       (import ../pkgs/tcl-modules);
 
-  # modern fork of sysklogd - same author as finit
-  sysklogd = prev.callPackage ../pkgs/sysklogd { };
-
   # relevant software for systems without logind - potentially useful to finix
   pam_xdg = prev.callPackage ../pkgs/pam_xdg { };
 }
