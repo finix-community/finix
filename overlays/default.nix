@@ -8,17 +8,6 @@ final: prev: {
     pkgs = prev;
   };
 
-  # see https://github.com/eudev-project/eudev/pull/290
-  eudev = prev.eudev.overrideAttrs (o: {
-    patches = (o.patches or [ ]) ++ [
-      (final.fetchpatch {
-        name = "s6-readiness.patch";
-        url = "https://github.com/eudev-project/eudev/pull/290/commits/48e9923a1d0218d714989d8aec119e301aa930ae.patch";
-        sha256 = "sha256-Icor2v2OYizquLW0ytYONjhCUW+oTs5srABamQR9Uvk=";
-      })
-    ];
-  });
-
   finix-rebuild = final.callPackage ../pkgs/finix-rebuild { };
 
   nix-actor = final.callPackage ../pkgs/nix-actor { };
