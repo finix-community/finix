@@ -19,6 +19,8 @@ final: prev: {
     ];
   });
 
+  finix-rebuild = final.callPackage ../pkgs/finix-rebuild { };
+
   nix-actor = final.callPackage ../pkgs/nix-actor { };
 
   preserves = final.callPackage ../pkgs/preserves { };
