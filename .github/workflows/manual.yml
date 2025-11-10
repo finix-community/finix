@@ -1,0 +1,35 @@
+name: "build and deploy documentation"
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      # build the manuals only when relevant directories are updated
+      - docs/**
+      - modules/**
+
+# sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: DeterminateSystems/nix-installer-action@main
+      - run: |
+          nix-build ./docs
+      - uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./result
