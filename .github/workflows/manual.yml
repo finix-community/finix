@@ -27,6 +27,9 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: DeterminateSystems/nix-installer-action@main
+        with:
+          extra-conf: |
+            extra-experimental-features = pipe-operators
       - run: |
           nix-build ./docs
       - uses: peaceiris/actions-gh-pages@v4
