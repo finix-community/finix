@@ -7,7 +7,8 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { finix, nixpkgs, ... }:
+  outputs =
+    { finix, nixpkgs, ... }:
     let
       pkgs = import nixpkgs {
         system = "x86_64-linux";
@@ -28,7 +29,8 @@
         modules = [
           { nixpkgs.pkgs = pkgs; }
           ./configuration.nix
-        ] ++ pkgs.lib.attrValues finix.nixosModules;
+        ]
+        ++ pkgs.lib.attrValues finix.nixosModules;
       };
     in
     {
@@ -36,6 +38,10 @@
     };
 
   nixConfig = {
-    extra-experimental-features = [ "flakes" "nix-command" "pipe-operators" ];
+    extra-experimental-features = [
+      "flakes"
+      "nix-command"
+      "pipe-operators"
+    ];
   };
 }

@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   options = {
     boot.initrd.supportedFilesystems.btrfs = {
@@ -28,12 +33,13 @@
 
   config = lib.mkIf config.boot.initrd.supportedFilesystems.btrfs.enable {
     boot.initrd.kernelModules = [ "btrfs" ];
-    boot.initrd.availableKernelModules =
-      [ "crc32c" ]
-      ++ lib.optionals (config.boot.kernelPackages.kernel.kernelAtLeast "5.5") [
-        "xxhash_generic"
-        "blake2b_generic"
-        "sha256_generic"
-      ];
+    boot.initrd.availableKernelModules = [
+      "crc32c"
+    ]
+    ++ lib.optionals (config.boot.kernelPackages.kernel.kernelAtLeast "5.5") [
+      "xxhash_generic"
+      "blake2b_generic"
+      "sha256_generic"
+    ];
   };
 }

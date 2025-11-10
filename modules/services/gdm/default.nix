@@ -1,5 +1,10 @@
 # FIXME: currently a work in progress, does not run
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.gdm;
 
@@ -40,7 +45,10 @@ in
     finit.services.gdm = {
       description = "gdm daemon";
       runlevels = "34";
-      conditions = [ "service/syslogd/ready" ] ++ lib.optionals config.services.elogind.enable [ "service/elogind/ready" ];
+      conditions = [
+        "service/syslogd/ready"
+      ]
+      ++ lib.optionals config.services.elogind.enable [ "service/elogind/ready" ];
       command = "${pkgs.gdm}/bin/gdm";
     };
 

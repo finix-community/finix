@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   inherit (builtins) readFile;
@@ -31,10 +36,19 @@ in
 
     synit.daemons.nix-actor = {
       argv = [ "nix-actor" ];
-      path = [ cfg.package config.services.nix-daemon.package ];
+      path = [
+        cfg.package
+        config.services.nix-daemon.package
+      ];
       protocol = "application/syndicate";
       requires = [
-        { key = [ "daemon" "nix-daemon" ]; state = "ready"; }
+        {
+          key = [
+            "daemon"
+            "nix-daemon"
+          ];
+          state = "ready";
+        }
       ];
       provides = lib.mkForce [ ];
     };

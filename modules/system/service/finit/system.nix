@@ -22,8 +22,16 @@ let
     prefixes: service:
     concatMapAttrs (
       name: module:
-      let label = if name == "" then prefixes else prefixes ++ [ name ];
-      in { "${concatStringsSep "-" label}" = { ... }: { imports = [ module ]; }; }
+      let
+        label = if name == "" then prefixes else prefixes ++ [ name ];
+      in
+      {
+        "${concatStringsSep "-" label}" =
+          { ... }:
+          {
+            imports = [ module ];
+          };
+      }
     ) service.finit.services
     // concatMapAttrs (
       subServiceName: subService: makeServices (prefixes ++ [ subServiceName ]) subService

@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.programs.sudo;
 in
@@ -72,32 +77,45 @@ in
 
       source =
         let
-          value = pkgs.runCommand "sudoers.in"
-            {
-              src = pkgs.writeText "sudoers.in" config.environment.etc."sudoers".text;
-              preferLocalBuild = true;
-            }
-            # Make sure that the sudoers file is syntactically valid.
-            "${pkgs.buildPackages.sudo}/sbin/visudo -f $src -c && cp $src $out";
+          value =
+            pkgs.runCommand "sudoers.in"
+              {
+                src = pkgs.writeText "sudoers.in" config.environment.etc."sudoers".text;
+                preferLocalBuild = true;
+              }
+              # Make sure that the sudoers file is syntactically valid.
+              "${pkgs.buildPackages.sudo}/sbin/visudo -f $src -c && cp $src $out";
         in
-          lib.mkForce value;
+        lib.mkForce value;
     };
 
-    security.wrappers = let
-      owner = "root";
-      group = "root";
-      setuid = true;
-      permissions = "u+rx,g+x,o+x";
-    in {
-      sudo = {
-        source = lib.getExe cfg.package;
-        inherit owner group setuid permissions;
+    security.wrappers =
+      let
+        owner = "root";
+        group = "root";
+        setuid = true;
+        permissions = "u+rx,g+x,o+x";
+      in
+      {
+        sudo = {
+          source = lib.getExe cfg.package;
+          inherit
+            owner
+            group
+            setuid
+            permissions
+            ;
+        };
+        sudoedit = {
+          source = "${cfg.package}/bin/sudoedit";
+          inherit
+            owner
+            group
+            setuid
+            permissions
+            ;
+        };
       };
-      sudoedit = {
-        source = "${cfg.package}/bin/sudoedit";
-        inherit owner group setuid permissions;
-      };
-    };
 
     # this module supplies an implementation for `providers.privileges`
     providers.privileges.backend = lib.mkDefault "sudo";

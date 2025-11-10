@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.greetd;
   format = pkgs.formats.toml { };
@@ -38,18 +43,42 @@ in
     finit.services.greetd = {
       description = "greeter daemon";
       runlevels = "34";
-      conditions = [ "service/syslogd/ready" ] ++ lib.optionals config.services.seatd.enable [ "service/seatd/ready" ];
+      conditions = [
+        "service/syslogd/ready"
+      ]
+      ++ lib.optionals config.services.seatd.enable [ "service/seatd/ready" ];
       command = "${pkgs.greetd}/bin/greetd --config ${configFile}";
       cgroup.name = "user";
     };
 
     synit.daemons.greetd = {
-      argv = [ "${pkgs.greetd}/bin/greetd" "--config" configFile ];
+      argv = [
+        "${pkgs.greetd}/bin/greetd"
+        "--config"
+        configFile
+      ];
       persistent = true;
-      provides = [ [ "milestone" "login" ] ];
-      requires = [ { key = [ "milestone" "wrappers" ]; } ]
-        ++ lib.optional config.services.seatd.enable
-          { key = [ "daemon" "seatd" ]; state = "ready"; };
+      provides = [
+        [
+          "milestone"
+          "login"
+        ]
+      ];
+      requires = [
+        {
+          key = [
+            "milestone"
+            "wrappers"
+          ];
+        }
+      ]
+      ++ lib.optional config.services.seatd.enable {
+        key = [
+          "daemon"
+          "seatd"
+        ];
+        state = "ready";
+      };
     };
 
     users.users = {
@@ -89,11 +118,8 @@ in
         session required pam_unix.so # unix (order 10200)
         session required pam_loginuid.so # loginuid (order 10300)
       ''
-      + lib.optionalString config.services.elogind.enable
-        "session optional ${pkgs.elogind}/lib/security/pam_elogind.so"
-      + lib.optionalString config.services.seatd.enable
-        "session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so"
-      ;
+      + lib.optionalString config.services.elogind.enable "session optional ${pkgs.elogind}/lib/security/pam_elogind.so"
+      + lib.optionalString config.services.seatd.enable "session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so";
     };
 
   };

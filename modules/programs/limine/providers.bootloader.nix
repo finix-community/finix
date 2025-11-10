@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.programs.limine;
 
@@ -15,7 +20,7 @@ let
         partitionIndex
         settings
         validateChecksums
-      ;
+        ;
 
       nixPath = config.services.nix-daemon.package;
       efiBootMgrPath = pkgs.efibootmgr;

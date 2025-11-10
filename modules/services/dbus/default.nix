@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.dbus;
 
@@ -25,7 +30,14 @@ in
       type = lib.types.package;
       default = pkgs.dbus;
       defaultText = lib.literalExpression "pkgs.dbus";
-      apply = package: if cfg.debug then package.overrideAttrs (o: { configureFlags = o.configureFlags ++ [ "--enable-verbose-mode" ]; }) else package;
+      apply =
+        package:
+        if cfg.debug then
+          package.overrideAttrs (o: {
+            configureFlags = o.configureFlags ++ [ "--enable-verbose-mode" ];
+          })
+        else
+          package;
       description = ''
         The package to use for `dbus`.
       '';
@@ -115,9 +127,11 @@ in
       cgroup.name = "system";
 
       pre = pkgs.writeShellScript "dbus-pre.sh" "${cfg.package}/bin/dbus-uuidgen --ensure";
-      env = lib.mkIf cfg.debug (pkgs.writeText "dbus.env" ''
-        DBUS_VERBOSE=1
-      '');
+      env = lib.mkIf cfg.debug (
+        pkgs.writeText "dbus.env" ''
+          DBUS_VERBOSE=1
+        ''
+      );
     };
 
     # TODO: add finit.services.reloadTriggers option

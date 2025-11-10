@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.programs.regreet;
   format = pkgs.formats.toml { };
@@ -84,7 +89,11 @@ in
     services.greetd.enable = true;
     services.greetd.settings = {
       default_session = {
-        command = "env ${lib.concatMapAttrsStringSep " " (k: v: "${k}=${toString v}") cfg.compositor.environment} ${lib.getExe cfg.compositor.package} ${toString cfg.compositor.extraArgs} -- ${lib.getExe cfg.package} --config ${configFile}" + lib.optionalString cfg.debug " --log-level debug";
+        command =
+          "env ${
+            lib.concatMapAttrsStringSep " " (k: v: "${k}=${toString v}") cfg.compositor.environment
+          } ${lib.getExe cfg.compositor.package} ${toString cfg.compositor.extraArgs} -- ${lib.getExe cfg.package} --config ${configFile}"
+          + lib.optionalString cfg.debug " --log-level debug";
       };
     };
 
@@ -95,23 +104,37 @@ in
 
       commands = lib.mkMerge [
         (lib.mkIf config.services.seatd.enable {
-          reboot = [ config.providers.privileges.command "/run/current-system/sw/bin/reboot" ];
-          poweroff = [ config.providers.privileges.command "/run/current-system/sw/bin/poweroff" ];
+          reboot = [
+            config.providers.privileges.command
+            "/run/current-system/sw/bin/reboot"
+          ];
+          poweroff = [
+            config.providers.privileges.command
+            "/run/current-system/sw/bin/poweroff"
+          ];
         })
 
         (lib.mkIf config.services.elogind.enable {
-          reboot = [ "loginctl" "reboot" ];
-          poweroff = [ "loginctl" "poweroff" ];
+          reboot = [
+            "loginctl"
+            "reboot"
+          ];
+          poweroff = [
+            "loginctl"
+            "poweroff"
+          ];
         })
       ];
     };
 
     providers.privileges.rules = lib.mkIf config.services.seatd.enable [
-      { command = "/run/current-system/sw/bin/reboot";
+      {
+        command = "/run/current-system/sw/bin/reboot";
         users = [ "greeter" ];
         requirePassword = false;
       }
-      { command = "/run/current-system/sw/bin/poweroff";
+      {
+        command = "/run/current-system/sw/bin/poweroff";
         users = [ "greeter" ];
         requirePassword = false;
       }

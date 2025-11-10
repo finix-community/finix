@@ -3,7 +3,10 @@ final: prev: {
 
   lib = import ../pkgs/lib |> prev.lib.extend;
 
-  formats = import ../pkgs/pkgs-lib/formats { inherit (final) lib; pkgs = prev; };
+  formats = import ../pkgs/pkgs-lib/formats {
+    inherit (final) lib;
+    pkgs = prev;
+  };
 
   # see https://github.com/eudev-project/eudev/pull/290
   eudev = prev.eudev.overrideAttrs (o: {
@@ -30,9 +33,7 @@ final: prev: {
 
   synit-service = final.callPackage ../pkgs/synit-service { };
 
-  tclPackages =
-    prev.tclPackages.overrideScope
-      (import ../pkgs/tcl-modules);
+  tclPackages = prev.tclPackages.overrideScope (import ../pkgs/tcl-modules);
 
   tcl9Packages =
     (prev.tclPackages.override {

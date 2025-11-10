@@ -1,4 +1,6 @@
-{ testenv ? import ./testenv { } }:
+{
+  testenv ? import ./testenv { },
+}:
 
 let
   inherit (testenv) lib pkgs;
@@ -7,39 +9,43 @@ in
 testenv.mkTest {
   name = "synit-nix-conversation";
 
-  nodes.machine = { nodes, ... }: {
-    boot.serviceManager = "synit";
-    services.dhcpcd.enable = true;
+  nodes.machine =
+    { nodes, ... }:
+    {
+      boot.serviceManager = "synit";
+      services.dhcpcd.enable = true;
 
-    # /nix/store is a read-only mount
-    # so run the daemon with a different
-    # store location for this test.
-    synit.daemons = rec {
-      nix-actor = nix-daemon;
-      nix-daemon.env = {
-        NIX_STORE_DIR = "/nuscht/store";
-        NIX_STATE_DIR = "/nuscht/var";
+      # /nix/store is a read-only mount
+      # so run the daemon with a different
+      # store location for this test.
+      synit.daemons = rec {
+        nix-actor = nix-daemon;
+        nix-daemon.env = {
+          NIX_STORE_DIR = "/nuscht/store";
+          NIX_STATE_DIR = "/nuscht/var";
+        };
       };
+
+      # Enable the actor for this test.
+      # Also enables the nix-daemon.
+      services.nix-actor.enable = true;
+
+      # Call host-to-guest through this port.
+      virtualisation.qemu.nics.eth0.args = [
+        "hostfwd=tcp:127.0.0.1:2424-:24"
+      ];
+
+      synit.plan.config.testListener = [
+        ''
+          # Add a listener that exposes the synit service dataspace to any
+          # IP address present on eth0.
+          $machine ? <ip address _ _ { "local": ?addr }> [
+            $config += <require-service  <relay-listener <tcp $addr 24> $config>>
+          ]
+        ''
+      ];
+
     };
-
-    # Enable the actor for this test.
-    # Also enables the nix-daemon.
-    services.nix-actor.enable = true;
-
-    # Call host-to-guest through this port.
-    virtualisation.qemu.nics.eth0.args = [
-      "hostfwd=tcp:127.0.0.1:2424-:24"
-    ];
-
-    synit.plan.config.testListener = [''
-      # Add a listener that exposes the synit service dataspace to any
-      # IP address present on eth0.
-      $machine ? <ip address _ _ { "local": ?addr }> [
-        $config += <require-service  <relay-listener <tcp $addr 24> $config>>
-      ]
-    ''];
-  
-  };
 
   runAttrs = {
     # Make the syndicate package available.

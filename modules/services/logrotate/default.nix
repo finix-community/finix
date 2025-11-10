@@ -1,27 +1,34 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.logrotate;
 
-  rulesOpts = { name, ... }: {
-    options = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
-        default = true;
-      };
+  rulesOpts =
+    { name, ... }:
+    {
+      options = {
+        enable = lib.mkOption {
+          type = lib.types.bool;
+          default = true;
+        };
 
-      text = lib.mkOption {
-        type = lib.types.lines;
-        default = "";
+        text = lib.mkOption {
+          type = lib.types.lines;
+          default = "";
+        };
       };
     };
-  };
 
-  configFile = cfg.rules
+  configFile =
+    cfg.rules
     |> lib.filterAttrs (_: v: v.enable)
     |> lib.mapAttrsToList (_: v: v.text)
     |> lib.concatStringsSep "\n"
-    |> pkgs.writeText "logrotate.conf"
-  ;
+    |> pkgs.writeText "logrotate.conf";
 in
 {
   options.services.logrotate = {

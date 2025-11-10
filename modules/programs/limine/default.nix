@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.programs.limine;
 
@@ -93,7 +98,11 @@ in
           };
 
           wallpaper_style = lib.mkOption {
-            type = lib.types.enum [ "centered" "streched" "tiled" ];
+            type = lib.types.enum [
+              "centered"
+              "streched"
+              "tiled"
+            ];
             default = "streched";
             description = ''
               The style which will be used to display the wallpaper image.
@@ -234,10 +243,15 @@ in
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      { assertion = pkgs.stdenv.hostPlatform.isx86_64 || pkgs.stdenv.hostPlatform.isi686 || pkgs.stdenv.hostPlatform.isAarch64;
+      {
+        assertion =
+          pkgs.stdenv.hostPlatform.isx86_64
+          || pkgs.stdenv.hostPlatform.isi686
+          || pkgs.stdenv.hostPlatform.isAarch64;
         message = "Limine can only be installed on aarch64 & x86 platforms";
       }
-      { assertion = cfg.efiSupport || cfg.biosSupport;
+      {
+        assertion = cfg.efiSupport || cfg.biosSupport;
         message = "Both UEFI support and BIOS support for Limine are disabled, this will result in an unbootable system";
       }
     ];
@@ -247,7 +261,10 @@ in
     fileSystems."/sys/firmware/efi/efivars" = lib.mkIf config.boot.loader.efi.canTouchEfiVariables {
       device = "efivarfs";
       fsType = "efivarfs";
-      options = [ "defaults" "nofail" ];
+      options = [
+        "defaults"
+        "nofail"
+      ];
     };
 
     programs.limine.settings = {

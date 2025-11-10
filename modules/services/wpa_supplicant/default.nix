@@ -1,4 +1,10 @@
-{ config, lib, options, pkgs, ... }:
+{
+  config,
+  lib,
+  options,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -73,21 +79,20 @@ let
 
       pskString = if opts.psk != null then quote opts.psk else opts.pskRaw;
 
-      options =
-        [
-          "ssid=${quote opts.ssid}"
-          (
-            if pskString != null || opts.auth != null then
-              "key_mgmt=${concatStringsSep " " opts.authProtocols}"
-            else
-              "key_mgmt=NONE"
-          )
-        ]
-        ++ optional opts.hidden "scan_ssid=1"
-        ++ optional (pskString != null) "psk=${pskString}"
-        ++ optionals (opts.auth != null) (filter (x: x != "") (splitString "\n" opts.auth))
-        ++ optional (opts.priority != null) "priority=${toString opts.priority}"
-        ++ filter (x: x != "") (splitString "\n" opts.extraConfig);
+      options = [
+        "ssid=${quote opts.ssid}"
+        (
+          if pskString != null || opts.auth != null then
+            "key_mgmt=${concatStringsSep " " opts.authProtocols}"
+          else
+            "key_mgmt=NONE"
+        )
+      ]
+      ++ optional opts.hidden "scan_ssid=1"
+      ++ optional (pskString != null) "psk=${pskString}"
+      ++ optionals (opts.auth != null) (filter (x: x != "") (splitString "\n" opts.auth))
+      ++ optional (opts.priority != null) "priority=${toString opts.priority}"
+      ++ filter (x: x != "") (splitString "\n" opts.extraConfig);
     in
     ''
       network={
@@ -446,18 +451,20 @@ in
             ] <= 1;
           message = ''options networking.wireless."${name}".{psk,pskRaw,auth} are mutually exclusive'';
         }
-      ) ++ [
-    {
-      assertion = cfg.userControlled.enable || (cfg.networks != { });
-      message = ''
-        Wireless networks must be defined or
-        wpa_supplicant must be user controllable.
-      '';
-    }
-    {
-      assertion = builtins.elem config.boot.serviceManager [ "synit" ];
-      message = "wpa_supplicant service not defined for the ${config.boot.serviceManager} service-manager";
-    }];
+      )
+      ++ [
+        {
+          assertion = cfg.userControlled.enable || (cfg.networks != { });
+          message = ''
+            Wireless networks must be defined or
+            wpa_supplicant must be user controllable.
+          '';
+        }
+        {
+          assertion = builtins.elem config.boot.serviceManager [ "synit" ];
+          message = "wpa_supplicant service not defined for the ${config.boot.serviceManager} service-manager";
+        }
+      ];
 
     # hardware.wirelessRegulatoryDatabase = true;
 
@@ -467,39 +474,59 @@ in
     # then start an instance of wpa_supplicant for
     # each device asserted at runtime.
     #
-    synit.plan.config.wpa_suplicant = lib.mkIf (cfg.interfaces == []) [ ''
-      $machine ? <wlan ?iface> [
-        let ?name = join "-" [ "wpa_supplicant" $iface ]
-        let ?ifaceArg = join "" [ "-i" $iface ]
-        $config += <depends-on <milestone network> <service-state <daemon $name> ready>>
-        $config += <daemon $name {
-          argv: [ ${[
-            "${pkgs.wpa_supplicant}/bin/wpa_supplicant"
-            "-D${cfg.driver}"
-            ] ++ (
-              if cfg.allowAuxiliaryImperativeNetworks then
-                [ "-c/etc/wpa_supplicant.conf" "-I${configFile}" ]
-              else
-                [ "-c${configFile}" ]
-            ) |> map builtins.toJSON |> toString} $ifaceArg ]
-        }>
-      ]
-    '' ];
+    synit.plan.config.wpa_suplicant = lib.mkIf (cfg.interfaces == [ ]) [
+      ''
+        $machine ? <wlan ?iface> [
+          let ?name = join "-" [ "wpa_supplicant" $iface ]
+          let ?ifaceArg = join "" [ "-i" $iface ]
+          $config += <depends-on <milestone network> <service-state <daemon $name> ready>>
+          $config += <daemon $name {
+            argv: [ ${
+              [
+                "${pkgs.wpa_supplicant}/bin/wpa_supplicant"
+                "-D${cfg.driver}"
+              ]
+              ++ (
+                if cfg.allowAuxiliaryImperativeNetworks then
+                  [
+                    "-c/etc/wpa_supplicant.conf"
+                    "-I${configFile}"
+                  ]
+                else
+                  [ "-c${configFile}" ]
+              )
+              |> map builtins.toJSON
+              |> toString
+            } $ifaceArg ]
+          }>
+        ]
+      ''
+    ];
 
     # If interfaces are explicitly configured then instantiate
     # a singe instance of wpa_supplicant over all of them.
     #
-    synit.daemons.wpa_supplicant = lib.mkIf (cfg.interfaces != []) {
+    synit.daemons.wpa_supplicant = lib.mkIf (cfg.interfaces != [ ]) {
       argv = [
         "${pkgs.wpa_supplicant}/bin/wpa_supplicant"
         "-D${cfg.driver}"
-      ] ++ (
+      ]
+      ++ (
         if cfg.allowAuxiliaryImperativeNetworks then
-          [ "-c/etc/wpa_supplicant.conf" "-I${configFile}" ]
+          [
+            "-c/etc/wpa_supplicant.conf"
+            "-I${configFile}"
+          ]
         else
           [ "-c${configFile}" ]
-      ) ++ map (i: "-I${i}") cfg.interfaces;
-      provides = [ [ "milestone" "network" ] ];
+      )
+      ++ map (i: "-I${i}") cfg.interfaces;
+      provides = [
+        [
+          "milestone"
+          "network"
+        ]
+      ];
     };
   };
 

@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   options = {
     environment.systemPackages = lib.mkOption {
@@ -8,8 +13,8 @@
 
     environment.pathsToLink = lib.mkOption {
       type = with lib.types; listOf str;
-      default = [];
-      example = ["/"];
+      default = [ ];
+      example = [ "/" ];
       description = "List of directories to be symlinked in {file}`/run/current-system/sw`.";
     };
 
@@ -59,27 +64,27 @@
       gnutar
     ];
 
-    environment.pathsToLink =
-      [ "/bin"
-        "/etc/xdg"
-        "/etc/gtk-2.0"
-        "/etc/gtk-3.0"
-        # NOTE: We need `/lib' to be among `pathsToLink' for NSS modules to work.
-        "/lib" # FIXME: remove and update debug-info.nix
-        "/sbin"
+    environment.pathsToLink = [
+      "/bin"
+      "/etc/xdg"
+      "/etc/gtk-2.0"
+      "/etc/gtk-3.0"
+      # NOTE: We need `/lib' to be among `pathsToLink' for NSS modules to work.
+      "/lib" # FIXME: remove and update debug-info.nix
+      "/sbin"
 
-        # TODO: trim this list down
-        "/share/emacs"
-        "/share/hunspell"
-        "/share/org"
-        "/share/themes"
-        "/share/vulkan"
-        "/share/kservices5"
-        "/share/kservicetypes5"
-        "/share/kxmlgui5"
-        "/share/thumbnailers"
-        "/share/wayland-sessions"
-      ];
+      # TODO: trim this list down
+      "/share/emacs"
+      "/share/hunspell"
+      "/share/org"
+      "/share/themes"
+      "/share/vulkan"
+      "/share/kservices5"
+      "/share/kservicetypes5"
+      "/share/kxmlgui5"
+      "/share/thumbnailers"
+      "/share/wayland-sessions"
+    ];
 
     environment.path = pkgs.buildEnv {
       name = "system-path";

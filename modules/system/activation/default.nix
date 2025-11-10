@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   scriptOpts = {
     options = {
@@ -30,7 +35,7 @@ in
 
     scripts = lib.mkOption {
       type = with lib.types; attrsOf (coercedTo str lib.noDepEntry (submodule scriptOpts));
-      default = {};
+      default = { };
 
       example = lib.literalExpression ''
         { stdio.text =
@@ -69,8 +74,10 @@ in
   config = {
     system.activation.out =
       let
-        set' = lib.mapAttrs (a: v:
-          v // {
+        set' = lib.mapAttrs (
+          a: v:
+          v
+          // {
             text = ''
               #### Activation script snippet ${a}:
               _localstatus=0
@@ -83,32 +90,32 @@ in
           }
         ) config.system.activation.scripts;
       in
-        pkgs.writeScript "activate" ''
-          #!${pkgs.runtimeShell}
+      pkgs.writeScript "activate" ''
+        #!${pkgs.runtimeShell}
 
-          systemConfig='@systemConfig@'
+        systemConfig='@systemConfig@'
 
-          export PATH=/empty
-          for i in ${toString config.system.activation.path}; do
-              PATH=$PATH:$i/bin:$i/sbin
-          done
+        export PATH=/empty
+        for i in ${toString config.system.activation.path}; do
+            PATH=$PATH:$i/bin:$i/sbin
+        done
 
-          _status=0
-          trap "_status=1 _localstatus=\$?" ERR
+        _status=0
+        trap "_status=1 _localstatus=\$?" ERR
 
-          # Ensure a consistent umask.
-          umask 0022
+        # Ensure a consistent umask.
+        umask 0022
 
-          ${lib.textClosureMap lib.id set' (lib.attrNames set')}
+        ${lib.textClosureMap lib.id set' (lib.attrNames set')}
 
-          # Make this configuration the current configuration.
-          # The readlink is there to ensure that when $systemConfig = /system
-          # (which is a symlink to the store), /run/current-system is still
-          # used as a garbage collection root.
-          ln -sfn "$(readlink -f "$systemConfig")" /run/current-system
+        # Make this configuration the current configuration.
+        # The readlink is there to ensure that when $systemConfig = /system
+        # (which is a symlink to the store), /run/current-system is still
+        # used as a garbage collection root.
+        ln -sfn "$(readlink -f "$systemConfig")" /run/current-system
 
-          exit $_status
-        '';
+        exit $_status
+      '';
 
     system.activation.scripts.specialfs = ''
       echo "specialfs stub here..."
@@ -116,24 +123,26 @@ in
       s6-ln -s -f -n /run /var/run
     '';
 
-    system.activation.path = with pkgs; map lib.getBin [
-      coreutils
-      gnugrep
-      findutils
-      getent
-      stdenv.cc.libc # nscd in update-users-groups.pl
-      shadow
-      nettools # needed for hostname
-      util-linux # needed for mount and mountpoint
-      s6-portable-utils # s6-ln
-    ];
+    system.activation.path =
+      with pkgs;
+      map lib.getBin [
+        coreutils
+        gnugrep
+        findutils
+        getent
+        stdenv.cc.libc # nscd in update-users-groups.pl
+        shadow
+        nettools # needed for hostname
+        util-linux # needed for mount and mountpoint
+        s6-portable-utils # s6-ln
+      ];
 
-    system.topLevel =  checkAssertWarn (pkgs.stdenvNoCC.mkDerivation {
-      name = "finix-system";
-      preferLocalBuild = true;
-      allowSubstitutes = false;
-      buildCommand =
-        ''
+    system.topLevel = checkAssertWarn (
+      pkgs.stdenvNoCC.mkDerivation {
+        name = "finix-system";
+        preferLocalBuild = true;
+        allowSubstitutes = false;
+        buildCommand = ''
           mkdir -p $out $out/bin
 
           cp ${config.system.activation.out} $out/activate
@@ -175,6 +184,7 @@ in
         + lib.optionalString (config.boot.bootspec.enable && config.boot.bootspec.enableValidation) ''
           ${config.boot.bootspec.validator} "$out/${config.boot.bootspec.filename}"
         '';
-    });
+      }
+    );
   };
 }

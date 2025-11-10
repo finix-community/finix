@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   options = {
     boot.initrd.supportedFilesystems.vfat = {
@@ -33,7 +38,10 @@
       "nls_iso8859-1"
     ];
 
-    boot.supportedFilesystems.vfat.packages = [ pkgs.dosfstools pkgs.mtools ];
+    boot.supportedFilesystems.vfat.packages = [
+      pkgs.dosfstools
+      pkgs.mtools
+    ];
     boot.initrd.supportedFilesystems.vfat.packages = [ pkgs.dosfstools ];
   };
 }

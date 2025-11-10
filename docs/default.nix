@@ -46,42 +46,41 @@ let
     options = eval.options;
     warningsAreErrors = false;
 
-    transformOptions = opt:
+    transformOptions =
+      opt:
       opt
       // {
-        declarations =
-          map (
-            decl:
-              if lib.hasPrefix (toString ../modules) (toString decl)
-              then
-                decl
-                  |> toString
-                  |> lib.removePrefix (toString ../modules)
-                  |> (x: {
-                    url = "https://github.com/finix-community/finix/blob/main/modules${x}";
-                    name = "<finix/modules${x}>";
-                  })
-              else if lib.hasPrefix modulesPath (toString decl)
-              then {
-                url = "https://github.com/NixOS/nixpkgs/blob/master/nixos/modules${lib.removePrefix modulesPath (toString decl)}";
-                name = "<nixpkgs/nixos/modules${lib.removePrefix modulesPath (toString decl)}>";
-              }
-              else decl
-          )
-          opt.declarations;
+        declarations = map (
+          decl:
+          if lib.hasPrefix (toString ../modules) (toString decl) then
+            decl
+            |> toString
+            |> lib.removePrefix (toString ../modules)
+            |> (x: {
+              url = "https://github.com/finix-community/finix/blob/main/modules${x}";
+              name = "<finix/modules${x}>";
+            })
+          else if lib.hasPrefix modulesPath (toString decl) then
+            {
+              url = "https://github.com/NixOS/nixpkgs/blob/master/nixos/modules${lib.removePrefix modulesPath (toString decl)}";
+              name = "<nixpkgs/nixos/modules${lib.removePrefix modulesPath (toString decl)}>";
+            }
+          else
+            decl
+        ) opt.declarations;
       };
 
   };
 in
-  pkgs.runCommandLocal "finix-options-doc" { nativeBuildInputs = [ ndg ]; } ''
-    mkdir -p $out
+pkgs.runCommandLocal "finix-options-doc" { nativeBuildInputs = [ ndg ]; } ''
+  mkdir -p $out
 
-    ndg html \
-      --jobs $NIX_BUILD_CORES \
-      --title finix \
-      --module-options ${doc.optionsJSON}/share/doc/nixos/options.json \
-      --manpage-urls ${./manpage-urls.json} \
-      --options-depth 1 \
-      --generate-search \
-      --output-dir "$out"
-  ''
+  ndg html \
+    --jobs $NIX_BUILD_CORES \
+    --title finix \
+    --module-options ${doc.optionsJSON}/share/doc/nixos/options.json \
+    --manpage-urls ${./manpage-urls.json} \
+    --options-depth 1 \
+    --generate-search \
+    --output-dir "$out"
+''

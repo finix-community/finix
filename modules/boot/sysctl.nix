@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   sysctlOption = lib.mkOptionType {
     name = "sysctl option value";
@@ -74,8 +79,13 @@ in
 
     synit.daemons.sysctl = {
       argv = [
-        "elglob" "-s" "GLOB" "/etc/sysctl.d/*"
-        "sysctl" "-p" "$GLOB"
+        "elglob"
+        "-s"
+        "GLOB"
+        "/etc/sysctl.d/*"
+        "sysctl"
+        "-p"
+        "$GLOB"
       ];
       path = [ pkgs.procps ];
       restart = "never";

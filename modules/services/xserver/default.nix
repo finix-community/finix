@@ -1,17 +1,28 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.xserver;
 
   # Map video driver names to driver packages. FIXME: move into card-specific modules.
   knownVideoDrivers = {
     # Alias so people can keep using "virtualbox" instead of "vboxvideo".
-    virtualbox = { modules = [ pkgs.xorg.xf86videovboxvideo ]; driverName = "vboxvideo"; };
+    virtualbox = {
+      modules = [ pkgs.xorg.xf86videovboxvideo ];
+      driverName = "vboxvideo";
+    };
 
     # Alias so that "radeon" uses the xf86-video-ati driver.
-    radeon = { modules = [ pkgs.xorg.xf86videoati ]; driverName = "ati"; };
+    radeon = {
+      modules = [ pkgs.xorg.xf86videoati ];
+      driverName = "ati";
+    };
 
     # modesetting does not have a xf86videomodesetting package as it is included in xorgserver
-    modesetting = {};
+    modesetting = { };
   };
 
   configFile = pkgs.writeText "xorg.conf" ''
@@ -121,14 +132,17 @@ in
 
     modules = lib.mkOption {
       type = with lib.types; listOf path;
-      default = [];
+      default = [ ];
       example = lib.literalExpression "[ pkgs.xf86_input_wacom ]";
       description = "Packages to be added to the module search path of the X server.";
     };
 
     videoDrivers = lib.mkOption {
       type = with lib.types; listOf str;
-      default = [ "modesetting" "fbdev" ];
+      default = [
+        "modesetting"
+        "fbdev"
+      ];
       example = [
         "nvidia"
         "amdgpu-pro"
@@ -234,7 +248,8 @@ in
 
     environment.etc = {
       "X11/xorg.conf".source = configFile;
-      "X11/xorg.conf.d/10-evdev.conf".source = "${pkgs.xorg.xf86inputevdev.out}/share/X11/xorg.conf.d/10-evdev.conf";
+      "X11/xorg.conf.d/10-evdev.conf".source =
+        "${pkgs.xorg.xf86inputevdev.out}/share/X11/xorg.conf.d/10-evdev.conf";
       "X11/xkb".source = "${config.services.xserver.xkb.dir}";
 
       "X11/xorg.conf.d/00-keyboard.conf".text = with config.services.xserver; ''
@@ -251,22 +266,33 @@ in
 
     environment.pathsToLink = [ "/share/X11" ];
 
-    services.xserver.modules =
-      lib.concatLists (lib.catAttrs "modules" cfg.drivers) ++
-      [ pkgs.xorg.xorgserver.out
-        pkgs.xorg.xf86inputevdev.out
+    services.xserver.modules = lib.concatLists (lib.catAttrs "modules" cfg.drivers) ++ [
+      pkgs.xorg.xorgserver.out
+      pkgs.xorg.xf86inputevdev.out
 
-        pkgs.xorg.xf86inputlibinput
-      ];
+      pkgs.xorg.xf86inputlibinput
+    ];
 
     # FIXME: somehow check for unknown driver names.
-    services.xserver.drivers = lib.flip lib.concatMap cfg.videoDrivers (name:
-      let driver =
-        lib.attrByPath [name]
-          (if pkgs.xorg ? ${"xf86video" + name}
-           then { modules = [pkgs.xorg.${"xf86video" + name}]; }
-           else null)
-          knownVideoDrivers;
-      in lib.optional (driver != null) ({ inherit name; modules = []; driverName = name; display = true; } // driver));
+    services.xserver.drivers = lib.flip lib.concatMap cfg.videoDrivers (
+      name:
+      let
+        driver = lib.attrByPath [ name ] (
+          if pkgs.xorg ? ${"xf86video" + name} then
+            { modules = [ pkgs.xorg.${"xf86video" + name} ]; }
+          else
+            null
+        ) knownVideoDrivers;
+      in
+      lib.optional (driver != null) (
+        {
+          inherit name;
+          modules = [ ];
+          driverName = name;
+          display = true;
+        }
+        // driver
+      )
+    );
   };
 }

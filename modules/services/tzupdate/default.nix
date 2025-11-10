@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.tzupdate;
 in
@@ -28,7 +33,10 @@ in
     finit.tasks.tzupdate = {
       description = "timezone update service";
       command = "${cfg.package}/bin/tzupdate -z ${pkgs.tzdata}/share/zoneinfo -d /dev/null";
-      conditions = [ "service/syslogd/ready" "net/route/default" ];
+      conditions = [
+        "service/syslogd/ready"
+        "net/route/default"
+      ];
     };
   };
 }

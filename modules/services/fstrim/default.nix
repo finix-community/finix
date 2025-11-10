@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.fstrim;
 in
@@ -27,12 +32,13 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    providers.scheduler.tasks = /* lib.mkIf (config.boot.isContainer != true) */ {
-      fstrim = {
-        inherit (cfg) interval;
+    providers.scheduler.tasks = # lib.mkIf (config.boot.isContainer != true)
+      {
+        fstrim = {
+          inherit (cfg) interval;
 
-        command = "${pkgs.util-linux}/bin/fstrim --listed-in /etc/fstab:/proc/self/mountinfo --verbose --quiet-unsupported";
+          command = "${pkgs.util-linux}/bin/fstrim --listed-in /etc/fstab:/proc/self/mountinfo --verbose --quiet-unsupported";
+        };
       };
-    };
   };
 }

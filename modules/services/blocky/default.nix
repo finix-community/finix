@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.blocky;
 
@@ -87,7 +92,10 @@ in
       inherit (cfg) user group;
 
       description = "a dns proxy and ad-blocker for the local network";
-      conditions = [ "service/syslogd/ready" "net/route/default" ];
+      conditions = [
+        "service/syslogd/ready"
+        "net/route/default"
+      ];
       command = "${lib.getExe cfg.package} --config ${configFile}";
       log = true;
       nohup = true;

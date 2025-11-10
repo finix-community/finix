@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   utils = import (pkgs.path + "/nixos/lib/utils.nix") { inherit config pkgs lib; };
 in

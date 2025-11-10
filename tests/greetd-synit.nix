@@ -1,21 +1,25 @@
-{ testenv ? import ./testenv { } }:
+{
+  testenv ? import ./testenv { },
+}:
 
 testenv.mkTest {
   name = "greetd-synit";
 
-  nodes.machine = { lib, pkgs, ... }: {
-    boot.serviceManager = "synit";
+  nodes.machine =
+    { lib, pkgs, ... }:
+    {
+      boot.serviceManager = "synit";
 
-    security.pam.debug = true;
+      security.pam.debug = true;
 
-    services.greetd = {
-      enable = true;
-      settings.initial_session = {
-        command = "${pkgs.bashInteractive}/bin/bash -l";
-        user = "nobody";
+      services.greetd = {
+        enable = true;
+        settings.initial_session = {
+          command = "${pkgs.bashInteractive}/bin/bash -l";
+          user = "nobody";
+        };
       };
     };
-  };
 
   tclScript = ''
     machine spawn

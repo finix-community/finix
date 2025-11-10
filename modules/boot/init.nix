@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.boot.init;
 
@@ -51,9 +56,14 @@ in
 
     boot.init.pid1.argv = {
       # Set the environment via argv.
-      env.text = cfg.pid1.env
+      env.text =
+        cfg.pid1.env
         |> builtins.attrNames
-        |> lib.concatMap (key: [ "export" key cfg.pid1.env.${key} ]);
+        |> lib.concatMap (key: [
+          "export"
+          key
+          cfg.pid1.env.${key}
+        ]);
 
       # How "@systemConfig@/activate" is called is declared elsewhere.
       activation.deps = [ "env" ];

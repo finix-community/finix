@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.zerotierone;
 in
@@ -38,7 +43,10 @@ in
 
     finit.services.zerotierone = {
       description = "zerotier one";
-      conditions = [ "service/syslogd/ready" "net/route/default" ];
+      conditions = [
+        "service/syslogd/ready"
+        "net/route/default"
+      ];
       command = "${cfg.package}/bin/zerotier-one ${cfg.stateDir}";
     };
 

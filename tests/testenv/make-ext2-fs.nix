@@ -33,11 +33,28 @@ let
       digest = builtins.hashString "sha256" seed;
     in
     (lib.lists.foldl
-      ({ str, off }: n:
-        let chunk = builtins.substring off n digest; in
-        { str = if off == 0 then chunk else "${str}-${chunk}";  off = off + n; })
-      { str = ""; off = 0; }
-      [ 8 4 4 4 12 ]
+      (
+        { str, off }:
+        n:
+        let
+          chunk = builtins.substring off n digest;
+        in
+        {
+          str = if off == 0 then chunk else "${str}-${chunk}";
+          off = off + n;
+        }
+      )
+      {
+        str = "";
+        off = 0;
+      }
+      [
+        8
+        4
+        4
+        4
+        12
+      ]
     ).str;
 
   volumeUuid = uuidFrom fsClosureInfo.outPath;
@@ -50,7 +67,8 @@ stdenv.mkDerivation {
     libfaketime
     perl
     fakeroot
-  ] ++ lib.optional (format == "qcow2") qemu;
+  ]
+  ++ lib.optional (format == "qcow2") qemu;
 
   buildCommand = ''
     img=temp.img
@@ -121,7 +139,7 @@ stdenv.mkDerivation {
     ${
       {
         raw = ''
-           cp ./$img $out/image.raw
+          cp ./$img $out/image.raw
         '';
         qcow2 = ''
           qemu-img convert -f raw -O qcow2 ./$img $out/image.qcow2

@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.rsyslog;
 
@@ -46,7 +51,9 @@ in
     finit.services.syslogd = {
       description = "system logging daemon";
       runlevels = "S0123456789";
-      conditions = lib.optionals config.services.udev.enable [ "run/udevadm:5/success" ] ++ lib.optionals config.services.mdevd.enable [ "run/coldplug/success" ];
+      conditions =
+        lib.optionals config.services.udev.enable [ "run/udevadm:5/success" ]
+        ++ lib.optionals config.services.mdevd.enable [ "run/coldplug/success" ];
       command = "${pkgs.rsyslog-light}/bin/rsyslogd -n -d -f ${configFile}";
     };
 

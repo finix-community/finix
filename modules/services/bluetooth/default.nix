@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.bluetooth;
 
@@ -60,8 +65,13 @@ in
 
     finit.services.bluetooth = {
       description = "bluetooth service";
-      conditions = [ "service/syslogd/ready" "service/dbus/ready" ];
-      command = "${cfg.package}/libexec/bluetooth/bluetoothd -f /etc/bluetooth/main.conf" + lib.optionalString cfg.debug " -d";
+      conditions = [
+        "service/syslogd/ready"
+        "service/dbus/ready"
+      ];
+      command =
+        "${cfg.package}/libexec/bluetooth/bluetoothd -f /etc/bluetooth/main.conf"
+        + lib.optionalString cfg.debug " -d";
     };
   };
 }

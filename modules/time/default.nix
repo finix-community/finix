@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   tzdir = "${pkgs.tzdata}/share/zoneinfo";
 

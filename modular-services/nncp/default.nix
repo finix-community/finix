@@ -1,6 +1,11 @@
 defaultPackage:
 
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.nncp;
@@ -20,11 +25,13 @@ let
 
   configScript = writeExeclineScript "nncp-config.el" [ ] ''
     importas -S PATH
-    export PATH "${lib.makeBinPath [
-      cfg.package
-      pkgs.jq
-      pkgs.hjson-go
-    ]}:$PATH"
+    export PATH "${
+      lib.makeBinPath [
+        cfg.package
+        pkgs.jq
+        pkgs.hjson-go
+      ]
+    }:$PATH"
     umask 127
     foreground { s6-rmrf ${nncpCfgFile} }
     pipeline -r {
@@ -56,7 +63,9 @@ in
       '';
     };
 
-    package = lib.mkPackageOption pkgs "nncp" { } // { default = defaultPackage; };
+    package = lib.mkPackageOption pkgs "nncp" { } // {
+      default = defaultPackage;
+    };
 
     secrets = lib.mkOption {
       type = with lib.types; listOf str;
@@ -151,13 +160,19 @@ in
         {
           name = "caller-${name}";
           value.process.argv = [
-            "s6-envuidgid" "root"
-            "s6-envuidgid" "-g" cfg.group
-            "s6-applyuidgid" "-U"
+            "s6-envuidgid"
+            "root"
+            "s6-envuidgid"
+            "-g"
+            cfg.group
+            "s6-applyuidgid"
+            "-U"
             "emptyenv"
             "${cfg.package}/bin/nncp-caller"
-            "-cfg" nncpCfgFile
-          ] ++ extraArgs;
+            "-cfg"
+            nncpCfgFile
+          ]
+          ++ extraArgs;
         }
       ) cfg.callers)
 
@@ -169,17 +184,25 @@ in
           value.process.argv =
             lib.optionals ucspi.enable (
               [
-                "s6-envuidgid" "root"
-                "s6-envuidgid" "-g" cfg.group
-                "${lib.getExe' pkgs.s6-networking "s6-tcpserver"}" "-U"
+                "s6-envuidgid"
+                "root"
+                "s6-envuidgid"
+                "-g"
+                cfg.group
+                "${lib.getExe' pkgs.s6-networking "s6-tcpserver"}"
+                "-U"
               ]
               ++ ucspi.extraArgs
-              ++ [ ucspi.addr (toString ucspi.port) ]
+              ++ [
+                ucspi.addr
+                (toString ucspi.port)
+              ]
             )
             ++ [
               "emptyenv"
               "${cfg.package}/bin/nncp-daemon"
-              "-cfg" nncpCfgFile
+              "-cfg"
+              nncpCfgFile
             ]
             ++ lib.optional ucspi.enable "-ucspi"
             ++ extraArgs;

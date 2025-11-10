@@ -23,88 +23,95 @@ let
     "/var/log"
   ];
 
-  addCheckDesc = desc: elemType: check: lib.types.addCheck elemType check
-    // { description = "${elemType.description} (with check: ${desc})"; };
-
-  nonEmptyWithoutTrailingSlash = addCheckDesc "non-empty without trailing slash" lib.types.str
-    (s: (builtins.match "[ \t\n]*" s) == null && (builtins.match ".+/" s) == null);
-
-  fileSystemOpts = { name, config, ... }: {
-
-    options = {
-      mountPoint = lib.mkOption {
-        example = "/mnt/usb";
-        type = nonEmptyWithoutTrailingSlash;
-        description = "Location of the mounted file system.";
-      };
-
-      device = lib.mkOption {
-        default = null;
-        example = "/dev/sda";
-        type = with lib.types; nullOr nonEmptyStr;
-        description = "Location of the device.";
-      };
-
-      fsType = lib.mkOption {
-        default = "auto";
-        example = "ext3";
-        type = lib.types.nonEmptyStr;
-        description = "Type of the file system.";
-      };
-
-      label = lib.mkOption {
-        default = null;
-        example = "root-partition";
-        type = with lib.types; nullOr nonEmptyStr;
-        description = "Label of the device (if any).";
-      };
-
-      noCheck = lib.mkOption {
-        default = false;
-        type = lib.types.bool;
-        description = "Disable running fsck on this filesystem.";
-      };
-
-      options = lib.mkOption {
-        default = [ "defaults" ];
-        example = [ "data=journal" ];
-        description = "Options used to mount the file system.";
-        type = with lib.types; nonEmptyListOf nonEmptyStr;
-      };
-
-      depends = lib.mkOption {
-        default = [ ];
-        example = [ "/persist" ];
-        type = lib.types.listOf nonEmptyWithoutTrailingSlash;
-        description = ''
-          List of paths that should be mounted before this one. This filesystem's
-          {option}`device` and {option}`mountPoint` are always
-          checked and do not need to be included explicitly. If a path is added
-          to this list, any other filesystem whose mount point is a parent of
-          the path will be mounted before this filesystem. The paths do not need
-          to actually be the {option}`mountPoint` of some other filesystem.
-        '';
-      };
-
-      neededForBoot = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-      };
+  addCheckDesc =
+    desc: elemType: check:
+    lib.types.addCheck elemType check
+    // {
+      description = "${elemType.description} (with check: ${desc})";
     };
 
-    config = {
-      mountPoint = lib.mkDefault name;
-      device = lib.mkIf (lib.elem config.fsType specialFSTypes) (lib.mkDefault config.fsType);
-      neededForBoot = lib.mkIf (lib.elem config.mountPoint pathsNeededForBoot) (lib.mkForce true);
-    };
+  nonEmptyWithoutTrailingSlash = addCheckDesc "non-empty without trailing slash" lib.types.str (
+    s: (builtins.match "[ \t\n]*" s) == null && (builtins.match ".+/" s) == null
+  );
 
-  };
+  fileSystemOpts =
+    { name, config, ... }:
+    {
+
+      options = {
+        mountPoint = lib.mkOption {
+          example = "/mnt/usb";
+          type = nonEmptyWithoutTrailingSlash;
+          description = "Location of the mounted file system.";
+        };
+
+        device = lib.mkOption {
+          default = null;
+          example = "/dev/sda";
+          type = with lib.types; nullOr nonEmptyStr;
+          description = "Location of the device.";
+        };
+
+        fsType = lib.mkOption {
+          default = "auto";
+          example = "ext3";
+          type = lib.types.nonEmptyStr;
+          description = "Type of the file system.";
+        };
+
+        label = lib.mkOption {
+          default = null;
+          example = "root-partition";
+          type = with lib.types; nullOr nonEmptyStr;
+          description = "Label of the device (if any).";
+        };
+
+        noCheck = lib.mkOption {
+          default = false;
+          type = lib.types.bool;
+          description = "Disable running fsck on this filesystem.";
+        };
+
+        options = lib.mkOption {
+          default = [ "defaults" ];
+          example = [ "data=journal" ];
+          description = "Options used to mount the file system.";
+          type = with lib.types; nonEmptyListOf nonEmptyStr;
+        };
+
+        depends = lib.mkOption {
+          default = [ ];
+          example = [ "/persist" ];
+          type = lib.types.listOf nonEmptyWithoutTrailingSlash;
+          description = ''
+            List of paths that should be mounted before this one. This filesystem's
+            {option}`device` and {option}`mountPoint` are always
+            checked and do not need to be included explicitly. If a path is added
+            to this list, any other filesystem whose mount point is a parent of
+            the path will be mounted before this filesystem. The paths do not need
+            to actually be the {option}`mountPoint` of some other filesystem.
+          '';
+        };
+
+        neededForBoot = lib.mkOption {
+          type = lib.types.bool;
+          default = false;
+        };
+      };
+
+      config = {
+        mountPoint = lib.mkDefault name;
+        device = lib.mkIf (lib.elem config.fsType specialFSTypes) (lib.mkDefault config.fsType);
+        neededForBoot = lib.mkIf (lib.elem config.mountPoint pathsNeededForBoot) (lib.mkForce true);
+      };
+
+    };
 in
 {
   options = {
     fileSystems = lib.mkOption {
       type = with lib.types; attrsOf (submodule fileSystemOpts);
-      default = {};
+      default = { };
       example = lib.literalExpression ''
         {
           "/".device = "/dev/hda1";

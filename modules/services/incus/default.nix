@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.incus;
 in
@@ -92,7 +97,9 @@ in
           zfs
         ];
 
-        text = "exec ${cfg.package}/bin/incusd --group incus-admin --syslog" + lib.optionalString cfg.debug " --debug";
+        text =
+          "exec ${cfg.package}/bin/incusd --group incus-admin --syslog"
+          + lib.optionalString cfg.debug " --debug";
       };
 
       kill = 30;

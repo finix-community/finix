@@ -222,20 +222,20 @@ rec {
         baseJSON = if baseOptionsJSON == null then builtins.toFile "base.json" "{}" else baseOptionsJSON;
       }
       ''
-          # Export list of options in different format.
-          dst=$out/share/doc/nixos
-          mkdir -p $dst
+        # Export list of options in different format.
+        dst=$out/share/doc/nixos
+        mkdir -p $dst
 
-          TOUCH_IF_DB=$dst/.used-docbook \
-          python ${pkgs.path + "/nixos/lib/make-options-doc/mergeJSON.py"} \
-            ${lib.optionalString warningsAreErrors "--warnings-are-errors"} \
-            $baseJSON $options \
-            > $dst/options.json
+        TOUCH_IF_DB=$dst/.used-docbook \
+        python ${pkgs.path + "/nixos/lib/make-options-doc/mergeJSON.py"} \
+          ${lib.optionalString warningsAreErrors "--warnings-are-errors"} \
+          $baseJSON $options \
+          > $dst/options.json
 
-          brotli -9 < $dst/options.json > $dst/options.json.br
+        brotli -9 < $dst/options.json > $dst/options.json.br
 
-          mkdir -p $out/nix-support
-          echo "file json $dst/options.json" >> $out/nix-support/hydra-build-products
-          echo "file json-br $dst/options.json.br" >> $out/nix-support/hydra-build-products
+        mkdir -p $out/nix-support
+        echo "file json $dst/options.json" >> $out/nix-support/hydra-build-products
+        echo "file json-br $dst/options.json.br" >> $out/nix-support/hydra-build-products
       '';
 }

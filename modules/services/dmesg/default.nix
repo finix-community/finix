@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.services.dmesg;
@@ -35,11 +40,18 @@ in
   config = mkIf cfg.enable {
 
     synit.daemons.dmesg = {
-      argv = lib.quoteExecline [
-        # Disable printing to console.
-        "foreground" [ "dmesg" "--console-off" ]
-        "dmesg" "--follow"
-      ] ++ cfg.extraArgs;
+      argv =
+        lib.quoteExecline [
+          # Disable printing to console.
+          "foreground"
+          [
+            "dmesg"
+            "--console-off"
+          ]
+          "dmesg"
+          "--follow"
+        ]
+        ++ cfg.extraArgs;
       path = [ pkgs.util-linux ];
       logging.args = mkDefault [
         "n1" # Single archive.

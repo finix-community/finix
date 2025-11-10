@@ -1,15 +1,19 @@
-{ testenv ? import ./testenv { } }:
+{
+  testenv ? import ./testenv { },
+}:
 
 testenv.mkTest {
   name = "yggdrasil-synit";
 
-  nodes.machine = { lib, pkgs, ... }: {
-    boot.serviceManager = "synit";
+  nodes.machine =
+    { lib, pkgs, ... }:
+    {
+      boot.serviceManager = "synit";
 
-    system.services.yggdrasil = {
-      imports = [ pkgs.yggdrasil.passthru.services ];
+      system.services.yggdrasil = {
+        imports = [ pkgs.yggdrasil.passthru.services ];
+      };
     };
-  };
 
   tclScript = ''
     machine spawn

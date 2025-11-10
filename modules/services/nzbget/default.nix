@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.nzbget;
   stateDir = "/var/lib/nzbget";
@@ -53,7 +58,13 @@ in
     };
 
     settings = lib.mkOption {
-      type = with lib.types; attrsOf (oneOf [ bool int str ]);
+      type =
+        with lib.types;
+        attrsOf (oneOf [
+          bool
+          int
+          str
+        ]);
       default = { };
       description = ''
         `nzbget` configuration. See [upstream documentation](https://nzbget.com/documentation/command-line-reference)
@@ -92,12 +103,19 @@ in
 
     finit.services.nzbget =
       let
-        configOpts = lib.concatStringsSep " " (lib.mapAttrsToList (name: value: "-o ${name}=${lib.escapeShellArg (toStr value)}") cfg.settings);
-        toStr = v:
-          if v == true then "yes"
-          else if v == false then "no"
-          else if lib.isInt v then toString v
-          else v;
+        configOpts = lib.concatStringsSep " " (
+          lib.mapAttrsToList (name: value: "-o ${name}=${lib.escapeShellArg (toStr value)}") cfg.settings
+        );
+        toStr =
+          v:
+          if v == true then
+            "yes"
+          else if v == false then
+            "no"
+          else if lib.isInt v then
+            toString v
+          else
+            v;
 
         script = pkgs.writeShellScript "nzbget.sh" ''
           exec ${lib.getExe cfg.package} --configfile ${configFile} ${configOpts} "$@"

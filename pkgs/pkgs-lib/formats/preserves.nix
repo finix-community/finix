@@ -6,18 +6,31 @@
 { ... }@args:
 let
   toPreserves = lib.generators.toPreserves args;
-  literal = with lib.types;
+  literal =
+    with lib.types;
     nullOr (oneOf [
-      bool int float str
-      (attrsOf literal) (listOf literal)
-    ]) // {
+      bool
+      int
+      float
+      str
+      (attrsOf literal)
+      (listOf literal)
+    ])
+    // {
       description = "Preserves value";
     };
   convert =
     syntax: name: value:
     pkgs.writeTextFile {
       name =
-        let ext = { binary = ".prb"; text = ".pr"; }.${syntax}; in
+        let
+          ext =
+            {
+              binary = ".prb";
+              text = ".pr";
+            }
+            .${syntax};
+        in
         if lib.hasSuffix ext name then name else "${name}${ext}";
       text = toString (map toPreserves value);
       checkPhase = ''
@@ -25,12 +38,16 @@ let
           --output-format ${syntax} \
           <$target >tmp.pr && mv tmp.pr $target
       '';
-      passthru = { inherit value; } // {
-          # For each syntax the alternative
-          # is available in passthru.
-          binary.text = convert "text" name value;
-          text.binary = convert "binary" name value;
-        }.${syntax};
+      passthru = {
+        inherit value;
+      }
+      // {
+        # For each syntax the alternative
+        # is available in passthru.
+        binary.text = convert "text" name value;
+        text.binary = convert "binary" name value;
+      }
+      .${syntax};
     };
 in
 {

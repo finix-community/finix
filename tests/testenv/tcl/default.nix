@@ -5,7 +5,8 @@
 
 let
   inherit (lib)
-    optionalString;
+    optionalString
+    ;
 
   finixModules = import ../../../modules;
   qemu-common = import (pkgs.path + /nixos/lib/qemu-common.nix) { inherit lib pkgs; };
@@ -36,15 +37,17 @@ let
               "console=ttyS0,115200n8"
             ];
             fileSystems."/" =
-              if config.testing.enableRootDisk
-              then {
-                device = "/dev/disk/by-label/${name}-test";
-                fsType = "ext2";
-              } else {
-                device = "tmpfs";
-                fsType = "tmpfs";
-                options = [ "mode=755" ];
-              };
+              if config.testing.enableRootDisk then
+                {
+                  device = "/dev/disk/by-label/${name}-test";
+                  fsType = "ext2";
+                }
+              else
+                {
+                  device = "tmpfs";
+                  fsType = "tmpfs";
+                  options = [ "mode=755" ];
+                };
             networking.hostName = name;
             testing = {
               enable = true;
@@ -53,7 +56,8 @@ let
             virtualisation.qemu.package = pkgs.qemu_test;
           }
         )
-      ] ++ lib.attrValues finixModules;
+      ]
+      ++ lib.attrValues finixModules;
     };
 
   mkRootImage' =
@@ -125,16 +129,15 @@ in
 
           namespace import testNodes::*
 
-          ${if builtins.isFunction tclScript
-            then tclScript { nodes = nodes'; }
-            else tclScript
-          }
+          ${if builtins.isFunction tclScript then tclScript { nodes = nodes'; } else tclScript}
 
           fail "test script fell thru"
         '';
       };
       run = pkgs.runCommand "test-${name}.log" runAttrs script;
-    in run // {
+    in
+    run
+    // {
       nodes = nodes';
       inherit script;
     };

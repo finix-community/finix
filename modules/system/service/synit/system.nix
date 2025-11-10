@@ -22,8 +22,16 @@ let
     prefixes: service:
     concatMapAttrs (
       name: module:
-      let label = if name == "" then prefixes else prefixes ++ [ name ];
-      in { "${concatStringsSep "-" label}" = { ... }: { imports = [ module ]; }; }
+      let
+        label = if name == "" then prefixes else prefixes ++ [ name ];
+      in
+      {
+        "${concatStringsSep "-" label}" =
+          { ... }:
+          {
+            imports = [ module ];
+          };
+      }
     ) service.synit.daemons
     // concatMapAttrs (
       subServiceName: subService: makeDaemons (prefixes ++ [ subServiceName ]) subService

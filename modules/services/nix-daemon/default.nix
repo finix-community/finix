@@ -1,10 +1,16 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.nix-daemon;
 
   configType =
     let
-      confAtom = with lib.types;
+      confAtom =
+        with lib.types;
         nullOr (oneOf [
           bool
           int
@@ -51,12 +57,12 @@ let
       isExtra = key: lib.hasPrefix "extra-" key;
 
     in
-      # workaround for https://github.com/NixOS/nix/issues/9487
-      # extra-* settings must come after their non-extra counterpart
-      pkgs.writeText "nix.conf" ''
-        ${mkKeyValuePairs (lib.filterAttrs (key: value: !(isExtra key)) cfg.settings)}
-        ${mkKeyValuePairs (lib.filterAttrs (key: value: isExtra key) cfg.settings)}
-      '';
+    # workaround for https://github.com/NixOS/nix/issues/9487
+    # extra-* settings must come after their non-extra counterpart
+    pkgs.writeText "nix.conf" ''
+      ${mkKeyValuePairs (lib.filterAttrs (key: value: !(isExtra key)) cfg.settings)}
+      ${mkKeyValuePairs (lib.filterAttrs (key: value: isExtra key) cfg.settings)}
+    '';
 in
 {
   options.services.nix-daemon = {
@@ -303,19 +309,27 @@ in
     ];
 
     synit.daemons.nix-daemon = {
-      argv = [ "nix-daemon" "--daemon" ];
-      path = [ pkgs.openssh cfg.package ];
+      argv = [
+        "nix-daemon"
+        "--daemon"
+      ];
+      path = [
+        pkgs.openssh
+        cfg.package
+      ];
     };
 
-    users.users = lib.listToAttrs (map (nr: {
-      name = "nixbld${toString nr}";
-      value = {
-        description = "Nix build user ${toString nr}";
-        uid = builtins.add config.ids.uids.nixbld nr;
-        group = "nixbld";
-        extraGroups = [ "nixbld" ];
-      };
-    }) (lib.range 1 cfg.nrBuildUsers));
+    users.users = lib.listToAttrs (
+      map (nr: {
+        name = "nixbld${toString nr}";
+        value = {
+          description = "Nix build user ${toString nr}";
+          uid = builtins.add config.ids.uids.nixbld nr;
+          group = "nixbld";
+          extraGroups = [ "nixbld" ];
+        };
+      }) (lib.range 1 cfg.nrBuildUsers)
+    );
 
     users.groups = {
       nixbld.gid = config.ids.gids.nixbld;
@@ -325,7 +339,12 @@ in
       trusted-public-keys = [ "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" ];
       trusted-users = [ "root" ];
       substituters = lib.mkAfter [ "https://cache.nixos.org/" ];
-      system-features = [ "nixos-test" "benchmark" "big-parallel" "kvm" ];
+      system-features = [
+        "nixos-test"
+        "benchmark"
+        "big-parallel"
+        "kvm"
+      ];
     };
 
     # TODO: add finit.services.restartTriggers option

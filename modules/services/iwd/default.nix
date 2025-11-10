@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.iwd;
   format = pkgs.formats.ini { };
@@ -68,9 +73,11 @@ in
       log = true;
 
       # TODO: now we're hijacking `env` and no one else can use it...
-      env = lib.mkIf (config.programs.openresolv.enable or false) (pkgs.writeText "iwd.env" ''
-        PATH="${lib.makeBinPath [ config.programs.openresolv.package ]}:$PATH"
-      '');
+      env = lib.mkIf (config.programs.openresolv.enable or false) (
+        pkgs.writeText "iwd.env" ''
+          PATH="${lib.makeBinPath [ config.programs.openresolv.package ]}:$PATH"
+        ''
+      );
     };
 
     # TODO: add finit.services.restartTriggers option

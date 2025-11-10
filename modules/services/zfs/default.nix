@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.zfs;
 
@@ -121,16 +126,17 @@ in
 
   config = lib.mkMerge [
     (lib.mkIf cfg.autoSnapshot.enable {
-      providers.scheduler.tasks =
-        builtins.listToAttrs (
-          map (name: {
-            name = "zfs-snapshot-${name}";
-            value = {
-              command = "${pkgs.zfstools}/bin/zfs-auto-snapshot ${cfg.autoSnapshot.flags} ${name} ${toString cfg.autoSnapshot.${name}}";
-              interval = if name == "frequent" then "0,15,30,45 * * * *" else name;
-            };
-          }) snapshots
-        );
+      providers.scheduler.tasks = builtins.listToAttrs (
+        map (name: {
+          name = "zfs-snapshot-${name}";
+          value = {
+            command = "${pkgs.zfstools}/bin/zfs-auto-snapshot ${cfg.autoSnapshot.flags} ${name} ${
+              toString cfg.autoSnapshot.${name}
+            }";
+            interval = if name == "frequent" then "0,15,30,45 * * * *" else name;
+          };
+        }) snapshots
+      );
     })
 
     (lib.mkIf cfg.autoScrub.enable {

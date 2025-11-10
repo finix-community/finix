@@ -1,5 +1,6 @@
 { lib, pkgs }@args:
 
-pkgs.formats // {
+pkgs.formats
+// {
   preserves = import ./preserves.nix args;
 }

@@ -1,26 +1,26 @@
 let
-  programModules = builtins.mapAttrs (dir: _:
-    ./programs/${dir}
-  ) (builtins.removeAttrs (builtins.readDir ./programs) [ "README.md" ]);
+  programModules = builtins.mapAttrs (dir: _: ./programs/${dir}) (
+    builtins.removeAttrs (builtins.readDir ./programs) [ "README.md" ]
+  );
 
-  serviceModules = builtins.mapAttrs (dir: _:
-    ./services/${dir}
-  ) (builtins.removeAttrs (builtins.readDir ./services) [
-    "README.md"
+  serviceModules = builtins.mapAttrs (dir: _: ./services/${dir}) (
+    builtins.removeAttrs (builtins.readDir ./services) [
+      "README.md"
 
-    # required modules - included by default
-    "dbus"
-    "elogind"
-    "mdevd"
-    "seatd"
-    "tmpfiles"
-    "udev"
-  ]);
+      # required modules - included by default
+      "dbus"
+      "elogind"
+      "mdevd"
+      "seatd"
+      "tmpfiles"
+      "udev"
+    ]
+  );
 
-  providerModules = builtins.removeAttrs (builtins.readDir ./providers) [ "README.md" ]
+  providerModules =
+    builtins.removeAttrs (builtins.readDir ./providers) [ "README.md" ]
     |> builtins.attrNames
-    |> builtins.map (value: ./providers/${value})
-  ;
+    |> builtins.map (value: ./providers/${value});
 in
 {
   default = {
@@ -48,6 +48,9 @@ in
       ./time
       ./users
       ./xdg
-    ] ++ providerModules;
+    ]
+    ++ providerModules;
   };
-} // programModules // serviceModules
+}
+// programModules
+// serviceModules

@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.chrony;
 in
@@ -16,7 +21,14 @@ in
       type = lib.types.package;
       default = pkgs.chrony;
       defaultText = lib.literalExpression "pkgs.chrony";
-      apply = package: if cfg.debug then package.overrideAttrs (o: { configureFlags = o.configureFlags ++ [ "--enable-debug" ]; }) else package;
+      apply =
+        package:
+        if cfg.debug then
+          package.overrideAttrs (o: {
+            configureFlags = o.configureFlags ++ [ "--enable-debug" ];
+          })
+        else
+          package;
       description = ''
         The package to use for `chrony`.
       '';
@@ -54,7 +66,9 @@ in
     finit.services.chronyd = {
       description = "chrony ntp daemon";
       conditions = [ "service/syslogd/ready" ];
-      command = "${cfg.package}/bin/chronyd -n -u chrony -f ${cfg.configFile}" + lib.optionalString cfg.debug " -L -1";
+      command =
+        "${cfg.package}/bin/chronyd -n -u chrony -f ${cfg.configFile}"
+        + lib.optionalString cfg.debug " -L -1";
       nohup = true;
 
       # TODO: add "if" to finit.services
@@ -71,15 +85,38 @@ in
 
     synit.daemons.chronyd = {
       argv = lib.quoteExecline ([
-        "if" [ "s6-mkdir" "-p" "-m" "750" "/var/lib/chrony" ]
-        "if" [
-          "s6-envuidgid" "chrony"
-          "s6-chown" "-U" "/var/lib/chrony"
+        "if"
+        [
+          "s6-mkdir"
+          "-p"
+          "-m"
+          "750"
+          "/var/lib/chrony"
         ]
-        "chronyd" "-d" "-u" "chrony" "-f" cfg.configFile
+        "if"
+        [
+          "s6-envuidgid"
+          "chrony"
+          "s6-chown"
+          "-U"
+          "/var/lib/chrony"
+        ]
+        "chronyd"
+        "-d"
+        "-u"
+        "chrony"
+        "-f"
+        cfg.configFile
       ]);
       path = [ cfg.package ];
-      requires = [ { key = [ "milestone" "network" ]; } ];
+      requires = [
+        {
+          key = [
+            "milestone"
+            "network"
+          ];
+        }
+      ];
 
       # Suppress the default timestamping behavior.
       logging.args = [ ];

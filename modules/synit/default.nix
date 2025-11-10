@@ -1,4 +1,9 @@
-{ lib, config, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 
 let
   inherit (lib)
@@ -19,7 +24,12 @@ let
   cfg = config.synit;
 
   synitPackages = attrValues {
-    inherit (pkgs) execline s6 s6-linux-utils s6-portable-utils;
+    inherit (pkgs)
+      execline
+      s6
+      s6-linux-utils
+      s6-portable-utils
+      ;
     inherit (cfg.syndicate-server) package;
   };
 
@@ -47,11 +57,13 @@ in
     basePath = mkOption {
       description = "PATH used to boot the system bus.";
       readOnly = true;
-      defaultText  = "The packages execline, s6, syndicate-server, and security wrappers.";
-      default = "${pkgs.buildEnv {
-            name = "synit-base-env";
-            paths = synitPackages;
-          }}/bin:${config.security.wrapperDir}";
+      defaultText = "The packages execline, s6, syndicate-server, and security wrappers.";
+      default = "${
+        pkgs.buildEnv {
+          name = "synit-base-env";
+          paths = synitPackages;
+        }
+      }/bin:${config.security.wrapperDir}";
     };
 
     logging = {
@@ -87,37 +99,69 @@ in
         };
 
         logger = {
-          deps = [  "pid1" ];
-          text = mkDefault (optionals cfg.logging.logToFileSystem (quoteExecline [
-            "foreground" [ "s6-mkdir" "-p" "/var/log/system-bus" ]
-            "fdswap" "1" "2"
-            "pipeline" "-w" [ "s6-log" "/var/log/system-bus" ]
-            "fdswap" "1" "2"
-          ]));
+          deps = [ "pid1" ];
+          text = mkDefault (
+            optionals cfg.logging.logToFileSystem (quoteExecline [
+              "foreground"
+              [
+                "s6-mkdir"
+                "-p"
+                "/var/log/system-bus"
+              ]
+              "fdswap"
+              "1"
+              "2"
+              "pipeline"
+              "-w"
+              [
+                "s6-log"
+                "/var/log/system-bus"
+              ]
+              "fdswap"
+              "1"
+              "2"
+            ])
+          );
         };
 
         # Activate as a child of PID 1.
         activation = {
-          deps = [ "logger" "pid1" ];
+          deps = [
+            "logger"
+            "pid1"
+          ];
           text = quoteExecline [
-            "foreground" [
+            "foreground"
+            [
               # Stdio is reserved for syndicate-protocol.
-              "fdclose" "0"
-              "fdmove" "-c" "1" "2"
-              "foreground" [
+              "fdclose"
+              "0"
+              "fdmove"
+              "-c"
+              "1"
+              "2"
+              "foreground"
+              [
                 # Run the activation script.
                 "@systemConfig@/activate"
               ]
               # Start an actor responsible for the plan set by the activation script.
-              "redirfd" "-w" "1" "/run/synit/config/plans/boot.pr"
+              "redirfd"
+              "-w"
+              "1"
+              "/run/synit/config/plans/boot.pr"
               # The use dummy activation script because the real script already ran.
-              "s6-echo" ''! <activate <plan "default" "${cfg.plan.file}" [ "s6-true" ]>>''
+              "s6-echo"
+              ''! <activate <plan "default" "${cfg.plan.file}" [ "s6-true" ]>>''
             ]
           ];
         };
 
         syndicate-server = {
-          deps = [ "activation" "logger" ];
+          deps = [
+            "activation"
+            "logger"
+          ];
           text = mkDefault [
             "syndicate-server"
             "--inferior"
@@ -126,7 +170,8 @@ in
         syndicate-server-config = {
           deps = [ "syndicate-server" ];
           text = mkDefault [
-            "--config" "${./boot.pr}"
+            "--config"
+            "${./boot.pr}"
           ];
         };
       };

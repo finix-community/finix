@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.services.upower;
 
@@ -43,7 +48,10 @@ in
 
     finit.services.upower = {
       description = "daemon for power management";
-      conditions = [ "service/syslogd/ready" "service/dbus/ready" ];
+      conditions = [
+        "service/syslogd/ready"
+        "service/dbus/ready"
+      ];
       command = "${cfg.package}/libexec/upowerd";
     };
 

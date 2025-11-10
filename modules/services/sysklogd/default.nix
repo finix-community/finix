@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.sysklogd;
 in
@@ -31,7 +36,9 @@ in
     finit.services.syslogd = {
       description = "system logging daemon";
       runlevels = "S0123456789";
-      conditions = lib.optionals config.services.udev.enable [ "run/udevadm:5/success" ] ++ lib.optionals config.services.mdevd.enable [ "run/coldplug/success" ];
+      conditions =
+        lib.optionals config.services.udev.enable [ "run/udevadm:5/success" ]
+        ++ lib.optionals config.services.mdevd.enable [ "run/coldplug/success" ];
       command = "${cfg.package}/bin/syslogd -F";
       notify = "pid";
     };

@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.security.shadow;
 in
@@ -93,16 +98,18 @@ in
           inherit source;
         };
       in
-        {
-          su = mkSetuidRoot "${cfg.package.su}/bin/su";
-          sg = mkSetuidRoot "${cfg.package.out}/bin/sg";
-          newgrp = mkSetuidRoot "${cfg.package.out}/bin/newgrp";
-          newuidmap = mkSetuidRoot "${cfg.package.out}/bin/newuidmap";
-          newgidmap = mkSetuidRoot "${cfg.package.out}/bin/newgidmap";
-        }
-        // lib.optionalAttrs true /* config.users.mutableUsers */ {
-          # chsh = mkSetuidRoot "${cfg.package.out}/bin/chsh";
-          passwd = mkSetuidRoot "${cfg.package.out}/bin/passwd";
-        };
+      {
+        su = mkSetuidRoot "${cfg.package.su}/bin/su";
+        sg = mkSetuidRoot "${cfg.package.out}/bin/sg";
+        newgrp = mkSetuidRoot "${cfg.package.out}/bin/newgrp";
+        newuidmap = mkSetuidRoot "${cfg.package.out}/bin/newuidmap";
+        newgidmap = mkSetuidRoot "${cfg.package.out}/bin/newgidmap";
+      }
+      //
+        lib.optionalAttrs true # config.users.mutableUsers
+          {
+            # chsh = mkSetuidRoot "${cfg.package.out}/bin/chsh";
+            passwd = mkSetuidRoot "${cfg.package.out}/bin/passwd";
+          };
   };
 }

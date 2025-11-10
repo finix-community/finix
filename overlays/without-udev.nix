@@ -9,10 +9,13 @@
 
 final: prev:
 let
-  udevZero = name: pkg: pkg
+  udevZero =
+    name: pkg:
+    pkg
     |> ({ override, ... }: override { ${name} = final.libudev-zero; })
     |> ({ overrideAttrs, ... }: overrideAttrs { doCheck = false; });
-in {
+in
+{
   __toString = _: "${prev.__toString or (_: "nixpkgs") prev}:without-udev";
   libgudev = udevZero "udev" prev.libgudev;
   libinput = udevZero "udev" prev.libinput;

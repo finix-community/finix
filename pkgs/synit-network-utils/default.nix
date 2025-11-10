@@ -24,7 +24,10 @@ stdenvNoCC.mkDerivation {
     hash = "sha256-Q+WpN/Nf0VXXbPDxxg7B+RtGD6k9EJIkoEqxnIzLpIY=";
   };
 
-  buildInputs = [ tcl sycl ];
+  buildInputs = [
+    tcl
+    sycl
+  ];
 
   buildPhase = ''
     runHook preBuild

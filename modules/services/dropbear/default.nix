@@ -1,51 +1,62 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.dropbear;
 
   stateDir = "/var/lib/dropbear";
 
-  keyOpts = { config, ... }: {
-    options = {
-      type = lib.mkOption {
-        type = lib.types.enum [ "rsa" "ecdsa" "ed25519" ];
-        default = "ed25519";
-        description = ''
-          The type of key to generate.
-        '';
+  keyOpts =
+    { config, ... }:
+    {
+      options = {
+        type = lib.mkOption {
+          type = lib.types.enum [
+            "rsa"
+            "ecdsa"
+            "ed25519"
+          ];
+          default = "ed25519";
+          description = ''
+            The type of key to generate.
+          '';
+        };
+
+        path = lib.mkOption {
+          type = lib.types.path;
+          description = ''
+            Write the secret key to this path.
+          '';
+        };
+
+        bits = lib.mkOption {
+          type = with lib.types; nullOr int;
+          default = null;
+          description = ''
+            Set the key size in bits.
+
+            ::: {.note}
+            Should be multiple of `8`.
+            :::
+          '';
+        };
+
+        comment = lib.mkOption {
+          type = with lib.types; nullOr str;
+          default = null;
+          description = ''
+            Specify the key comment (email).
+          '';
+        };
       };
 
-      path = lib.mkOption {
-        type = lib.types.path;
-        description = ''
-          Write the secret key to this path.
-        '';
-      };
-
-      bits = lib.mkOption {
-        type = with lib.types; nullOr int;
-        default = null;
-        description = ''
-          Set the key size in bits.
-
-          ::: {.note}
-          Should be multiple of `8`.
-          :::
-        '';
-      };
-
-      comment = lib.mkOption {
-        type = with lib.types; nullOr str;
-        default = null;
-        description = ''
-          Specify the key comment (email).
-        '';
+      config = {
+        path = lib.mkDefault "${stateDir}/dropbear_${config.type}_host_key";
       };
     };
-
-    config = {
-      path = lib.mkDefault "${stateDir}/dropbear_${config.type}_host_key";
-    };
-  };
 in
 {
   options.services.dropbear = {
@@ -68,9 +79,16 @@ in
 
     hostKeys = lib.mkOption {
       type = with lib.types; listOf (submodule keyOpts);
-      default = [ { /* default */ } ];
+      default = [
+        {
+          # default
+        }
+      ];
       defaultText = [
-        { type = "ed25519"; path = "${stateDir}/dropbear_ed25519_host_key"; }
+        {
+          type = "ed25519";
+          path = "${stateDir}/dropbear_ed25519_host_key";
+        }
       ];
       description = ''
         `finix` will automatically generate SSH host keys using {manpage}`dropbearkey(1)` on startup.
@@ -92,10 +110,13 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    services.dropbear.extraArgs = config.services.dropbear.hostKeys
-      |> map (key: [ "-r" key.path ])
-      |> lib.flatten
-    ;
+    services.dropbear.extraArgs =
+      config.services.dropbear.hostKeys
+      |> map (key: [
+        "-r"
+        key.path
+      ])
+      |> lib.flatten;
 
     environment.systemPackages = [
       cfg.package
@@ -108,17 +129,22 @@ in
         let
           script = lib.concatMapStringsSep "\n" (key: ''
             if ! [ -s "${key.path}" ]; then
-              ${cfg.package}/bin/dropbearkey -t ${key.type} -f "${key.path}" ${lib.optionalString (key.bits != null) "-s ${toString key.bits}"} ${lib.optionalString (key.comment != null) "-C \"${key.comment}\""}
+              ${cfg.package}/bin/dropbearkey -t ${key.type} -f "${key.path}" ${
+                lib.optionalString (key.bits != null) "-s ${toString key.bits}"
+              } ${lib.optionalString (key.comment != null) "-C \"${key.comment}\""}
             fi
           '') config.services.dropbear.hostKeys;
         in
-          pkgs.writeShellScript "ssh-keygen.sh" script;
+        pkgs.writeShellScript "ssh-keygen.sh" script;
     };
-
 
     finit.services.dropbear = {
       description = "dropbear ssh daemon";
-      conditions = [ "net/lo/up" "service/syslogd/ready" "task/dropbear-keygen/success" ];
+      conditions = [
+        "net/lo/up"
+        "service/syslogd/ready"
+        "task/dropbear-keygen/success"
+      ];
       command = "${pkgs.dropbear}/bin/dropbear -F " + lib.escapeShellArgs cfg.extraArgs;
       cgroup.name = "user";
       log = true;

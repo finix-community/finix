@@ -5,8 +5,15 @@ in
 with builtins;
 readDir ./.
 |> attrNames
-|> filter (x: !(elem x [ "default.nix" "testenv" ])) 
+|> filter (
+  x:
+  !(elem x [
+    "default.nix"
+    "testenv"
+  ])
+)
 |> map (p: {
   name = lib.removeSuffix ".nix" p;
   value = import ./${p} testArgs;
-}) |> listToAttrs
+})
+|> listToAttrs

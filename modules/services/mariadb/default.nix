@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.mariadb;
 
@@ -60,7 +65,7 @@ in
 
     settings = lib.mkOption {
       type = format.type;
-      default = {};
+      default = { };
       description = ''
         MySQL configuration. Refer to
         <https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html>,
@@ -135,7 +140,10 @@ in
       inherit (cfg) user group;
 
       description = "mariadb database service";
-      conditions = [ "service/syslogd/ready" "task/mariadb-init/success" ];
+      conditions = [
+        "service/syslogd/ready"
+        "task/mariadb-init/success"
+      ];
       command = "${cfg.package}/bin/mysqld --defaults-file=/etc/my.cnf ${mysqldOptions}";
       notify = "systemd";
       log = true;

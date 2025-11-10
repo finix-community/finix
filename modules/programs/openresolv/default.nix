@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.programs.openresolv;
 
@@ -8,14 +13,17 @@ let
     generate =
       name: value:
       let
-        transformedValue =
-          lib.mapAttrs (key: val:
-            if lib.isList val then "'" + listToValue val + "'"
-            else if lib.isBool val then lib.boolToString val
-            else toString val
-          ) value;
+        transformedValue = lib.mapAttrs (
+          key: val:
+          if lib.isList val then
+            "'" + listToValue val + "'"
+          else if lib.isBool val then
+            lib.boolToString val
+          else
+            toString val
+        ) value;
       in
-        pkgs.writeText name (lib.generators.toKeyValue { } transformedValue);
+      pkgs.writeText name (lib.generators.toKeyValue { } transformedValue);
   };
 in
 {
@@ -62,7 +70,10 @@ in
 
   config = lib.mkIf cfg.enable {
     programs.openresolv.settings = {
-      interface_order = [ "lo" "lo[0-9]" ];
+      interface_order = [
+        "lo"
+        "lo[0-9]"
+      ];
       resolv_conf = "/etc/resolv.conf";
     };
 

@@ -1,12 +1,19 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   options = {
-    boot.kernel.enable = lib.mkEnableOption "the Linux kernel. This is useful for systemd-like containers which do not require a kernel" // {
-      default = true;
-    };
+    boot.kernel.enable =
+      lib.mkEnableOption "the Linux kernel. This is useful for systemd-like containers which do not require a kernel"
+      // {
+        default = true;
+      };
 
     boot.kernel.features = lib.mkOption {
-      default = {};
+      default = { };
       example = lib.literalExpression "{ debug = true; }";
       internal = true;
       description = ''
@@ -21,13 +28,17 @@
     boot.kernelPackages = lib.mkOption {
       default = pkgs.linuxPackages;
       type = lib.types.raw;
-      apply = kernelPackages: kernelPackages.extend (self: super: {
-        kernel = super.kernel.override (originalArgs: {
-          inherit (config.boot.kernel) randstructSeed;
-          kernelPatches = (originalArgs.kernelPatches or []) ++ config.boot.kernelPatches;
-          features = lib.recursiveUpdate super.kernel.features config.boot.kernel.features;
-        });
-      });
+      apply =
+        kernelPackages:
+        kernelPackages.extend (
+          self: super: {
+            kernel = super.kernel.override (originalArgs: {
+              inherit (config.boot.kernel) randstructSeed;
+              kernelPatches = (originalArgs.kernelPatches or [ ]) ++ config.boot.kernelPatches;
+              features = lib.recursiveUpdate super.kernel.features config.boot.kernel.features;
+            });
+          }
+        );
       # We don't want to evaluate all of linuxPackages for the manual
       # - some of it might not even evaluate correctly.
       defaultText = lib.literalExpression "pkgs.linuxPackages";
@@ -53,7 +64,7 @@
 
     boot.kernelPatches = lib.mkOption {
       type = lib.types.listOf lib.types.attrs;
-      default = [];
+      default = [ ];
       example = lib.literalExpression ''
         [
           {
@@ -118,24 +129,27 @@
     };
 
     boot.kernelParams = lib.mkOption {
-      type = lib.types.listOf (lib.types.strMatching ''([^"[:space:]]|"[^"]*")+'' // {
-        name = "kernelParam";
-        description = "string, with spaces inside double quotes";
-      });
+      type = lib.types.listOf (
+        lib.types.strMatching ''([^"[:space:]]|"[^"]*")+''
+        // {
+          name = "kernelParam";
+          description = "string, with spaces inside double quotes";
+        }
+      );
       default = [ ];
       description = "Parameters added to the kernel command line.";
     };
 
     boot.extraModulePackages = lib.mkOption {
       type = with lib.types; listOf package;
-      default = [];
+      default = [ ];
       example = lib.literalExpression "[ config.boot.kernelPackages.nvidia_x11 ]";
       description = "A list of additional packages supplying kernel modules.";
     };
 
     boot.kernelModules = lib.mkOption {
       type = with lib.types; listOf str;
-      default = [];
+      default = [ ];
       apply = lib.unique;
       description = ''
         The set of kernel modules to be loaded in the second stage of
@@ -148,9 +162,12 @@
 
     boot.initrd.availableKernelModules = lib.mkOption {
       type = with lib.types; listOf str;
-      default = [];
+      default = [ ];
       apply = lib.unique;
-      example = [ "sata_nv" "ext3" ];
+      example = [
+        "sata_nv"
+        "ext3"
+      ];
       description = ''
         The set of kernel modules in the initial ramdisk used during the
         boot process.  This set must include all modules necessary for
@@ -170,7 +187,7 @@
 
     boot.initrd.kernelModules = lib.mkOption {
       type = with lib.types; listOf str;
-      default = [];
+      default = [ ];
       apply = lib.unique;
       description = "List of modules that are always loaded by the initrd.";
     };
@@ -178,24 +195,32 @@
     system.modulesTree = lib.mkOption {
       type = with lib.types; listOf path;
       internal = true;
-      default = [];
+      default = [ ];
       description = ''
         Tree of kernel modules.  This includes the kernel, plus modules
         built outside of the kernel.  Combine these into a single tree of
         symlinks because modprobe only supports one directory.
       '';
       # Convert the list of path to only one path.
-      apply = let
-        kernel-name = config.boot.kernelPackages.kernel.name or "kernel";
-      in modules: (pkgs.aggregateModules modules).override { name = kernel-name + "-modules"; };
+      apply =
+        let
+          kernel-name = config.boot.kernelPackages.kernel.name or "kernel";
+        in
+        modules: (pkgs.aggregateModules modules).override { name = kernel-name + "-modules"; };
     };
   };
 
   config = lib.mkIf config.boot.kernel.enable {
     # use split output for modules, when available
-    system.modulesTree = [ (config.boot.kernelPackages.kernel.modules or config.boot.kernelPackages.kernel) ] ++ config.boot.extraModulePackages;
+    system.modulesTree = [
+      (config.boot.kernelPackages.kernel.modules or config.boot.kernelPackages.kernel)
+    ]
+    ++ config.boot.extraModulePackages;
 
-    boot.kernelModules = [ "loop" "atkbd" ];
+    boot.kernelModules = [
+      "loop"
+      "atkbd"
+    ];
 
     boot.initrd.availableKernelModules = [
       # Note: most of these (especially the SATA/PATA modules)
@@ -232,13 +257,22 @@
       "xhci_hcd"
       "xhci_pci"
       "usbhid"
-      "hid_generic" "hid_lenovo" "hid_apple" "hid_roccat"
-      "hid_logitech_hidpp" "hid_logitech_dj" "hid_microsoft" "hid_cherry"
+      "hid_generic"
+      "hid_lenovo"
+      "hid_apple"
+      "hid_roccat"
+      "hid_logitech_hidpp"
+      "hid_logitech_dj"
+      "hid_microsoft"
+      "hid_cherry"
       "hid_corsair"
 
-    ] ++ lib.optionals pkgs.stdenv.hostPlatform.isx86 [
+    ]
+    ++ lib.optionals pkgs.stdenv.hostPlatform.isx86 [
       # Misc. x86 keyboard stuff.
-      "pcips2" "atkbd" "i8042"
+      "pcips2"
+      "atkbd"
+      "i8042"
 
       # x86 RTC needed by the stage 2 init script.
       "rtc_cmos"

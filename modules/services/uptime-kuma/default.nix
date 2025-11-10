@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.uptime-kuma;
   format = pkgs.formats.keyValue { };
@@ -99,7 +104,10 @@ in
       inherit (cfg) user group;
 
       description = "uptime kuma";
-      conditions = [ "service/syslogd/ready" "net/route/default" ];
+      conditions = [
+        "service/syslogd/ready"
+        "net/route/default"
+      ];
       command = lib.getExe cfg.package;
       kill = lib.mkDefault 10;
       nohup = true;

@@ -1,22 +1,29 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
-  pamOpts = { name, ... }: {
-    options = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
-        default = true;
-      };
+  pamOpts =
+    { name, ... }:
+    {
+      options = {
+        enable = lib.mkOption {
+          type = lib.types.bool;
+          default = true;
+        };
 
-      name = lib.mkOption {
-        type = lib.types.str;
-        default = name;
-      };
+        name = lib.mkOption {
+          type = lib.types.str;
+          default = name;
+        };
 
-      text = lib.mkOption {
-        type = lib.types.lines;
+        text = lib.mkOption {
+          type = lib.types.lines;
+        };
       };
     };
-  };
 
   cfg = config.security.pam;
 in
@@ -44,27 +51,33 @@ in
 
     environment = lib.mkOption {
       description = "Set of rules for pam_env.";
-      type = lib.types.submodule {
-        options =
-          let
-            opt = lib.mkOption {
-              type = with lib.types; nullOr str;
-              default = null;
+      type =
+        lib.types.submodule {
+          options =
+            let
+              opt = lib.mkOption {
+                type = with lib.types; nullOr str;
+                default = null;
+              };
+            in
+            {
+              default = opt;
+              override = opt;
             };
-          in {
-            default = opt;
-            override = opt;
-          };
-      } |> lib.types.attrsOf;
+        }
+        |> lib.types.attrsOf;
     };
   };
 
   config = {
     environment.etc =
       let
-        etcTree = lib.mapAttrs' (k: v: lib.nameValuePair "pam.d/${k}" {
-          inherit (v) text;
-        }) (lib.filterAttrs (_: v: v.enable) config.security.pam.services);
+        etcTree = lib.mapAttrs' (
+          k: v:
+          lib.nameValuePair "pam.d/${k}" {
+            inherit (v) text;
+          }
+        ) (lib.filterAttrs (_: v: v.enable) config.security.pam.services);
 
         debug = lib.mkIf config.security.pam.debug {
           "pam_debug".text = "";
@@ -73,11 +86,16 @@ in
         pam_env."security/pam_env.conf".text =
           let
             toField = key: val: lib.optionalString (val != null) " ${key}=${lib.escapeShellArg val}";
-          in lib.concatMapAttrsStringSep "\n" (
+          in
+          lib.concatMapAttrsStringSep "\n" (
             var: { default, override }: "${var}${toField "DEFAULT" default}${toField "OVERRIDE" override}"
           ) cfg.environment;
       in
-        lib.mkMerge [ debug pam_env etcTree ];
+      lib.mkMerge [
+        debug
+        pam_env
+        etcTree
+      ];
 
     security.pam.environment = lib.mapAttrs (_: v: { default = lib.mkDefault v; }) {
       EDITOR = "micro";

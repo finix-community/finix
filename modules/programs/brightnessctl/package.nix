@@ -43,7 +43,8 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     pkg-config
-  ] ++ lib.optionals udevSupport [
+  ]
+  ++ lib.optionals udevSupport [
     udevCheckHook
   ];
 

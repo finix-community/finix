@@ -1,4 +1,9 @@
-{ lib, config, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 let
   cfg = config.synit;
 
@@ -42,18 +47,19 @@ let
     };
   };
 
-  toRecord = fields: with builtins;
-    tail fields ++ [ { _record = head fields; } ];
+  toRecord = fields: with builtins; tail fields ++ [ { _record = head fields; } ];
 
-  dependsOn = { key, dependee }: [
-    (toRecord key)
+  dependsOn =
+    { key, dependee }:
     [
-      (toRecord dependee.key)
-      dependee.state
-      { _record = "service-state"; }
-    ]
-    { _record = "depends-on"; }
-  ];
+      (toRecord key)
+      [
+        (toRecord dependee.key)
+        dependee.state
+        { _record = "service-state"; }
+      ]
+      { _record = "depends-on"; }
+    ];
 
 in
 {
@@ -86,8 +92,19 @@ in
         to {option}.`synit.milestones.system.requires`.
       '';
       example.network.requires = [
-        { key = [ "milestone" "devices" ]; }
-        { key = [ "daemon" "dhcpcd" ]; state = "ready"; }
+        {
+          key = [
+            "milestone"
+            "devices"
+          ];
+        }
+        {
+          key = [
+            "daemon"
+            "dhcpcd"
+          ];
+          state = "ready";
+        }
       ];
       type = types.attrsOf (
         types.submodule {
@@ -113,16 +130,26 @@ in
 
   config = mkIf cfg.enable {
 
-    assertions = let
-      missingDeamons = with builtins; filter
-        ({ dependee, ... }: let hasName = hasAttr (elemAt dependee.key 1); in
-          !((head dependee.key) != "daemon" || ((hasName cfg.daemons) || (hasName cfg.core.daemons)))
-        ) cfg.depends;
-    in [ {
-      assertion = missingDeamons == [];
-      message = "Some daemons are required but not defined: ${
-        missingDeamons |> map dependsOn |> toPreserves}";
-    } ];
+    assertions =
+      let
+        missingDeamons =
+          with builtins;
+          filter (
+            { dependee, ... }:
+            let
+              hasName = hasAttr (elemAt dependee.key 1);
+            in
+            !((head dependee.key) != "daemon" || ((hasName cfg.daemons) || (hasName cfg.core.daemons)))
+          ) cfg.depends;
+      in
+      [
+        {
+          assertion = missingDeamons == [ ];
+          message = "Some daemons are required but not defined: ${
+            missingDeamons |> map dependsOn |> toPreserves
+          }";
+        }
+      ];
 
     # Declare the initial milestones.
     # If no further relations are declared for
@@ -136,9 +163,19 @@ in
     # Accumulate all milestones into the top-level
     # collection of relations.
     synit.depends = foldl' (
-      depends: { name, value }: let key = [ "milestone" name ]; in
+      depends:
+      { name, value }:
+      let
+        key = [
+          "milestone"
+          name
+        ];
+      in
       depends
-      ++ map (other: { key = other; dependee.key = key; }) value.provides
+      ++ map (other: {
+        key = other;
+        dependee.key = key;
+      }) value.provides
       ++ map (dependee: { inherit key dependee; }) value.requires
     ) [ ] (attrsToList cfg.milestones);
 

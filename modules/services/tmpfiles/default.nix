@@ -1,4 +1,9 @@
-{ pkgs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 let
   tmpfilesOpts = {
     options = {
@@ -9,7 +14,7 @@ let
 
       rules = lib.mkOption {
         type = with lib.types; listOf str;
-        default = [];
+        default = [ ];
         example = [ "d /tmp 1777 root root 10d" ];
         description = ''
           Rules for creation, deletion and cleaning of volatile and temporary files
@@ -44,11 +49,16 @@ in
           "finit.d/tmpfiles-setup.conf".text = lib.mkAfter ''
 
             # force a restart on configuration change
-            ${lib.concatMapAttrsStringSep "\n" (k: v: "# " + config.environment.etc."tmpfiles.d/${k}.conf".source) (lib.filterAttrs (_: v: v.enable) config.services.tmpfiles)}
+            ${lib.concatMapAttrsStringSep "\n" (
+              k: v: "# " + config.environment.etc."tmpfiles.d/${k}.conf".source
+            ) (lib.filterAttrs (_: v: v.enable) config.services.tmpfiles)}
           '';
         };
       in
-        lib.mkMerge [ etcTree reload ];
+      lib.mkMerge [
+        etcTree
+        reload
+      ];
 
     finit.tasks.tmpfiles-setup.command = "${config.finit.package}/libexec/finit/tmpfiles --create";
 

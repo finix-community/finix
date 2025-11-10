@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   utils = import (pkgs.path + "/nixos/lib/utils.nix") { inherit config pkgs lib; };
 
@@ -7,14 +12,16 @@ let
 
   fileSystems' = lib.toposort utils.fsBefore (lib.attrValues config.fileSystems);
 
-  fileSystems = if fileSystems' ? result
-                then # use topologically sorted fileSystems everywhere
-                     fileSystems'.result
-                else # the assertion below will catch this,
-                     # but we fall back to the original order
-                     # anyway so that other modules could check
-                     # their assertions too
-                     (lib.attrValues config.fileSystems);
+  fileSystems =
+    if fileSystems' ? result then
+      # use topologically sorted fileSystems everywhere
+      fileSystems'.result
+    else
+      # the assertion below will catch this,
+      # but we fall back to the original order
+      # anyway so that other modules could check
+      # their assertions too
+      (lib.attrValues config.fileSystems);
 
   makeFstabEntries =
     let
@@ -40,23 +47,46 @@ let
         "cifs"
         "prl_fs"
         "vmhgfs"
-      ] ++ lib.optionals false /* (!config.boot.initrd.checkJournalingFS) */ [
-        "ext3"
-        "ext4"
-        "reiserfs"
-        "xfs"
-        "jfs"
-        "f2fs"
-      ];
+      ]
+      ++
+        lib.optionals false # (!config.boot.initrd.checkJournalingFS)
+          [
+            "ext3"
+            "ext4"
+            "reiserfs"
+            "xfs"
+            "jfs"
+            "f2fs"
+          ];
       isBindMount = fs: lib.elem "bind" fs.options;
-      skipCheck = fs: fs.noCheck || fs.device == "none" || lib.elem fs.fsType fsToSkipCheck || isBindMount fs;
-    in fstabFileSystems: { }: lib.concatMapStrings (fs:
-      (if fs.device != null then escape fs.device
-         else throw "No device specified for mount point ‘${fs.mountPoint}’.")
-      + " " + escape fs.mountPoint
-      + " " + fs.fsType
-      + " " + escape (lib.concatStringsSep "," fs.options)
-      + " 0 " + (if skipCheck fs then "0" else if fs.mountPoint == "/" then "1" else "2")
+      skipCheck =
+        fs: fs.noCheck || fs.device == "none" || lib.elem fs.fsType fsToSkipCheck || isBindMount fs;
+    in
+    fstabFileSystems:
+    { }:
+    lib.concatMapStrings (
+      fs:
+      (
+        if fs.device != null then
+          escape fs.device
+        else
+          throw "No device specified for mount point ‘${fs.mountPoint}’."
+      )
+      + " "
+      + escape fs.mountPoint
+      + " "
+      + fs.fsType
+      + " "
+      + escape (lib.concatStringsSep "," fs.options)
+      + " 0 "
+      + (
+        if skipCheck fs then
+          "0"
+        else if fs.mountPoint == "/" then
+          "1"
+        else
+          "2"
+      )
       + "\n"
     ) fstabFileSystems;
 in
@@ -82,13 +112,13 @@ in
     # system.fsPackages = [ pkgs.dosfstools ];
     # environment.systemPackages = with pkgs; [ fuse3 fuse ] ++ config.system.fsPackages;
 
-    environment.systemPackages = config.boot.supportedFilesystems
+    environment.systemPackages =
+      config.boot.supportedFilesystems
       |> lib.filterAttrs (_: v: v.enable)
       |> lib.attrValues
       |> lib.catAttrs "packages"
       |> lib.flatten
-      |> lib.unique
-    ;
+      |> lib.unique;
 
     environment.etc.fstab.text = ''
       # This is a generated file.  Do not edit!
@@ -99,11 +129,13 @@ in
       # <file system> <mount point>   <type>  <options>       <dump>  <pass>
 
       # filesystems
-      ${makeFstabEntries fileSystems {}}
+      ${makeFstabEntries fileSystems { }}
 
       # TODO: swap devices
     '';
 
-    boot.supportedFilesystems = lib.mapAttrs' (_: v: lib.nameValuePair v.fsType { enable = true; }) config.fileSystems;
+    boot.supportedFilesystems = lib.mapAttrs' (
+      _: v: lib.nameValuePair v.fsType { enable = true; }
+    ) config.fileSystems;
   };
 }

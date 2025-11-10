@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.hardware.graphics;
 
@@ -67,7 +72,7 @@ in
         :::
       '';
       type = lib.types.listOf lib.types.package;
-      default = [];
+      default = [ ];
       example = lib.literalExpression "with pkgs; [ intel-media-driver intel-ocl intel-vaapi-driver ]";
     };
 
@@ -81,7 +86,7 @@ in
         :::
       '';
       type = lib.types.listOf lib.types.package;
-      default = [];
+      default = [ ];
       example = lib.literalExpression "with pkgs.pkgsi686Linux; [ intel-media-driver intel-vaapi-driver ]";
     };
   };
@@ -100,19 +105,37 @@ in
 
     services.tmpfiles.graphics.rules = [
       "L+ /run/opengl-driver - - - - ${driversEnv}"
-    ] ++ lib.optionals cfg.enable32Bit [
+    ]
+    ++ lib.optionals cfg.enable32Bit [
       "L+ /run/opengl-driver-32 - - - - ${driversEnv32}"
     ];
 
     synit.daemons.opengl-driver = {
-      argv = lib.quoteExecline (lib.optionals cfg.enable32Bit [
-        "foreground" [ "s6-ln" "-sf" driversEnv32 "/run/opengl-driver-32" ]
-      ] ++ [
-        "s6-ln" "-sf" driversEnv "/run/opengl-driver"
-      ]);
+      argv = lib.quoteExecline (
+        lib.optionals cfg.enable32Bit [
+          "foreground"
+          [
+            "s6-ln"
+            "-sf"
+            driversEnv32
+            "/run/opengl-driver-32"
+          ]
+        ]
+        ++ [
+          "s6-ln"
+          "-sf"
+          driversEnv
+          "/run/opengl-driver"
+        ]
+      );
       restart = "on-error";
       logging.enable = lib.mkDefault false;
-      provides = [ [ "milestone" "graphics" ] ];
+      provides = [
+        [
+          "milestone"
+          "graphics"
+        ]
+      ];
     };
 
     hardware.graphics.package = lib.mkDefault pkgs.mesa;

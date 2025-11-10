@@ -207,15 +207,17 @@ in
       };
 
       nics = mkOption {
-        type = types.attrsOf (types.submodule {
-          options = {
-            args = mkOption {
-              type = with types; listOf str;
-              default = [ ];
-              example = [ "model=virtio-net-pci" ];
+        type = types.attrsOf (
+          types.submodule {
+            options = {
+              args = mkOption {
+                type = with types; listOf str;
+                default = [ ];
+                example = [ "model=virtio-net-pci" ];
+              };
             };
-          };
-        });
+          }
+        );
       };
 
       mountHostNixStore = mkOption {
@@ -237,7 +239,8 @@ in
       "virtio_blk"
       "virtio_console"
       "virtio_net"
-    ] ++ lib.optional (cfg.sharedDirectories != { }) "9pnet_virtio";
+    ]
+    ++ lib.optional (cfg.sharedDirectories != { }) "9pnet_virtio";
 
     fileSystems = mkMerge (
       [
@@ -249,7 +252,8 @@ in
           value.options = [
             "trans=virtio"
             "version=9p2000.L"
-          ] ++ lib.optional (tag == "nix-store") "cache=loose";
+          ]
+          ++ lib.optional (tag == "nix-store") "cache=loose";
         }) cfg.sharedDirectories)
       ]
       ++ optional cfg.mountHostNixStore {
@@ -277,11 +281,19 @@ in
         ]) cfg.sharedDirectories
       ))
       ++ optionals config.testing.enable [
-          "-serial" "mon:stdio"
-        ]
-      ++ flatten (mapAttrsToList
-        (name: { args }: [ "-nic" (concatStringsSep "," (args ++ [ "id=${name}" ])) ])
-        cfg.nics)
+        "-serial"
+        "mon:stdio"
+      ]
+      ++ flatten (
+        mapAttrsToList (
+          name:
+          { args }:
+          [
+            "-nic"
+            (concatStringsSep "," (args ++ [ "id=${name}" ]))
+          ]
+        ) cfg.nics
+      )
       ++ cfg.extraArgs;
 
     virtualisation.qemu.sharedDirectories = {

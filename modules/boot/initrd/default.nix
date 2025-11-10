@@ -1,105 +1,126 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.boot.initrd;
 
-
   # Perform substitutions in all udev rules files.
-  udevRulesFor = { name, udevPackages, udevPath, udev, binPackages }: pkgs.runCommand name
-    { preferLocalBuild = true;
-      allowSubstitutes = false;
-      packages = lib.unique (map toString udevPackages);
-    }
-    ''
-      mkdir -p $out
-      shopt -s nullglob
-      set +o pipefail
+  udevRulesFor =
+    {
+      name,
+      udevPackages,
+      udevPath,
+      udev,
+      binPackages,
+    }:
+    pkgs.runCommand name
+      {
+        preferLocalBuild = true;
+        allowSubstitutes = false;
+        packages = lib.unique (map toString udevPackages);
+      }
+      ''
+        mkdir -p $out
+        shopt -s nullglob
+        set +o pipefail
 
-      # Set a reasonable $PATH for programs called by udev rules.
-      echo 'ENV{PATH}="${udevPath}/bin:${udevPath}/sbin"' > $out/00-path.rules
+        # Set a reasonable $PATH for programs called by udev rules.
+        echo 'ENV{PATH}="${udevPath}/bin:${udevPath}/sbin"' > $out/00-path.rules
 
-      # Add the udev rules from other packages.
-      for i in $packages; do
-        echo "Adding rules for package $i"
-        for j in $i/{etc,lib,/var/lib}/udev/rules.d/*; do
-          echo "Copying $j to $out/$(basename $j)"
-          cat $j > $out/$(basename $j)
-        done
-      done
-
-      # Fix some paths in the standard udev rules.  Hacky.
-      for i in $out/*.rules; do
-        substituteInPlace $i \
-          --replace-quiet \"/sbin/modprobe \"${pkgs.kmod}/bin/modprobe \
-          --replace-quiet \"/sbin/mdadm \"${pkgs.mdadm}/sbin/mdadm \
-          --replace-quiet \"/sbin/blkid \"${pkgs.util-linux}/sbin/blkid \
-          --replace-quiet \"/bin/mount \"${pkgs.util-linux}/bin/mount \
-          --replace-quiet /usr/bin/readlink ${pkgs.coreutils}/bin/readlink \
-          --replace-quiet /usr/bin/cat ${pkgs.coreutils}/bin/cat \
-          --replace-quiet /usr/bin/basename ${pkgs.coreutils}/bin/basename 2>/dev/null
-      done
-
-      echo -n "Checking that all programs called by relative paths in udev rules exist in ${udev}/lib/udev... "
-      import_progs=$(grep 'IMPORT{program}="[^/$]' $out/* |
-        sed -e 's/.*IMPORT{program}="\([^ "]*\)[ "].*/\1/' | uniq)
-      run_progs=$(grep -v '^[[:space:]]*#' $out/* | grep 'RUN+="[^/$]' |
-        sed -e 's/.*RUN+="\([^ "]*\)[ "].*/\1/' | uniq)
-      for i in $import_progs $run_progs; do
-        if [[ ! -x ${udev}/lib/udev/$i && ! $i =~ socket:.* ]]; then
-          echo "FAIL"
-          echo "$i is called in udev rules but not installed by udev"
-          exit 1
-        fi
-      done
-      echo "OK"
-
-      echo -n "Checking that all programs called by absolute paths in udev rules exist... "
-      import_progs=$(grep 'IMPORT{program}="/' $out/* |
-        sed -e 's/.*IMPORT{program}="\([^ "]*\)[ "].*/\1/' | uniq)
-      run_progs=$(grep -v '^[[:space:]]*#' $out/* | grep 'RUN+="/' |
-        sed -e 's/.*RUN+="\([^ "]*\)[ "].*/\1/' | uniq)
-      for i in $import_progs $run_progs; do
-        if [[ ! -x $i ]]; then
-          echo "FAIL"
-          echo "$i is called in udev rules but is not executable or does not exist"
-          exit 1
-        fi
-      done
-      echo "OK"
-
-      filesToFixup="$(for i in "$out"/*; do
-        # list all files referring to (/usr)/bin paths, but allow references to /bin/sh.
-        grep -P -l '\B(?!\/bin\/sh\b)(\/usr)?\/bin(?:\/.*)?' "$i" || :
-      done)"
-
-      if [ -n "$filesToFixup" ]; then
-        echo "Consider fixing the following udev rules:"
-        echo "$filesToFixup" | while read localFile; do
-          remoteFile="origin unknown"
-          for i in ${toString binPackages}; do
-            for j in "$i"/*/udev/rules.d/*; do
-              [ -e "$out/$(basename "$j")" ] || continue
-              [ "$(basename "$j")" = "$(basename "$localFile")" ] || continue
-              remoteFile="originally from $j"
-              break 2
-            done
+        # Add the udev rules from other packages.
+        for i in $packages; do
+          echo "Adding rules for package $i"
+          for j in $i/{etc,lib,/var/lib}/udev/rules.d/*; do
+            echo "Copying $j to $out/$(basename $j)"
+            cat $j > $out/$(basename $j)
           done
-          refs="$(
-            grep -o '\B\(/usr\)\?/s\?bin/[^ "]\+' "$localFile" \
-              | sed -e ':r;N;''${s/\n/ and /;br};s/\n/, /g;br'
-          )"
-          echo "$localFile ($remoteFile) contains references to $refs."
         done
-        exit 1
-      fi
-    '';
 
-    mkMount = mnt: ''
+        # Fix some paths in the standard udev rules.  Hacky.
+        for i in $out/*.rules; do
+          substituteInPlace $i \
+            --replace-quiet \"/sbin/modprobe \"${pkgs.kmod}/bin/modprobe \
+            --replace-quiet \"/sbin/mdadm \"${pkgs.mdadm}/sbin/mdadm \
+            --replace-quiet \"/sbin/blkid \"${pkgs.util-linux}/sbin/blkid \
+            --replace-quiet \"/bin/mount \"${pkgs.util-linux}/bin/mount \
+            --replace-quiet /usr/bin/readlink ${pkgs.coreutils}/bin/readlink \
+            --replace-quiet /usr/bin/cat ${pkgs.coreutils}/bin/cat \
+            --replace-quiet /usr/bin/basename ${pkgs.coreutils}/bin/basename 2>/dev/null
+        done
+
+        echo -n "Checking that all programs called by relative paths in udev rules exist in ${udev}/lib/udev... "
+        import_progs=$(grep 'IMPORT{program}="[^/$]' $out/* |
+          sed -e 's/.*IMPORT{program}="\([^ "]*\)[ "].*/\1/' | uniq)
+        run_progs=$(grep -v '^[[:space:]]*#' $out/* | grep 'RUN+="[^/$]' |
+          sed -e 's/.*RUN+="\([^ "]*\)[ "].*/\1/' | uniq)
+        for i in $import_progs $run_progs; do
+          if [[ ! -x ${udev}/lib/udev/$i && ! $i =~ socket:.* ]]; then
+            echo "FAIL"
+            echo "$i is called in udev rules but not installed by udev"
+            exit 1
+          fi
+        done
+        echo "OK"
+
+        echo -n "Checking that all programs called by absolute paths in udev rules exist... "
+        import_progs=$(grep 'IMPORT{program}="/' $out/* |
+          sed -e 's/.*IMPORT{program}="\([^ "]*\)[ "].*/\1/' | uniq)
+        run_progs=$(grep -v '^[[:space:]]*#' $out/* | grep 'RUN+="/' |
+          sed -e 's/.*RUN+="\([^ "]*\)[ "].*/\1/' | uniq)
+        for i in $import_progs $run_progs; do
+          if [[ ! -x $i ]]; then
+            echo "FAIL"
+            echo "$i is called in udev rules but is not executable or does not exist"
+            exit 1
+          fi
+        done
+        echo "OK"
+
+        filesToFixup="$(for i in "$out"/*; do
+          # list all files referring to (/usr)/bin paths, but allow references to /bin/sh.
+          grep -P -l '\B(?!\/bin\/sh\b)(\/usr)?\/bin(?:\/.*)?' "$i" || :
+        done)"
+
+        if [ -n "$filesToFixup" ]; then
+          echo "Consider fixing the following udev rules:"
+          echo "$filesToFixup" | while read localFile; do
+            remoteFile="origin unknown"
+            for i in ${toString binPackages}; do
+              for j in "$i"/*/udev/rules.d/*; do
+                [ -e "$out/$(basename "$j")" ] || continue
+                [ "$(basename "$j")" = "$(basename "$localFile")" ] || continue
+                remoteFile="originally from $j"
+                break 2
+              done
+            done
+            refs="$(
+              grep -o '\B\(/usr\)\?/s\?bin/[^ "]\+' "$localFile" \
+                | sed -e ':r;N;''${s/\n/ and /;br};s/\n/, /g;br'
+            )"
+            echo "$localFile ($remoteFile) contains references to $refs."
+          done
+          exit 1
+        fi
+      '';
+
+  mkMount =
+    mnt:
+    ''
       mkdir -p "$targetRoot${mnt.mountPoint}"
-    '' + (if builtins.elem "bind" mnt.options then ''
-      mount -o ${lib.concatStringsSep "," mnt.options} "$targetRoot${mnt.device}" "$targetRoot${mnt.mountPoint}"
-    '' else ''
-      mount -t ${mnt.fsType} -o ${lib.concatStringsSep "," mnt.options} "${mnt.device}" "$targetRoot${mnt.mountPoint}"
-    '');
+    ''
+    + (
+      if builtins.elem "bind" mnt.options then
+        ''
+          mount -o ${lib.concatStringsSep "," mnt.options} "$targetRoot${mnt.device}" "$targetRoot${mnt.mountPoint}"
+        ''
+      else
+        ''
+          mount -t ${mnt.fsType} -o ${lib.concatStringsSep "," mnt.options} "${mnt.device}" "$targetRoot${mnt.mountPoint}"
+        ''
+    );
 
   # TODO: respect log levels, be quiet
   init = pkgs.writeScript "init" ''
@@ -235,7 +256,9 @@ let
     ${cfg.fileSystemImportCommands}
 
     # mount everything needed for boot
-    ${lib.concatMapStringsSep "\n" mkMount (builtins.filter (builtins.getAttr "neededForBoot") (builtins.attrValues config.fileSystems))}
+    ${lib.concatMapStringsSep "\n" mkMount (
+      builtins.filter (builtins.getAttr "neededForBoot") (builtins.attrValues config.fileSystems)
+    )}
 
     ${
       if config.services.udev.enable then
@@ -294,31 +317,30 @@ let
     fail # should never be reached
   '';
 
-  fsPackages = config.boot.initrd.supportedFilesystems
+  fsPackages =
+    config.boot.initrd.supportedFilesystems
     |> lib.filterAttrs (_: v: v.enable)
     |> lib.attrValues
     |> lib.catAttrs "packages"
     |> lib.flatten
-    |> lib.unique
-  ;
+    |> lib.unique;
 
   path = pkgs.buildEnv {
     name = "initrd-path";
-    paths =
-      [
-        pkgs.busybox
-        pkgs.kmod
-        (lib.hiPrio pkgs.util-linux.mount)
-      ]
-      ++ lib.optional config.services.udev.enable pkgs.eudev
-      ++ lib.optionals config.services.mdevd.enable [
-        config.services.mdevd.package
+    paths = [
+      pkgs.busybox
+      pkgs.kmod
+      (lib.hiPrio pkgs.util-linux.mount)
+    ]
+    ++ lib.optional config.services.udev.enable pkgs.eudev
+    ++ lib.optionals config.services.mdevd.enable [
+      config.services.mdevd.package
 
-        pkgs.execline
-        pkgs.s6-portable-utils
-        pkgs.util-linux
-      ]
-      ++ fsPackages;
+      pkgs.execline
+      pkgs.s6-portable-utils
+      pkgs.util-linux
+    ]
+    ++ fsPackages;
     pathsToLink = [
       "/bin"
     ];
@@ -352,10 +374,7 @@ in
 
     compressor = lib.mkOption {
       default =
-        if lib.versionAtLeast config.boot.kernelPackages.kernel.version "5.9"
-        then "zstd"
-        else "gzip"
-      ;
+        if lib.versionAtLeast config.boot.kernelPackages.kernel.version "5.9" then "zstd" else "gzip";
       defaultText = lib.literalExpression "`zstd` if the kernel supports it (5.9+), `gzip` if not";
       type = with lib.types; either str (functionTo str);
       description = ''
@@ -377,17 +396,19 @@ in
     };
 
     contents = lib.mkOption {
-      type = with lib.types; listOf (submodule {
-        options = {
-          source = lib.mkOption {
-            type = types.path;
+      type =
+        with lib.types;
+        listOf (submodule {
+          options = {
+            source = lib.mkOption {
+              type = types.path;
+            };
+            target = lib.mkOption {
+              type = with types; nullOr str;
+              default = null;
+            };
           };
-          target = lib.mkOption {
-            type = with types; nullOr str;
-            default = null;
-          };
-        };
-      });
+        });
       description = ''
         Contents of the initrd.
       '';
@@ -412,26 +433,37 @@ in
   };
 
   config = {
-    boot.initrd.supportedFilesystems = config.fileSystems
+    boot.initrd.supportedFilesystems =
+      config.fileSystems
       |> lib.filterAttrs (_: fs: fs.neededForBoot)
-      |> lib.mapAttrs' (_: v: lib.nameValuePair v.fsType { enable = true; })
-    ;
+      |> lib.mapAttrs' (_: v: lib.nameValuePair v.fsType { enable = true; });
 
     # stupid simple initrd, need a better implementation than this
     boot.initrd = {
       package = pkgs.makeInitrdNG {
         name = "simple-initrd";
         inherit (cfg) compressor compressorArgs;
-        contents = map
-          ({source, target}@pair:
-            if target != null then pair else { inherit source; })
-          cfg.contents;
+        contents = map (
+          { source, target }@pair: if target != null then pair else { inherit source; }
+        ) cfg.contents;
       };
       contents = [
-        { target = "/init"; source = init; }
-        { target = "/bin"; source = "${path}/bin";  }
-        { target = "/sbin"; source = "${path}/bin";  }
-        { target = "/lib"; source = "${modulesClosure}/lib"; }
+        {
+          target = "/init";
+          source = init;
+        }
+        {
+          target = "/bin";
+          source = "${path}/bin";
+        }
+        {
+          target = "/sbin";
+          source = "${path}/bin";
+        }
+        {
+          target = "/lib";
+          source = "${modulesClosure}/lib";
+        }
       ];
     };
   };

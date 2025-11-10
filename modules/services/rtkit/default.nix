@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.rtkit;
 in
@@ -32,13 +37,19 @@ in
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      { assertion = config.services.polkit.enable; message = "services.rtkit requires services.polkit.enable set to true"; }
+      {
+        assertion = config.services.polkit.enable;
+        message = "services.rtkit requires services.polkit.enable set to true";
+      }
     ];
 
     finit.services.rtkit-daemon = {
       description = "RealtimeKit scheduling policy service";
       command = "${cfg.package}/libexec/rtkit-daemon" + lib.optionalString cfg.debug " --debug";
-      conditions = [ "service/dbus/ready" "service/polkit/ready" ];
+      conditions = [
+        "service/dbus/ready"
+        "service/polkit/ready"
+      ];
 
       cgroup.name = "root";
     };

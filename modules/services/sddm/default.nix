@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.sddm;
 
@@ -92,7 +97,10 @@ in
     finit.services.sddm = {
       description = "sddm display manager";
       runlevels = "34";
-      conditions = [ "service/syslogd/ready" "services/elogind/ready" ];
+      conditions = [
+        "service/syslogd/ready"
+        "services/elogind/ready"
+      ];
       command = "/run/current-system/sw/bin/sddm";
     };
 

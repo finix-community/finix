@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.jellyfin;
 in
@@ -77,7 +82,8 @@ in
     services.tmpfiles.jellyfin.rules = [
       "d /var/cache/jellyfin 0700 ${cfg.user} ${cfg.group}"
       "d /var/log/jellyfin 0750 ${cfg.user} ${cfg.group}"
-    ] ++ lib.optionals (cfg.dataDir == "/var/lib/jellyfin") [
+    ]
+    ++ lib.optionals (cfg.dataDir == "/var/lib/jellyfin") [
       "d ${cfg.dataDir} 0700 ${cfg.user} ${cfg.group}"
       "d ${cfg.dataDir}/config 0700 ${cfg.user} ${cfg.group}"
     ];

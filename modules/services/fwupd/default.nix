@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.fwupd;
 
@@ -68,7 +73,7 @@ in
           };
         };
       in
-        vendor // local;
+      vendor // local;
 
     environment.systemPackages = [
       cfg.package
@@ -79,8 +84,12 @@ in
 
     finit.services.fwupd = {
       description = "";
-      command = "${cfg.package}/libexec/fwupd/fwupd --no-timestamp" + lib.optionalString cfg.debug " --verbose";
-      conditions = [ "service/dbus/ready" "service/polkit/ready" ];
+      command =
+        "${cfg.package}/libexec/fwupd/fwupd --no-timestamp" + lib.optionalString cfg.debug " --verbose";
+      conditions = [
+        "service/dbus/ready"
+        "service/polkit/ready"
+      ];
       log = true;
       nohup = true;
 

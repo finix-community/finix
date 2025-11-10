@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.polkit;
 in
@@ -80,7 +85,8 @@ in
     finit.services.polkit = {
       description = "policykit authorization manager";
       # TODO: conditions
-      command = "${cfg.package.out}/lib/polkit-1/polkitd " + (lib.optionalString (!cfg.debug) "--no-debug");
+      command =
+        "${cfg.package.out}/lib/polkit-1/polkitd " + (lib.optionalString (!cfg.debug) "--no-debug");
     };
 
     # The polkit daemon reads action/rule files

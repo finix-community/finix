@@ -18,27 +18,31 @@ let
   cfg = config.services.mdevd;
 
   # Rules for the special standalone devices to be created at boot.
-  specialRules = let tty = gidOf "tty"; in ''
-    null      0:0 666
-    zero      0:0 666
-    full      0:0 666
-    random    0:0 444
-    urandom   0:0 444
-    hwrandom  0:0 444
+  specialRules =
+    let
+      tty = gidOf "tty";
+    in
+    ''
+      null      0:0 666
+      zero      0:0 666
+      full      0:0 666
+      random    0:0 444
+      urandom   0:0 444
+      hwrandom  0:0 444
 
-    ptmx        0:${tty} 666
-    pty.*       0:${tty} 660
-    tty         0:${tty} 666
-    tty[0-9]+   0:${tty} 660
+      ptmx        0:${tty} 666
+      pty.*       0:${tty} 660
+      tty         0:${tty} 666
+      tty[0-9]+   0:${tty} 660
 
-    vcsa[0-9]*  0:${tty} 660
-    ttyS[0-9]*  0:${gidOf "uucp"} 660
+      vcsa[0-9]*  0:${tty} 660
+      ttyS[0-9]*  0:${gidOf "uucp"} 660
 
-    snd/.*      0:${gidOf "audio"} 660
+      snd/.*      0:${gidOf "audio"} 660
 
-    dri/.*      0:${gidOf "video"} 660
-    video[0-9]+ 0:${gidOf "video"} 660
-  '';
+      dri/.*      0:${gidOf "video"} 660
+      video[0-9]+ 0:${gidOf "video"} 660
+    '';
 
   # Insert modules for devices.
   modaliasRule = "-$MODALIAS=.* 0:0 660 +importas m MODALIAS modprobe --quiet $m";
@@ -162,10 +166,12 @@ in
     # Mdevd coldplugs the system during the stage-1 init in initramfs.
     # See ../../boot/initrd/default.nix
     boot.initrd.contents = [
-      { target = "/etc/mdev.conf";
+      {
+        target = "/etc/mdev.conf";
         source = pkgs.writeText "mdev.conf" config.services.mdevd.coldplugRules;
       }
-      { source = devDiskScript;
+      {
+        source = devDiskScript;
         target = "/etc/dev-disk.el";
       }
     ];
@@ -174,7 +180,12 @@ in
 
     finit.services.mdevd = {
       description = "device event daemon (mdevd)";
-      command = "${cfg.package}/bin/mdevd -D %n -F /run/current-system/firmware -f ${config.environment.etc."mdev.conf".source}" + lib.optionalString (cfg.nlgroups != null) " -O ${toString cfg.nlgroups}" + lib.optionalString cfg.debug " -v 3";
+      command =
+        "${cfg.package}/bin/mdevd -D %n -F /run/current-system/firmware -f ${
+          config.environment.etc."mdev.conf".source
+        }"
+        + lib.optionalString (cfg.nlgroups != null) " -O ${toString cfg.nlgroups}"
+        + lib.optionalString cfg.debug " -v 3";
       runlevels = "S12345789";
       cgroup.name = "init";
       notify = "s6";
@@ -182,13 +193,24 @@ in
 
       # TODO: now we're hijacking `env` and no one else can use it...
       env = pkgs.writeText "mdevd.env" ''
-        PATH="${lib.makeBinPath [ pkgs.s6-portable-utils pkgs.coreutils pkgs.execline pkgs.kmod pkgs.util-linux ]}:$PATH"
+        PATH="${
+          lib.makeBinPath [
+            pkgs.s6-portable-utils
+            pkgs.coreutils
+            pkgs.execline
+            pkgs.kmod
+            pkgs.util-linux
+          ]
+        }:$PATH"
       '';
     };
 
     finit.run.coldplug = {
       description = "cold plugging system";
-      command = "${cfg.package}/bin/mdevd-coldplug" + lib.optionalString (cfg.nlgroups != null) " -O ${toString cfg.nlgroups}" + lib.optionalString cfg.debug " -v 3";
+      command =
+        "${cfg.package}/bin/mdevd-coldplug"
+        + lib.optionalString (cfg.nlgroups != null) " -O ${toString cfg.nlgroups}"
+        + lib.optionalString cfg.debug " -v 3";
       runlevels = "S";
       conditions = "service/mdevd/ready";
       cgroup.name = "init";
@@ -214,17 +236,27 @@ in
     synit.core.daemons.mdevd = {
       argv = [
         "${cfg.package}/bin/mdevd"
-        "-D" "3"
-        "-F" "/run/current-system/firmware"
+        "-D"
+        "3"
+        "-F"
+        "/run/current-system/firmware"
         # TODO: reload on SIGHUP.
-        "-f" "/etc/mdev.conf"
-      ] ++ lib.optionals (cfg.nlgroups != null) [
-        "-O" (toString cfg.nlgroups)
-      ] ++ lib.optionals cfg.debug [
-        "-v" "3"
+        "-f"
+        "/etc/mdev.conf"
+      ]
+      ++ lib.optionals (cfg.nlgroups != null) [
+        "-O"
+        (toString cfg.nlgroups)
+      ]
+      ++ lib.optionals cfg.debug [
+        "-v"
+        "3"
       ];
       readyOnNotify = 3;
-      path = with pkgs; [ kmod util-linux ];
+      path = with pkgs; [
+        kmod
+        util-linux
+      ];
       # Upstream claims mdevd is terse enough to run
       # without a dedicated logging destination.
       logging.enable = false;
@@ -232,9 +264,26 @@ in
 
     # Hold core back until another coldplug completes.
     synit.core.daemons.mdevd-coldplug = {
-      argv = [ "${cfg.package}/bin/mdevd-coldplug" ] ++ lib.optionals (cfg.nlgroups != null) [ "-O" (toString cfg.nlgroups) ] ++ lib.optionals cfg.debug [ "-v" "3" ];
+      argv = [
+        "${cfg.package}/bin/mdevd-coldplug"
+      ]
+      ++ lib.optionals (cfg.nlgroups != null) [
+        "-O"
+        (toString cfg.nlgroups)
+      ]
+      ++ lib.optionals cfg.debug [
+        "-v"
+        "3"
+      ];
       restart = "on-error";
-      requires = [ { key = [ "daemon" "mdevd" ]; } ];
+      requires = [
+        {
+          key = [
+            "daemon"
+            "mdevd"
+          ];
+        }
+      ];
       logging.enable = false;
     };
   };

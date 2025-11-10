@@ -1,15 +1,23 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.hardware.console;
 
-  mkBinaryKeyMap = km: pkgs.runCommand "bkeymap"
-    {
-      nativeBuildInputs = [ pkgs.buildPackages.kbd ];
-      preferLocalBuild = true;
-    } ''
-      loadkeys --bkeymap "${km}" >$out
-    '';
+  mkBinaryKeyMap =
+    km:
+    pkgs.runCommand "bkeymap"
+      {
+        nativeBuildInputs = [ pkgs.buildPackages.kbd ];
+        preferLocalBuild = true;
+      }
+      ''
+        loadkeys --bkeymap "${km}" >$out
+      '';
 in
 {
   options = {
@@ -55,19 +63,20 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = [ pkgs.kbd ] ;
+    environment.systemPackages = [ pkgs.kbd ];
 
     # Include binary keymap in the initramfs.
     boot.initrd.contents = [ { source = cfg.binaryKeyMap; } ];
 
     # Use the device-manager to load the keymap rather
     # than injecting somewhere into the early boot script.
-    services.mdevd.coldplugRules =
-      "-console 0:${toString config.ids.gids.tty} 600 +redirfd -r 0 ${cfg.binaryKeyMap} loadkmap";
+    services.mdevd.coldplugRules = "-console 0:${toString config.ids.gids.tty} 600 +redirfd -r 0 ${cfg.binaryKeyMap} loadkmap";
 
-    services.udev.packages = [ (pkgs.writeTextDir "etc/udev/rules.d/loadkmap" ''
-      KERNEL=="console", SUBSYSTEM=="tty", RUN+="${pkgs.busybox}/bin/loadkmap <${cfg.binaryKeyMap}"
-    '') ];
+    services.udev.packages = [
+      (pkgs.writeTextDir "etc/udev/rules.d/loadkmap" ''
+        KERNEL=="console", SUBSYSTEM=="tty", RUN+="${pkgs.busybox}/bin/loadkmap <${cfg.binaryKeyMap}"
+      '')
+    ];
 
     system.activation.scripts.console = ''
       ${pkgs.kbd}/bin/setvesablank ${if cfg.setvesablank then "on" else "off"}

@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   imports = [
     ./hardware-configuration.nix
@@ -23,14 +28,23 @@
 
   # list packgaes installed in system profile
   environment.systemPackages = with pkgs; [
-    iproute2 iputils nettools
-    grub2_efi efibootmgr
-    acpi pmutils
+    iproute2
+    iputils
+    nettools
+    grub2_efi
+    efibootmgr
+    acpi
+    pmutils
 
-    mako walker waybar
-    niri swaybg
+    mako
+    walker
+    waybar
+    niri
+    swaybg
 
-    firefox ghostty imv
+    firefox
+    ghostty
+    imv
   ];
 
   # graphical runlevel

@@ -1,4 +1,6 @@
-{ testenv ? import ./testenv { } }:
+{
+  testenv ? import ./testenv { },
+}:
 
 testenv.mkTest {
   name = "finit";

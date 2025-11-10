@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.radarr;
 
@@ -6,13 +11,16 @@ let
   format = {
     type = (pkgs.formats.ini { }).type;
 
-    generate = path: attrs: pkgs.writeText path (
-      lib.concatMapAttrsStringSep "\n" (namespace: settings:
-        lib.concatMapAttrsStringSep "\n" (item: value:
-          "RADARR__${lib.toUpper namespace}__${lib.toUpper item}=${arrToString value}"
-        ) settings
-      ) attrs
-    );
+    generate =
+      path: attrs:
+      pkgs.writeText path (
+        lib.concatMapAttrsStringSep "\n" (
+          namespace: settings:
+          lib.concatMapAttrsStringSep "\n" (
+            item: value: "RADARR__${lib.toUpper namespace}__${lib.toUpper item}=${arrToString value}"
+          ) settings
+        ) attrs
+      );
   };
 in
 {
@@ -41,7 +49,13 @@ in
         options = {
           update = {
             mechanism = lib.mkOption {
-              type = with lib.types; nullOr (enum [ "external" "builtIn" "script" ]);
+              type =
+                with lib.types;
+                nullOr (enum [
+                  "external"
+                  "builtIn"
+                  "script"
+                ]);
               default = "external";
               description = "Which update mechanism to use.";
             };
@@ -69,7 +83,11 @@ in
             };
 
             level = lib.mkOption {
-              type = lib.types.enum [ "debug" "info" "trace" ];
+              type = lib.types.enum [
+                "debug"
+                "info"
+                "trace"
+              ];
               default = "info";
               description = "Log level.";
             };
@@ -137,7 +155,10 @@ in
       inherit (cfg) user group;
 
       description = "radarr";
-      conditions = [ "service/syslogd/ready" "net/lo/up" ];
+      conditions = [
+        "service/syslogd/ready"
+        "net/lo/up"
+      ];
       command = "${lib.getExe cfg.package} -nobrowser -data=${cfg.dataDir}";
       nohup = true;
       log = true;

@@ -36,61 +36,63 @@ in
     };
 
     rules = lib.mkOption {
-      type = lib.types.listOf (lib.types.submodule {
-        options = {
-          command = lib.mkOption {
-            type = program;
-            description = ''
-              The command the user or group members are allowed to run.
+      type = lib.types.listOf (
+        lib.types.submodule {
+          options = {
+            command = lib.mkOption {
+              type = program;
+              description = ''
+                The command the user or group members are allowed to run.
 
-              ::: {.note}
-              It is best practice to specify absolute paths.
-              :::
-            '';
-          };
+                ::: {.note}
+                It is best practice to specify absolute paths.
+                :::
+              '';
+            };
 
-          args = lib.mkOption {
-            type = with lib.types; listOf str;
-            default = [ ];
-            description = ''
-              Arguments that must be provided to the command. When
-              empty, the command must be run without any arguments.
-            '';
-          };
+            args = lib.mkOption {
+              type = with lib.types; listOf str;
+              default = [ ];
+              description = ''
+                Arguments that must be provided to the command. When
+                empty, the command must be run without any arguments.
+              '';
+            };
 
-          users = lib.mkOption {
-            type = with lib.types; listOf nonEmptyStr;
-            default = [ ];
-            description = ''
-              The users that are able to run this command.
-            '';
-          };
+            users = lib.mkOption {
+              type = with lib.types; listOf nonEmptyStr;
+              default = [ ];
+              description = ''
+                The users that are able to run this command.
+              '';
+            };
 
-          groups = lib.mkOption {
-            type = with lib.types; listOf nonEmptyStr;
-            default = [ ];
-            description = ''
-              The groups that are able to run this command.
-            '';
-          };
+            groups = lib.mkOption {
+              type = with lib.types; listOf nonEmptyStr;
+              default = [ ];
+              description = ''
+                The groups that are able to run this command.
+              '';
+            };
 
-          requirePassword = lib.mkOption {
-            type = lib.types.bool;
-            default = true;
-            description = ''
-              Whether the user is required to enter a password.
-            '';
-          };
+            requirePassword = lib.mkOption {
+              type = lib.types.bool;
+              default = true;
+              description = ''
+                Whether the user is required to enter a password.
+              '';
+            };
 
-          runAs = lib.mkOption {
-            type = lib.types.nonEmptyStr;
-            default = "root";
-            description = ''
-              The user the command is allowed to run as, or `"*"` for allowing the command to run as any user.
-            '';
+            runAs = lib.mkOption {
+              type = lib.types.nonEmptyStr;
+              default = "root";
+              description = ''
+                The user the command is allowed to run as, or `"*"` for allowing the command to run as any user.
+              '';
+            };
           };
-        };
-      });
+        }
+      );
       default = [ ];
       description = ''
         A list of rules which provide a way to temporarily elevate the privileges of a command for a given user or group.

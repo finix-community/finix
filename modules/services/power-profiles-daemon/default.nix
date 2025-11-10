@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.services.power-profiles-daemon;
 in
@@ -30,7 +35,10 @@ in
 
     finit.services.power-profiles-daemon = {
       description = "power profiles daemon";
-      conditions = [ "service/syslogd/ready" "service/dbus/ready" ];
+      conditions = [
+        "service/syslogd/ready"
+        "service/dbus/ready"
+      ];
       command = "${cfg.package}/libexec/power-profiles-daemon";
     };
 

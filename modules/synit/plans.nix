@@ -61,8 +61,7 @@ in
       '';
 
       file =
-        cfg.config |> attrValues |> concatLists |>
-        preserves.generate "${config.networking.hostName}.plan";
+        cfg.config |> attrValues |> concatLists |> preserves.generate "${config.networking.hostName}.plan";
     };
 
   };

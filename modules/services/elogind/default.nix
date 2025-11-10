@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.elogind;
 in
@@ -29,17 +34,22 @@ in
   };
 
   options.finit.ttys = lib.mkOption {
-    type = with lib.types; attrsOf (submodule {
-      config = lib.mkIf cfg.enable {
-        conditions = "service/elogind/ready";
-      };
-    });
+    type =
+      with lib.types;
+      attrsOf (submodule {
+        config = lib.mkIf cfg.enable {
+          conditions = "service/elogind/ready";
+        };
+      });
   };
 
   config = lib.mkIf cfg.enable {
     finit.services.elogind = {
       description = "login manager";
-      conditions = [ "service/syslogd/ready" "service/dbus/ready" ];
+      conditions = [
+        "service/syslogd/ready"
+        "service/dbus/ready"
+      ];
       command = "${cfg.package}/libexec/elogind";
     };
 

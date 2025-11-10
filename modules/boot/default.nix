@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   imports = [
     ./bootspec.nix
@@ -11,7 +16,10 @@
 
   options = {
     boot.serviceManager = lib.mkOption {
-      type = lib.types.enum [ "finit" "synit" ];
+      type = lib.types.enum [
+        "finit"
+        "synit"
+      ];
       default = "finit";
       description = ''
         Which service-manager to bootstrap into.
@@ -25,7 +33,10 @@
       runlevels = "S";
       command = pkgs.writeShellApplication {
         name = "remount-nix-store.sh";
-        runtimeInputs = with pkgs; [ coreutils util-linux ];
+        runtimeInputs = with pkgs; [
+          coreutils
+          util-linux
+        ];
         text = ''
           #!${pkgs.runtimeShell}
 

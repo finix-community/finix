@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.networking;
 
@@ -64,11 +69,12 @@ in
         hexChars = lib.stringToCharacters "0123456789abcdef";
         isHexString = s: lib.all (c: lib.elem c hexChars) (lib.stringToCharacters (lib.toLower s));
       in
-        [
-          { assertion = cfg.hostId == null || (lib.stringLength cfg.hostId == 8 && isHexString cfg.hostId);
-            message = "Invalid value given to the networking.hostId option.";
-          }
-        ];
+      [
+        {
+          assertion = cfg.hostId == null || (lib.stringLength cfg.hostId == 8 && isHexString cfg.hostId);
+          message = "Invalid value given to the networking.hostId option.";
+        }
+      ];
 
     boot.kernel.sysctl = {
       # allow all users to do ICMP echo requests (ping)
@@ -85,7 +91,10 @@ in
 
     boot.initrd = {
       contents = lib.optionals (cfg.hostId != null) [
-        { target = "/etc/hostid"; source = hostidFile; }
+        {
+          target = "/etc/hostid";
+          source = hostidFile;
+        }
       ];
     };
 
@@ -97,14 +106,13 @@ in
           oneToString = set: ip: ip + " " + lib.concatStringsSep " " set.${ip} + "\n";
           allToString = set: lib.concatMapStrings (oneToString set) (lib.attrNames set);
         in
-          allToString (lib.filterAttrs (_: v: v != [ ]) cfg.hosts)
-      ;
+        allToString (lib.filterAttrs (_: v: v != [ ]) cfg.hosts);
 
       # /etc/services: TCP/UDP port assignments.
       services.source = pkgs.iana-etc + "/etc/services";
 
       # /etc/protocols: IP protocol numbers.
-      protocols.source  = pkgs.iana-etc + "/etc/protocols";
+      protocols.source = pkgs.iana-etc + "/etc/protocols";
 
       # /etc/netgroup: Network-wide groups.
       netgroup.text = lib.mkDefault "";
@@ -115,7 +123,8 @@ in
       '';
 
       hostid = lib.mkIf (cfg.hostId != null) { source = hostidFile; };
-    } // lib.optionalAttrs (pkgs.stdenv.hostPlatform.libc == "glibc") {
+    }
+    // lib.optionalAttrs (pkgs.stdenv.hostPlatform.libc == "glibc") {
       # /etc/rpc: RPC program numbers.
       rpc.source = pkgs.stdenv.cc.libc.out + "/etc/rpc";
     };

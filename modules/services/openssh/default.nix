@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.openssh;
 
@@ -6,12 +11,18 @@ let
   settingsFormat =
     let
       # reports boolean as yes / no
-      mkValueString = v:
-        if lib.isInt           v then toString v
-        else if lib.isString   v then v
-        else if true  ==   v then "yes"
-        else if false ==   v then "no"
-        else throw "unsupported type ${builtins.typeOf v}: ${(lib.generators.toPretty {}) v}";
+      mkValueString =
+        v:
+        if lib.isInt v then
+          toString v
+        else if lib.isString v then
+          v
+        else if true == v then
+          "yes"
+        else if false == v then
+          "no"
+        else
+          throw "unsupported type ${builtins.typeOf v}: ${(lib.generators.toPretty { }) v}";
 
       base = pkgs.formats.keyValue {
         mkKeyValue = k: v: "${k} ${mkValueString v}";
@@ -22,22 +33,41 @@ let
       # Consult either sshd_config(5) or, as last resort, the OpehSSH source for parsing
       # the options at servconf.c:process_server_config_line_depth() to determine the right "mode"
       # for each. But fortunaly this fact is documented for most of them in the manpage.
-      commaSeparated = [ "Ciphers" "KexAlgorithms" "Macs" ];
-      spaceSeparated = [ "AuthorizedKeysFile" "AllowGroups" "AllowUsers" "DenyGroups" "DenyUsers" "HostKey" "Port" ];
-    in {
+      commaSeparated = [
+        "Ciphers"
+        "KexAlgorithms"
+        "Macs"
+      ];
+      spaceSeparated = [
+        "AuthorizedKeysFile"
+        "AllowGroups"
+        "AllowUsers"
+        "DenyGroups"
+        "DenyUsers"
+        "HostKey"
+        "Port"
+      ];
+    in
+    {
       inherit (base) type;
 
-      generate = name: value:
-        let transformedValue = lib.mapAttrs (key: val:
-          if lib.isList val then
-            if lib.elem key commaSeparated then lib.concatStringsSep "," (map toString val)
-            else if lib.elem key spaceSeparated then lib.concatStringsSep " " (map toString val)
-            else throw "list value for unknown key ${key}: ${(lib.generators.toPretty {}) val}"
-          else
-            val
+      generate =
+        name: value:
+        let
+          transformedValue = lib.mapAttrs (
+            key: val:
+            if lib.isList val then
+              if lib.elem key commaSeparated then
+                lib.concatStringsSep "," (map toString val)
+              else if lib.elem key spaceSeparated then
+                lib.concatStringsSep " " (map toString val)
+              else
+                throw "list value for unknown key ${key}: ${(lib.generators.toPretty { }) val}"
+            else
+              val
           ) value;
         in
-          base.generate name transformedValue;
+        base.generate name transformedValue;
     };
 in
 {
@@ -80,7 +110,11 @@ in
         freeformType = settingsFormat.type;
         options = {
           AddressFamily = lib.mkOption {
-            type = lib.types.enum [ "any" "inet" "inet6" ];
+            type = lib.types.enum [
+              "any"
+              "inet"
+              "inet6"
+            ];
             default = "any";
             description = ''
               Specifies which address family should be used by {manpage}`sshd(8)`.
@@ -103,7 +137,17 @@ in
           };
 
           LogLevel = lib.mkOption {
-            type = lib.types.enum [ "QUIET" "FATAL" "ERROR" "INFO" "VERBOSE" "DEBUG" "DEBUG1" "DEBUG2" "DEBUG3" ];
+            type = lib.types.enum [
+              "QUIET"
+              "FATAL"
+              "ERROR"
+              "INFO"
+              "VERBOSE"
+              "DEBUG"
+              "DEBUG1"
+              "DEBUG2"
+              "DEBUG3"
+            ];
             default = "INFO"; # upstream default
             description = ''
               Gives the verbosity level that is used when logging messages from {manpage}`sshd(8)`. Logging with a `DEBUG` level
@@ -111,9 +155,9 @@ in
             '';
           };
 
-          UsePAM =
-            lib.mkEnableOption "PAM authentication"
-            // { default = true; };
+          UsePAM = lib.mkEnableOption "PAM authentication" // {
+            default = true;
+          };
 
           PasswordAuthentication = lib.mkOption {
             type = lib.types.bool;
@@ -125,7 +169,13 @@ in
 
           PermitRootLogin = lib.mkOption {
             default = "prohibit-password";
-            type = lib.types.enum ["yes" "without-password" "prohibit-password" "forced-commands-only" "no"];
+            type = lib.types.enum [
+              "yes"
+              "without-password"
+              "prohibit-password"
+              "forced-commands-only"
+              "no"
+            ];
             description = ''
               Whether the root user can login using ssh.
             '';
@@ -223,7 +273,8 @@ in
       # TODO: fixup host key generation
       HostKey = [ "/var/lib/sshd/ssh_host_ed25519_key" ];
 
-      "Subsystem sftp" = lib.mkIf cfg.sftp.enable "${cfg.sftp.executable} ${lib.concatStringsSep " " cfg.sftp.flags}";
+      "Subsystem sftp" =
+        lib.mkIf cfg.sftp.enable "${cfg.sftp.executable} ${lib.concatStringsSep " " cfg.sftp.flags}";
     };
 
     finit.tasks.ssh-keygen = {
@@ -238,7 +289,11 @@ in
 
     finit.services.sshd = {
       description = "openssh daemon";
-      conditions = [ "net/lo/up" "service/syslogd/ready" "task/ssh-keygen/success" ];
+      conditions = [
+        "net/lo/up"
+        "service/syslogd/ready"
+        "task/ssh-keygen/success"
+      ];
       notify = "pid";
       command = "${cfg.package}/bin/sshd -D -f /etc/ssh/sshd_config";
       cgroup.name = "user";
@@ -286,22 +341,40 @@ in
     ];
 
     synit.daemons.sshd = {
-      argv = let
-        keygenScript = pkgs.execline.writeScript "ssh-keygen.el" "-s0" ''
-          foreground { s6-mkdir -m 0755 -p /var/lib/sshd }
-          foreground {
-            if -n { eltest -s "/var/lib/sshd/ssh_host_ed25519_key" }
-            ssh-keygen -t ed25519 -f "/var/lib/sshd/ssh_host_ed25519_key" -N ""
-          }
-          $@
-        '';
-      in [
-        keygenScript
-        "${cfg.package}/bin/sshd" "-D" "-e" "-f" "/etc/ssh/sshd_config"
-      ];
+      argv =
+        let
+          keygenScript = pkgs.execline.writeScript "ssh-keygen.el" "-s0" ''
+            foreground { s6-mkdir -m 0755 -p /var/lib/sshd }
+            foreground {
+              if -n { eltest -s "/var/lib/sshd/ssh_host_ed25519_key" }
+              ssh-keygen -t ed25519 -f "/var/lib/sshd/ssh_host_ed25519_key" -N ""
+            }
+            $@
+          '';
+        in
+        [
+          keygenScript
+          "${cfg.package}/bin/sshd"
+          "-D"
+          "-e"
+          "-f"
+          "/etc/ssh/sshd_config"
+        ];
       path = [ cfg.package ];
-      provides = [ [ "milestone" "login" ] ];
-      requires = [ { key = [ "milestone" "network" ]; } ];
+      provides = [
+        [
+          "milestone"
+          "login"
+        ]
+      ];
+      requires = [
+        {
+          key = [
+            "milestone"
+            "network"
+          ];
+        }
+      ];
     };
 
     users.users.sshd = {

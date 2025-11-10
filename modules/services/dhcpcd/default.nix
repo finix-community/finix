@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.dhcpcd;
 
@@ -166,7 +171,15 @@ in
       hostname = "";
 
       # A list of options to request from the DHCP server.
-      option = [ "domain_name_servers" "domain_name" "domain_search" "host_name" "classless_static_routes" "ntp_servers" "interface_mtu" ];
+      option = [
+        "domain_name_servers"
+        "domain_name"
+        "domain_search"
+        "host_name"
+        "classless_static_routes"
+        "ntp_servers"
+        "interface_mtu"
+      ];
 
       # A ServerID is required by RFC2131.
       # Commented out because of many non-compliant DHCP servers in the wild :(
@@ -179,7 +192,17 @@ in
       # Ignore peth* devices; on Xen, they're renamed physical
       # Ethernet cards used for bridging.  Likewise for vif* and tap*
       # (Xen) and virbr* and vnet* (libvirt).
-      denyinterfaces = [ "lo" "peth*" "vif*" "tap*" "tun*" "virbr*" "vnet*" "vboxnet*" "sit*" ];
+      denyinterfaces = [
+        "lo"
+        "peth*"
+        "vif*"
+        "tap*"
+        "tun*"
+        "virbr*"
+        "vnet*"
+        "vboxnet*"
+        "sit*"
+      ];
 
       # Immediately fork to background if specified, otherwise wait for IP address to be assigned
       waitip = true;
@@ -193,27 +216,58 @@ in
 
     synit.daemons.dhcpcd = {
       argv = lib.quoteExecline [
-        "if" [
-          "s6-envuidgid" "dhcpcd"
-          "forx" "-E" "-p" "DIR" [ "/var/db/dhcpcd" "/var/lib/dhcpcd" ]
-          "if" [ "s6-mkdir" "-p" "-m" "750" "$DIR" ]
-          "s6-chown" "-U" "$DIR"
+        "if"
+        [
+          "s6-envuidgid"
+          "dhcpcd"
+          "forx"
+          "-E"
+          "-p"
+          "DIR"
+          [
+            "/var/db/dhcpcd"
+            "/var/lib/dhcpcd"
+          ]
+          "if"
+          [
+            "s6-mkdir"
+            "-p"
+            "-m"
+            "750"
+            "$DIR"
+          ]
+          "s6-chown"
+          "-U"
+          "$DIR"
         ]
 
         "dhcpcd"
         "--nobackground"
-        "--config" cfg.configFile
+        "--config"
+        cfg.configFile
 
         # Disable dhcpcd from applying configuation
         # and use a hooks script that communicates
         # with ../../synit/networking.tcl instead.
         "--noconfigure"
-        "--script" "${pkgs.synit-network-utils}/lib/dhcpcd-hook.tcl"
+        "--script"
+        "${pkgs.synit-network-utils}/lib/dhcpcd-hook.tcl"
       ];
       path = [ cfg.package ];
-      provides = [ [ "milestone" "network" ] ];
+      provides = [
+        [
+          "milestone"
+          "network"
+        ]
+      ];
       requires = [
-        { key = [ "daemon" "network-configurator"  ]; state = "ready"; }
+        {
+          key = [
+            "daemon"
+            "network-configurator"
+          ];
+          state = "ready";
+        }
       ];
     };
 

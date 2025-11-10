@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.programs.doas;
 in
@@ -65,15 +70,16 @@ in
 
       source =
         let
-          value = pkgs.runCommand "doas.conf.in"
-            {
-              src = pkgs.writeText "doas.conf.in" config.environment.etc."doas.conf".text;
-              preferLocalBuild = true;
-            }
-            # Make sure that the doas.conf file is syntactically valid.
-            "${pkgs.buildPackages.doas}/bin/doas -C $src && cp $src $out";
+          value =
+            pkgs.runCommand "doas.conf.in"
+              {
+                src = pkgs.writeText "doas.conf.in" config.environment.etc."doas.conf".text;
+                preferLocalBuild = true;
+              }
+              # Make sure that the doas.conf file is syntactically valid.
+              "${pkgs.buildPackages.doas}/bin/doas -C $src && cp $src $out";
         in
-          lib.mkForce value;
+        lib.mkForce value;
     };
 
     security.wrappers.doas = {

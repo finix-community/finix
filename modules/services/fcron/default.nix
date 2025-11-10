@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.fcron;
 
@@ -159,7 +164,10 @@ in
 
     finit.tasks.fcrontab = {
       description = "reload fcrontab";
-      conditions = [ "service/syslogd/ready" "task/suid-sgid-wrappers/success" ];
+      conditions = [
+        "service/syslogd/ready"
+        "task/suid-sgid-wrappers/success"
+      ];
 
       # https://github.com/NixOS/nixpkgs/issues/25072
       command = "${cfg.package}/bin/fcrontab -u systab - < ${systab}";
@@ -172,7 +180,10 @@ in
 
     finit.services.fcron = {
       description = "fcron daemon";
-      conditions = [ "service/syslogd/ready" "task/fcrontab/success" ];
+      conditions = [
+        "service/syslogd/ready"
+        "task/fcrontab/success"
+      ];
       command = "${cfg.package}/bin/fcron --foreground" + lib.optionalString cfg.debug " --debug";
     };
 

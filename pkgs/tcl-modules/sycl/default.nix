@@ -9,7 +9,10 @@
 }:
 
 buildNimSbom (finalAttrs: {
-  outputs = [ "out" "man" ];
+  outputs = [
+    "out"
+    "man"
+  ];
 
   src = fetchFromGitea {
     domain = "git.syndicate-lang.org";

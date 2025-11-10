@@ -1,4 +1,6 @@
-{ testenv ? import ./testenv { } }:
+{
+  testenv ? import ./testenv { },
+}:
 
 let
   inherit (testenv) pkgs;
@@ -6,15 +8,17 @@ in
 testenv.mkTest {
   name = "ssh-synit";
 
-  nodes.machine = { lib, ... }: {
-    boot.serviceManager = "synit";
-    services.dhcpcd.enable = true;
-    services.openssh.enable = true;
+  nodes.machine =
+    { lib, ... }:
+    {
+      boot.serviceManager = "synit";
+      services.dhcpcd.enable = true;
+      services.openssh.enable = true;
 
-    virtualisation.qemu.nics.eth0.args = [
-      "hostfwd=tcp:127.0.0.1:2222-:22"
-    ];
-  };
+      virtualisation.qemu.nics.eth0.args = [
+        "hostfwd=tcp:127.0.0.1:2222-:22"
+      ];
+    };
 
   tclScript = ''
     machine spawn

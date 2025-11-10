@@ -1,4 +1,9 @@
-{ lib, config, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.networking;
@@ -14,25 +19,44 @@ in
 
     # Collect information on network devices when triggered
     # by uevent and assert it into the machine dataspace.
-    services.mdevd.hotplugRules =
-      "-SUBSYSTEM=net;DEVPATH=.*/net/*;.* 0:0 600 &${pkgs.synit-network-utils}/lib/mdev-hook.el";
+    services.mdevd.hotplugRules = "-SUBSYSTEM=net;DEVPATH=.*/net/*;.* 0:0 600 &${pkgs.synit-network-utils}/lib/mdev-hook.el";
 
-    # A Tcl script responds to assertions in the 
+    # A Tcl script responds to assertions in the
     # network dataspace by executing iproute2 commands
     # and relaying actually existing configuration into
     # the machine dataspaces.
     synit.daemons.network-configurator =
-      let inherit (pkgs.tclPackages) sycl; in {
+      let
+        inherit (pkgs.tclPackages) sycl;
+      in
+      {
         argv = lib.quoteExecline [
-          "if" [ "resolvconf" "-I" ]
+          "if"
+          [
+            "resolvconf"
+            "-I"
+          ]
           "network-configurator"
         ];
         path = builtins.attrValues {
           inherit (pkgs) iproute2 openresolv synit-network-utils;
         };
         protocol = "text/syndicate";
-        provides = [ [ "milestone" "network" ] ];
-        requires = [ { key = [ "daemon" "sysctl" ]; state = "complete"; } ];
+        provides = [
+          [
+            "milestone"
+            "network"
+          ]
+        ];
+        requires = [
+          {
+            key = [
+              "daemon"
+              "sysctl"
+            ];
+            state = "complete";
+          }
+        ];
         readyOnStart = false;
       };
 

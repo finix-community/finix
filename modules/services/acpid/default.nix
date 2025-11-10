@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.acpid;
 
@@ -41,14 +46,17 @@ in
   config = lib.mkIf cfg.enable {
     environment.etc =
       let
-        etcTree = lib.mapAttrs' (k: v: lib.nameValuePair "acpi/events/${k}" {
-          text = ''
-            event=${v.event}
-            action=${pkgs.writeShellScriptBin "${k}.sh" v.action}/bin/${k}.sh '%e'
-          '';
-        }) (lib.filterAttrs (_: v: v.enable) config.services.acpid.handlers);
+        etcTree = lib.mapAttrs' (
+          k: v:
+          lib.nameValuePair "acpi/events/${k}" {
+            text = ''
+              event=${v.event}
+              action=${pkgs.writeShellScriptBin "${k}.sh" v.action}/bin/${k}.sh '%e'
+            '';
+          }
+        ) (lib.filterAttrs (_: v: v.enable) config.services.acpid.handlers);
       in
-        lib.mkMerge [ etcTree ];
+      lib.mkMerge [ etcTree ];
 
     finit.services.acpid = {
       description = "acpi daemon";
