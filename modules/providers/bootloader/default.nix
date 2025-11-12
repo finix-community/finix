@@ -2,7 +2,7 @@
 {
   options.providers.bootloader = {
     backend = lib.mkOption {
-      type = lib.types.enum [ ];
+      type = lib.types.enum [ "none" ];
       description = ''
         The selected module which should implement functionality for the {option}`providers.bootloader` contract.
       '';
