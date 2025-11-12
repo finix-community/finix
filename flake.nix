@@ -1,5 +1,5 @@
 {
-  description = "A collection of overlays and modules for finix";
+  description = "A collection of overlays, modules, libs, and templates for working with finix";
 
   outputs =
     { self }:
@@ -19,6 +19,28 @@
         # apply modular services to packages for convenience
         modular-services = import ./overlays/modular-services.nix;
       };
+
+      lib.finixSystem =
+        {
+          lib ? null,
+          specialArgs ? { },
+          modules ? [ ],
+          ...
+        }:
+        let
+          sources = import ./lon.nix;
+          modulesPath = toString sources.nixpkgs + "/nixos/modules";
+        in
+        lib.evalModules {
+          specialArgs =
+            lib.optionalAttrs (!specialArgs ? modulesPath) {
+              # pull in a pinned copy of nixpkgs if not provided by the caller
+              inherit modulesPath;
+            }
+            // specialArgs;
+
+          modules = [ self.nixosModules.default ] ++ modules;
+        };
 
       templates = {
         default = self.templates.desktop-greetd;
