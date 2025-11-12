@@ -2,7 +2,8 @@
 {
   options.providers.resumeAndSuspend = {
     backend = lib.mkOption {
-      type = lib.types.enum [ ];
+      type = lib.types.enum [ "none" ];
+      default = "none";
       description = ''
         The selected module which should implement functionality for the {option}`providers.resumeAndSuspend` contract.
       '';
