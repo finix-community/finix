@@ -22,6 +22,7 @@ in
 
     backend = lib.mkOption {
       type = lib.types.enum [ "none" ];
+      default = "none";
       description = ''
         The selected module which should implement functionality for the {option}`providers.privileges` contract.
       '';
