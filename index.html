@@ -78,7 +78,7 @@
     <details class="toc-category">
       <summary title="boot">
         <span>boot</span>
-        <span class="toc-count">68</span>
+        <span class="toc-count">72</span>
       </summary>
       <ul>
         
@@ -287,6 +287,22 @@
         <li>
           <a href='#option-boot-initrd-supportedFilesystems-ext4-packages' title="boot.initrd.supportedFilesystems.ext4.packages">
             initrd.supportedFilesystems.ext4.packages
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-boot-initrd-supportedFilesystems-f2fs-enable' title="boot.initrd.supportedFilesystems.f2fs.enable">
+            initrd.supportedFilesystems.f2fs.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-boot-initrd-supportedFilesystems-f2fs-packages' title="boot.initrd.supportedFilesystems.f2fs.packages">
+            initrd.supportedFilesystems.f2fs.packages
             
             
           </a>
@@ -535,6 +551,22 @@
         <li>
           <a href='#option-boot-supportedFilesystems-ext4-packages' title="boot.supportedFilesystems.ext4.packages">
             supportedFilesystems.ext4.packages
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-boot-supportedFilesystems-f2fs-enable' title="boot.supportedFilesystems.f2fs.enable">
+            supportedFilesystems.f2fs.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-boot-supportedFilesystems-f2fs-packages' title="boot.supportedFilesystems.f2fs.packages">
+            supportedFilesystems.f2fs.packages
             
             
           </a>
@@ -2298,7 +2330,7 @@
     <details class="toc-category">
       <summary title="programs">
         <span>programs</span>
-        <span class="toc-count">56</span>
+        <span class="toc-count">58</span>
       </summary>
       <ul>
         
@@ -2752,6 +2784,22 @@
           </a>
         </li>
         
+        <li>
+          <a href='#option-programs-zzz-enable' title="programs.zzz.enable">
+            zzz.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs-zzz-package' title="programs.zzz.package">
+            zzz.package
+            
+            
+          </a>
+        </li>
+        
       </ul>
     </details>
   </li>
@@ -2760,7 +2808,7 @@
     <details class="toc-category">
       <summary title="providers">
         <span>providers</span>
-        <span class="toc-count">17</span>
+        <span class="toc-count">23</span>
       </summary>
       <ul>
         
@@ -2849,6 +2897,54 @@
         <li>
           <a href='#option-providers-privileges-rules-*-users' title="providers.privileges.rules.*.users">
             privileges.rules.*.users
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-providers-resumeAndSuspend-backend' title="providers.resumeAndSuspend.backend">
+            resumeAndSuspend.backend
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-providers-resumeAndSuspend-hooks' title="providers.resumeAndSuspend.hooks">
+            resumeAndSuspend.hooks
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-providers-resumeAndSuspend-hooks-&lt;name&gt;-action' title="providers.resumeAndSuspend.hooks.&lt;name&gt;.action">
+            resumeAndSuspend.hooks.&lt;name&gt;.action
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-providers-resumeAndSuspend-hooks-&lt;name&gt;-enable' title="providers.resumeAndSuspend.hooks.&lt;name&gt;.enable">
+            resumeAndSuspend.hooks.&lt;name&gt;.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-providers-resumeAndSuspend-hooks-&lt;name&gt;-event' title="providers.resumeAndSuspend.hooks.&lt;name&gt;.event">
+            resumeAndSuspend.hooks.&lt;name&gt;.event
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-providers-resumeAndSuspend-hooks-&lt;name&gt;-priority' title="providers.resumeAndSuspend.hooks.&lt;name&gt;.priority">
+            resumeAndSuspend.hooks.&lt;name&gt;.priority
             
             
           </a>
@@ -3140,7 +3236,7 @@
     <details class="toc-category">
       <summary title="services">
         <span>services</span>
-        <span class="toc-count">290</span>
+        <span class="toc-count">293</span>
       </summary>
       <ul>
         
@@ -5035,6 +5131,30 @@
         </li>
         
         <li>
+          <a href='#option-services-tlp-enable' title="services.tlp.enable">
+            tlp.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-tlp-package' title="services.tlp.package">
+            tlp.package
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-tlp-settings' title="services.tlp.settings">
+            tlp.settings
+            
+            
+          </a>
+        </li>
+        
+        <li>
           <a href='#option-services-tmpfiles' title="services.tmpfiles">
             tmpfiles
             
@@ -6688,6 +6808,30 @@ the device-manager and before mounting file-systems.</p>
   <div class="option-default">Default: <code>[ ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/ext4.nix" target="_blank">&lt;finix/modules/filesystems/ext4.nix&gt;</a></code></div>
 </div>
+<div class="option" id="option-boot-initrd-supportedFilesystems-f2fs-enable">
+  <h3 class="option-name">
+    <a href="#option-boot-initrd-supportedFilesystems-f2fs-enable" class="option-anchor">boot.initrd.supportedFilesystems.f2fs.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/f2fs.nix" target="_blank">&lt;finix/modules/filesystems/f2fs.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-boot-initrd-supportedFilesystems-f2fs-packages">
+  <h3 class="option-name">
+    <a href="#option-boot-initrd-supportedFilesystems-f2fs-packages" class="option-anchor">boot.initrd.supportedFilesystems.f2fs.packages</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of package</code></div>
+  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/f2fs.nix" target="_blank">&lt;finix/modules/filesystems/f2fs.nix&gt;</a></code></div>
+</div>
 <div class="option" id="option-boot-initrd-supportedFilesystems-fuse-enable">
   <h3 class="option-name">
     <a href="#option-boot-initrd-supportedFilesystems-fuse-enable" class="option-anchor">boot.initrd.supportedFilesystems.fuse.enable</a>
@@ -7137,6 +7281,30 @@ that follow this format and can be used directly.</p>
 </body></html></div>
   <div class="option-default">Default: <code>[ ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/ext4.nix" target="_blank">&lt;finix/modules/filesystems/ext4.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-boot-supportedFilesystems-f2fs-enable">
+  <h3 class="option-name">
+    <a href="#option-boot-supportedFilesystems-f2fs-enable" class="option-anchor">boot.supportedFilesystems.f2fs.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/f2fs.nix" target="_blank">&lt;finix/modules/filesystems/f2fs.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-boot-supportedFilesystems-f2fs-packages">
+  <h3 class="option-name">
+    <a href="#option-boot-supportedFilesystems-f2fs-packages" class="option-anchor">boot.supportedFilesystems.f2fs.packages</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of package</code></div>
+  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/f2fs.nix" target="_blank">&lt;finix/modules/filesystems/f2fs.nix&gt;</a></code></div>
 </div>
 <div class="option" id="option-boot-supportedFilesystems-fuse-enable">
   <h3 class="option-name">
@@ -10692,13 +10860,37 @@ needs to be added to the <code>vboxusers</code> group.</p>
   <div class="option-default">Default: <code>pkgs.xwayland-satellite</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/xwayland-satellite" target="_blank">&lt;finix/modules/programs/xwayland-satellite&gt;</a></code></div>
 </div>
+<div class="option" id="option-programs-zzz-enable">
+  <h3 class="option-name">
+    <a href="#option-programs-zzz-enable" class="option-anchor">programs.zzz.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://github.com/jirutka/zzz">zzz</a>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/zzz" target="_blank">&lt;finix/modules/programs/zzz&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs-zzz-package">
+  <h3 class="option-name">
+    <a href="#option-programs-zzz-package" class="option-anchor">programs.zzz.package</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>zzz</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code><derivation zzz-0.2.0></code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/zzz" target="_blank">&lt;finix/modules/programs/zzz&gt;</a></code></div>
+</div>
 <div class="option" id="option-providers-bootloader-backend">
   <h3 class="option-name">
     <a href="#option-providers-bootloader-backend" class="option-anchor">providers.bootloader.backend</a>
     <span class="copy-link" title="Copy link to this option"></span>
     <span class="copy-feedback">Link copied!</span>
   </h3>
-  <div class="option-type">Type: <code>value "limine" (singular enum)</code></div>
+  <div class="option-type">Type: <code>one of "limine", "none"</code></div>
   <div class="option-description"><html><head></head><body><p>The selected module which should implement functionality for the <a class="option-reference" href="options.html#option-providers-bootloader"><code>providers.bootloader</code></a> contract.</p>
 </body></html></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/limine/providers.bootloader.nix" target="_blank">&lt;finix/modules/programs/limine/providers.bootloader.nix&gt;</a></code></div>
@@ -10725,7 +10917,7 @@ needs to be added to the <code>vboxusers</code> group.</p>
     <span class="copy-link" title="Copy link to this option"></span>
     <span class="copy-feedback">Link copied!</span>
   </h3>
-  <div class="option-type">Type: <code>one of "sudo", "doas"</code></div>
+  <div class="option-type">Type: <code>one of "sudo", "doas", "none"</code></div>
   <div class="option-description"><html><head></head><body><p>The selected module which should implement functionality for the <a class="option-reference" href="options.html#option-providers-privileges"><code>providers.privileges</code></a> contract.</p>
 </body></html></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/sudo/providers.privileges.nix" target="_blank">&lt;finix/modules/programs/sudo/providers.privileges.nix&gt;</a></code></div>
@@ -10830,13 +11022,85 @@ empty, the command must be run without any arguments.</p>
   <div class="option-default">Default: <code>[ ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/privileges" target="_blank">&lt;finix/modules/providers/privileges&gt;</a></code></div>
 </div>
+<div class="option" id="option-providers-resumeAndSuspend-backend">
+  <h3 class="option-name">
+    <a href="#option-providers-resumeAndSuspend-backend" class="option-anchor">providers.resumeAndSuspend.backend</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>one of "zzz", "none"</code></div>
+  <div class="option-description"><html><head></head><body><p>The selected module which should implement functionality for the <a class="option-reference" href="options.html#option-providers-resumeAndSuspend"><code>providers.resumeAndSuspend</code></a> contract.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>"none"</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/zzz/providers.resume-and-suspend.nix" target="_blank">&lt;finix/modules/programs/zzz/providers.resume-and-suspend.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-providers-resumeAndSuspend-hooks">
+  <h3 class="option-name">
+    <a href="#option-providers-resumeAndSuspend-hooks" class="option-anchor">providers.resumeAndSuspend.hooks</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>attribute set of (submodule)</code></div>
+  <div class="option-description"><html><head></head><body><p>A set of hooks which are to be run on system <em>suspend</em> or <em>resume</em>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/resume-and-suspend" target="_blank">&lt;finix/modules/providers/resume-and-suspend&gt;</a></code></div>
+</div>
+<div class="option" id="option-providers-resumeAndSuspend-hooks-&lt;name&gt;-action">
+  <h3 class="option-name">
+    <a href="#option-providers-resumeAndSuspend-hooks-&lt;name&gt;-action" class="option-anchor">providers.resumeAndSuspend.hooks.&lt;name&gt;.action</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>strings concatenated with "\n"</code></div>
+  <div class="option-description"><html><head></head><body><p>Shell commands to execute when the <code>event</code> is triggered.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>""</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/resume-and-suspend" target="_blank">&lt;finix/modules/providers/resume-and-suspend&gt;</a></code></div>
+</div>
+<div class="option" id="option-providers-resumeAndSuspend-hooks-&lt;name&gt;-enable">
+  <h3 class="option-name">
+    <a href="#option-providers-resumeAndSuspend-hooks-&lt;name&gt;-enable" class="option-anchor">providers.resumeAndSuspend.hooks.&lt;name&gt;.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether this hook should be executed on the given <code>event</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>true</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/resume-and-suspend" target="_blank">&lt;finix/modules/providers/resume-and-suspend&gt;</a></code></div>
+</div>
+<div class="option" id="option-providers-resumeAndSuspend-hooks-&lt;name&gt;-event">
+  <h3 class="option-name">
+    <a href="#option-providers-resumeAndSuspend-hooks-&lt;name&gt;-event" class="option-anchor">providers.resumeAndSuspend.hooks.&lt;name&gt;.event</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>one of "suspend", "resume"</code></div>
+  <div class="option-description"><html><head></head><body><p>The event type.</p>
+</body></html></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/resume-and-suspend" target="_blank">&lt;finix/modules/providers/resume-and-suspend&gt;</a></code></div>
+</div>
+<div class="option" id="option-providers-resumeAndSuspend-hooks-&lt;name&gt;-priority">
+  <h3 class="option-name">
+    <a href="#option-providers-resumeAndSuspend-hooks-&lt;name&gt;-priority" class="option-anchor">providers.resumeAndSuspend.hooks.&lt;name&gt;.priority</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>integer between 0 and 9999 (both inclusive)</code></div>
+  <div class="option-description"><html><head></head><body><p>Order of this hook in relation to the others. The semantics are
+the same as with <code>lib.mkOrder</code>. Smaller values are inserted first.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>1000</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/resume-and-suspend" target="_blank">&lt;finix/modules/providers/resume-and-suspend&gt;</a></code></div>
+</div>
 <div class="option" id="option-providers-scheduler-backend">
   <h3 class="option-name">
     <a href="#option-providers-scheduler-backend" class="option-anchor">providers.scheduler.backend</a>
     <span class="copy-link" title="Copy link to this option"></span>
     <span class="copy-feedback">Link copied!</span>
   </h3>
-  <div class="option-type">Type: <code>one of "fcron", "cron", "anacron"</code></div>
+  <div class="option-type">Type: <code>one of "fcron", "none", "cron", "anacron"</code></div>
   <div class="option-description"><html><head></head><body><p>The selected module which should implement functionality for the <a class="option-reference" href="options.html#option-providers-scheduler"><code>providers.scheduler</code></a> contract.</p>
 </body></html></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fcron/providers.scheduler.nix" target="_blank">&lt;finix/modules/services/fcron/providers.scheduler.nix&gt;</a></code></div>
@@ -14491,6 +14755,43 @@ ensuring the user exists before the <code>sonarr</code> service starts.</p>
 </body></html></div>
   <div class="option-default">Default: <code>pkgs.system76-scheduler</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/system76-scheduler" target="_blank">&lt;finix/modules/services/system76-scheduler&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-tlp-enable">
+  <h3 class="option-name">
+    <a href="#option-services-tlp-enable" class="option-anchor">services.tlp.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://linrunner.de/en/tlp/docs/tlp-linux-advanced-power-management.html">tlp</a> as a system service.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/tlp" target="_blank">&lt;finix/modules/services/tlp&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-tlp-package">
+  <h3 class="option-name">
+    <a href="#option-services-tlp-package" class="option-anchor">services.tlp.package</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>tlp</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.tlp</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/tlp" target="_blank">&lt;finix/modules/services/tlp&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-tlp-settings">
+  <h3 class="option-name">
+    <a href="#option-services-tlp-settings" class="option-anchor">services.tlp.settings</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>attribute set of (atom (null, bool, int, float or string) or a non-empty list of them)</code></div>
+  <div class="option-description"><html><head></head><body><p><code>tlp</code> configuration. See <a href="https://linrunner.de/tlp/settings">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/tlp" target="_blank">&lt;finix/modules/services/tlp&gt;</a></code></div>
 </div>
 <div class="option" id="option-services-tmpfiles">
   <h3 class="option-name">
