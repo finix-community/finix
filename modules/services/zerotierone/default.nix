@@ -29,6 +29,15 @@ in
     stateDir = lib.mkOption {
       type = lib.types.path;
       default = "/var/lib/zerotier-one";
+      description = ''
+        The directory used to store all `zerotier` data.
+
+        ::: {.note}
+        If left as the default value this directory will automatically be created on
+        system activation, otherwise you are responsible for ensuring the directory exists
+        with appropriate ownership and permissions before the `zerotier` service starts.
+        :::
+      '';
     };
   };
 
