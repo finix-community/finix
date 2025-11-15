@@ -25,12 +25,55 @@ in
         The package to use for `earlyoom`.
       '';
     };
+
+    debug = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to enable debug logging.
+      '';
+    };
+
+    extraArgs = lib.mkOption {
+      type = with lib.types; listOf str;
+      default = [
+        "-r"
+        "3600"
+      ];
+      defaultText = lib.literalExpression ''
+        [
+          "-p"
+          "-r"
+          "3600"
+        ]
+      '';
+      description = ''
+        Additional arguments to pass to `earlyoom`. See {manpage}`earlyoom(1)`
+        for additional details.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
+    services.earlyoom.extraArgs = [ "-p" ] ++ lib.optionals cfg.debug [ "--debug" ];
+
     finit.services.earlyoom = {
       description = "early oom daemon";
-      command = "${cfg.package}/bin/earlyoom --syslog -r 3600";
+      command = "${cfg.package}/bin/earlyoom --syslog " + lib.escapeShellArgs cfg.extraArgs;
+      conditions = "service/syslogd/ready";
+      nohup = true;
+
+      cgroup.settings = {
+        "memory.max" = "50M";
+        "pids.max" = 10;
+      };
+
+      # TODO: now we're hijacking `env` and no one else can use it...
+      env = lib.mkIf (lib.elem "-n" cfg.extraArgs) (
+        pkgs.writeText "earlyoom.env" ''
+          PATH="${lib.makeBinPath [ pkgs.dbus ]}:$PATH"
+        ''
+      );
     };
   };
 }

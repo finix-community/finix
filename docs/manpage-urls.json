@@ -7,6 +7,7 @@
   "crontab(5)": "https://man.archlinux.org/man/crontab.5",
   "dropbear(8)": "https://man.archlinux.org/man/dropbear.8",
   "dropbearkey(1)": "https://man.archlinux.org/man/dropbearkey.1",
+  "earlyoom(1)": "https://man.archlinux.org/man/earlyoom.1",
   "fwupd.conf(5)": "https://man.archlinux.org/man/fwupd.conf.5",
   "greetd(5)": "https://man.archlinux.org/man/greetd.5",
   "iwd.config(5)": "https://man.archlinux.org/man/iwd.config.5",
