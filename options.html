@@ -3236,19 +3236,11 @@
     <details class="toc-category">
       <summary title="services">
         <span>services</span>
-        <span class="toc-count">293</span>
+        <span class="toc-count">290</span>
       </summary>
       <ul>
         
 
-        
-        <li>
-          <a href='#option-services-accounts-daemon-enable' title="services.accounts-daemon.enable">
-            accounts-daemon.enable
-            
-            
-          </a>
-        </li>
         
         <li>
           <a href='#option-services-acpid-enable' title="services.acpid.enable">
@@ -3907,8 +3899,24 @@
         </li>
         
         <li>
+          <a href='#option-services-earlyoom-debug' title="services.earlyoom.debug">
+            earlyoom.debug
+            
+            
+          </a>
+        </li>
+        
+        <li>
           <a href='#option-services-earlyoom-enable' title="services.earlyoom.enable">
             earlyoom.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-earlyoom-extraArgs' title="services.earlyoom.extraArgs">
+            earlyoom.extraArgs
             
             
           </a>
@@ -3947,14 +3955,6 @@
         </li>
         
         <li>
-          <a href='#option-services-fcron-configFile' title="services.fcron.configFile">
-            fcron.configFile
-            
-            
-          </a>
-        </li>
-        
-        <li>
           <a href='#option-services-fcron-debug' title="services.fcron.debug">
             fcron.debug
             
@@ -3979,6 +3979,14 @@
         </li>
         
         <li>
+          <a href='#option-services-fcron-extraArgs' title="services.fcron.extraArgs">
+            fcron.extraArgs
+            
+            
+          </a>
+        </li>
+        
+        <li>
           <a href='#option-services-fcron-package' title="services.fcron.package">
             fcron.package
             
@@ -3987,32 +3995,8 @@
         </li>
         
         <li>
-          <a href='#option-services-fcron-settings-fcronallow' title="services.fcron.settings.fcronallow">
-            fcron.settings.fcronallow
-            
-            
-          </a>
-        </li>
-        
-        <li>
-          <a href='#option-services-fcron-settings-fcrondeny' title="services.fcron.settings.fcrondeny">
-            fcron.settings.fcrondeny
-            
-            
-          </a>
-        </li>
-        
-        <li>
-          <a href='#option-services-fcron-settings-fcrontabs' title="services.fcron.settings.fcrontabs">
-            fcron.settings.fcrontabs
-            
-            
-          </a>
-        </li>
-        
-        <li>
-          <a href='#option-services-fcron-settings-fifofile' title="services.fcron.settings.fifofile">
-            fcron.settings.fifofile
+          <a href='#option-services-fcron-settings' title="services.fcron.settings">
+            fcron.settings
             
             
           </a>
@@ -4117,22 +4101,6 @@
         <li>
           <a href='#option-services-fwupd-settings-fwupd-IdleTimeout' title="services.fwupd.settings.fwupd.IdleTimeout">
             fwupd.settings.fwupd.IdleTimeout
-            
-            
-          </a>
-        </li>
-        
-        <li>
-          <a href='#option-services-gdm-enable' title="services.gdm.enable">
-            gdm.enable
-            
-            
-          </a>
-        </li>
-        
-        <li>
-          <a href='#option-services-gdm-settings' title="services.gdm.settings">
-            gdm.settings
             
             
           </a>
@@ -5173,6 +5141,14 @@
         <li>
           <a href='#option-services-tmpfiles-&lt;name&gt;-rules' title="services.tmpfiles.&lt;name&gt;.rules">
             tmpfiles.&lt;name&gt;.rules
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-tzupdate-debug' title="services.tzupdate.debug">
+            tzupdate.debug
             
             
           </a>
@@ -10893,6 +10869,7 @@ needs to be added to the <code>vboxusers</code> group.</p>
   <div class="option-type">Type: <code>one of "limine", "none"</code></div>
   <div class="option-description"><html><head></head><body><p>The selected module which should implement functionality for the <a class="option-reference" href="options.html#option-providers-bootloader"><code>providers.bootloader</code></a> contract.</p>
 </body></html></div>
+  <div class="option-default">Default: <code>"none"</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/limine/providers.bootloader.nix" target="_blank">&lt;finix/modules/programs/limine/providers.bootloader.nix&gt;</a></code></div>
 </div>
 <div class="option" id="option-providers-bootloader-installHook">
@@ -10920,6 +10897,7 @@ needs to be added to the <code>vboxusers</code> group.</p>
   <div class="option-type">Type: <code>one of "sudo", "doas", "none"</code></div>
   <div class="option-description"><html><head></head><body><p>The selected module which should implement functionality for the <a class="option-reference" href="options.html#option-providers-privileges"><code>providers.privileges</code></a> contract.</p>
 </body></html></div>
+  <div class="option-default">Default: <code>"none"</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/sudo/providers.privileges.nix" target="_blank">&lt;finix/modules/programs/sudo/providers.privileges.nix&gt;</a></code></div>
 </div>
 <div class="option" id="option-providers-privileges-command">
@@ -11103,6 +11081,7 @@ the same as with <code>lib.mkOrder</code>. Smaller values are inserted first.</p
   <div class="option-type">Type: <code>one of "fcron", "none", "cron", "anacron"</code></div>
   <div class="option-description"><html><head></head><body><p>The selected module which should implement functionality for the <a class="option-reference" href="options.html#option-providers-scheduler"><code>providers.scheduler</code></a> contract.</p>
 </body></html></div>
+  <div class="option-default">Default: <code>"none"</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fcron/providers.scheduler.nix" target="_blank">&lt;finix/modules/services/fcron/providers.scheduler.nix&gt;</a></code></div>
 </div>
 <div class="option" id="option-providers-scheduler-supportedFeatures-user">
@@ -11542,18 +11521,6 @@ symbolic or numeric file mode understood by <code class="command">chmod</code>.<
   <div class="option-description"><html><head></head><body><p>The absolute path to the program to be wrapped.</p>
 </body></html></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/security/wrappers" target="_blank">&lt;finix/modules/security/wrappers&gt;</a></code></div>
-</div>
-<div class="option" id="option-services-accounts-daemon-enable">
-  <h3 class="option-name">
-    <a href="#option-services-accounts-daemon-enable" class="option-anchor">services.accounts-daemon.enable</a>
-    <span class="copy-link" title="Copy link to this option"></span>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-type">Type: <code>boolean</code></div>
-  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://www.freedesktop.org/wiki/Software/AccountsService">accountsservice</a> as a system service.</p>
-</body></html></div>
-  <div class="option-default">Default: <code>false</code></div>
-  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/accounts-daemon" target="_blank">&lt;finix/modules/services/accounts-daemon&gt;</a></code></div>
 </div>
 <div class="option" id="option-services-acpid-enable">
   <h3 class="option-name">
@@ -12635,6 +12602,18 @@ for additional details.</p>
   <div class="option-default">Default: <code>pkgs.dropbear</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/dropbear" target="_blank">&lt;finix/modules/services/dropbear&gt;</a></code></div>
 </div>
+<div class="option" id="option-services-earlyoom-debug">
+  <h3 class="option-name">
+    <a href="#option-services-earlyoom-debug" class="option-anchor">services.earlyoom.debug</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/earlyoom" target="_blank">&lt;finix/modules/services/earlyoom&gt;</a></code></div>
+</div>
 <div class="option" id="option-services-earlyoom-enable">
   <h3 class="option-name">
     <a href="#option-services-earlyoom-enable" class="option-anchor">services.earlyoom.enable</a>
@@ -12645,6 +12624,24 @@ for additional details.</p>
   <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://github.com/rfjakob/earlyoom">earlyoom</a> as a system service.</p>
 </body></html></div>
   <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/earlyoom" target="_blank">&lt;finix/modules/services/earlyoom&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-earlyoom-extraArgs">
+  <h3 class="option-name">
+    <a href="#option-services-earlyoom-extraArgs" class="option-anchor">services.earlyoom.extraArgs</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <code>earlyoom</code>. See <a href="https://man.archlinux.org/man/earlyoom.1" class="manpage-reference">earlyoom(1)</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[
+  "-p"
+  "-r"
+  "3600"
+]
+</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/earlyoom" target="_blank">&lt;finix/modules/services/earlyoom&gt;</a></code></div>
 </div>
 <div class="option" id="option-services-earlyoom-package">
@@ -12690,23 +12687,15 @@ for additional details.</p>
     <span class="copy-feedback">Link copied!</span>
   </h3>
   <div class="option-type">Type: <code>list of string</code></div>
-  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+  <div class="option-description"><html><head></head><body><p>Users allowed to use <code>fcrontab</code> and <code>fcrondyn</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A special name <code>"all"</code> acts for everyone.</p>
+</div>
 </body></html></div>
   <div class="option-default">Default: <code>[
   "all"
 ]</code></div>
-  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fcron" target="_blank">&lt;finix/modules/services/fcron&gt;</a></code></div>
-</div>
-<div class="option" id="option-services-fcron-configFile">
-  <h3 class="option-name">
-    <a href="#option-services-fcron-configFile" class="option-anchor">services.fcron.configFile</a>
-    <span class="copy-link" title="Copy link to this option"></span>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-type">Type: <code>package</code></div>
-  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
-</body></html></div>
-  <div class="option-default">Default: <code><derivation fcron.conf></code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fcron" target="_blank">&lt;finix/modules/services/fcron&gt;</a></code></div>
 </div>
 <div class="option" id="option-services-fcron-debug">
@@ -12728,7 +12717,11 @@ for additional details.</p>
     <span class="copy-feedback">Link copied!</span>
   </h3>
   <div class="option-type">Type: <code>list of string</code></div>
-  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+  <div class="option-description"><html><head></head><body><p>Users who are not allowed to use <code>fcrontab</code> and <code>fcrondyn</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A special name <code>"all"</code> acts for everyone.</p>
+</div>
 </body></html></div>
   <div class="option-default">Default: <code>[ ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fcron" target="_blank">&lt;finix/modules/services/fcron&gt;</a></code></div>
@@ -12745,6 +12738,25 @@ for additional details.</p>
   <div class="option-default">Default: <code>false</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fcron" target="_blank">&lt;finix/modules/services/fcron&gt;</a></code></div>
 </div>
+<div class="option" id="option-services-fcron-extraArgs">
+  <h3 class="option-name">
+    <a href="#option-services-fcron-extraArgs" class="option-anchor">services.fcron.extraArgs</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <code>fcron</code>. See <a href="https://man.archlinux.org/man/fcron.8" class="manpage-reference">fcron(8)</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-example">Example: <pre><code>[
+  "--maxserial"
+  "5"
+  "--firstsleep"
+  "60"
+]</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fcron" target="_blank">&lt;finix/modules/services/fcron&gt;</a></code></div>
+</div>
 <div class="option" id="option-services-fcron-package">
   <h3 class="option-name">
     <a href="#option-services-fcron-package" class="option-anchor">services.fcron.package</a>
@@ -12757,52 +12769,17 @@ for additional details.</p>
   <div class="option-default">Default: <code>pkgs.fcron</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fcron" target="_blank">&lt;finix/modules/services/fcron&gt;</a></code></div>
 </div>
-<div class="option" id="option-services-fcron-settings-fcronallow">
+<div class="option" id="option-services-fcron-settings">
   <h3 class="option-name">
-    <a href="#option-services-fcron-settings-fcronallow" class="option-anchor">services.fcron.settings.fcronallow</a>
+    <a href="#option-services-fcron-settings" class="option-anchor">services.fcron.settings</a>
     <span class="copy-link" title="Copy link to this option"></span>
     <span class="copy-feedback">Link copied!</span>
   </h3>
-  <div class="option-type">Type: <code>absolute path</code></div>
-  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+  <div class="option-type">Type: <code>open submodule of attribute set of (atom (null, bool, int, float or string))</code></div>
+  <div class="option-description"><html><head></head><body><p><code>fcron</code> configuration. See <a href="https://man.archlinux.org/man/fcron.conf.5" class="manpage-reference">fcron.conf(5)</a>
+for additional details.</p>
 </body></html></div>
-  <div class="option-default">Default: <code>"/etc/fcron.allow"</code></div>
-  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fcron" target="_blank">&lt;finix/modules/services/fcron&gt;</a></code></div>
-</div>
-<div class="option" id="option-services-fcron-settings-fcrondeny">
-  <h3 class="option-name">
-    <a href="#option-services-fcron-settings-fcrondeny" class="option-anchor">services.fcron.settings.fcrondeny</a>
-    <span class="copy-link" title="Copy link to this option"></span>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-type">Type: <code>absolute path</code></div>
-  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
-</body></html></div>
-  <div class="option-default">Default: <code>"/etc/fcron.deny"</code></div>
-  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fcron" target="_blank">&lt;finix/modules/services/fcron&gt;</a></code></div>
-</div>
-<div class="option" id="option-services-fcron-settings-fcrontabs">
-  <h3 class="option-name">
-    <a href="#option-services-fcron-settings-fcrontabs" class="option-anchor">services.fcron.settings.fcrontabs</a>
-    <span class="copy-link" title="Copy link to this option"></span>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-type">Type: <code>absolute path</code></div>
-  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
-</body></html></div>
-  <div class="option-default">Default: <code>"/var/spool/fcron"</code></div>
-  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fcron" target="_blank">&lt;finix/modules/services/fcron&gt;</a></code></div>
-</div>
-<div class="option" id="option-services-fcron-settings-fifofile">
-  <h3 class="option-name">
-    <a href="#option-services-fcron-settings-fifofile" class="option-anchor">services.fcron.settings.fifofile</a>
-    <span class="copy-link" title="Copy link to this option"></span>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-type">Type: <code>absolute path</code></div>
-  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
-</body></html></div>
-  <div class="option-default">Default: <code>"/run/fcron.fifo"</code></div>
+  <div class="option-default">Default: <code>{ }</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fcron" target="_blank">&lt;finix/modules/services/fcron&gt;</a></code></div>
 </div>
 <div class="option" id="option-services-fcron-settings-sendmail">
@@ -12812,7 +12789,7 @@ for additional details.</p>
     <span class="copy-feedback">Link copied!</span>
   </h3>
   <div class="option-type">Type: <code>absolute path</code></div>
-  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+  <div class="option-description"><html><head></head><body><p>Location of mailer program called by <code>fcron</code> to send job output.</p>
 </body></html></div>
   <div class="option-default">Default: <code>"/run/wrappers/bin/sendmail"</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fcron" target="_blank">&lt;finix/modules/services/fcron&gt;</a></code></div>
@@ -12824,9 +12801,11 @@ for additional details.</p>
     <span class="copy-feedback">Link copied!</span>
   </h3>
   <div class="option-type">Type: <code>absolute path</code></div>
-  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+  <div class="option-description"><html><head></head><body><p>Location of default shell called by <code>fcron</code> when running a job. When <code>fcron</code> runs a job, <code>fcron</code> uses the
+value of <code>SHELL</code> from the <code>fcrontab</code> if any, otherwise it uses the value from <code>fcron.conf</code> if any, or in
+last resort the value from <code>/etc/passwd</code>.</p>
 </body></html></div>
-  <div class="option-default">Default: <code>"/nix/store/2j7r5np0vaz4cnqkymp1mqivmjj1x9xl-bash-interactive-5.3p3/bin/bash"</code></div>
+  <div class="option-default">Default: <code>lib.getExe pkgs.bash</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fcron" target="_blank">&lt;finix/modules/services/fcron&gt;</a></code></div>
 </div>
 <div class="option" id="option-services-fcron-systab">
@@ -12836,7 +12815,7 @@ for additional details.</p>
     <span class="copy-feedback">Link copied!</span>
   </h3>
   <div class="option-type">Type: <code>list of non-empty string</code></div>
-  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+  <div class="option-description"><html><head></head><body><p>A list of <code>cron</code> jobs to be appended to the system-wide <a href="https://man.archlinux.org/man/fcrontab.5" class="manpage-reference">fcrontab(5)</a>.</p>
 </body></html></div>
   <div class="option-default">Default: <code>[ ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fcron" target="_blank">&lt;finix/modules/services/fcron&gt;</a></code></div>
@@ -12966,30 +12945,6 @@ for additional details.</p>
 </body></html></div>
   <div class="option-default">Default: <code>0</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fwupd" target="_blank">&lt;finix/modules/services/fwupd&gt;</a></code></div>
-</div>
-<div class="option" id="option-services-gdm-enable">
-  <h3 class="option-name">
-    <a href="#option-services-gdm-enable" class="option-anchor">services.gdm.enable</a>
-    <span class="copy-link" title="Copy link to this option"></span>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-type">Type: <code>boolean</code></div>
-  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://gitlab.gnome.org/GNOME/gdm">gdm</a> as a system service.</p>
-</body></html></div>
-  <div class="option-default">Default: <code>false</code></div>
-  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/gdm" target="_blank">&lt;finix/modules/services/gdm&gt;</a></code></div>
-</div>
-<div class="option" id="option-services-gdm-settings">
-  <h3 class="option-name">
-    <a href="#option-services-gdm-settings" class="option-anchor">services.gdm.settings</a>
-    <span class="copy-link" title="Copy link to this option"></span>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-type">Type: <code>attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</code></div>
-  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
-</body></html></div>
-  <div class="option-default">Default: <code>{ }</code></div>
-  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/gdm" target="_blank">&lt;finix/modules/services/gdm&gt;</a></code></div>
 </div>
 <div class="option" id="option-services-getty-enable">
   <h3 class="option-name">
@@ -14833,6 +14788,18 @@ automatically. See <a href="https://man.archlinux.org/man/tmpfiles.d.5" class="m
 ]</code></pre></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/tmpfiles" target="_blank">&lt;finix/modules/services/tmpfiles&gt;</a></code></div>
 </div>
+<div class="option" id="option-services-tzupdate-debug">
+  <h3 class="option-name">
+    <a href="#option-services-tzupdate-debug" class="option-anchor">services.tzupdate.debug</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/tzupdate" target="_blank">&lt;finix/modules/services/tzupdate&gt;</a></code></div>
+</div>
 <div class="option" id="option-services-tzupdate-enable">
   <h3 class="option-name">
     <a href="#option-services-tzupdate-enable" class="option-anchor">services.tzupdate.enable</a>
@@ -14840,7 +14807,7 @@ automatically. See <a href="https://man.archlinux.org/man/tmpfiles.d.5" class="m
     <span class="copy-feedback">Link copied!</span>
   </h3>
   <div class="option-type">Type: <code>boolean</code></div>
-  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://github.com/cdown/tzupdate">tzupdate</a> as a system startup task.</p>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://github.com/cdown/tzupdate">tzupdate</a> as a system task.</p>
 </body></html></div>
   <div class="option-default">Default: <code>false</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/tzupdate" target="_blank">&lt;finix/modules/services/tzupdate&gt;</a></code></div>
@@ -15414,7 +15381,13 @@ e.g. free ones (mesa-based) with proprietary ones.</p>
     <span class="copy-feedback">Link copied!</span>
   </h3>
   <div class="option-type">Type: <code>absolute path</code></div>
-  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+  <div class="option-description"><html><head></head><body><p>The directory used to store all <code>zerotier</code> data.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this directory will automatically be created on
+system activation, otherwise you are responsible for ensuring the directory exists
+with appropriate ownership and permissions before the <code>zerotier</code> service starts.</p>
+</div>
 </body></html></div>
   <div class="option-default">Default: <code>"/var/lib/zerotier-one"</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zerotierone" target="_blank">&lt;finix/modules/services/zerotierone&gt;</a></code></div>
