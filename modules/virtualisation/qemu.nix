@@ -128,7 +128,7 @@ let
       "-initrd"
       "${config.boot.initrd.package}/initrd"
       "-append"
-      (toString config.boot.kernelParams)
+      (config.boot.kernelParams ++ [ "init=${config.system.topLevel}/init" ] |> toString)
     ];
   };
 in
