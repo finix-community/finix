@@ -18,8 +18,4 @@ rec {
       ''"${lib.replaceString ''"'' ''\"'' string}"''
     else
       string;
-
-  generators = prev.generators // {
-    toPreserves = import ./generators/preserves.nix { inherit lib; };
-  };
 }

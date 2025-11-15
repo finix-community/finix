@@ -251,7 +251,7 @@ in
         # with ../../synit/networking.tcl instead.
         "--noconfigure"
         "--script"
-        "${pkgs.synit-network-utils}/lib/dhcpcd-hook.tcl"
+        "${pkgs.alt.sam.synit-network-utils}/lib/dhcpcd-hook.tcl"
       ];
       path = [ cfg.package ];
       provides = [

@@ -1,8 +1,11 @@
+let
+  sources = import ../../lon.nix;
+in
 {
-  pkgs ? import <nixpkgs> {
-    overlays = map (_: import _) [
-      ../../overlays/default.nix
-      ../../overlays/modular-services.nix
+  pkgs ? import sources.nixpkgs {
+    overlays = [
+      (import ../../overlays/default.nix)
+      (import "${sources.sampkgs}/overlay.nix")
     ];
   },
 }:

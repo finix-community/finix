@@ -50,7 +50,7 @@ in
       defaultText = ''config.boot.serviceManager == "synit"'';
       readOnly = true;
       description = ''
-        Whether to enable [synit](${pkgs.synit-pid1.meta.homepage}) as the system service manager and pid `1`.
+        Whether to enable [synit](${pkgs.alt.sam.synit-pid1.meta.homepage}) as the system service manager and pid `1`.
       '';
     };
 
@@ -72,9 +72,9 @@ in
       };
     };
 
-    syndicate-server.package = mkPackageOption pkgs "syndicate-server" { };
+    syndicate-server.package = mkPackageOption pkgs [ "alt" "sam" "syndicate-server" ] { };
 
-    pid1.package = mkPackageOption pkgs "synit-pid1" { };
+    pid1.package = mkPackageOption pkgs [ "alt" "sam" "synit-pid1" ] { };
 
   };
 
@@ -178,7 +178,7 @@ in
     };
 
     environment.systemPackages = synitPackages ++ [
-      pkgs.synit-service
+      pkgs.alt.sam.synit-service
     ];
 
     # Only tested with mdevd.

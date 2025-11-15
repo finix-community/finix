@@ -30,7 +30,7 @@ let
 
   strOrPath = with types; either str path;
 
-  preserves = pkgs.formats.preserves {
+  preserves = pkgs.alt.sam.formats.preserves {
     ignoreNulls = true;
     rawStrings = true;
   };
@@ -480,7 +480,7 @@ let
         env =
           let
             env' = optionalAttrs (attrs.env != null) attrs.env;
-            path' = attrs.path ++ optional hasReadyOnNotify pkgs.syndicate_utils;
+            path' = attrs.path ++ optional hasReadyOnNotify pkgs.alt.sam.syndicate-utils;
           in
           mapAttrs (_: v: if v == null then false else builtins.toJSON v) (
             env'
