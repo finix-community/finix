@@ -41,65 +41,99 @@ in
       '';
     };
 
+    extraArgs = lib.mkOption {
+      type = with lib.types; listOf str;
+      default = [ ];
+      example = [
+        "--maxserial"
+        "5"
+        "--firstsleep"
+        "60"
+      ];
+      description = ''
+        Additional arguments to pass to `fcron`. See {manpage}`fcron(8)`
+        for additional details.
+      '';
+    };
+
     systab = lib.mkOption {
       type = with lib.types; listOf nonEmptyStr;
       default = [ ];
+      description = ''
+        A list of `cron` jobs to be appended to the system-wide {manpage}`fcrontab(5)`.
+      '';
     };
 
     allow = lib.mkOption {
       type = with lib.types; listOf str;
       default = [ "all" ];
+      description = ''
+        Users allowed to use `fcrontab` and `fcrondyn`.
+
+        ::: {.note}
+        A special name `"all"` acts for everyone.
+        :::
+      '';
     };
 
     deny = lib.mkOption {
       type = with lib.types; listOf str;
       default = [ ];
+      description = ''
+        Users who are not allowed to use `fcrontab` and `fcrondyn`.
+
+        ::: {.note}
+        A special name `"all"` acts for everyone.
+        :::
+      '';
     };
 
-    # TODO: in serious need of mkField stuff
-    settings = {
-      fcrontabs = lib.mkOption {
-        type = lib.types.path;
-        default = "/var/spool/fcron";
-      };
+    settings = lib.mkOption {
+      type = lib.types.submodule {
+        freeformType = format.type;
+        options = {
+          shell = lib.mkOption {
+            type = lib.types.path;
+            default = lib.getExe pkgs.bash;
+            defaultText = lib.literalExpression "lib.getExe pkgs.bash";
+            description = ''
+              Location of default shell called by `fcron` when running a job. When `fcron` runs a job, `fcron` uses the
+              value of `SHELL` from the `fcrontab` if any, otherwise it uses the value from `fcron.conf` if any, or in
+              last resort the value from `/etc/passwd`.
+            '';
+          };
 
-      fifofile = lib.mkOption {
-        type = lib.types.path;
-        default = "/run/fcron.fifo";
+          sendmail = lib.mkOption {
+            type = lib.types.path;
+            default = "${config.security.wrapperDir}/sendmail";
+            description = ''
+              Location of mailer program called by `fcron` to send job output.
+            '';
+          };
+        };
       };
-
-      fcronallow = lib.mkOption {
-        type = lib.types.path;
-        default = "/etc/fcron.allow";
-      };
-
-      fcrondeny = lib.mkOption {
-        type = lib.types.path;
-        default = "/etc/fcron.deny";
-      };
-
-      shell = lib.mkOption {
-        type = lib.types.path;
-        default = "${pkgs.bash}/bin/bash";
-      };
-
-      sendmail = lib.mkOption {
-        type = lib.types.path;
-        default = "${config.security.wrapperDir}/sendmail";
-      };
-    };
-
-    configFile = lib.mkOption {
-      type = lib.types.package;
-      default = format.generate "fcron.conf" cfg.settings;
+      default = { };
+      description = ''
+        `fcron` configuration. See {manpage}`fcron.conf(5)`
+        for additional details.
+      '';
     };
   };
 
   config = lib.mkIf cfg.enable {
+    services.fcron.extraArgs = lib.optionals cfg.debug [ "--debug" ];
+
+    services.fcron.settings = {
+      fcrontabs = "/var/spool/fcron";
+      fifofile = "/run/fcron.fifo";
+      fcronallow = "/etc/fcron.allow";
+      fcrondeny = "/etc/fcron.deny";
+    };
+
     environment.etc."fcron.conf" = {
       group = "fcron";
       mode = "0644";
-      source = cfg.configFile;
+      source = format.generate "fcron.conf" cfg.settings;
     };
 
     environment.etc."fcron.allow" = {
@@ -135,9 +169,11 @@ in
       cfg.package
     ];
 
-    services.tmpfiles.fcron.rules = [
-      "d /var/spool/fcron 0770 fcron fcron"
-    ];
+    services.tmpfiles = lib.optionalAttrs (cfg.settings.fcrontabs == "/var/spool/fcron") {
+      fcron.rules = [
+        "d ${cfg.settings.fcrontabs} 0770 fcron fcron"
+      ];
+    };
 
     security.wrappers = {
       fcrontab = {
@@ -180,17 +216,17 @@ in
 
     finit.services.fcron = {
       description = "fcron daemon";
+      command = "${cfg.package}/bin/fcron --foreground " + lib.escapeShellArgs cfg.extraArgs;
       conditions = [
         "service/syslogd/ready"
         "task/fcrontab/success"
       ];
-      command = "${cfg.package}/bin/fcron --foreground" + lib.optionalString cfg.debug " --debug";
     };
 
     users.users = {
       fcron = {
         uid = config.ids.uids.fcron;
-        home = "/var/spool/fcron";
+        home = cfg.settings.fcrontabs;
         group = "fcron";
       };
     };
