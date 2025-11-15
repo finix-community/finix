@@ -13,7 +13,7 @@ in
       type = lib.types.bool;
       default = false;
       description = ''
-        Whether to enable [tzupdate](${pkgs.tzupdate.meta.homepage}) as a system startup task.
+        Whether to enable [tzupdate](${pkgs.tzupdate.meta.homepage}) as a system task.
       '';
     };
 
@@ -23,6 +23,14 @@ in
       defaultText = lib.literalExpression "pkgs.tzupdate";
       description = ''
         The package to use for `tzupdate`.
+      '';
+    };
+
+    debug = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to enable debug logging.
       '';
     };
   };
@@ -37,6 +45,13 @@ in
         "service/syslogd/ready"
         "net/route/default"
       ];
+
+      # TODO: now we're hijacking `env` and no one else can use it...
+      env = lib.mkIf cfg.debug (
+        pkgs.writeText "tzupdate.env" ''
+          RUST_LOG=debug
+        ''
+      );
     };
   };
 }
