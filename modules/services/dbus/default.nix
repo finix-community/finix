@@ -127,11 +127,9 @@ in
       cgroup.name = "system";
 
       pre = pkgs.writeShellScript "dbus-pre.sh" "${cfg.package}/bin/dbus-uuidgen --ensure";
-      env = lib.mkIf cfg.debug (
-        pkgs.writeText "dbus.env" ''
-          DBUS_VERBOSE=1
-        ''
-      );
+      environment = {
+        DBUS_VERBOSE = lib.mkIf cfg.debug 1;
+      };
     };
 
     # TODO: add finit.services.reloadTriggers option

@@ -164,7 +164,7 @@ in
       log = true;
 
       # TODO: now we're hijacking `env` and no one else can use it...
-      env = format.generate "radarr.env" cfg.settings;
+      env = cfg.settings;
     };
 
     users.users = lib.optionalAttrs (cfg.user == "radarr") {

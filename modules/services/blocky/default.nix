@@ -102,9 +102,9 @@ in
 
       # https://github.com/0xERR0R/blocky/issues/1910
       # TODO: now we're hijacking `env` and no one else can use it...
-      env = pkgs.writeText "blocky.env" ''
-        NO_COLOR=1
-      '';
+      environment = {
+        NO_COLOR = 1;
+      };
     };
   };
 }

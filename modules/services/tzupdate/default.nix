@@ -47,11 +47,9 @@ in
       ];
 
       # TODO: now we're hijacking `env` and no one else can use it...
-      env = lib.mkIf cfg.debug (
-        pkgs.writeText "tzupdate.env" ''
-          RUST_LOG=debug
-        ''
-      );
+      environment = {
+        RUST_LOG = lib.mkIf cfg.debug "debug";
+      };
     };
   };
 }

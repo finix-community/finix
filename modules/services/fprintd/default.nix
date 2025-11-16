@@ -55,7 +55,11 @@ in
       ];
       nohup = true;
       log = true;
-      env = lib.mkIf cfg.debug (pkgs.writeText "fprintd.env" "G_MESSAGES_DEBUG=all");
+
+      # TODO: now we're hijacking `env` and no one else can use it...
+      environment = {
+        G_MESSAGES_DEBUG = lib.mkIf cfg.debug "all";
+      };
     };
   };
 }

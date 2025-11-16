@@ -114,7 +114,7 @@ in
       log = true;
 
       # TODO: now we're hijacking `env` and no one else can use it...
-      env = format.generate "uptime-kuma.env" cfg.settings;
+      env = cfg.settings;
     };
 
     services.tmpfiles.uptime-kuma = lib.mkIf (cfg.settings.DATA_DIR == "/var/lib/uptime-kuma") {

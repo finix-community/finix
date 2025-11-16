@@ -63,11 +63,9 @@ in
       };
 
       # TODO: now we're hijacking `env` and no one else can use it...
-      env = lib.mkIf (lib.elem "-n" cfg.extraArgs) (
-        pkgs.writeText "earlyoom.env" ''
-          PATH="${lib.makeBinPath [ pkgs.dbus ]}:$PATH"
-        ''
-      );
+      environment = lib.optionalAttrs (lib.elem "-n" cfg.extraArgs) {
+        PATH = "${lib.makeBinPath [ pkgs.dbus ]}:$PATH";
+      };
     };
   };
 }

@@ -6,6 +6,7 @@
 }:
 let
   cfg = config.finit;
+  format = pkgs.formats.keyValue { };
 
   pathOrStr = with lib.types; coercedTo path (x: "${x}") str;
   program =
@@ -64,7 +65,7 @@ let
         };
 
         settings = lib.mkOption {
-          type = (pkgs.formats.keyValue { }).type;
+          type = format.type;
           default = { };
           example = {
             "cpu.weight" = 100;
@@ -140,7 +141,7 @@ let
           };
 
           settings = lib.mkOption {
-            type = (pkgs.formats.keyValue { }).type;
+            type = format.type;
             default = { };
             description = ''
               The cgroup settings to apply to this process.
@@ -228,6 +229,17 @@ let
           type = with lib.types; nullOr (either str path);
           default = null;
           description = "either a path or a path prefixed with a '-' to indicate a missing file is fine.";
+        };
+
+        environment = lib.mkOption {
+          type = format.type;
+          default = { };
+          example = {
+            TZ = "CET";
+          };
+          description = ''
+            Environment variables passed to this service.
+          '';
         };
 
         log = lib.mkOption {
@@ -387,6 +399,9 @@ let
               null;
 
           nohup = lib.mkDefault (config.notify == "s6");
+          env = lib.mkIf (config.environment != { }) (
+            format.generate "${config.name}.env" config.environment
+          );
         };
     };
 

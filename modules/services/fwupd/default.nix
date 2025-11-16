@@ -94,9 +94,9 @@ in
       nohup = true;
 
       # TODO: now we're hijacking `env` and no one else can use it...
-      env = pkgs.writeText "fwupd.env" ''
-        NO_COLOR=1
-      '';
+      environment = {
+        NO_COLOR = 1;
+      };
     };
 
     services.tmpfiles.fwupd.rules = [

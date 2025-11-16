@@ -192,8 +192,8 @@ in
       log = true;
 
       # TODO: now we're hijacking `env` and no one else can use it...
-      env = pkgs.writeText "mdevd.env" ''
-        PATH="${
+      environment = {
+        PATH = "${
           lib.makeBinPath [
             pkgs.s6-portable-utils
             pkgs.coreutils
@@ -201,8 +201,8 @@ in
             pkgs.kmod
             pkgs.util-linux
           ]
-        }:$PATH"
-      '';
+        }:$PATH";
+      };
     };
 
     finit.run.coldplug = {

@@ -73,11 +73,9 @@ in
       log = true;
 
       # TODO: now we're hijacking `env` and no one else can use it...
-      env = lib.mkIf (config.programs.openresolv.enable or false) (
-        pkgs.writeText "iwd.env" ''
-          PATH="${lib.makeBinPath [ config.programs.openresolv.package ]}:$PATH"
-        ''
-      );
+      environment = lib.optionalAttrs (config.programs.openresolv.enable or false) {
+        PATH = "${lib.makeBinPath [ config.programs.openresolv.package ]}:$PATH";
+      };
     };
 
     # TODO: add finit.services.restartTriggers option

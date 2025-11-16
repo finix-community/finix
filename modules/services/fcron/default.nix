@@ -209,9 +209,9 @@ in
       command = "${cfg.package}/bin/fcrontab -u systab - < ${systab}";
 
       # TODO: now we're hijacking `env` and no one else can use it...
-      env = pkgs.writeText "fcron.env" ''
-        PATH="${lib.makeBinPath [ cfg.package ]}:$PATH"
-      '';
+      environment = {
+        PATH = "${lib.makeBinPath [ cfg.package ]}:$PATH";
+      };
     };
 
     finit.services.fcron = {
