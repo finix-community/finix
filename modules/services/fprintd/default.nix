@@ -53,6 +53,7 @@ in
         "service/dbus/ready"
         "service/polkit/ready"
       ];
+      nohup = true;
       log = true;
       env = lib.mkIf cfg.debug (pkgs.writeText "fprintd.env" "G_MESSAGES_DEBUG=all");
     };
