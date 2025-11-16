@@ -145,7 +145,7 @@ in
         "service/syslogd/ready"
         "task/dropbear-keygen/success"
       ];
-      command = "${pkgs.dropbear}/bin/dropbear -F " + lib.escapeShellArgs cfg.extraArgs;
+      command = "${cfg.package}/bin/dropbear -F " + lib.escapeShellArgs cfg.extraArgs;
       cgroup.name = "user";
       log = true;
       nohup = true;
