@@ -8,19 +8,48 @@ let
   cfg = config.services.atd;
 in
 {
-  options.services.atd.enable = lib.mkOption {
-    type = lib.types.bool;
-    default = false;
-    description = ''
-      Whether to enable [atd](${pkgs.at.meta.homepage}) as a system service.
-    '';
+  options.services.atd = {
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to enable [atd](${pkgs.at.meta.homepage}) as a system service.
+      '';
+    };
+
+    extraArgs = lib.mkOption {
+      type = with lib.types; listOf str;
+      default = [ ];
+      description = ''
+        Additional arguments to pass to `atd`. See {manpage}`atd(8)`
+        for additional details.
+      '';
+    };
+
+    allow = lib.mkOption {
+      type = with lib.types; nullOr (listOf str);
+      default = null;
+      description = ''
+        Users allowed to use `at`. See {manpage}`at.allow(5)`
+        for additional details.
+      '';
+    };
+
+    deny = lib.mkOption {
+      type = with lib.types; nullOr (listOf str);
+      default = [ ];
+      description = ''
+        Users who are not allowed to use `at`. See {manpage}`at.deny(5)`
+        for additional details.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
     finit.services.atd = {
       description = "deferred execution scheduler";
       conditions = "service/syslogd/ready";
-      command = "${pkgs.at}/bin/atd -f";
+      command = "${pkgs.at}/bin/atd -f " + lib.escapeShellArgs cfg.extraArgs;
       notify = "pid";
     };
 

@@ -1,6 +1,9 @@
 {
   "anacron(8)": "https://man.archlinux.org/man/anacron.8",
   "anacrontab(5)": "https://man.archlinux.org/man/anacrontab.5",
+  "atd(8)": "https://man.archlinux.org/man/atd.8",
+  "at.allow(5)": "https://man.archlinux.org/man/at.allow.5",
+  "at.deny(5)": "https://man.archlinux.org/man/at.deny.5",
   "cap_from_text(3)": "https://man.archlinux.org/man/cap_from_text.3",
   "capabilities(7)": "https://man.archlinux.org/man/capabilities.7",
   "cron(8)": "https://man.archlinux.org/man/cron.8",
