@@ -9,6 +9,21 @@ let
   format = pkgs.formats.toml { };
 
   configFile = format.generate "regreet.toml" cfg.settings;
+
+  # libudev-zero is a hard requirement when running mdevd
+  libinput = pkgs.libinput.override (
+    lib.optionalAttrs config.services.mdevd.enable {
+      udev = pkgs.libudev-zero;
+      wacomSupport = false;
+    }
+  );
+
+  wlroots_0_19 = pkgs.wlroots_0_19.override {
+    inherit libinput;
+
+    # xwayland appears to cause issues with mdevd - and not required in this context, so no harm in removing
+    enableXWayland = !config.services.mdevd.enable;
+  };
 in
 {
   options.programs.regreet = {
@@ -54,7 +69,9 @@ in
     compositor = {
       package = lib.mkOption {
         type = lib.types.package;
-        default = pkgs.cage;
+        default = pkgs.cage.override {
+          inherit wlroots_0_19;
+        };
         defaultText = lib.literalExpression "pkgs.cage";
         description = ''
           The package to use for `cage`.

@@ -16,6 +16,14 @@ let
     Name=labwc
     Type=Application
   '';
+
+  # libudev-zero is a hard requirement when running mdevd
+  libinput = pkgs.libinput.override (
+    lib.optionalAttrs config.services.mdevd.enable {
+      udev = pkgs.libudev-zero;
+      wacomSupport = false;
+    }
+  );
 in
 {
   options.programs.labwc = {
@@ -29,7 +37,11 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.labwc;
+      default = pkgs.labwc.override {
+        inherit libinput;
+
+        wlroots_0_19 = pkgs.wlroots_0_19.override { inherit libinput; };
+      };
       defaultText = lib.literalExpression "pkgs.labwc";
       description = ''
         The package to use for `labwc`.

@@ -15,6 +15,19 @@ let
     Name=Niri
     Type=Application
   '';
+
+  overrideAttrs = lib.optionalAttrs config.services.mdevd.enable {
+    eudev = pkgs.libudev-zero;
+
+    # since we're recompiling go ahead and disable systemd
+    withSystemd = false;
+
+    # libudev-zero is a hard requirement when running mdevd
+    libinput = pkgs.libinput.override {
+      udev = pkgs.libudev-zero;
+      wacomSupport = false;
+    };
+  };
 in
 {
   options.programs.niri = {
@@ -28,7 +41,7 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.niri;
+      default = pkgs.niri.override overrideAttrs;
       defaultText = lib.literalExpression "pkgs.niri";
       description = ''
         The package to use for `niri`.
