@@ -6,9 +6,8 @@
 }:
 let
   cfg = config.services.nzbget;
-  stateDir = "/var/lib/nzbget";
   logDir = "/var/log/nzbget";
-  configFile = "${stateDir}/nzbget.conf";
+  configFile = "${cfg.stateDir}/nzbget.conf";
 in
 {
   options.services.nzbget = {
@@ -57,6 +56,20 @@ in
       '';
     };
 
+    stateDir = lib.mkOption {
+      type = lib.types.path;
+      default = "/var/lib/nzbget";
+      description = ''
+        The directory used to store all `nzbget` data.
+
+        ::: {.note}
+        If left as the default value this directory will automatically be created on
+        system activation, otherwise you are responsible for ensuring the directory exists
+        with appropriate ownership and permissions before the `nzbget` service starts.
+        :::
+      '';
+    };
+
     settings = lib.mkOption {
       type =
         with lib.types;
@@ -78,7 +91,7 @@ in
 
   config = lib.mkIf cfg.enable {
     services.nzbget.settings = {
-      MainDir = stateDir;
+      MainDir = cfg.stateDir;
 
       # allows nzbget to run as a "simple" service
       OutputMode = "loggable";
@@ -138,13 +151,15 @@ in
       };
 
     services.tmpfiles.nzbget.rules = [
-      "d ${stateDir} 0750 ${cfg.user} ${cfg.group}"
       "d ${logDir} 0750 ${cfg.user} ${cfg.group}"
+    ]
+    ++ lib.optionals (cfg.stateDir == "/var/lib/nzbget") [
+      "d ${cfg.stateDir} 0750 ${cfg.user} ${cfg.group}"
     ];
 
     users.users = lib.mkIf (cfg.user == "nzbget") {
       nzbget = {
-        home = stateDir;
+        home = cfg.stateDir;
         group = cfg.group;
         uid = config.ids.uids.nzbget;
       };
