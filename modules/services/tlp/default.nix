@@ -101,6 +101,13 @@ in
       };
     };
 
+    # TODO: add finit.services.restartTriggers option
+    environment.etc."finit.d/tlp@reload.conf".text = lib.mkAfter ''
+
+      # standard nixos trick to force a restart when something has changed
+      # ${config.environment.etc."tlp.conf".source}
+    '';
+
     synit.daemons = {
       tlp = {
         argv = [
