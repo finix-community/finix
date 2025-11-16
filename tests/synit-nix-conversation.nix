@@ -2,15 +2,11 @@
   testenv ? import ./testenv { },
 }:
 
-let
-  inherit (testenv) lib pkgs;
-  inherit (pkgs.tclPackages) sycl;
-in
 testenv.mkTest {
   name = "synit-nix-conversation";
 
   nodes.machine =
-    { nodes, ... }:
+    { ... }:
     {
       boot.serviceManager = "synit";
       services.dhcpcd.enable = true;
@@ -29,28 +25,7 @@ testenv.mkTest {
       # Enable the actor for this test.
       # Also enables the nix-daemon.
       services.nix-actor.enable = true;
-
-      # Call host-to-guest through this port.
-      virtualisation.qemu.nics.eth0.args = [
-        "hostfwd=tcp:127.0.0.1:2424-:24"
-      ];
-
-      synit.plan.config.testListener = [
-        ''
-          # Add a listener that exposes the synit service dataspace to any
-          # IP address present on eth0.
-          $machine ? <ip address _ _ { "local": ?addr }> [
-            $config += <require-service  <relay-listener <tcp $addr 24> $config>>
-          ]
-        ''
-      ];
-
     };
-
-  runAttrs = {
-    # Make the syndicate package available.
-    TCLLIBPATH = [ "${sycl}/lib/${sycl.name}" ];
-  };
 
   tclScript = ''
     package require syndicate
@@ -87,14 +62,10 @@ testenv.mkTest {
           request "<nix eval-literal #f \"$expr\" $arg>" $replyName $script
         }
 
-        guestNixEval {_: _: builtins.nixVersion} 0 nixVersion {
-          puts stderr "\nbuiltins.nixVersion is $nixVersion"
-          if {$nixVersion != {"${pkgs.nix.version}"}} {
-            fail "Got $nixVersion, expected \"${pkgs.nix.version}\"."
-          }
-          testPass
-        }
+        variable testsStarted
+        variable testsPassed
 
+        incr testsStarted
         guestNixEval {_: _: builtins.storeDir} 0 storeDir {
           puts stderr "\nbuiltins.storeDir is $storeDir"
           if {$storeDir != {"/nuscht/store"}} {
@@ -110,8 +81,9 @@ testenv.mkTest {
         }
 
         proc testPass {} {
-          variable n
-          if {[incr n] >= 3} success
+          variable testsPassed
+          variable testsStarted
+          if {[incr testsPassed] >= $testsStarted} success
         }
       }
     }

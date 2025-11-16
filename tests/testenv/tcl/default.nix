@@ -2,14 +2,8 @@
   lib,
   pkgs,
 }:
-
 let
-  inherit (lib)
-    optionalString
-    ;
-
   finixModules = import ../../../modules;
-  qemu-common = import (pkgs.path + /nixos/lib/qemu-common.nix) { inherit lib pkgs; };
 
   mkRootImage = pkgs.callPackage ../make-ext2-fs.nix {
     qemu = pkgs.qemu_test;
@@ -71,26 +65,20 @@ let
     };
 
   # Emit a Tcl script that declares a test node.
-  createNodeScript =
-    name: config:
-    let
-      # monPtyPath = "${name}.mon.pty";
-      monitorPath = "${name}.monitor";
-    in
-    ''
-      CreateNode ${name} {
-        variable spawnCmd
-        lappend spawnCmd ${config.virtualisation.qemu.argv |> map (s: "{${s}}") |> toString}
-        lappend spawnCmd -name {${name}}
-        ${optionalString config.testing.enableRootDisk ''
+  createNodeScript = name: config: ''
+    CreateNode ${name} {
+      variable spawnCmd
+      lappend spawnCmd ${toString (map (s: "{${s}}") config.virtualisation.qemu.argv)}
+      lappend spawnCmd -name {${name}}
+      ${lib.optionalString config.testing.enableRootDisk ''
 
-          exec -ignorestderr ${config.virtualisation.qemu.package}/bin/qemu-img create \
-            -f qcow2 -b {${mkRootImage' name config}/image.qcow2} \
-            -F qcow2 {${name}.root.qcow2}
-          lappend spawnCmd -drive {file=${name}.root.qcow2}
-        ''}
-      }
-    '';
+        exec -ignorestderr ${config.virtualisation.qemu.package}/bin/qemu-img create \
+          -f qcow2 -b {${mkRootImage' name config}/image.qcow2} \
+          -F qcow2 {${name}.root.qcow2}
+        lappend spawnCmd -drive {file=${name}.root.qcow2}
+      ''}
+    }
+  '';
 
 in
 {
@@ -134,11 +122,18 @@ in
           fail "test script fell thru"
         '';
       };
-      run = pkgs.runCommand "test-${name}.log" runAttrs script;
+      runAttrs' = runAttrs // {
+        TCLLIBPATH =
+          runAttrs.TCLLIBPATH or [ ]
+          ++ lib.optional (lib.any ({ config, ... }: config.synit.enable) (
+            lib.attrValues nodes'
+          )) "${pkgs.alt.sam.tclPackages.sycl}/lib/${pkgs.alt.sam.tclPackages.sycl.name}";
+
+        passthru = runAttrs.passthru or { } // {
+          nodes = nodes';
+          inherit script;
+        };
+      };
     in
-    run
-    // {
-      nodes = nodes';
-      inherit script;
-    };
+    pkgs.runCommand "test-${name}.log" runAttrs' script;
 }
