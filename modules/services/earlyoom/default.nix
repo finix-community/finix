@@ -36,17 +36,11 @@ in
 
     extraArgs = lib.mkOption {
       type = with lib.types; listOf str;
-      default = [
+      default = [ ];
+      example = [
         "-r"
         "3600"
       ];
-      defaultText = lib.literalExpression ''
-        [
-          "-p"
-          "-r"
-          "3600"
-        ]
-      '';
       description = ''
         Additional arguments to pass to `earlyoom`. See {manpage}`earlyoom(1)`
         for additional details.
