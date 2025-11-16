@@ -16,12 +16,26 @@ in
         Whether to enable [illum](${pkgs.illum.meta.homepage}) as a system service.
       '';
     };
+
+    package = lib.mkOption {
+      type = lib.types.package;
+      default = pkgs.illum.override (
+        lib.optionalAttrs config.services.mdevd.enable {
+          udev = pkgs.libudev-zero;
+        }
+      );
+      defaultText = lib.literalExpression "pkgs.illum";
+      description = ''
+        The package to use for `illum`.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
     finit.services.illum = {
       description = "backlight adjustment service";
-      command = "${pkgs.illum}/bin/illum-d";
+      command = lib.getExe cfg.package;
+      conditions = [ "service/syslogd/ready" ];
       log = true;
     };
   };
