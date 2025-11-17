@@ -225,6 +225,14 @@ let
           default = null;
         };
 
+        path = lib.mkOption {
+          type = with lib.types; listOf (either package str);
+          default = [ ];
+          description = ''
+            Packages added to the `PATH` environment variable of this service.
+          '';
+        };
+
         env = lib.mkOption {
           type = with lib.types; nullOr (either str path);
           default = null;
@@ -399,6 +407,7 @@ let
               null;
 
           nohup = lib.mkDefault (config.notify == "s6");
+          environment.PATH = lib.mkIf (config.path != [ ]) (lib.makeBinPath config.path);
           env = lib.mkIf (config.environment != { }) (
             format.generate "${config.name}.env" config.environment
           );

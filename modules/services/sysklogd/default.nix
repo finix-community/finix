@@ -27,6 +27,31 @@ in
     };
   };
 
+  # finit has explicit sysklogd support, requires `logger` to be available in `PATH`
+  options.finit = lib.optionalAttrs cfg.enable {
+    services = lib.mkOption {
+      type = lib.types.attrsOf (
+        lib.types.submodule (
+          { config, ... }:
+          {
+            config.path = lib.optionals config.log [ cfg.package ];
+          }
+        )
+      );
+    };
+
+    tasks = lib.mkOption {
+      type = lib.types.attrsOf (
+        lib.types.submodule (
+          { config, ... }:
+          {
+            config.path = lib.optionals config.log [ cfg.package ];
+          }
+        )
+      );
+    };
+  };
+
   config = lib.mkIf cfg.enable {
     # finit has explicit sysklogd support, requires `logger` to be available in `PATH`
     finit.path = [

@@ -63,9 +63,7 @@ in
       };
 
       # TODO: now we're hijacking `env` and no one else can use it...
-      environment = lib.optionalAttrs (lib.elem "-n" cfg.extraArgs) {
-        PATH = "${lib.makeBinPath [ pkgs.dbus ]}:$PATH";
-      };
+      path = lib.optionals (lib.elem "-n" cfg.extraArgs) [ pkgs.dbus ];
     };
   };
 }

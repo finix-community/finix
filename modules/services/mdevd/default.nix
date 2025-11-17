@@ -192,17 +192,13 @@ in
       log = true;
 
       # TODO: now we're hijacking `env` and no one else can use it...
-      environment = {
-        PATH = "${
-          lib.makeBinPath [
-            pkgs.s6-portable-utils
-            pkgs.coreutils
-            pkgs.execline
-            pkgs.kmod
-            pkgs.util-linux
-          ]
-        }:$PATH";
-      };
+      path = with pkgs; [
+        s6-portable-utils
+        coreutils
+        execline
+        kmod
+        util-linux
+      ];
     };
 
     finit.run.coldplug = {

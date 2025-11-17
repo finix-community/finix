@@ -96,8 +96,6 @@ in
   config = lib.mkIf cfg.enable {
     services.uptime-kuma.settings = {
       NODE_ENV = "production";
-
-      PATH = "${lib.makeBinPath [ pkgs.unixtools.ping ]}:$PATH";
     };
 
     finit.services.uptime-kuma = {
@@ -115,6 +113,7 @@ in
 
       # TODO: now we're hijacking `env` and no one else can use it...
       env = cfg.settings;
+      path = [ pkgs.unixtools.ping ];
     };
 
     services.tmpfiles.uptime-kuma = lib.mkIf (cfg.settings.DATA_DIR == "/var/lib/uptime-kuma") {

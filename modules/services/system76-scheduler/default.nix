@@ -55,15 +55,13 @@ in
       log = true;
 
       # TODO: now we're hijacking `env` and no one else can use it...
+      path = with pkgs; [
+        kmod
+        gnutar
+        xz
+      ];
       environment = {
         NO_COLOR = 1;
-        PATH = "${
-          lib.makeBinPath [
-            pkgs.kmod
-            pkgs.gnutar
-            pkgs.xz
-          ]
-        }:$PATH";
         RUST_LOG = lib.mkIf cfg.debug "system76_scheduler=debug";
       };
     };

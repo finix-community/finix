@@ -260,6 +260,7 @@ in
       runlevels = "S12345";
       log = true;
       command = wrappersScript;
+      path = [ pkgs.coreutils ];
     };
 
     synit.milestones.wrappers = { };

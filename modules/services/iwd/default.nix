@@ -72,10 +72,9 @@ in
       nohup = true;
       log = true;
 
-      # TODO: now we're hijacking `env` and no one else can use it...
-      environment = lib.optionalAttrs (config.programs.openresolv.enable or false) {
-        PATH = "${lib.makeBinPath [ config.programs.openresolv.package ]}:$PATH";
-      };
+      path = lib.optionals (config.programs.openresolv.enable or false) [
+        config.programs.openresolv.package
+      ];
     };
 
     # TODO: add finit.services.restartTriggers option
