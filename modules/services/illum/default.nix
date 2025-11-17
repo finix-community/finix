@@ -37,6 +37,7 @@ in
       command = lib.getExe cfg.package;
       conditions = [ "service/syslogd/ready" ];
       log = true;
+      nohup = true;
     };
   };
 }
