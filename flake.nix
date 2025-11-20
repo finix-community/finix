@@ -15,9 +15,6 @@
 
         # can be used to relieve packages from requiring udev at runtime
         without-udev = import ./overlays/without-udev.nix;
-
-        # apply modular services to packages for convenience
-        modular-services = import ./overlays/modular-services.nix;
       };
 
       lib.finixSystem =

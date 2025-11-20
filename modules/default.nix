@@ -44,7 +44,6 @@ in
       ./services/udev
       ./synit
       ./system/activation
-      ./system/service
       ./time
       ./users
       ./xdg
