@@ -32,8 +32,9 @@ An example of defining a `finit` service in `nix`:
 
 `finix` is currently running on my ~spare~ primary laptop:
 
-- without the excellent `systemd` init system
-- with `seatd` instead of `elogind`
+- with `finit` instead of `systemd` as the init system
+- with `seatd` instead of `elogind` as the seat manager
+- with `mdevd` instead of `eudev` as the device manager
 - using [niri](https://github.com/YaLTeR/niri) as my `wayland` compositor
 
 ![niri-desktop-screenshot](https://github.com/user-attachments/assets/3567af60-b090-43b8-87a2-984bcea85a3c)
