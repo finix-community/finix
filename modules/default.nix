@@ -1,6 +1,11 @@
 let
   programModules = builtins.mapAttrs (dir: _: ./programs/${dir}) (
-    builtins.removeAttrs (builtins.readDir ./programs) [ "README.md" ]
+    builtins.removeAttrs (builtins.readDir ./programs) [
+      "README.md"
+
+      # required modules - included by default
+      "shadow"
+    ]
   );
 
   serviceModules = builtins.mapAttrs (dir: _: ./services/${dir}) (
@@ -35,6 +40,7 @@ in
       ./misc
       ./networking
       ./nixpkgs
+      ./programs/shadow
       ./security
       ./services/dbus
       ./services/elogind
