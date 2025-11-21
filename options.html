@@ -71,6 +71,14 @@
             <ul class="toc-list">
   
   
+  <li>
+    <a href='#option-specialisation' title="specialisation">
+      specialisation
+      
+      
+    </a>
+  </li>
+  
 
   
   
@@ -16049,6 +16057,25 @@ reversals due to daylight savings, timezone or other date/time changes.</p>
 </body></html></div>
   <div class="option-default">Default: <code>4</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zfs" target="_blank">&lt;finix/modules/services/zfs&gt;</a></code></div>
+</div>
+<div class="option" id="option-specialisation">
+  <h3 class="option-name">
+    <a href="#option-specialisation" class="option-anchor">specialisation</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>attribute set of (submodule)</code></div>
+  <div class="option-description"><html><head></head><body><p>Additional configurations to build.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-example">Example: <pre><code>{
+  mdevd = {
+    services.mdevd.enable = lib.mkForce true;
+    services.udev.enable = lib.mkForce false;
+  };
+}
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/system/activation/specialisation.nix" target="_blank">&lt;finix/modules/system/activation/specialisation.nix&gt;</a></code></div>
 </div>
 <div class="option" id="option-synit-basePath">
   <h3 class="option-name">
