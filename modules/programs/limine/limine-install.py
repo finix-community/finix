@@ -429,8 +429,7 @@ def install_bootloader() -> None:
     settings = config('settings')
 
     if 'default_entry' not in settings:
-        # settings['default_entry'] = {3 if len(last_gen_boot_spec.specialisations.items()) > 0 else 2}
-        settings['default_entry'] = 3
+        settings['default_entry'] = {3 if len(last_gen_boot_spec.specialisations.items()) > 0 else 2}
 
     for key, value in settings.items():
       if type(value) is bool:

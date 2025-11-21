@@ -50,6 +50,7 @@ in
       ./services/udev
       ./synit
       ./system/activation
+      ./system/activation/specialisation.nix
       ./time
       ./users
       ./xdg

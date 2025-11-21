@@ -9,6 +9,7 @@ attr_path="config.system.topLevel"
 attr_specified=false
 flake=""
 use_flake=false
+specialisation=""
 impure=""
 
 # Check for nom availability and set build commands
@@ -78,6 +79,14 @@ while [[ $# -gt 0 ]]; do
       attr_specified=true
       shift 2
       ;;
+    --specialisation|-c)
+      if [ -z "$1" ]; then
+          log "$0: ‘--specialisation’ requires an argument"
+          exit 1
+      fi
+      specialisation="$2"
+      shift 2
+      ;;
     --impure)
       impure="--impure"
       shift
@@ -144,6 +153,11 @@ else
   fi
 fi
 
+if [[ ! -z "$specialisation" && ! "$action" = switch && ! "$action" = test ]]; then
+  echo "error: ‘--specialisation’ can only be used with ‘switch’ and ‘test’"
+  exit 1
+fi
+
 case "$action" in
   build)
     # build the configuration
@@ -177,8 +191,19 @@ case "$action" in
       pathToConfig=$($nix_build_cmd "$config_source" --no-out-link -A "$attr_path")
     fi
 
+    if [[ -z "$specialisation" ]]; then
+      cmd="$pathToConfig/bin/switch-to-configuration"
+    else
+      cmd="$pathToConfig/specialisation/$specialisation/bin/switch-to-configuration"
+    fi
+
+    if [[ ! -f "$cmd" ]]; then
+      echo "error: specialisation not found: $specialisation"
+      exit 1
+    fi
+
     # activate the configuration, reload finit
-    sudo --preserve-env=NIX_PATH "$pathToConfig/bin/switch-to-configuration" "$action"
+    sudo --preserve-env=NIX_PATH "$cmd" "$action"
   ;;
 
   switch)
@@ -189,11 +214,22 @@ case "$action" in
       pathToConfig=$($nix_build_cmd "$config_source" --no-out-link -A "$attr_path")
     fi
 
+    if [[ -z "$specialisation" ]]; then
+      cmd="$pathToConfig/bin/switch-to-configuration"
+    else
+      cmd="$pathToConfig/specialisation/$specialisation/bin/switch-to-configuration"
+    fi
+
+    if [[ ! -f "$cmd" ]]; then
+      echo "error: specialisation not found: $specialisation"
+      exit 1
+    fi
+
     # install to the system profile
     sudo --preserve-env=NIX_PATH nix-env --profile /nix/var/nix/profiles/system --set "$pathToConfig"
 
     # rebuild boot loader entries, activate the configuration, reload finit
-    sudo --preserve-env=NIX_PATH "$pathToConfig/bin/switch-to-configuration" "$action"
+    sudo --preserve-env=NIX_PATH "$cmd" "$action"
   ;;
 
   repl)

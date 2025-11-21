@@ -152,6 +152,12 @@ in
 
           substituteInPlace $out/activate --subst-var-by systemConfig $out
           substituteInPlace $out/init --subst-var-by systemConfig $out
+
+          mkdir $out/specialisation
+
+          ${lib.concatMapAttrsStringSep "\n" (
+            k: v: "ln -s ${v.system.topLevel} $out/specialisation/${lib.escapeShellArg k}"
+          ) config.specialisation}
         ''
         + lib.optionalString config.boot.kernel.enable ''
           ${pkgs.coreutils}/bin/ln -s ${config.boot.kernelPackages.kernel}/bzImage $out/kernel

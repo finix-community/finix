@@ -68,7 +68,7 @@ let
                     childName
                     "${childToplevel}/${filename}"
                   ]
-                ) { }
+                ) (lib.mapAttrs (k: v: v.system.topLevel) config.specialisation)
               );
             in
             lib.escapeShellArgs [
