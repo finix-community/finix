@@ -21,8 +21,8 @@ let
   wlroots_0_19 = pkgs.wlroots_0_19.override {
     inherit libinput;
 
-    # xwayland appears to cause issues with mdevd - and not required in this context, so no harm in removing
-    enableXWayland = !config.services.mdevd.enable;
+    # xwayland appears to cause issues - and not required in this context, so no harm in removing
+    enableXWayland = false;
   };
 in
 {
