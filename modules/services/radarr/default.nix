@@ -7,21 +7,19 @@
 let
   cfg = config.services.radarr;
 
-  arrToString = v: if false == v || true == v then lib.boolToString v else toString v;
-  format = {
-    type = (pkgs.formats.ini { }).type;
-
-    generate =
-      path: attrs:
-      pkgs.writeText path (
-        lib.concatMapAttrsStringSep "\n" (
-          namespace: settings:
-          lib.concatMapAttrsStringSep "\n" (
-            item: value: "RADARR__${lib.toUpper namespace}__${lib.toUpper item}=${arrToString value}"
-          ) settings
-        ) attrs
-      );
-  };
+  format = pkgs.formats.ini { };
+  toEnvVars =
+    settings:
+    settings
+    |> (lib.mapAttrsRecursive (
+      path: value:
+      lib.optionalAttrs (value != null) {
+        name = lib.toUpper "RADARR__${lib.concatStringsSep "__" path}";
+        value = toString (if lib.isBool value then lib.boolToString value else value);
+      }
+    ))
+    |> (lib.collect (x: lib.isString x.name or false && lib.isString x.value or false))
+    |> lib.listToAttrs;
 in
 {
   options.services.radarr = {
@@ -162,9 +160,7 @@ in
       command = "${lib.getExe cfg.package} -nobrowser -data=${cfg.dataDir}";
       nohup = true;
       log = true;
-
-      # TODO: now we're hijacking `env` and no one else can use it...
-      env = cfg.settings;
+      environment = toEnvVars cfg.settings;
     };
 
     users.users = lib.optionalAttrs (cfg.user == "radarr") {
