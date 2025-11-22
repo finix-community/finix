@@ -100,6 +100,7 @@ in
     ./ext2.nix
     ./ext4.nix
     ./f2fs.nix
+    ./fuse.mergerfs.nix
     ./fuse.nix
     ./special.nix
     ./tmpfs.nix
