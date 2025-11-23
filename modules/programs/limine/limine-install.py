@@ -429,20 +429,20 @@ def install_bootloader() -> None:
     settings = config('settings')
 
     if 'default_entry' not in settings:
-        settings['default_entry'] = {3 if len(last_gen_boot_spec.specialisations.items()) > 0 else 2}
+        settings['default_entry'] = 3 if len(last_gen_boot_spec.specialisations.items()) > 0 else 2
 
     for key, value in settings.items():
       if type(value) is bool:
-        config_file += f'{key}={"yes" if value else "no"}\n'
+        config_file += f'{key}: {"yes" if value else "no"}\n'
       elif type(value) is list:
         if key == 'wallpaper':
           for elem in value:
             config_file += f'''key: {get_copied_path_uri(elem, 'wallpapers')}\n'''
         else:
           for elem in value:
-            config_file += f'{key}={elem}\n'
+            config_file += f'{key}: {elem}\n'
       else:
-        config_file += f'{key}={value}\n'
+        config_file += f'{key}: {value}\n'
 
     config_file += textwrap.dedent('''
         # NixOS boot entries start here
