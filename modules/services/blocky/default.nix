@@ -99,12 +99,6 @@ in
       command = "${lib.getExe cfg.package} --config ${configFile}";
       log = true;
       nohup = true;
-
-      # https://github.com/0xERR0R/blocky/issues/1910
-      # TODO: now we're hijacking `env` and no one else can use it...
-      environment = {
-        NO_COLOR = 1;
-      };
     };
 
     users.users = lib.mkIf (cfg.user == "blocky") {

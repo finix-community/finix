@@ -92,11 +92,6 @@ in
       ];
       log = true;
       nohup = true;
-
-      # TODO: now we're hijacking `env` and no one else can use it...
-      environment = {
-        NO_COLOR = 1;
-      };
     };
 
     services.tmpfiles.fwupd.rules = [
