@@ -118,6 +118,16 @@ let
           '';
         };
 
+        caps = lib.mkOption {
+          type = with lib.types; coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr);
+          apply = lib.unique;
+          default = [ ];
+          example = [ "^cap_net_bind_service" ];
+          description = ''
+            Allow services to run with minimal required privileges instead of running as `root`.
+          '';
+        };
+
         description = lib.mkOption {
           type = with lib.types; nullOr str;
           default = null;
@@ -555,6 +565,7 @@ let
       )
       ++ (lib.optional (svc.manual or false) "manual:yes")
       ++ (lib.optional (svc.kill or null != null) "kill:${toString svc.kill}")
+      ++ (lib.optional (svc.caps or [ ] != [ ]) ("caps:${lib.concatStringsSep "," svc.caps}"))
       ++ (lib.optional (svc.conflict or [ ] != [ ]) ("conflict:${lib.concatStringsSep "," svc.conflict}"))
       ++ (lib.optional (svc.pid or null != null) "pid:${svc.pid}")
       ++ (lib.optional (svc.type or null != null) "type:${svc.type}")

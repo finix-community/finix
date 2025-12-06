@@ -76,9 +76,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    # https://github.com/finit-project/finit/issues/454
-    boot.kernel.sysctl."net.ipv4.ip_unprivileged_port_start" = 0;
-
     services.blocky.settings = {
       log = {
         level = lib.mkIf cfg.debug "debug";
@@ -97,6 +94,7 @@ in
         "net/route/default"
       ];
       command = "${lib.getExe cfg.package} --config ${configFile}";
+      caps = [ "^cap_net_bind_service" ];
       log = true;
       nohup = true;
     };
