@@ -15,7 +15,7 @@
   };
 
   config = lib.mkIf config.boot.supportedFilesystems."fuse.mergerfs".enable {
-    boot.kernelModules = [
+    boot.initrd.kernelModules = [
       "fuse"
     ];
 
