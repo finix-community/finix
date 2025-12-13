@@ -106,5 +106,16 @@ in
         NO_COLOR = 1;
       };
     };
+
+    users.users = lib.mkIf (cfg.user == "blocky") {
+      blocky = {
+        isSystemUser = true;
+        group = cfg.group;
+      };
+    };
+
+    users.groups = lib.mkIf (cfg.group == "blocky") {
+      blocky = { };
+    };
   };
 }
