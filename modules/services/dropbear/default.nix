@@ -153,8 +153,8 @@ in
       # TODO: dropbear doesn't use PAM so we need to keep these variables in sync with security.pam.environment!
       # NOTE: dropbear will only respect PATH and LD_LIBRARY_PATH
       path = [
-        config.security.wrapperDir
-        "/run/current-system/sw/bin"
+        (dirOf config.security.wrapperDir)
+        "/run/current-system/sw"
       ];
     };
 
