@@ -20,8 +20,8 @@ testenv.mkTest {
       ];
     };
 
-  tclScript = ''
-    machine spawn
+  testScript = ''
+    machine start
     machine expect {synit_pid1: Awaiting signals...}
     machine expect {syndicate_server: inferior server instance}
     set timeout 20

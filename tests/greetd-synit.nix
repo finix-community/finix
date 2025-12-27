@@ -21,8 +21,8 @@ testenv.mkTest {
       };
     };
 
-  tclScript = ''
-    machine spawn
+  testScript = ''
+    machine start
     machine expect {synit_pid1: Awaiting signals...}
     machine expect {syndicate_server: inferior server instance}
     machine expect {pam_unix(greetd:session): session opened for user nobody*\n}
