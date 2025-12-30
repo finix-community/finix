@@ -39,6 +39,7 @@ in
     ./daemons.nix
     ./dependencies.nix
     ./filesystems.nix
+    ./initrd.nix
     ./logging.nix
     ./networking.nix
     ./plans.nix

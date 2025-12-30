@@ -7,8 +7,8 @@
 {
   imports = [
     ./bootspec.nix
-    ./initrd
     ./init.nix
+    ./initrd.nix
     ./kernel.nix
     ./modprobe.nix
     ./sysctl.nix
