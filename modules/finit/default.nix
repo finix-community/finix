@@ -664,6 +664,10 @@ let
     );
 in
 {
+  imports = [
+    ./initrd.nix
+  ];
+
   options.finit = {
     enable = lib.mkOption {
       type = lib.types.bool;
