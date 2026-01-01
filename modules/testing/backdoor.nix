@@ -44,18 +44,22 @@ let
       sleep 0.1
     done
 
-    # redirect stdin/stdout to virtio console, stderr to serial console
-    exec < /dev/hvc0 > /dev/hvc0
-    # wait for ttyS0 to be available (with 10 second timeout to avoid hang)
+    # redirect stdin/stdout/stderr to virtio console
+    # this ensures all command output (including help text which often goes to stderr)
+    # is visible through the backdoor socket
+    exec < /dev/hvc0 > /dev/hvc0 2>&1
+
+    # wait for ttyS0 to be available for the "connecting to host..." message
     deadline=$((SECONDS + 10))
-    while ! exec 2> /dev/ttyS0; do
+    while [[ ! -e /dev/ttyS0 ]]; do
       if [[ $SECONDS -ge $deadline ]]; then
-        echo "ERROR: ttyS0 not available after 10s" > /dev/hvc0
-        exit 1
+        echo "warning: ttyS0 not available after 10s"
+        break
       fi
       sleep 0.1
     done
-    echo "connecting to host..." >&2
+    # send connect message to serial console if available
+    [[ -e /dev/ttyS0 ]] && echo "connecting to host..." > /dev/ttyS0
 
     # set raw mode to prevent CR/LF conversion
     stty -F /dev/hvc0 raw -echo

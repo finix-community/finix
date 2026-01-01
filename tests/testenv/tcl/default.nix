@@ -238,6 +238,7 @@ in
       # interactive driver script - runs the test with tty for shell interaction
       driverInteractive = pkgs.writeShellScriptBin "test-${name}-interactive" ''
         set -e
+        unset out  # prevent driver.tcl from trying to log to nix-shell's $out
         export PATH="${lib.makeBinPath testDeps}:$PATH"
         ${lib.optionalString (tclLibPath != [ ]) ''
           export TCLLIBPATH="${lib.concatStringsSep " " tclLibPath}"
@@ -301,6 +302,7 @@ in
       # interactive shell driver - just boots and gives you a shell
       interactive = pkgs.writeShellScriptBin "test-${name}-shell" ''
         set -e
+        unset out  # prevent driver.tcl from trying to log to nix-shell's $out
         export PATH="${lib.makeBinPath testDeps}:$PATH"
         ${lib.optionalString (tclLibPath != [ ]) ''
           export TCLLIBPATH="${lib.concatStringsSep " " tclLibPath}"
