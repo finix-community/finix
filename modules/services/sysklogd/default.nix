@@ -34,7 +34,7 @@ in
         lib.types.submodule (
           { config, ... }:
           {
-            config.path = lib.optionals config.log [ cfg.package ];
+            config.path = lib.optionals (config.log != false) [ cfg.package ];
           }
         )
       );
@@ -45,7 +45,7 @@ in
         lib.types.submodule (
           { config, ... }:
           {
-            config.path = lib.optionals config.log [ cfg.package ];
+            config.path = lib.optionals (config.log != false) [ cfg.package ];
           }
         )
       );
@@ -68,6 +68,7 @@ in
       notify = "pid";
     };
 
-    environment.etc."syslog.conf".source = "${cfg.package}/share/doc/sysklogd/syslog.conf";
+    environment.etc."syslog.conf".source =
+      lib.mkDefault "${cfg.package}/share/doc/sysklogd/syslog.conf";
   };
 }
