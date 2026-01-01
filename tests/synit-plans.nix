@@ -50,14 +50,14 @@ testenv.mkTest {
     TCLLIBPATH = [ "${sycl}/lib/${sycl.name}" ];
   };
 
-  tclScript =
+  testScript =
     { nodes }:
     ''
       package require syndicate
 
       # Boot the machine.
       #
-      machine spawn
+      machine start
       machine expect {synit_pid1: Awaiting signals...}
       machine expect {syndicate_server: inferior server instance}
       set timeout 25

@@ -218,6 +218,10 @@ in
             };
           }
         );
+        default = { };
+        description = ''
+          Network interface cards to add to the VM.
+        '';
       };
 
       mountHostNixStore = mkOption {

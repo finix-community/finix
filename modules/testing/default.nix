@@ -1,38 +1,122 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  nodes,
+  ...
+}:
 
 let
-  inherit (lib)
-    mkBefore
-    mkEnableOption
-    mkIf
-    mkOption
-    types
-    ;
   cfg = config.testing;
+
+  # get sorted node names for consistent ordering
+  nodeNames = lib.sort lib.lessThan (lib.attrNames nodes);
+
+  # find this node's index (1-based for ip addressing)
+  nodeIndex = (lib.lists.findFirstIndex (name: name == config.networking.hostName) 0 nodeNames) + 1;
+
+  # generate a deterministic mac address using nixos convention
+  # format: 52:54:00:12:${vlan}:${node} where vlan is 01 (fixed) and node is the node index
+  # this matches the nixos testing framework for compatibility
+  nodeMac =
+    let
+      zeroPad = n: if n < 16 then "0${lib.toHexString n}" else lib.toHexString n;
+      vlan = 1;
+    in
+    "52:54:00:12:${zeroPad vlan}:${zeroPad nodeIndex}";
+
+  # this node's ip address
+  nodeIp = "192.168.1.${toString nodeIndex}";
+
+  vlan = 1;
 in
 {
+  imports = [
+    ./backdoor.nix
+  ];
+
   options = {
-    testing.enable = mkEnableOption "test instrumentation";
+    testing.enable = lib.mkEnableOption "test instrumentation";
 
-    testing.enableRootDisk = mkEnableOption "use a root file-system on a disk image otherwise use tmpfs";
+    testing.enableRootDisk = lib.mkEnableOption "use a root file-system on a disk image otherwise use tmpfs";
 
-    testing.driver = mkOption {
-      type = types.enum [ "tcl" ];
+    testing.driver = lib.mkOption {
+      type = lib.types.enum [ "tcl" ];
       description = "Test driver.";
     };
 
-    testing.graphics.enable = mkEnableOption "graphic devices";
+    testing.graphics.enable = lib.mkEnableOption "graphic devices";
+
+    testing.network = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = "Enable test network interface.";
+      };
+
+      ip = lib.mkOption {
+        type = lib.types.str;
+        default = nodeIp;
+        description = "IP address for this node on the test network.";
+        readOnly = true;
+      };
+
+      mac = lib.mkOption {
+        type = lib.types.str;
+        default = nodeMac;
+        description = "MAC address for this node.";
+        readOnly = true;
+      };
+
+      nodeIndex = lib.mkOption {
+        type = lib.types.int;
+        default = nodeIndex;
+        description = "This node's index in the test network (1-based).";
+        readOnly = true;
+      };
+
+      vlan = lib.mkOption {
+        type = lib.types.int;
+        default = vlan;
+        description = "VLAN number for this test network.";
+        readOnly = true;
+      };
+    };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     hardware.console.keyMap = "us";
-    synit.logging.logToFileSystem = false;
-    virtualisation.qemu = {
-      extraArgs = lib.optional (!cfg.graphics.enable) "-nographic";
-      nics.eth0.args = mkBefore [
-        "user"
-        "model=virtio-net-pci"
-      ];
+
+    services.sysklogd.enable = true;
+    synit.logging.logToFileSystem = false; # TODO: revisit this
+
+    environment.etc."syslog.conf".source = pkgs.writeText "syslog.conf" ''
+      # log *all* messages to console so they're visible in tests
+      *.* /dev/console
+
+      include /etc/syslog.d/*.conf
+    '';
+
+    # add /etc/hosts entries for all test nodes
+    networking.hosts = lib.listToAttrs (
+      lib.imap1 (idx: name: {
+        name = "192.168.1.${toString idx}";
+        value = [ name ];
+      }) nodeNames
+    );
+
+    virtualisation.qemu.extraArgs = lib.optional (!cfg.graphics.enable) "-nographic";
+
+    finit.tasks.test-network = lib.mkIf cfg.network.enable {
+      description = "configure test network";
+      conditions = [
+        "service/syslogd/ready"
+      ]
+      ++ lib.optionals config.services.mdevd.enable [ "run/coldplug/success" ]
+      ++ lib.optionals config.services.sysklogd.enable [ "service/syslogd/ready" ];
+      command = pkgs.writeShellScript "test-network" ''
+        ${pkgs.iproute2}/bin/ip addr add ${nodeIp}/24 dev eth0 && ${pkgs.iproute2}/bin/ip link set eth0 up
+      '';
     };
   };
 }

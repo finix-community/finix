@@ -9,11 +9,11 @@ testenv.mkTest {
     # TODO(emery): Enable dhcpcd by default in tests.
     services.dhcpcd.enable = true;
   };
-  tclScript = ''
+  testScript = ''
     package require syndicate
     set timeout 20
 
-    machine spawn
+    machine start
     machine expect {synit_pid1: Awaiting signals...}
     machine expect {syndicate_server: inferior server instance}
     machine expect {eth0: soliciting a DHCP lease}

@@ -27,12 +27,12 @@ testenv.mkTest {
       services.nix-actor.enable = true;
     };
 
-  tclScript = ''
+  testScript = ''
     package require syndicate
 
     # Boot the machine.
     #
-    machine spawn
+    machine start
     machine expect {synit_pid1: Awaiting signals...}
     machine expect {syndicate_server: inferior server instance}
     set timeout 25
