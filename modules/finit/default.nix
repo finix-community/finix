@@ -202,6 +202,14 @@ let
           '';
         };
 
+        supplementary_groups = lib.mkOption {
+          type = with lib.types; listOf str;
+          default = [ ];
+          description = ''
+            Explicitly specify supplementary groups, in addition to reading group membership from {file}`/etc/group`.
+          '';
+        };
+
         restart = lib.mkOption {
           type = lib.types.ints.between (-1) 255;
           default = 10;
@@ -558,7 +566,11 @@ let
       ++ (lib.optional (svc.restart or false != false) "restart:${toString svc.restart}")
       ++ (lib.optional (svc.restart_sec or null != null) "restart_sec:${toString svc.restart_sec}")
       ++ (lib.optional (svc.user or null != null) (
-        "@${svc.user}" + lib.optionalString (svc.group != null) ":${svc.group}"
+        "@${svc.user}"
+        + lib.optionalString (svc.group != null) ":${svc.group}"
+        + lib.optionalString (
+          svc.supplementary_groups or [ ] != [ ]
+        ) ",${lib.concatStringsSep "," svc.supplementary_groups}"
       ))
       ++ (lib.optional (svc.conditions or [ ] != [ ] || svc.nohup or false == true)
         "<${lib.optionalString (svc.nohup or false) "!"}${lib.concatStringsSep "," svc.conditions}>"
