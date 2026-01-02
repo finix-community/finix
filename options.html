@@ -904,7 +904,7 @@
     <details class="toc-category">
       <summary title="finit">
         <span>finit</span>
-        <span class="toc-count">127</span>
+        <span class="toc-count">134</span>
       </summary>
       <ul>
         
@@ -985,6 +985,14 @@
         <li>
           <a href='#option-finit-run' title="finit.run">
             run
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-finit-run-&lt;name&gt;-caps' title="finit.run.&lt;name&gt;.caps">
+            run.&lt;name&gt;.caps
             
             
           </a>
@@ -1239,6 +1247,14 @@
         </li>
         
         <li>
+          <a href='#option-finit-run-&lt;name&gt;-supplementary_groups' title="finit.run.&lt;name&gt;.supplementary_groups">
+            run.&lt;name&gt;.supplementary_groups
+            
+            
+          </a>
+        </li>
+        
+        <li>
           <a href='#option-finit-run-&lt;name&gt;-type' title="finit.run.&lt;name&gt;.type">
             run.&lt;name&gt;.type
             
@@ -1265,6 +1281,14 @@
         <li>
           <a href='#option-finit-services' title="finit.services">
             services
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-finit-services-&lt;name&gt;-caps' title="finit.services.&lt;name&gt;.caps">
+            services.&lt;name&gt;.caps
             
             
           </a>
@@ -1519,6 +1543,14 @@
         </li>
         
         <li>
+          <a href='#option-finit-services-&lt;name&gt;-supplementary_groups' title="finit.services.&lt;name&gt;.supplementary_groups">
+            services.&lt;name&gt;.supplementary_groups
+            
+            
+          </a>
+        </li>
+        
+        <li>
           <a href='#option-finit-services-&lt;name&gt;-type' title="finit.services.&lt;name&gt;.type">
             services.&lt;name&gt;.type
             
@@ -1537,6 +1569,14 @@
         <li>
           <a href='#option-finit-tasks' title="finit.tasks">
             tasks
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-finit-tasks-&lt;name&gt;-caps' title="finit.tasks.&lt;name&gt;.caps">
+            tasks.&lt;name&gt;.caps
             
             
           </a>
@@ -1791,6 +1831,14 @@
         </li>
         
         <li>
+          <a href='#option-finit-tasks-&lt;name&gt;-supplementary_groups' title="finit.tasks.&lt;name&gt;.supplementary_groups">
+            tasks.&lt;name&gt;.supplementary_groups
+            
+            
+          </a>
+        </li>
+        
+        <li>
           <a href='#option-finit-tasks-&lt;name&gt;-type' title="finit.tasks.&lt;name&gt;.type">
             tasks.&lt;name&gt;.type
             
@@ -1817,6 +1865,14 @@
         <li>
           <a href='#option-finit-ttys-&lt;name&gt;-baud' title="finit.ttys.&lt;name&gt;.baud">
             ttys.&lt;name&gt;.baud
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-finit-ttys-&lt;name&gt;-caps' title="finit.ttys.&lt;name&gt;.caps">
+            ttys.&lt;name&gt;.caps
             
             
           </a>
@@ -8277,6 +8333,21 @@ are guaranteed to be completed before running the next command. Useful when seri
   <div class="option-default">Default: <code>{ }</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
 </div>
+<div class="option" id="option-finit-run-&lt;name&gt;-caps">
+  <h3 class="option-name">
+    <a href="#option-finit-run-&lt;name&gt;-caps" class="option-anchor">finit.run.&lt;name&gt;.caps</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>(list of non-empty string) or non-empty string convertible to it</code></div>
+  <div class="option-description"><html><head></head><body><p>Allow services to run with minimal required privileges instead of running as <code>root</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-example">Example: <pre><code>[
+  "^cap_net_bind_service"
+]</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
+</div>
 <div class="option" id="option-finit-run-&lt;name&gt;-cgroup-name">
   <h3 class="option-name">
     <a href="#option-finit-run-&lt;name&gt;-cgroup-name" class="option-anchor">finit.run.&lt;name&gt;.cgroup.name</a>
@@ -8679,6 +8750,18 @@ seconds at a time or never terminates.</p>
   <div class="option-default">Default: <code>null</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
 </div>
+<div class="option" id="option-finit-run-&lt;name&gt;-supplementary_groups">
+  <h3 class="option-name">
+    <a href="#option-finit-run-&lt;name&gt;-supplementary_groups" class="option-anchor">finit.run.&lt;name&gt;.supplementary_groups</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>Explicitly specify supplementary groups, in addition to reading group membership from <code class="file-path">/etc/group</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
+</div>
 <div class="option" id="option-finit-run-&lt;name&gt;-type">
   <h3 class="option-name">
     <a href="#option-finit-run-&lt;name&gt;-type" class="option-anchor">finit.run.&lt;name&gt;.type</a>
@@ -8727,6 +8810,21 @@ restarted if they exit prematurely.</p>
 <p>See <a href="https://github.com/troglobit/finit/tree/master/doc#services">upstream documentation</a> for additional details.</p>
 </body></html></div>
   <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
+</div>
+<div class="option" id="option-finit-services-&lt;name&gt;-caps">
+  <h3 class="option-name">
+    <a href="#option-finit-services-&lt;name&gt;-caps" class="option-anchor">finit.services.&lt;name&gt;.caps</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>(list of non-empty string) or non-empty string convertible to it</code></div>
+  <div class="option-description"><html><head></head><body><p>Allow services to run with minimal required privileges instead of running as <code>root</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-example">Example: <pre><code>[
+  "^cap_net_bind_service"
+]</code></pre></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
 </div>
 <div class="option" id="option-finit-services-&lt;name&gt;-cgroup-name">
@@ -9131,6 +9229,18 @@ seconds at a time or never terminates.</p>
   <div class="option-default">Default: <code>null</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
 </div>
+<div class="option" id="option-finit-services-&lt;name&gt;-supplementary_groups">
+  <h3 class="option-name">
+    <a href="#option-finit-services-&lt;name&gt;-supplementary_groups" class="option-anchor">finit.services.&lt;name&gt;.supplementary_groups</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>Explicitly specify supplementary groups, in addition to reading group membership from <code class="file-path">/etc/group</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
+</div>
 <div class="option" id="option-finit-services-&lt;name&gt;-type">
   <h3 class="option-name">
     <a href="#option-finit-services-&lt;name&gt;-type" class="option-anchor">finit.services.&lt;name&gt;.type</a>
@@ -9166,6 +9276,21 @@ seconds at a time or never terminates.</p>
 <p>See <a href="https://github.com/troglobit/finit/tree/master/doc#one-shot-commands-parallel">upstream documentation</a> for additional details.</p>
 </body></html></div>
   <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
+</div>
+<div class="option" id="option-finit-tasks-&lt;name&gt;-caps">
+  <h3 class="option-name">
+    <a href="#option-finit-tasks-&lt;name&gt;-caps" class="option-anchor">finit.tasks.&lt;name&gt;.caps</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>(list of non-empty string) or non-empty string convertible to it</code></div>
+  <div class="option-description"><html><head></head><body><p>Allow services to run with minimal required privileges instead of running as <code>root</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-example">Example: <pre><code>[
+  "^cap_net_bind_service"
+]</code></pre></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
 </div>
 <div class="option" id="option-finit-tasks-&lt;name&gt;-cgroup-name">
@@ -9570,6 +9695,18 @@ seconds at a time or never terminates.</p>
   <div class="option-default">Default: <code>null</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
 </div>
+<div class="option" id="option-finit-tasks-&lt;name&gt;-supplementary_groups">
+  <h3 class="option-name">
+    <a href="#option-finit-tasks-&lt;name&gt;-supplementary_groups" class="option-anchor">finit.tasks.&lt;name&gt;.supplementary_groups</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>Explicitly specify supplementary groups, in addition to reading group membership from <code class="file-path">/etc/group</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
+</div>
 <div class="option" id="option-finit-tasks-&lt;name&gt;-type">
   <h3 class="option-name">
     <a href="#option-finit-tasks-&lt;name&gt;-type" class="option-anchor">finit.tasks.&lt;name&gt;.type</a>
@@ -9617,6 +9754,21 @@ seconds at a time or never terminates.</p>
   <div class="option-description"><html><head></head><body><p>This option has no description.</p>
 </body></html></div>
   <div class="option-default">Default: <code>null</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
+</div>
+<div class="option" id="option-finit-ttys-&lt;name&gt;-caps">
+  <h3 class="option-name">
+    <a href="#option-finit-ttys-&lt;name&gt;-caps" class="option-anchor">finit.ttys.&lt;name&gt;.caps</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>(list of non-empty string) or non-empty string convertible to it</code></div>
+  <div class="option-description"><html><head></head><body><p>Allow services to run with minimal required privileges instead of running as <code>root</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-example">Example: <pre><code>[
+  "^cap_net_bind_service"
+]</code></pre></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
 </div>
 <div class="option" id="option-finit-ttys-&lt;name&gt;-cgroup-name">
