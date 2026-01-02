@@ -61,7 +61,6 @@ in
         xz
       ];
       environment = {
-        NO_COLOR = 1;
         RUST_LOG = lib.mkIf cfg.debug "system76_scheduler=debug";
       };
     };
