@@ -277,7 +277,16 @@ proc CreateNode {name body} {
             exp_continue
           }
           # check for the marker with status (the actual output line)
-          if {[regexp "^$marker (\[0-9\]+)$" $line -> exitCode]} {
+          # use (.*) prefix to handle commands that output without trailing newline,
+          # which causes their output to concatenate with the marker line
+          if {[regexp "^(.*)$marker (\[0-9\]+)$" $line -> prefix exitCode]} {
+            # capture any output that was concatenated before the marker
+            if {$prefix ne ""} {
+              if {$output ne ""} {
+                append output "\n"
+              }
+              append output $prefix
+            }
             set status $exitCode
             # done - don't continue
           } else {
