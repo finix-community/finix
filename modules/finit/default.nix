@@ -143,10 +143,20 @@ let
 
         cgroup = {
           name = lib.mkOption {
-            type = with lib.types; nullOr str; # TODO: add constraints based on finit
-            default = null;
+            type = lib.types.str;
+            default = "system";
             description = ''
               The name of the cgroup to place this process under.
+            '';
+          };
+
+          delegate = lib.mkOption {
+            type = lib.types.bool;
+            default = false;
+            description = ''
+              For services that need to create their own child `cgroups` (container runtimes like `docker`, `podman`, `systemd-nspawn`, `lxc`, etc...).
+
+              See [ustream documentation](https://finit-project.github.io/config/cgroups/#cgroup-delegation) for details.
             '';
           };
 
@@ -524,12 +534,13 @@ let
           "'" + (value |> lib.removePrefix "'" |> lib.removeSuffix "'") + "'"
         else
           toString value;
+
+      options =
+        lib.optional cgroup.delegate "delegate"
+        ++ lib.mapAttrsToList (k: v: "${k}:${mkValueString v}") cgroup.settings;
     in
-    "cgroup"
-    + lib.optionalString (cgroup.name != null) ("." + cgroup.name)
-    + lib.optionalString (cgroup.settings != { }) (
-      ":" + (lib.concatMapAttrsStringSep "," (k: v: "${k}:${mkValueString v}") cgroup.settings)
-    );
+    "cgroup.${cgroup.name}"
+    + lib.optionalString (options != [ ]) ",${lib.concatStringsSep "," options}";
 
   rlimitStr =
     let
