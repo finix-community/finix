@@ -115,7 +115,7 @@ let
           default = [ ];
           example = "pid/syslog";
           description = ''
-            See [upstream documentation](https://github.com/troglobit/finit/blob/master/doc/conditions.md) for details.
+            See [upstream documentation](https://finit-project.github.io/conditions/) for details.
           '';
         };
 
@@ -128,7 +128,7 @@ let
           type = lib.types.str; # TODO: string  matching 0-9S
           default = "234";
           description = ''
-            See [upstream documentation](https://github.com/troglobit/finit?tab=readme-ov-file#runlevels) for details.
+            See [upstream documentation](https://finit-project.github.io/runlevels/) for details.
           '';
         };
 
@@ -147,7 +147,7 @@ let
             description = ''
               For services that need to create their own child `cgroups` (container runtimes like `docker`, `podman`, `systemd-nspawn`, `lxc`, etc...).
 
-              See [ustream documentation](https://finit-project.github.io/config/cgroups/#cgroup-delegation) for details.
+              See [upstream documentation](https://finit-project.github.io/config/cgroups/#cgroup-delegation) for details.
             '';
           };
 
@@ -246,7 +246,7 @@ let
             tool. This is useful for programs that do not support `syslog` on their own, which is sometimes
             the case when running in the foreground.
 
-            See [upstream documentation](https://github.com/troglobit/finit/tree/master/doc#redirecting-output) for additional details.
+            See [upstream documentation](https://finit-project.github.io/config/logging/) for additional details.
           '';
         };
 
@@ -364,7 +364,7 @@ let
           type = with lib.types; nullOr str;
           default = null;
           description = ''
-            See [upstream documentation](https://github.com/troglobit/finit/blob/master/doc/service.md) for details.
+            See [upstream documentation](https://finit-project.github.io/config/services/) for details.
           '';
         };
 
@@ -385,7 +385,7 @@ let
           default = cfg.readiness;
           defaultText = lib.literalExpression "config.finit.readiness";
           description = ''
-            See [upstream documentation](https://github.com/troglobit/finit/tree/master/doc#service-synchronization) for details.
+            See [upstream documentation](https://finit-project.github.io/config/service-sync/) for details.
           '';
         };
 
@@ -562,7 +562,7 @@ let
         description = ''
           An attribute set of resource limits that will be apply by `finit`.
 
-          See [upstream documentation](https://github.com/troglobit/finit/tree/master/doc/config.md#resource-limits) for additional details.
+          See [upstream documentation](https://finit-project.github.io/config/runlevels/#resource-limits) for additional details.
         '';
       };
     };
@@ -725,7 +725,7 @@ in
       description = ''
         An attribute set of cgroups (v2) that will be created by `finit`.
 
-        See [upstream documentation](https://github.com/troglobit/finit/blob/master/doc/config.md#cgroups) for additional details.
+        See [upstream documentation](https://finit-project.github.io/config/cgroups/) for additional details.
       '';
     };
 
@@ -735,7 +735,7 @@ in
       description = ''
         An attribute set of resource limits that will be apply by `finit`.
 
-        See [upstream documentation](https://github.com/troglobit/finit/tree/master/doc/config.md#resource-limits) for additional details.
+        See [upstream documentation](https://finit-project.github.io/config/runlevels/#resource-limits) for additional details.
       '';
     };
 
@@ -753,7 +753,7 @@ in
         An attribute set of services, or daemons, to be monitored and automatically
         restarted if they exit prematurely.
 
-        See [upstream documentation](https://github.com/troglobit/finit/tree/master/doc#services) for additional details.
+        See [upstream documentation](https://finit-project.github.io/config/services/) for additional details.
       '';
     };
 
@@ -769,7 +769,7 @@ in
       description = ''
         An attribute set of one-shot commands to be executed by `finit`.
 
-        See [upstream documentation](https://github.com/troglobit/finit/tree/master/doc#one-shot-commands-parallel) for additional details.
+        See [upstream documentation](https://finit-project.github.io/config/task-and-run/) for additional details.
       '';
     };
 
@@ -786,7 +786,7 @@ in
         An attribute set of one-shot commands to run in sequence when entering a runlevel. `run` commands
         are guaranteed to be completed before running the next command. Useful when serialization is required.
 
-        See [upstream documentation](https://github.com/troglobit/finit/tree/master/doc#one-shot-commands-sequence) for additional details.
+        See [upstream documentation](https://finit-project.github.io/config/task-and-run/) for additional details.
       '';
     };
 
@@ -801,7 +801,7 @@ in
       description = ''
         An attribute set of TTYs that `finit` should manage.
 
-        See [upstream documentation](https://github.com/troglobit/finit/tree/master/doc#ttys-and-consoles) for additional details.
+        See [upstream documentation](https://finit-project.github.io/config/tty/) for additional details.
       '';
     };
 
@@ -819,7 +819,7 @@ in
         An attribute set of SysV init scripts to be managed by `finit`. These are
         legacy init scripts that are called with `start`, `stop`, and `restart` arguments.
 
-        See [upstream documentation](https://github.com/troglobit/finit/blob/master/doc/config/sysv.md) for additional details.
+        See [upstream documentation](https://finit-project.github.io/config/sysv/) for additional details.
       '';
     };
   };
