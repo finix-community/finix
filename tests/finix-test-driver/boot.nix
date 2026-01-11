@@ -12,7 +12,7 @@
 
   testScript = ''
     machine start
-    machine expect "entering runlevel 2"
+    machine expect -timeout 30 "entering runlevel 2"
 
     log "system booted to runlevel 2 successfully"
 
