@@ -88,7 +88,6 @@ in
     hardware.console.keyMap = "us";
 
     services.sysklogd.enable = true;
-    synit.logging.logToFileSystem = false; # TODO: revisit this
 
     environment.etc."syslog.conf".source = pkgs.writeText "syslog.conf" ''
       # log *all* messages to console so they're visible in tests

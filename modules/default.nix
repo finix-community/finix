@@ -48,7 +48,6 @@ in
       ./services/seatd
       ./services/tmpfiles
       ./services/udev
-      ./synit
       ./system/activation
       ./system/activation/specialisation.nix
       ./time

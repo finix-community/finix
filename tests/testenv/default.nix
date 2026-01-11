@@ -5,7 +5,6 @@ in
   pkgs ? import sources.nixpkgs {
     overlays = [
       (import ../../overlays/default.nix)
-      (import "${sources.sampkgs}/overlay.nix")
     ];
   },
 }:

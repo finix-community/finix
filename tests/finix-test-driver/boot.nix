@@ -6,8 +6,6 @@
   name = "finix-test-driver.boot";
 
   nodes.machine = {
-    boot.serviceManager = "finit";
-
     finit.runlevel = 2;
     services.mdevd.enable = true;
   };

@@ -214,63 +214,6 @@ in
       command = "${lib.getExe cfg.package} -f ${cfg.configFile}";
     };
 
-    synit.daemons.dhcpcd = {
-      argv = lib.quoteExecline [
-        "if"
-        [
-          "s6-envuidgid"
-          "dhcpcd"
-          "forx"
-          "-E"
-          "-p"
-          "DIR"
-          [
-            "/var/db/dhcpcd"
-            "/var/lib/dhcpcd"
-          ]
-          "if"
-          [
-            "s6-mkdir"
-            "-p"
-            "-m"
-            "750"
-            "$DIR"
-          ]
-          "s6-chown"
-          "-U"
-          "$DIR"
-        ]
-
-        "dhcpcd"
-        "--nobackground"
-        "--config"
-        cfg.configFile
-
-        # Disable dhcpcd from applying configuation
-        # and use a hooks script that communicates
-        # with ../../synit/networking.tcl instead.
-        "--noconfigure"
-        "--script"
-        "${pkgs.alt.sam.synit-network-utils}/lib/dhcpcd-hook.tcl"
-      ];
-      path = [ cfg.package ];
-      provides = [
-        [
-          "milestone"
-          "network"
-        ]
-      ];
-      requires = [
-        {
-          key = [
-            "daemon"
-            "network-configurator"
-          ];
-          state = "ready";
-        }
-      ];
-    };
-
     services.tmpfiles.dhcpd.rules = [
       "d /var/db/dhcpcd - dhcpcd"
       "d /var/lib/dhcpcd - dhcpcd dhcpcd"

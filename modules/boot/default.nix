@@ -1,6 +1,5 @@
 {
   config,
-  lib,
   pkgs,
   ...
 }:
@@ -13,19 +12,6 @@
     ./modprobe.nix
     ./sysctl.nix
   ];
-
-  options = {
-    boot.serviceManager = lib.mkOption {
-      type = lib.types.enum [
-        "finit"
-        "synit"
-      ];
-      default = "finit";
-      description = ''
-        Which service-manager to bootstrap into.
-      '';
-    };
-  };
 
   config = {
     finit.tasks.remount-nix-store = {

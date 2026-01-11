@@ -262,30 +262,5 @@ in
       command = wrappersScript;
       path = [ pkgs.coreutils ];
     };
-
-    synit.milestones.wrappers = { };
-
-    synit.daemons.suid-sgid-wrappers = {
-      argv = lib.quoteExecline [
-        "if"
-        [ wrappersScript ]
-        "redirfd"
-        "-w"
-        "1"
-        "/run/synit/config/state/suid-sgid-wrappers.pr"
-        "echo"
-        "<service-state <daemon suid-sgid-wrappers> ready>"
-      ];
-      path = [ pkgs.coreutils ];
-      restart = "on-error";
-      readyOnStart = false;
-      logging.enable = lib.mkDefault false;
-      provides = [
-        [
-          "milestone"
-          "wrappers"
-        ]
-      ];
-    };
   };
 }

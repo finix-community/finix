@@ -6,8 +6,6 @@ testenv.mkTest {
   name = "finit";
 
   nodes.machine = {
-    boot.serviceManager = "finit";
-
     finit.runlevel = 2;
     services.mdevd.enable = true;
   };

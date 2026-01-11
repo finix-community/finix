@@ -620,8 +620,7 @@ in
   options.finit = {
     enable = lib.mkOption {
       type = lib.types.bool;
-      default = config.boot.serviceManager == "finit";
-      defaultText = lib.literalMD ''config.boot.serviceManager == "finit"'';
+      default = true;
       readOnly = true;
       description = ''
         Whether to enable [finit](${pkgs.finit.meta.homepage}) as the system service manager and pid `1`.

@@ -25,6 +25,5 @@
   "sshd_config(5)": "https://man.archlinux.org/man/sshd_config.5",
   "syd(5)": "https://man.archlinux.org/man/syd.5",
   "sysctl(8)": "https://man.archlinux.org/man/sysctl.8",
-  "tmpfiles.d(5)": "https://man.archlinux.org/man/tmpfiles.d.5",
-  "wpa_supplicant.conf(5)": "https://man.archlinux.org/man/wpa_supplicant.conf.5"
+  "tmpfiles.d(5)": "https://man.archlinux.org/man/tmpfiles.d.5"
 }

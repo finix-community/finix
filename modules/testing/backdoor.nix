@@ -94,15 +94,5 @@ in
       # the backdoor runs bash which executes commands from hvc0 until EOF, then exits
       restart = 0;
     };
-
-    # backdoor service for synit
-    synit.core.daemons.backdoor = {
-      argv = [ backdoorScript ];
-      readyOnStart = true;
-      logging.enable = false;
-
-      # the backdoor runs bash which executes commands from hvc0 until EOF, then exits
-      restart = "never";
-    };
   };
 }

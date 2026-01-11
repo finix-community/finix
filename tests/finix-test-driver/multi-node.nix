@@ -6,15 +6,11 @@
   name = "finix-test-driver.multi-node";
 
   nodes.client = {
-    boot.serviceManager = "finit";
-
     finit.runlevel = 2;
     services.mdevd.enable = true;
   };
 
   nodes.server = {
-    boot.serviceManager = "finit";
-
     finit.runlevel = 2;
     services.mdevd.enable = true;
   };

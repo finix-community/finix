@@ -176,14 +176,6 @@ in
             --subst-var-by finit ${config.finit.package} \
             --subst-var-by installHook ${config.providers.bootloader.installHook}
         ''
-        + lib.optionalString config.synit.enable ''
-          cp ${config.synit.plan.activatePlan} $out/activatePlan
-          substituteInPlace $out/activatePlan --subst-var-by systemConfig $out
-
-          cp ${../../synit/switch-to-configuration.sh} $out/bin/switch-to-configuration
-          substituteInPlace $out/bin/switch-to-configuration \
-            --subst-var-by bash ${pkgs.bash}
-        ''
         + lib.optionalString config.boot.bootspec.enable ''
           ${config.boot.bootspec.writer}
         ''
