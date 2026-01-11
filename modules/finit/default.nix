@@ -90,7 +90,8 @@ let
     };
   };
 
-  commonOpts =
+  # baseOpts: options shared by ALL stanza types (service, task, run, tty, sysv)
+  baseOpts =
     { config, name, ... }:
     {
       options = {
@@ -115,16 +116,6 @@ let
           example = "pid/syslog";
           description = ''
             See [upstream documentation](https://github.com/troglobit/finit/blob/master/doc/conditions.md) for details.
-          '';
-        };
-
-        caps = lib.mkOption {
-          type = with lib.types; coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr);
-          apply = lib.unique;
-          default = [ ];
-          example = [ "^cap_net_bind_service" ];
-          description = ''
-            Allow services to run with minimal required privileges instead of running as `root`.
           '';
         };
 
@@ -169,6 +160,23 @@ let
               See [kernel documentation](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html) for additional details.
             '';
           };
+        };
+      };
+    };
+
+  # commonOpts: baseOpts plus options for executable stanzas (will be refactored further)
+  commonOpts =
+    { config, name, ... }:
+    {
+      options = {
+        caps = lib.mkOption {
+          type = with lib.types; coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr);
+          apply = lib.unique;
+          default = [ ];
+          example = [ "^cap_net_bind_service" ];
+          description = ''
+            Allow services to run with minimal required privileges instead of running as `root`.
+          '';
         };
       };
     };
@@ -696,6 +704,7 @@ in
       type =
         with lib.types;
         attrsOf (submodule [
+          baseOpts
           commonOpts
           serviceOpts
           rlimitOpts
@@ -713,6 +722,7 @@ in
       type =
         with lib.types;
         attrsOf (submodule [
+          baseOpts
           commonOpts
           serviceOpts
           rlimitOpts
@@ -729,6 +739,7 @@ in
       type =
         with lib.types;
         attrsOf (submodule [
+          baseOpts
           commonOpts
           runOpts
           serviceOpts
@@ -746,6 +757,7 @@ in
       type =
         with lib.types;
         attrsOf (submodule [
+          baseOpts
           commonOpts
           ttyOpts
         ]);
