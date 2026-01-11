@@ -465,11 +465,19 @@ let
   # tty [LVLS] <COND> DEV [BAUD] [noclear] [nowait] [nologin] [TERM]
   # tty [LVLS] <COND> CMD <ARGS> [noclear] [nowait]
   # TODO: assertions that make sure options make sense together
-  # TODO: figure out what service options are also allowed in ttys
   ttyOpts =
     { name, config, ... }:
     {
       options = {
+        id = lib.mkOption {
+          type = with lib.types; nullOr nonEmptyStr;
+          default = null;
+          description = ''
+            Explicit instance ID for the TTY. If not set, finit auto-derives it from the device name
+            (e.g., `tty1` becomes `:1`, `ttyS0` becomes `:S0`).
+          '';
+        };
+
         noclear = lib.mkOption {
           type = lib.types.bool;
           default = false;
@@ -493,6 +501,22 @@ let
             Disables `getty` and `/bin/login`, and gives the user a `root` (login) shell on the given TTY `device`
             immediately. Needless to say, this is a rather insecure option, but can be very useful for developer
             builds, during board bringup, or similar.
+          '';
+        };
+
+        rescue = lib.mkOption {
+          type = lib.types.bool;
+          default = false;
+          description = ''
+            Start `sulogin` instead of a regular shell, requiring the root password. Useful for rescue/single-user mode.
+          '';
+        };
+
+        notty = lib.mkOption {
+          type = lib.types.bool;
+          default = false;
+          description = ''
+            No device node mode. This is insecure and intended only for board bringup or testing scenarios.
           '';
         };
 
@@ -631,6 +655,8 @@ let
       ++ (lib.optional (svc.noclear or false) "noclear")
       ++ (lib.optional (svc.nowait or false) "nowait")
       ++ (lib.optional (svc.nologin or false) "nologin")
+      ++ (lib.optional (svc.rescue or false) "rescue")
+      ++ (lib.optional (svc.notty or false) "notty")
       ++ (lib.optional (svc.term or null != null) svc.term)
       ++
 
