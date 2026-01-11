@@ -164,25 +164,8 @@ let
       };
     };
 
-  # commonOpts: baseOpts plus options for executable stanzas (will be refactored further)
-  commonOpts =
-    { config, name, ... }:
-    {
-      options = {
-        caps = lib.mkOption {
-          type = with lib.types; coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr);
-          apply = lib.unique;
-          default = [ ];
-          example = [ "^cap_net_bind_service" ];
-          description = ''
-            Allow services to run with minimal required privileges instead of running as `root`.
-          '';
-        };
-      };
-    };
-
-  # TODO: move options common to finit.{run, tasks, ttys, services} from here into commonOpts
-  serviceOpts =
+  # execOpts: options shared by executable stanzas (service, task, run, sysv) but NOT tty
+  execOpts =
     { config, name, ... }:
     {
       options = {
@@ -194,14 +177,6 @@ let
         id = lib.mkOption {
           type = with lib.types; nullOr str;
           readOnly = true;
-        };
-
-        nohup = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
-          description = ''
-            Whether this service supports reload on SIGHUP.
-          '';
         };
 
         user = lib.mkOption {
@@ -228,37 +203,14 @@ let
           '';
         };
 
-        restart = lib.mkOption {
-          type = lib.types.ints.between (-1) 255;
-          default = 10;
+        caps = lib.mkOption {
+          type = with lib.types; coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr);
+          apply = lib.unique;
+          default = [ ];
+          example = [ "^cap_net_bind_service" ];
           description = ''
-            The number of times `finit` tries to restart a crashing service. When
-            this limit is reached the service is marked crashed and must be restarted
-            manually with `initctl restart NAME`.
+            Allow services to run with minimal required privileges instead of running as `root`.
           '';
-        };
-
-        restart_sec = lib.mkOption {
-          type = with lib.types; nullOr ints.unsigned;
-          default = null;
-          description = ''
-            The number of seconds before Finit tries to restart a crashing service, default: `2`
-            seconds for the first five retries, then back-off to `5` seconds. The maximum of this
-            configured value and the above (`2` and `5`) will be used.
-          '';
-        };
-
-        pid = lib.mkOption {
-          type = with lib.types; nullOr str;
-          default = null;
-          description = ''
-            See [upstream documentation](https://github.com/troglobit/finit/blob/master/doc/service.md) for details.
-          '';
-        };
-
-        type = lib.mkOption {
-          type = with lib.types; nullOr (enum [ "forking" ]);
-          default = null;
         };
 
         path = lib.mkOption {
@@ -316,6 +268,102 @@ let
           '';
         };
 
+        command = lib.mkOption {
+          type = program;
+        };
+
+        pre = lib.mkOption {
+          type = lib.types.nullOr program;
+          default = null;
+          description = ''
+            A script which will be called before the service is started.
+          '';
+        };
+
+        post = lib.mkOption {
+          type = lib.types.nullOr program;
+          default = null;
+          description = ''
+            A script which will be called after the service has stopped.
+          '';
+        };
+
+        cleanup = lib.mkOption {
+          type = lib.types.nullOr program;
+          default = null;
+          description = ''
+            A script which will be called when the service is removed.
+          '';
+        };
+
+        restart = lib.mkOption {
+          type = lib.types.ints.between (-1) 255;
+          default = 10;
+          description = ''
+            The number of times `finit` tries to restart a crashing service. When
+            this limit is reached the service is marked crashed and must be restarted
+            manually with `initctl restart NAME`.
+          '';
+        };
+
+        restart_sec = lib.mkOption {
+          type = with lib.types; nullOr ints.unsigned;
+          default = null;
+          description = ''
+            The number of seconds before Finit tries to restart a crashing service, default: `2`
+            seconds for the first five retries, then back-off to `5` seconds. The maximum of this
+            configured value and the above (`2` and `5`) will be used.
+          '';
+        };
+      };
+
+      config =
+        let
+          value = lib.splitString "@" name;
+        in
+        {
+          name = lib.head value;
+          id =
+            if lib.hasSuffix "@" name then
+              "%i"
+            else if lib.hasInfix "@" name then
+              lib.elemAt value 1
+            else
+              null;
+
+          environment.PATH = lib.mkIf (config.path != [ ]) (lib.makeBinPath config.path);
+          env = lib.mkIf (config.environment != { }) (
+            format.generate "${config.name}.env" config.environment
+          );
+        };
+    };
+
+  # serviceOpts: options specific to service and sysv stanzas only
+  serviceOpts =
+    { config, name, ... }:
+    {
+      options = {
+        nohup = lib.mkOption {
+          type = lib.types.bool;
+          default = false;
+          description = ''
+            Whether this service supports reload on SIGHUP.
+          '';
+        };
+
+        pid = lib.mkOption {
+          type = with lib.types; nullOr str;
+          default = null;
+          description = ''
+            See [upstream documentation](https://github.com/troglobit/finit/blob/master/doc/service.md) for details.
+          '';
+        };
+
+        type = lib.mkOption {
+          type = with lib.types; nullOr (enum [ "forking" ]);
+          default = null;
+        };
+
         notify = lib.mkOption {
           type =
             with lib.types;
@@ -330,10 +378,6 @@ let
           description = ''
             See [upstream documentation](https://github.com/troglobit/finit/tree/master/doc#service-synchronization) for details.
           '';
-        };
-
-        command = lib.mkOption {
-          type = program;
         };
 
         reload = lib.mkOption {
@@ -381,35 +425,11 @@ let
           '';
         };
 
-        pre = lib.mkOption {
-          type = lib.types.nullOr program;
-          default = null;
-          description = ''
-            A script which will be called before the service is started.
-          '';
-        };
-
-        post = lib.mkOption {
-          type = lib.types.nullOr program;
-          default = null;
-          description = ''
-            A script which will be called after the service has stopped.
-          '';
-        };
-
         ready = lib.mkOption {
           type = lib.types.nullOr program;
           default = null;
           description = ''
             A script which will be called when the service is ready.
-          '';
-        };
-
-        cleanup = lib.mkOption {
-          type = lib.types.nullOr program;
-          default = null;
-          description = ''
-            A script which will be called when the service is removed.
           '';
         };
 
@@ -428,26 +448,9 @@ let
         };
       };
 
-      config =
-        let
-          value = lib.splitString "@" name;
-        in
-        {
-          name = lib.head value;
-          id =
-            if lib.hasSuffix "@" name then
-              "%i"
-            else if lib.hasInfix "@" name then
-              lib.elemAt value 1
-            else
-              null;
-
-          nohup = lib.mkDefault (config.notify == "s6");
-          environment.PATH = lib.mkIf (config.path != [ ]) (lib.makeBinPath config.path);
-          env = lib.mkIf (config.environment != { }) (
-            format.generate "${config.name}.env" config.environment
-          );
-        };
+      config = {
+        nohup = lib.mkDefault (config.notify == "s6");
+      };
     };
 
   # tty [LVLS] <COND> DEV [BAUD] [noclear] [nowait] [nologin] [TERM]
@@ -705,7 +708,7 @@ in
         with lib.types;
         attrsOf (submodule [
           baseOpts
-          commonOpts
+          execOpts
           serviceOpts
           rlimitOpts
         ]);
@@ -723,8 +726,7 @@ in
         with lib.types;
         attrsOf (submodule [
           baseOpts
-          commonOpts
-          serviceOpts
+          execOpts
           rlimitOpts
         ]);
       default = { };
@@ -740,9 +742,8 @@ in
         with lib.types;
         attrsOf (submodule [
           baseOpts
-          commonOpts
+          execOpts
           runOpts
-          serviceOpts
         ]);
       default = { };
       description = ''
@@ -758,7 +759,6 @@ in
         with lib.types;
         attrsOf (submodule [
           baseOpts
-          commonOpts
           ttyOpts
         ]);
       default = { };
