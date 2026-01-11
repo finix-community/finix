@@ -804,6 +804,24 @@ in
         See [upstream documentation](https://github.com/troglobit/finit/tree/master/doc#ttys-and-consoles) for additional details.
       '';
     };
+
+    sysv = lib.mkOption {
+      type =
+        with lib.types;
+        attrsOf (submodule [
+          baseOpts
+          execOpts
+          serviceOpts
+          rlimitOpts
+        ]);
+      default = { };
+      description = ''
+        An attribute set of SysV init scripts to be managed by `finit`. These are
+        legacy init scripts that are called with `start`, `stop`, and `restart` arguments.
+
+        See [upstream documentation](https://github.com/troglobit/finit/blob/master/doc/config/sysv.md) for additional details.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -888,6 +906,13 @@ in
           value.text = mkConfigFile "task" task;
         }) (lib.filterAttrs (_: task: task.enable) cfg.tasks);
 
+        sysvTree = lib.mapAttrs' (name: sysv: {
+          name = if sysv.id != "%i" then "finit.d/${name}.conf" else "finit.d/available/${name}.conf";
+
+          value.mode = "direct-symlink";
+          value.text = mkConfigFile "sysv" sysv;
+        }) (lib.filterAttrs (_: sysv: sysv.enable) cfg.sysv);
+
         cgroup = lib.concatMapAttrsStringSep "\n" (
           _: cgroupOpts:
           ''cgroup ${cgroupOpts.name} ${
@@ -935,6 +960,7 @@ in
       lib.mkMerge [
         serviceTree
         taskTree
+        sysvTree
         configFile
       ];
 
