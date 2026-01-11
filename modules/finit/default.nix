@@ -315,6 +315,15 @@ let
             configured value and the above (`2` and `5`) will be used.
           '';
         };
+
+        respawn = lib.mkOption {
+          type = lib.types.bool;
+          default = false;
+          description = ''
+            Enable endless restarts without counting toward the retry limit. When set, the service
+            will be restarted indefinitely regardless of the `restart` limit.
+          '';
+        };
       };
 
       config =
@@ -587,6 +596,7 @@ let
       ))
       ++ (lib.optional (svc.restart or false != false) "restart:${toString svc.restart}")
       ++ (lib.optional (svc.restart_sec or null != null) "restart_sec:${toString svc.restart_sec}")
+      ++ (lib.optional (svc.respawn or false) "respawn")
       ++ (lib.optional (svc.user or null != null) (
         "@${svc.user}"
         + lib.optionalString (svc.group != null) ":${svc.group}"
