@@ -106,16 +106,10 @@ in
 
     virtualisation.qemu.extraArgs = lib.optional (!cfg.graphics.enable) "-nographic";
 
-    finit.tasks.test-network = lib.mkIf cfg.network.enable {
-      description = "configure test network";
-      conditions = [
-        "service/syslogd/ready"
-      ]
-      ++ lib.optionals config.services.mdevd.enable [ "run/coldplug/success" ]
-      ++ lib.optionals config.services.sysklogd.enable [ "service/syslogd/ready" ];
-      command = pkgs.writeShellScript "test-network" ''
-        ${pkgs.iproute2}/bin/ip addr add ${nodeIp}/24 dev eth0 && ${pkgs.iproute2}/bin/ip link set eth0 up
-      '';
+    programs.ifupdown-ng.enable = true;
+    programs.ifupdown-ng.auto = [ "eth0" ];
+    programs.ifupdown-ng.iface.eth0 = {
+      address = "${nodeIp}/24";
     };
   };
 }

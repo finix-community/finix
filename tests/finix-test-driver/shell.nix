@@ -65,7 +65,7 @@
     }
 
     subtest "waitForCondition" {
-      machine waitForCondition "task/test-network/success" 30
+      machine waitForCondition "task/ifupdown-ng/success" 30
     }
 
     subtest "shutdown" {
