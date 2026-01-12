@@ -5,10 +5,16 @@
 {
   name = "finix-test-driver.shell";
 
-  nodes.machine = {
-    finit.runlevel = 2;
-    services.mdevd.enable = true;
-  };
+  nodes.machine =
+    { pkgs, ... }:
+    {
+      finit.runlevel = 2;
+      services.mdevd.enable = true;
+
+      finit.package = pkgs.finit.overrideAttrs (o: {
+        patches = o.patches or [ ] ++ [ ./netlink.patch ];
+      });
+    };
 
   testScript = ''
     machine start
@@ -65,7 +71,7 @@
     }
 
     subtest "waitForCondition" {
-      machine waitForCondition "task/test-network/success" 30
+      machine waitForCondition "task/ifupdown-ng/success" 30
     }
 
     subtest "shutdown" {

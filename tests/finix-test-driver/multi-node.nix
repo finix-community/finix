@@ -5,15 +5,27 @@
 {
   name = "finix-test-driver.multi-node";
 
-  nodes.client = {
-    finit.runlevel = 2;
-    services.mdevd.enable = true;
-  };
+  nodes.client =
+    { pkgs, ... }:
+    {
+      finit.runlevel = 2;
+      services.mdevd.enable = true;
 
-  nodes.server = {
-    finit.runlevel = 2;
-    services.mdevd.enable = true;
-  };
+      finit.package = pkgs.finit.overrideAttrs (o: {
+        patches = o.patches or [ ] ++ [ ./netlink.patch ];
+      });
+    };
+
+  nodes.server =
+    { pkgs, ... }:
+    {
+      finit.runlevel = 2;
+      services.mdevd.enable = true;
+
+      finit.package = pkgs.finit.overrideAttrs (o: {
+        patches = o.patches or [ ] ++ [ ./netlink.patch ];
+      });
+    };
 
   testScript = ''
     subtest "startAll starts all nodes" {
@@ -21,13 +33,12 @@
     }
 
     # Wait for both VMs to boot and network to be configured
-    # The test-network run unit depends on coldplug and syslogd, then configures eth0
     client expect -timeout 30 "entering runlevel 2"
     server expect -timeout 30 "entering runlevel 2"
 
-    # Wait for test-network run unit to complete
-    client waitForCondition "task/test-network/success" 30
-    server waitForCondition "task/test-network/success" 30
+    # Wait for ifupdown-ng task to complete
+    client waitForCondition "task/ifupdown-ng/success" 30
+    server waitForCondition "task/ifupdown-ng/success" 30
 
     subtest "nodes have correct ips" {
       set clientIp [client succeed "ip addr show eth0"]

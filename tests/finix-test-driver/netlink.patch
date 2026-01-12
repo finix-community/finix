@@ -1,0 +1,35 @@
+diff --git a/plugins/netlink.c b/plugins/netlink.c
+index e647c858..a70b01e8 100644
+--- a/plugins/netlink.c
++++ b/plugins/netlink.c
+@@ -406,9 +406,29 @@ static void nl_reconf(void *arg)
+ 	cond_reassert("net/");
+ }
+ 
++/*
++ * Initial enumeration of existing interfaces and routes.  Called from
++ * HOOK_SVC_PLUGIN which runs after the condition system is initialized.
++ * Interfaces that exist before finit starts (e.g., virtio-net in QEMU)
++ * won't generate RTM_NEWLINK events, so we must query for them.
++ */
++static void nl_enumerate(void *arg)
++{
++	int sd;
++
++	sd = socket(AF_NETLINK, SOCK_DGRAM, NETLINK_ROUTE);
++	if (sd < 0)
++		return;
++
++	nl_resync_ifaces(sd, 0);
++	nl_resync_routes(sd, 1);
++	close(sd);
++}
++
+ static plugin_t plugin = {
+ 	.name = __FILE__,
+-	.hook[HOOK_SVC_RECONF] = { .cb = nl_reconf },
++	.hook[HOOK_SVC_RECONF]  = { .cb = nl_reconf },
++	.hook[HOOK_SVC_PLUGIN]  = { .cb = nl_enumerate },
+ 	.io = {
+ 		.cb    = nl_callback,
+ 		.flags = PLUGIN_IO_READ,
