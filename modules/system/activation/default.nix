@@ -145,6 +145,8 @@ in
         buildCommand = ''
           mkdir -p $out $out/bin
 
+          echo -n "finix" > $out/nixos-version
+
           cp ${config.system.activation.out} $out/activate
           cp ${config.boot.init.script} $out/init
 
