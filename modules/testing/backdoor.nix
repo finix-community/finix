@@ -17,17 +17,8 @@ let
   backdoorScript = pkgs.writeShellScript "backdoor" ''
     export USER=root
     export HOME=/root
-    export PATH=${
-      lib.makeBinPath [
-        pkgs.coreutils
-        pkgs.gnugrep
-        pkgs.gnused
-        pkgs.findutils
-        pkgs.netcat
-        pkgs.iproute2
-        pkgs.iputils
-      ]
-    }:$PATH
+    # use the system path (same as /run/current-system/sw) to get all environment.systemPackages
+    export PATH=${lib.makeBinPath [ config.environment.path ]}
 
     # source profile if it exists
     if [[ -e /etc/profile ]]; then
@@ -83,6 +74,11 @@ in
   config = lib.mkIf (cfg.enable && cfg.backdoor.enable) {
     # ensure virtio_console module is loaded early
     boot.initrd.kernelModules = [ "virtio_console" ];
+
+    environment.systemPackages = [
+      pkgs.iproute2
+      pkgs.iputils
+    ];
 
     # backdoor service for finit
     finit.services.backdoor = {
