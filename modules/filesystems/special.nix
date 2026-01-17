@@ -5,6 +5,9 @@
       enable = lib.mkOption {
         type = lib.types.bool;
         default = true;
+        description = ''
+          Whether to enable support for bind mounts in the initial ramdisk.
+        '';
       };
     };
 
@@ -12,6 +15,9 @@
       enable = lib.mkOption {
         type = lib.types.bool;
         default = true;
+        description = ''
+          Whether to enable support for bind mounts.
+        '';
       };
     };
   };

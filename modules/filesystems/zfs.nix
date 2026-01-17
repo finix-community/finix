@@ -10,11 +10,17 @@
       enable = lib.mkOption {
         type = lib.types.bool;
         default = false;
+        description = ''
+          Whether to enable support for the `zfs` filesystem in the initial ramdisk.
+        '';
       };
 
       packages = lib.mkOption {
         type = with lib.types; listOf package;
         default = [ pkgs.zfs ];
+        description = ''
+          Packages providing filesystem utilities for `zfs` in the initial ramdisk.
+        '';
       };
     };
 
@@ -22,11 +28,17 @@
       enable = lib.mkOption {
         type = lib.types.bool;
         default = false;
+        description = ''
+          Whether to enable support for the `zfs` filesystem.
+        '';
       };
 
       packages = lib.mkOption {
         type = with lib.types; listOf package;
         default = [ pkgs.zfs ];
+        description = ''
+          Packages providing filesystem utilities for `zfs`.
+        '';
       };
     };
 

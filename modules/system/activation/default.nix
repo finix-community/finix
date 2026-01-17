@@ -31,6 +31,9 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = true;
+      description = ''
+        Whether to enable system activation scripts.
+      '';
     };
 
     scripts = lib.mkOption {
@@ -62,6 +65,9 @@ in
     path = lib.mkOption {
       type = with lib.types; listOf package;
       default = [ ];
+      description = ''
+        Packages added to the `PATH` environment variable of activation scripts.
+      '';
     };
 
     out = lib.mkOption {

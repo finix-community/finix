@@ -5,7 +5,9 @@
       type = lib.types.pkgs // {
         description = "An evaluation of Nixpkgs; the top level attribute set of packages";
       };
-      description = "";
+      description = ''
+        The `nixpkgs` package set to use for this system.
+      '';
     };
   };
 

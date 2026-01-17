@@ -11,16 +11,20 @@ in
 {
   options =
     let
-      fuseEnable = default: {
+      fuseEnable = default: description: {
         supportedFilesystems.fuse.enable = lib.mkOption {
           type = lib.types.bool;
-          inherit default;
+          inherit default description;
         };
       };
     in
     {
-      boot = (fuseEnable true) // {
-        initrd = fuseEnable false;
+      boot = (fuseEnable true ''
+        Whether to enable support for the `fuse` filesystem.
+      '') // {
+        initrd = fuseEnable false ''
+          Whether to enable support for the `fuse` filesystem in the initial ramdisk.
+        '';
       };
     };
 

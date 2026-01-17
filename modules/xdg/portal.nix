@@ -12,11 +12,17 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = true;
+      description = ''
+        Whether to enable XDG desktop portals.
+      '';
     };
 
     portals = lib.mkOption {
       type = with lib.types; listOf package;
       default = [ ];
+      description = ''
+        List of XDG desktop portal packages to install.
+      '';
     };
   };
 

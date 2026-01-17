@@ -98,6 +98,9 @@ let
         enable = lib.mkOption {
           type = lib.types.bool;
           default = true;
+          description = ''
+            Whether to enable this stanza.
+          '';
         };
 
         extraConfig = lib.mkOption {
@@ -122,6 +125,9 @@ let
         description = lib.mkOption {
           type = with lib.types; nullOr str;
           default = null;
+          description = ''
+            A human-readable description of this service, displayed by `initctl`.
+          '';
         };
 
         runlevels = lib.mkOption {
@@ -172,11 +178,17 @@ let
         name = lib.mkOption {
           type = lib.types.str; # TODO: limit name, no : allowed, only valid chars
           readOnly = true;
+          description = ''
+            The name of this stanza, derived from the attribute name.
+          '';
         };
 
         id = lib.mkOption {
           type = with lib.types; nullOr str;
           readOnly = true;
+          description = ''
+            The instance identifier, derived from the attribute name if it contains an `@` character.
+          '';
         };
 
         user = lib.mkOption {
@@ -270,6 +282,9 @@ let
 
         command = lib.mkOption {
           type = program;
+          description = ''
+            The command to execute.
+          '';
         };
 
         pre = lib.mkOption {
@@ -356,7 +371,7 @@ let
           type = lib.types.bool;
           default = false;
           description = ''
-            Whether this service supports reload on SIGHUP.
+            Whether this service supports reload on `SIGHUP`.
           '';
         };
 
@@ -371,6 +386,10 @@ let
         type = lib.mkOption {
           type = with lib.types; nullOr (enum [ "forking" ]);
           default = null;
+          description = ''
+            Service type. Set to `"forking"` for traditional daemons that fork
+            to the background and use PID files for process tracking.
+          '';
         };
 
         notify = lib.mkOption {
@@ -541,11 +560,17 @@ let
         baud = lib.mkOption {
           type = with lib.types; nullOr nonEmptyStr;
           default = null;
+          description = ''
+            Baud rate for serial TTYs.
+          '';
         };
 
         term = lib.mkOption {
           type = with lib.types; nullOr nonEmptyStr;
           default = null;
+          description = ''
+            The `TERM` environment variable value for the TTY.
+          '';
         };
       };
 

@@ -93,15 +93,24 @@ in
       enable = lib.mkOption {
         type = lib.types.bool;
         default = true;
+        description = ''
+          Whether to enable the SFTP subsystem.
+        '';
       };
 
       executable = lib.mkOption {
         type = lib.types.str;
+        description = ''
+          Path to the SFTP server executable.
+        '';
       };
 
       flags = lib.mkOption {
         type = with lib.types; listOf str;
         default = [ ];
+        description = ''
+          Additional command-line flags to pass to the SFTP server.
+        '';
       };
     };
 
@@ -133,7 +142,9 @@ in
           HostKey = lib.mkOption {
             type = with lib.types; listOf path;
             default = [ ];
-            description = "TODO: description";
+            description = ''
+              Specifies a file containing a private host key used by {manpage}`sshd(8)`.
+            '';
           };
 
           LogLevel = lib.mkOption {

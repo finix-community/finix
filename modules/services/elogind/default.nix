@@ -33,6 +33,7 @@ in
     };
   };
 
+  # extend finit.ttys to add elogind readiness conditions
   options.finit.ttys = lib.mkOption {
     type =
       with lib.types;

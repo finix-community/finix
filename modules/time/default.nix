@@ -15,6 +15,12 @@ in
       description = "null or string without spaces";
     };
     default = null;
+    example = "America/New_York";
+    description = ''
+      The time zone used when displaying times and dates. See
+      <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones>
+      for a list of valid time zone names.
+    '';
   };
 
   config = {
