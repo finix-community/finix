@@ -75,7 +75,7 @@ in
       extraConfig = "if:<!int/container>";
     };
 
-    services.tmpfiles.chrony.rules = [
+    finit.tmpfiles.rules = [
       "d /var/lib/chrony 0750 chrony chrony - -"
       "f /var/lib/chrony/chrony.drift 0640 chrony chrony - -"
       "f /var/lib/chrony/chrony.keys 0640 chrony chrony - -"

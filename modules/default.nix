@@ -17,7 +17,6 @@ let
       "elogind"
       "mdevd"
       "seatd"
-      "tmpfiles"
       "udev"
     ]
   );
@@ -46,7 +45,6 @@ in
       ./services/elogind
       ./services/mdevd
       ./services/seatd
-      ./services/tmpfiles
       ./services/udev
       ./system/activation
       ./system/activation/specialisation.nix

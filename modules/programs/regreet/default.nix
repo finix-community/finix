@@ -157,7 +157,7 @@ in
       }
     ];
 
-    services.tmpfiles.regreet.rules = [
+    finit.tmpfiles.rules = [
       "d /var/log/regreet 0755 greeter greeter - -"
       "d /var/lib/regreet 0755 greeter greeter - -"
     ];

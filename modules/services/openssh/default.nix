@@ -336,7 +336,7 @@ in
       cfg.package
     ];
 
-    services.tmpfiles.sshd.rules = [
+    finit.tmpfiles.rules = [
       "d /var/lib/sshd 0755"
     ];
 

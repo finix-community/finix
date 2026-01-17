@@ -294,7 +294,7 @@ in
       cfg.package
     ];
 
-    services.tmpfiles.nix-daemon.rules = [
+    finit.tmpfiles.rules = [
       "d /nix/var/nix/daemon-socket 0755 root root - -"
 
       "R! /nix/var/nix/gcroots/tmp           -    -    -    - -"

@@ -94,7 +94,7 @@ in
       nohup = true;
     };
 
-    services.tmpfiles.fwupd.rules = [
+    finit.tmpfiles.rules = [
       "/var/lib/fwupd"
       "/var/cache/fwupd"
     ];

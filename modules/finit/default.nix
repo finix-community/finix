@@ -666,6 +666,7 @@ in
 {
   imports = [
     ./initrd.nix
+    ./tmpfiles.nix
   ];
 
   options.finit = {
@@ -979,7 +980,7 @@ in
       cfg.package
     ];
 
-    services.tmpfiles.finit.rules = [
+    finit.tmpfiles.rules = [
       "d /etc/finit.d/enabled 0755"
     ];
   };

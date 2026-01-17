@@ -49,7 +49,7 @@ in
       cfg.package
     ];
 
-    services.tmpfiles.tlp.rules = [
+    finit.tmpfiles.rules = [
       "d /var/lib/tlp"
     ];
 

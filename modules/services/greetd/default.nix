@@ -66,7 +66,7 @@ in
       greeter = { };
     };
 
-    services.tmpfiles.greetd.rules = [
+    finit.tmpfiles.rules = [
       "d /var/cache/tuigreet - greeter greeter"
     ];
 

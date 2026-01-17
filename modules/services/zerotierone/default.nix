@@ -59,12 +59,10 @@ in
       command = "${cfg.package}/bin/zerotier-one ${cfg.stateDir}";
     };
 
-    services.tmpfiles.zerotierone = lib.mkIf (cfg.stateDir == "/var/lib/zerotier-one") {
-      rules = [
-        "d ${cfg.stateDir}"
+    finit.tmpfiles.rules = lib.optionals (cfg.stateDir == "/var/lib/zerotier-one") [
+      "d ${cfg.stateDir}"
 
-        # TODO: ${cfg.stateDir}/networks.d/<JOIN> -> managed by linker
-      ];
-    };
+      # TODO: ${cfg.stateDir}/networks.d/<JOIN> -> managed by linker
+    ];
   };
 }

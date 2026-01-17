@@ -214,7 +214,7 @@ in
       command = "${lib.getExe cfg.package} -f ${cfg.configFile}";
     };
 
-    services.tmpfiles.dhcpd.rules = [
+    finit.tmpfiles.rules = [
       "d /var/db/dhcpcd - dhcpcd"
       "d /var/lib/dhcpcd - dhcpcd dhcpcd"
     ];

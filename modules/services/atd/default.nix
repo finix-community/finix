@@ -72,7 +72,7 @@ in
       setgid = true;
     });
 
-    services.tmpfiles.atd.rules = [
+    finit.tmpfiles.rules = [
       "d /var/spool/atjobs 1770 atd atd"
       "f /var/spool/atjobs/.SEQ 0600 atd atd"
       "d /var/spool/atspool 1770 atd atd"
