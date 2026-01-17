@@ -85,8 +85,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    hardware.console.keyMap = "us";
-
     services.sysklogd.enable = true;
 
     environment.etc."syslog.conf".source = pkgs.writeText "syslog.conf" ''

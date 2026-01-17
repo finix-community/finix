@@ -9,9 +9,6 @@
     ./hardware-configuration.nix
   ];
 
-  # specify the keyboard
-  hardware.console.keyMap = "us";
-
   # set your time zone
   time.timeZone = "America/Toronto";
 
