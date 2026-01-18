@@ -829,6 +829,13 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = lib.versionAtLeast cfg.package.version "4.16";
+        message = "finit version must be at least 4.16";
+      }
+    ];
+
     boot.init.pid1 =
       let
         # finit needs to mount extra file systems not covered by boot
