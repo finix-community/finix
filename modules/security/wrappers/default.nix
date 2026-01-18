@@ -169,23 +169,29 @@ let
   ) (lib.attrValues wrappers);
 
   wrappersScript = pkgs.writeShellScript "suid-sgid-wrappers.sh" ''
-    PATH=$PATH:${pkgs.s6-portable-utils}/bin
     set -e
+
+    chmod 755 "${parentWrapperDir}"
+
     # We want to place the tmpdirs for the wrappers to the parent dir.
-    mkdir -p "${parentWrapperDir}"
     wrapperDir=$(mktemp --directory --tmpdir="${parentWrapperDir}" wrappers.XXXXXXXXXX)
     chmod a+rx "$wrapperDir"
 
     ${lib.concatStringsSep "\n" mkWrappedPrograms}
 
     if [ -L ${wrapperDir} ]; then
+      # Atomically replace the symlink
+      # See https://axialcorps.com/2013/07/03/atomically-replacing-files-and-directories/
       old=$(readlink -f ${wrapperDir})
-      # s6-ln is not POSIX, it does atomic replacement.
-      s6-ln -s -f -n "$wrapperDir" "${wrapperDir}"
-      s6-rmrf "$old"
+      if [ -e "${wrapperDir}-tmp" ]; then
+        rm --force --recursive "${wrapperDir}-tmp"
+      fi
+      ln --symbolic --force --no-dereference "$wrapperDir" "${wrapperDir}-tmp"
+      mv --no-target-directory "${wrapperDir}-tmp" "${wrapperDir}"
+      rm --force --recursive "$old"
     else
       # For initial setup
-      s6-ln -s "$wrapperDir" "${wrapperDir}"
+      ln --symbolic "$wrapperDir" "${wrapperDir}"
     fi
   '';
 

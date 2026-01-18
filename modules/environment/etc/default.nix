@@ -87,14 +87,14 @@ in
     '';
 
     system.activation.scripts.shebangCompatibility = ''
-      s6-mkdir -m 0755 -p /usr/bin /bin
+      mkdir -p -m 0755 /usr/bin /bin
 
       # Create /usr/bin/env for shebangs.
-      s6-ln -s -f -n ${pkgs.coreutils}/bin/env /usr/bin/env
+      ln -sfn ${pkgs.coreutils}/bin/env /usr/bin/env
 
       # Create the required /bin/sh symlink; otherwise lots of things
       # (notably the system() function) won't work.
-      s6-ln -s -f -n "${pkgs.bashInteractive}/bin/sh" /bin/sh
+      ln -sfn "${pkgs.bashInteractive}/bin/sh" /bin/sh
     '';
   };
 }

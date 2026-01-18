@@ -126,7 +126,7 @@ in
     system.activation.scripts.specialfs = ''
       echo "specialfs stub here..."
       mkdir -p /bin /etc /run /tmp /usr /var/{cache,db,empty,lib,log,spool}
-      s6-ln -s -f -n /run /var/run
+      ln -sfn /run /var/run
     '';
 
     system.activation.path =
@@ -140,7 +140,6 @@ in
         shadow
         nettools # needed for hostname
         util-linux # needed for mount and mountpoint
-        s6-portable-utils # s6-ln
       ];
 
     system.topLevel = checkAssertWarn (
