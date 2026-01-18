@@ -862,7 +862,7 @@ in
       }
     ];
 
-    boot.init.pid1 =
+    boot.init.script =
       let
         # finit needs to mount extra file systems not covered by boot
         fsPackages =
@@ -873,38 +873,35 @@ in
           |> lib.flatten
           |> lib.unique;
       in
-      {
-        env = {
-          # finit requires fsck, modprobe & mount commands
-          # before PATH can be read from finit.conf
-          PATH = lib.makeBinPath (
+      pkgs.writeShellScript "init" ''
+        systemConfig='@systemConfig@'
+
+        echo ""
+        echo "<<< finix - stage 2 >>>"
+        echo ""
+
+        # record the boot configuration.
+        ${pkgs.coreutils}/bin/ln -sfn "$systemConfig" /run/booted-system
+        ${pkgs.coreutils}/bin/ln -sfn "$systemConfig" /run/current-system
+
+        # run the activation script.
+        "$systemConfig/activate"
+
+        # finit requires fsck, modprobe & mount commands
+        # before PATH can be read from finit.conf
+        export PATH=${
+          lib.makeBinPath (
             [
               pkgs.unixtools.fsck
               pkgs.kmod
               pkgs.util-linux.mount
             ]
             ++ fsPackages
-          );
-        };
-        argv = {
-          # Initial profile activation.
-          activation = {
-            text = lib.quoteExecline [
-              "foreground"
-              [ "@systemConfig@/activate" ]
-            ];
-          };
-          pid1 = {
-            deps = [
-              "env"
-              "activation"
-            ];
-            text = [
-              "${config.finit.package}/bin/finit"
-            ];
-          };
-        };
-      };
+          )
+        }
+
+        exec ${cfg.package}/bin/finit "$@"
+      '';
 
     # TODO: decide a reasonable default here... user can override if needed
     finit.path = [
