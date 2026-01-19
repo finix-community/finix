@@ -23,16 +23,6 @@ let
         ''
     );
 
-  init = pkgs.writeScript "init" ''
-    #!/bin/sh
-
-    # the very first thing to run with finit is mounting /dev, /proc, and /sys
-    # hence we need to create some directories before we run finit
-    /bin/mkdir -p /dev /proc /sys
-
-    exec /bin/finit
-  '';
-
   fsPackages =
     config.boot.initrd.supportedFilesystems
     |> lib.filterAttrs (_: v: v.enable)
@@ -74,7 +64,7 @@ in
     boot.initrd.contents = [
       {
         target = "/init";
-        source = init;
+        source = "${config.finit.package}/bin/finit";
       }
       {
         target = "/bin";
