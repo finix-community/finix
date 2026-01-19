@@ -6,11 +6,6 @@
     {
       nixosModules = import ./modules;
 
-      overlays = {
-        # software required for finix to operate
-        default = import ./overlays/default.nix;
-      };
-
       lib.finixSystem =
         {
           lib ? null,

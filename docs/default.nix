@@ -4,11 +4,7 @@ let
 
   sources = import ../lon.nix;
   ndg = pkgs.callPackage (toString sources.ndg + "/flake/packages/ndg/package.nix") { };
-  pkgs = import sources.nixpkgs {
-    overlays = [
-      (import ../overlays/default.nix)
-    ];
-  };
+  pkgs = import sources.nixpkgs { };
 
   modulesPath = toString sources.nixpkgs + "/nixos/modules";
 

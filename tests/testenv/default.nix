@@ -2,11 +2,7 @@ let
   sources = import ../../lon.nix;
 in
 {
-  pkgs ? import sources.nixpkgs {
-    overlays = [
-      (import ../../overlays/default.nix)
-    ];
-  },
+  pkgs ? import sources.nixpkgs { },
 }:
 import ./tcl {
   inherit (pkgs) lib;
