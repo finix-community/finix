@@ -131,7 +131,7 @@ in
         source = pkgs.writeScript "finix-switch-root" ''
           #!/bin/sh
 
-          # Process the kernel command line.
+          # process the kernel command line to find init=
           export stage2Init=/init
           for o in $(cat /proc/cmdline); do
             case $o in
@@ -142,8 +142,8 @@ in
             esac
           done
 
-          echo "stage2Init: $stage2Init"
-
+          # pass the original stage2Init path - this becomes argv[0] in stage 2
+          # the finix-setup finit plugin uses argv[0] to derive systemConfig
           exec initctl switch-root /sysroot "$stage2Init"
         '';
       }

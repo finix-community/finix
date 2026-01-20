@@ -153,12 +153,11 @@ in
           echo -n "finix" > $out/nixos-version
 
           cp ${config.system.activation.out} $out/activate
-          cp ${config.boot.init.script} $out/init
-
-          ${pkgs.coreutils}/bin/ln -s ${config.environment.path} $out/sw
 
           substituteInPlace $out/activate --subst-var-by systemConfig $out
-          substituteInPlace $out/init --subst-var-by systemConfig $out
+
+          ${pkgs.coreutils}/bin/ln -sr ${config.finit.package}/bin/finit $out/init
+          ${pkgs.coreutils}/bin/ln -s ${config.environment.path} $out/sw
 
           mkdir $out/specialisation
 
