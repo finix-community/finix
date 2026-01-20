@@ -8,6 +8,9 @@ let
   cfg = config.finit;
   format = pkgs.formats.keyValue { };
 
+  # finix-setup plugin for early boot initialization
+  finix-setup = pkgs.callPackage ../../pkgs/finix-setup { };
+
   pathOrStr = with lib.types; coercedTo path (x: "${x}") str;
   program =
     lib.types.coercedTo (
@@ -708,8 +711,21 @@ in
       type = lib.types.package;
       default = pkgs.finit;
       defaultText = lib.literalExpression "pkgs.finit";
+      apply =
+        package:
+        package.overrideAttrs (old: {
+          configureFlags = old.configureFlags ++ [
+            "--with-plugin-path=${finix-setup}/lib/finit/plugins"
+          ];
+        });
       description = ''
         The package to use for `finit`.
+
+        ::: {.note}
+        The specified package will have its `configureFlags` appended to with
+        a finit plugin path (`--with-plugin-path`) set to the required
+        `finix-setup` plugin.
+        :::
       '';
     };
 
@@ -861,47 +877,6 @@ in
         message = "finit version must be at least 4.16";
       }
     ];
-
-    boot.init.script =
-      let
-        # finit needs to mount extra file systems not covered by boot
-        fsPackages =
-          config.boot.supportedFilesystems
-          |> lib.filterAttrs (_: v: v.enable)
-          |> lib.attrValues
-          |> lib.catAttrs "packages"
-          |> lib.flatten
-          |> lib.unique;
-      in
-      pkgs.writeShellScript "init" ''
-        systemConfig='@systemConfig@'
-
-        echo ""
-        echo "<<< finix - stage 2 >>>"
-        echo ""
-
-        # record the boot configuration.
-        ${pkgs.coreutils}/bin/ln -sfn "$systemConfig" /run/booted-system
-        ${pkgs.coreutils}/bin/ln -sfn "$systemConfig" /run/current-system
-
-        # run the activation script.
-        "$systemConfig/activate"
-
-        # finit requires fsck, modprobe & mount commands
-        # before PATH can be read from finit.conf
-        export PATH=${
-          lib.makeBinPath (
-            [
-              pkgs.unixtools.fsck
-              pkgs.kmod
-              pkgs.util-linux.mount
-            ]
-            ++ fsPackages
-          )
-        }
-
-        exec ${cfg.package}/bin/finit "$@"
-      '';
 
     # TODO: decide a reasonable default here... user can override if needed
     finit.path = [

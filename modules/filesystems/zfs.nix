@@ -92,7 +92,7 @@
       boot.initrd = {
         kernelModules = [ "zfs" ];
         fileSystemImportCommands =
-          map (name: "zpool import -f ${name}") config.boot.zfs.importPools
+          map (name: "zpool list ${name} >/dev/null 2>&1 || zpool import -f ${name}") config.boot.zfs.importPools
           ++ map (name: "zfs load-key ${name}") config.boot.zfs.loadKeys
           |> (lib.concatStringsSep "\n");
       };
