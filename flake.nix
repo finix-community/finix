@@ -6,11 +6,6 @@
     {
       nixosModules = import ./modules;
 
-      overlays = {
-        # software required for finix to operate
-        default = import ./overlays/default.nix;
-      };
-
       lib.finixSystem =
         {
           lib ? null,
@@ -35,6 +30,11 @@
 
       templates = {
         default = self.templates.desktop-greetd;
+
+        minimal = {
+          path = ./templates/minimal;
+          description = "A minimal finix system";
+        };
 
         desktop-greetd = {
           path = ./templates/desktop-seattd;

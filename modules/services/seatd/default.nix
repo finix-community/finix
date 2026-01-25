@@ -53,28 +53,5 @@ in
         "${pkgs.seatd.bin}/bin/seatd -n %n -u root -g ${cfg.group}"
         + lib.optionalString cfg.debug " -l debug";
     };
-
-    synit.daemons.seatd = {
-      argv = [
-        "${pkgs.seatd.bin}/bin/seatd"
-        "-n"
-        "3"
-        "-u"
-        "root"
-        "-g"
-        cfg.group
-      ]
-      ++ lib.optionals cfg.debug [
-        "-l"
-        "debug"
-      ];
-      readyOnNotify = 3;
-      provides = [
-        [
-          "milestone"
-          "login"
-        ]
-      ];
-    };
   };
 }

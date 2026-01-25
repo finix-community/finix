@@ -96,6 +96,10 @@ let
         neededForBoot = lib.mkOption {
           type = lib.types.bool;
           default = false;
+          description = ''
+            Whether this filesystem is needed for boot. If set, the filesystem
+            will be mounted in the initial ramdisk.
+          '';
         };
       };
 

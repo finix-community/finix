@@ -17,17 +17,8 @@ let
   backdoorScript = pkgs.writeShellScript "backdoor" ''
     export USER=root
     export HOME=/root
-    export PATH=${
-      lib.makeBinPath [
-        pkgs.coreutils
-        pkgs.gnugrep
-        pkgs.gnused
-        pkgs.findutils
-        pkgs.netcat
-        pkgs.iproute2
-        pkgs.iputils
-      ]
-    }:$PATH
+    # use the system path (same as /run/current-system/sw) to get all environment.systemPackages
+    export PATH=${lib.makeBinPath [ config.environment.path ]}
 
     # source profile if it exists
     if [[ -e /etc/profile ]]; then
@@ -84,6 +75,11 @@ in
     # ensure virtio_console module is loaded early
     boot.initrd.kernelModules = [ "virtio_console" ];
 
+    environment.systemPackages = [
+      pkgs.iproute2
+      pkgs.iputils
+    ];
+
     # backdoor service for finit
     finit.services.backdoor = {
       description = "test driver backdoor shell";
@@ -93,16 +89,6 @@ in
 
       # the backdoor runs bash which executes commands from hvc0 until EOF, then exits
       restart = 0;
-    };
-
-    # backdoor service for synit
-    synit.core.daemons.backdoor = {
-      argv = [ backdoorScript ];
-      readyOnStart = true;
-      logging.enable = false;
-
-      # the backdoor runs bash which executes commands from hvc0 until EOF, then exits
-      restart = "never";
     };
   };
 }

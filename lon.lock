@@ -20,16 +20,6 @@
       "revision": "544961dfcce86422ba200ed9a0b00dd4b1486ec5",
       "url": "https://github.com/nixos/nixpkgs/archive/544961dfcce86422ba200ed9a0b00dd4b1486ec5.tar.gz",
       "hash": "sha256-EVAqOteLBFmd7pKkb0+FIUyzTF61VKi7YmvP1tw4nEw="
-    },
-    "sampkgs": {
-      "type": "Git",
-      "fetchType": "git",
-      "branch": "trunk",
-      "revision": "6bffb8a17e6e3e8e75ffa75a2cb91d57df349d78",
-      "url": "https://git.syndicate-lang.org/synit/sampkgs",
-      "hash": "sha256-FcMWYPntCX8vLgmG5wiE5GzNdzzlmvhXaDP5hn7qmF4=",
-      "lastModified": 1762689600,
-      "submodules": false
     }
   }
 }
