@@ -6,15 +6,13 @@
   name = "finix-test-driver.shell";
 
   nodes.machine = {
-    boot.serviceManager = "finit";
-
     finit.runlevel = 2;
     services.mdevd.enable = true;
   };
 
   testScript = ''
     machine start
-    machine expect "entering runlevel 2"
+    machine expect -timeout 30 "entering runlevel 2"
     after 500
 
     subtest "succeed returns command output" {
@@ -67,7 +65,7 @@
     }
 
     subtest "waitForCondition" {
-      machine waitForCondition "task/test-network/success" 30
+      machine waitForCondition "task/ifupdown-ng/success" 30
     }
 
     subtest "shutdown" {

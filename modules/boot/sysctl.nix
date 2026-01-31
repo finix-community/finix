@@ -77,20 +77,6 @@ in
       command = "${pkgs.procps}/bin/sysctl -p ${config.environment.etc."sysctl.d/60-finix.conf".source}";
     };
 
-    synit.daemons.sysctl = {
-      argv = [
-        "elglob"
-        "-s"
-        "GLOB"
-        "/etc/sysctl.d/*"
-        "sysctl"
-        "-p"
-        "$GLOB"
-      ];
-      path = [ pkgs.procps ];
-      restart = "never";
-    };
-
     # Hide kernel pointers (e.g. in /proc/modules) for unprivileged
     # users as these make it easier to exploit kernel vulnerabilities.
     boot.kernel.sysctl."kernel.kptr_restrict" = lib.mkDefault 1;

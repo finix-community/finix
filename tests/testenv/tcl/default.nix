@@ -228,21 +228,11 @@ in
         pkgs.expect # for the test driver itself
       ];
 
-      # tcl library path for synit tests
-      # when any node uses synit, we need the sycl package which provides
-      # synit-specific tcl commands for service management and status queries
-      tclLibPath = lib.optional (lib.any ({ config, ... }: config.synit.enable) (
-        lib.attrValues nodes'
-      )) "${pkgs.alt.sam.tclPackages.sycl}/lib/${pkgs.alt.sam.tclPackages.sycl.name}";
-
       # interactive driver script - runs the test with tty for shell interaction
       driverInteractive = pkgs.writeShellScriptBin "test-${name}-interactive" ''
         set -e
         unset out  # prevent driver.tcl from trying to log to nix-shell's $out
         export PATH="${lib.makeBinPath testDeps}:$PATH"
-        ${lib.optionalString (tclLibPath != [ ]) ''
-          export TCLLIBPATH="${lib.concatStringsSep " " tclLibPath}"
-        ''}
 
         # create temp directory for test state
         TMPDIR=$(mktemp -d -t finix-test-${name}.XXXXXX)
@@ -304,9 +294,6 @@ in
         set -e
         unset out  # prevent driver.tcl from trying to log to nix-shell's $out
         export PATH="${lib.makeBinPath testDeps}:$PATH"
-        ${lib.optionalString (tclLibPath != [ ]) ''
-          export TCLLIBPATH="${lib.concatStringsSep " " tclLibPath}"
-        ''}
 
         TMPDIR=$(mktemp -d -t finix-test-${name}.XXXXXX)
         trap "rm -rf $TMPDIR" EXIT
@@ -322,8 +309,6 @@ in
 
       runAttrs' = runAttrs // {
         nativeBuildInputs = runAttrs.nativeBuildInputs or [ ] ++ testDeps;
-
-        TCLLIBPATH = runAttrs.TCLLIBPATH or [ ] ++ tclLibPath;
 
         passthru = runAttrs.passthru or { } // {
           nodes = nodes';

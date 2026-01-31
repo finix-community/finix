@@ -489,7 +489,6 @@ proc CreateNode {name body} {
     }
 
     # reboot the vm (graceful shutdown + start)
-    # works with both finit (entering runlevel) and synit (awaiting signals)
     proc reboot {{timeout 60}} {
       variable nodeName
       variable spawn_id
@@ -501,15 +500,12 @@ proc CreateNode {name body} {
       # disconnect existing sockets (they'll be invalid after reboot)
       disconnect
       # wait for boot messages indicating vm has restarted
-      # match either finit or synit boot completion messages
+      # match finit boot completion messages
       set savedTimeout $::timeout
       set ::timeout $timeout
       ::expect -i $spawn_id \
         -re {entering runlevel [0-9]+} {
           ::log "$nodeName: reboot complete (finit)"
-        } \
-        "synit_pid1: Awaiting signals..." {
-          ::log "$nodeName: reboot complete (synit)"
         } \
         timeout {
           set ::timeout $savedTimeout

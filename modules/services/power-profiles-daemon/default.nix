@@ -42,7 +42,7 @@ in
       command = "${cfg.package}/libexec/power-profiles-daemon";
     };
 
-    services.tmpfiles.power-profiles-daemon.rules = [
+    finit.tmpfiles.rules = [
       "d /var/lib/power-profiles-daemon"
     ];
   };
