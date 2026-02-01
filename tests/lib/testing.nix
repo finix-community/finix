@@ -1,8 +1,8 @@
 {
-  config,
-  lib,
-  pkgs,
   nodes,
+  config,
+  pkgs,
+  lib,
   ...
 }:
 
@@ -37,13 +37,6 @@ in
 
   options = {
     testing.enable = lib.mkEnableOption "test instrumentation";
-
-    testing.enableRootDisk = lib.mkEnableOption "use a root file-system on a disk image otherwise use tmpfs";
-
-    testing.driver = lib.mkOption {
-      type = lib.types.enum [ "tcl" ];
-      description = "Test driver.";
-    };
 
     testing.graphics.enable = lib.mkEnableOption "graphic devices";
 
@@ -85,6 +78,19 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    boot.kernel.sysctl = {
+      # fail fast - panic instead of hanging on errors
+      "kernel.hung_task_timeout_secs" = 600;
+      # panic on out-of-memory rather than letting OOM killer cause hard-to-diagnose failures
+      "vm.panic_on_oom" = 2;
+    };
+
+    boot.kernelParams = [
+      # panic if an error occurs in stage 1 (rather than waiting for user intervention)
+      "panic=1"
+      "boot.panic_on_fail"
+    ];
+
     services.sysklogd.enable = true;
 
     environment.etc."syslog.conf".source = pkgs.writeText "syslog.conf" ''
