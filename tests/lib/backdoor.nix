@@ -35,29 +35,23 @@ let
       sleep 0.1
     done
 
-    # redirect stdin/stdout/stderr to virtio console
-    # this ensures all command output (including help text which often goes to stderr)
-    # is visible through the backdoor socket
-    exec < /dev/hvc0 > /dev/hvc0 2>&1
+    # redirect stdin/stdout to virtio console
+    exec < /dev/hvc0 > /dev/hvc0
 
-    # wait for ttyS0 to be available for the "connecting to host..." message
-    deadline=$((SECONDS + 10))
-    while [[ ! -e /dev/ttyS0 ]]; do
-      if [[ $SECONDS -ge $deadline ]]; then
-        echo "warning: ttyS0 not available after 10s"
-        break
-      fi
+    # wait for ttyS0 to be available, then redirect stderr to serial console
+    # this matches NixOS behavior and avoids escape sequences from programs
+    # like initctl being sent back through the backdoor
+    while ! exec 2> /dev/ttyS0; do
       sleep 0.1
     done
-    # send connect message to serial console if available
-    [[ -e /dev/ttyS0 ]] && echo "connecting to host..." > /dev/ttyS0
+    echo "connecting to host..." >&2
 
     # set raw mode to prevent CR/LF conversion
     stty -F /dev/hvc0 raw -echo
 
     # signal to test driver that shell is ready
-    # this exact message is expected by the test driver
-    echo "spawning backdoor root shell..."
+    # NixOS test driver expects this exact message (capital S)
+    echo "Spawning backdoor root shell..."
 
     # run a non-interactive bash that reads commands from /dev/hvc0
     # passing the device as argument makes bash run non-interactively
