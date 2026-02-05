@@ -3,12 +3,12 @@
 # tests the tmpfiles utility that creates, removes, and manages
 # temporary files and directories according to configuration.
 {
-  name = "tmpfiles";
+  name = "finit.tmpfiles";
 
   nodes.machine =
     { pkgs, ... }:
     {
-      imports = [ ./lib/common.nix ];
+      imports = [ ../lib/common.nix ];
 
       # pre-create test tmpfiles.d configs for boot-time testing
       environment.etc."tmpfiles.d/test-boot.conf".text = ''
