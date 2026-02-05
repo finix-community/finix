@@ -93,6 +93,22 @@ let
     };
   };
 
+  # oneshotOpts: options specific to oneshot stanzas (task, run) - not services
+  oneshotOpts = {
+    options.remain = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        By default, a `run` or `task` will re-run each time its runlevel is
+        entered, and its `post:` script does not run on completion.
+
+        With `remain:yes`, the task runs once and does not re-run on runlevel. The
+        `post:` script will run if the task is explicitly stopped or when the task
+        leaves its valid runlevels.
+      '';
+    };
+  };
+
   # baseOpts: options shared by ALL stanza types (service, task, run, tty, sysv)
   baseOpts =
     { config, name, ... }:
@@ -660,6 +676,7 @@ let
         "<${lib.optionalString (svc.nohup or false) "!"}${lib.concatStringsSep "," svc.conditions}>"
       )
       ++ (lib.optional (svc.manual or false) "manual:yes")
+      ++ (lib.optional (svc.remain or false) "remain:yes")
       ++ (lib.optional (svc.kill or null != null) "kill:${toString svc.kill}")
       ++ (lib.optional (svc.caps or [ ] != [ ]) ("caps:${lib.concatStringsSep "," svc.caps}"))
       ++ (lib.optional (svc.conflict or [ ] != [ ]) ("conflict:${lib.concatStringsSep "," svc.conflict}"))
@@ -809,6 +826,7 @@ in
         attrsOf (submodule [
           baseOpts
           execOpts
+          oneshotOpts
           rlimitOpts
         ]);
       default = { };
@@ -825,6 +843,7 @@ in
         attrsOf (submodule [
           baseOpts
           execOpts
+          oneshotOpts
           runOpts
         ]);
       default = { };
@@ -924,9 +943,9 @@ in
 
         cgroup = lib.concatMapAttrsStringSep "\n" (
           _: cgroupOpts:
-          ''cgroup ${cgroupOpts.name} ${
+          "cgroup ${cgroupOpts.name} ${
             lib.concatMapAttrsStringSep "," (k: v: "${k}:${toString v}") cgroupOpts.settings
-          }''
+          }"
         ) cfg.cgroups;
 
         # TODO: split these out into their own files, while preserving order, and add rlimits option

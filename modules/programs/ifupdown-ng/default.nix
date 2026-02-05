@@ -200,9 +200,13 @@ in
     finit.tasks.ifupdown-ng = {
       description = "bring up network interfaces";
       log = true;
+      remain = true;
       command =
         "${cfg.package}/bin/ifup -E ${cfg.package}/libexec/ifupdown-ng "
         + lib.escapeShellArgs cfg.extraArgs;
+      post = pkgs.writeShellScript "ifdown.sh" ''
+        ${cfg.package}/bin/ifdown -E ${cfg.package}/libexec/ifupdown-ng ${lib.escapeShellArgs cfg.extraArgs}
+      '';
       conditions = [
         "service/syslogd/ready"
       ]
