@@ -12,7 +12,6 @@ let
     types
     ;
 
-  writeExeclineScript = pkgs.execline.writeScript;
   gidOf = name: toString config.ids.gids.${name};
 
   cfg = config.services.mdevd;
@@ -44,50 +43,56 @@ let
       video[0-9]+ 0:${gidOf "video"} 660
     '';
 
-  # Insert modules for devices.
-  modaliasRule = "-$MODALIAS=.* 0:0 660 +importas m MODALIAS modprobe --quiet $m";
+  # Insert modules for devices with a modalias.
+  # Use @ prefix to run via /bin/sh on add events.
+  modaliasRule = ''-$MODALIAS=.* 0:0 660 @modprobe --quiet "$MODALIAS"'';
 
   # We need symlinks in /dev/disk/{by-id,by-label,by-uuid}
   # so we run this script for block device events.
   # Requires blkid from util-linux be on $PATH.
-  devDiskScript = writeExeclineScript "mdevd-disk.el" "" ''
-    multisubstitute {
-      importas -S ACTION
-      importas -S MDEV
-    }
-    case $ACTION
-    {
-      add {
-        # Udev compatibility hack.
-        foreground { s6-mkdir -p /dev/disk/by-id }
-        foreground { s6-ln -s ../../$MDEV /dev/disk/by-id/$MDEV }
+  #
+  # Note: The by-id symlinks just use the device name as a placeholder.
+  # Real unique IDs would require querying device serial numbers, etc.
+  devDiskScript = pkgs.writeShellScript "mdevd-disk.sh" ''
+    case "$ACTION" in
+      add)
+        # Create by-id symlink (using device name as placeholder ID)
+        mkdir -p /dev/disk/by-id
+        ln -sf "../../$MDEV" "/dev/disk/by-id/$MDEV"
 
-        forbacktickx -pE LINE { blkid --output export /dev/$MDEV }
-        case -N $LINE {
-          ^LABEL=(.*) {
-            foreground { s6-mkdir -p /dev/disk/by-label }
-            importas -S 1
-            s6-ln -s ../../$MDEV /dev/disk/by-label/$1
-          }
-          ^UUID=(.*) {
-            foreground { s6-mkdir -p /dev/disk/by-uuid }
-            importas -S 1
-            s6-ln -s ../../$MDEV /dev/disk/by-uuid/$1
-          }
-        }
-      }
-      remove {
-        foreground { s6-rmrf /dev/disk/by-id/$MDEV }
-        forbacktickx -pE LINE { blkid --output export /dev/$MDEV }
-        case -N $LINE {
-          ^LABEL=(.*) { importas -S 1 s6-rmrf /dev/disk/by-label/$1 }
-           ^UUID=(.*) { importas -S 1 s6-rmrf /dev/disk/by-uuid/$1  }
-        }
-      }
-    }
+        # Create by-label and by-uuid symlinks from blkid output
+        blkid --output export "/dev/$MDEV" 2>/dev/null | while IFS='=' read -r key value; do
+          case "$key" in
+            LABEL)
+              mkdir -p /dev/disk/by-label
+              ln -sf "../../$MDEV" "/dev/disk/by-label/$value"
+              ;;
+            UUID)
+              mkdir -p /dev/disk/by-uuid
+              ln -sf "../../$MDEV" "/dev/disk/by-uuid/$value"
+              ;;
+          esac
+        done
+        ;;
+      remove)
+        # Remove symlinks pointing to this device.
+        # We scan directories instead of calling blkid since the device may already be gone.
+        for dir in /dev/disk/by-id /dev/disk/by-label /dev/disk/by-uuid; do
+          [ -d "$dir" ] || continue
+          for link in "$dir"/*; do
+            [ -L "$link" ] || continue
+            target=$(readlink "$link")
+            case "$target" in
+              "../../$MDEV") rm -f "$link" ;;
+            esac
+          done
+        done
+        ;;
+    esac
   '';
 
-  devDiskRule = "-SUBSYSTEM=block;.* 0:${gidOf "disk"} 660 &${devDiskScript}";
+  # Use * prefix to run via /bin/sh on any action (add/remove).
+  devDiskRule = "-SUBSYSTEM=block;.* 0:${gidOf "disk"} 660 *${devDiskScript}";
 in
 {
   options.services.mdevd = {
@@ -172,7 +177,7 @@ in
       }
       {
         source = devDiskScript;
-        target = "/etc/dev-disk.el";
+        target = "/etc/mdevd-disk.sh";
       }
     ];
 
@@ -193,7 +198,6 @@ in
 
       # TODO: now we're hijacking `env` and no one else can use it...
       path = with pkgs; [
-        s6-portable-utils
         coreutils
         execline
         kmod
@@ -226,61 +230,6 @@ in
           echo -n "${config.hardware.firmware}/lib/firmware" > /sys/module/firmware_class/parameters/path
         fi
       '';
-    };
-
-    # Start a hotpluging mdevd after the stage-2 init.
-    synit.core.daemons.mdevd = {
-      argv = [
-        "${cfg.package}/bin/mdevd"
-        "-D"
-        "3"
-        "-F"
-        "/run/current-system/firmware"
-        # TODO: reload on SIGHUP.
-        "-f"
-        "/etc/mdev.conf"
-      ]
-      ++ lib.optionals (cfg.nlgroups != null) [
-        "-O"
-        (toString cfg.nlgroups)
-      ]
-      ++ lib.optionals cfg.debug [
-        "-v"
-        "3"
-      ];
-      readyOnNotify = 3;
-      path = with pkgs; [
-        kmod
-        util-linux
-      ];
-      # Upstream claims mdevd is terse enough to run
-      # without a dedicated logging destination.
-      logging.enable = false;
-    };
-
-    # Hold core back until another coldplug completes.
-    synit.core.daemons.mdevd-coldplug = {
-      argv = [
-        "${cfg.package}/bin/mdevd-coldplug"
-      ]
-      ++ lib.optionals (cfg.nlgroups != null) [
-        "-O"
-        (toString cfg.nlgroups)
-      ]
-      ++ lib.optionals cfg.debug [
-        "-v"
-        "3"
-      ];
-      restart = "on-error";
-      requires = [
-        {
-          key = [
-            "daemon"
-            "mdevd"
-          ];
-        }
-      ];
-      logging.enable = false;
     };
   };
 }

@@ -12,11 +12,7 @@
     let
       pkgs = import nixpkgs {
         system = "x86_64-linux";
-
         config.allowUnfree = true;
-        overlays = [
-          finix.overlays.default
-        ];
       };
 
       os = pkgs.lib.evalModules {

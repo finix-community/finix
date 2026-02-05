@@ -10,11 +10,17 @@
       enable = lib.mkOption {
         type = lib.types.bool;
         default = false;
+        description = ''
+          Whether to enable support for the `vfat` filesystem in the initial ramdisk.
+        '';
       };
 
       packages = lib.mkOption {
         type = with lib.types; listOf package;
         default = [ ];
+        description = ''
+          Packages providing filesystem utilities for `vfat` in the initial ramdisk.
+        '';
       };
     };
 
@@ -22,11 +28,17 @@
       enable = lib.mkOption {
         type = lib.types.bool;
         default = false;
+        description = ''
+          Whether to enable support for the `vfat` filesystem.
+        '';
       };
 
       packages = lib.mkOption {
         type = with lib.types; listOf package;
         default = [ ];
+        description = ''
+          Packages providing filesystem utilities for `vfat`.
+        '';
       };
     };
   };

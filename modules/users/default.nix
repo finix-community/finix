@@ -59,7 +59,7 @@ in
       ${pkgs.userborn}/bin/userborn ${configFile}
     '';
 
-    services.tmpfiles.home.rules = [
+    finit.tmpfiles.rules = [
       "d /home"
     ]
     ++ lib.mapAttrsToList (username: opts: "d ${opts.home} 0700 ${opts.name} ${opts.group}") (

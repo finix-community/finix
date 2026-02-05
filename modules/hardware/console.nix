@@ -35,18 +35,13 @@ in
       };
 
       keyMap = lib.mkOption {
+        type = with lib.types; either str path;
+        default = "us";
         description = ''
           The keyboard mapping table for the virtual consoles.
           This option may have no effect if
           hardware.console.binaryKeyMap is set.
         '';
-        type = with lib.types; either str path;
-        example = "us";
-        # Not setting a default here can be obnoxious but
-        # not worse than favoring a culturally biased
-        # layout optimised for mechanical typewriters.
-        # We should localize the templates and auto-detected
-        # configs instead of the defaults.
       };
 
       binaryKeyMap = lib.mkOption {

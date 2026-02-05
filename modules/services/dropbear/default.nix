@@ -158,7 +158,7 @@ in
       ];
     };
 
-    services.tmpfiles.dropbear.rules = [
+    finit.tmpfiles.rules = [
       "d ${stateDir} 0755"
     ];
   };

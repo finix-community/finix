@@ -12,6 +12,9 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
+      description = ''
+        Whether to enable periodic SSD TRIM of mounted partitions in background.
+      '';
     };
 
     # TODO: share this type with options.providers.scheduler.tasks.*.interval

@@ -1,26 +1,11 @@
 {
   config,
-  lib,
   pkgs,
+  lib,
   ...
 }:
 
 let
-  inherit (lib)
-    concatStringsSep
-    flatten
-    literalExpression
-    mapAttrs'
-    mapAttrsToList
-    mkIf
-    mkMerge
-    mkOption
-    mkPackageOption
-    optional
-    optionals
-    types
-    ;
-
   qemuCommand =
     qemuPkg:
     let
@@ -104,10 +89,10 @@ let
         let
           supportedSystems = [ "linux" ] ++ (lib.attrNames otherHostGuestMatrix);
         in
-        throw "Unsupported host system ${hostSystem}, supported: ${concatStringsSep ", " supportedSystems}";
+        throw "Unsupported host system ${hostSystem}, supported: ${lib.concatStringsSep ", " supportedSystems}";
       throwUnsupportedGuestSystem =
         guestMap:
-        throw "Unsupported guest system ${guestSystem} for host ${hostSystem}, supported: ${concatStringsSep ", " (lib.attrNames guestMap)}";
+        throw "Unsupported guest system ${guestSystem} for host ${hostSystem}, supported: ${lib.concatStringsSep ", " (lib.attrNames guestMap)}";
     in
     if hostStdenv.hostPlatform.isLinux then
       linuxHostGuestMatrix.${guestSystem} or "${qemuPkg}/bin/qemu-kvm"
@@ -137,44 +122,44 @@ in
 
   options = {
     virtualisation.qemu = {
-      package = mkPackageOption pkgs [ "qemu" ] { };
+      package = lib.mkPackageOption pkgs [ "qemu" ] { };
 
-      bootMode = mkOption {
-        type = types.enum [ "kernel" ]; # ++ [ "bios" "uefi" ];
+      bootMode = lib.mkOption {
+        type = lib.types.enum [ "kernel" ]; # ++ [ "bios" "uefi" ];
         default = "kernel";
         description = ''
           Boot method used to load the guest.
         '';
       };
 
-      argv = mkOption {
-        type = types.listOf types.str;
+      argv = lib.mkOption {
+        type = with lib.types; listOf str;
         readOnly = true;
         description = ''
           Command-line for starting the host QEMU.
         '';
       };
 
-      extraArgs = mkOption {
-        type = types.listOf types.str;
+      extraArgs = lib.mkOption {
+        type = with lib.types; listOf str;
         description = ''
           Extra command-line options for starting the host QEMU.
         '';
       };
 
-      sharedDirectories = mkOption {
-        type = types.attrsOf (
-          types.submodule {
-            options.source = mkOption {
-              type = types.str;
+      sharedDirectories = lib.mkOption {
+        type = lib.types.attrsOf (
+          lib.types.submodule {
+            options.source = lib.mkOption {
+              type = lib.types.str;
               description = "The path of the directory to share, can be a shell variable";
             };
-            options.target = mkOption {
-              type = types.path;
+            options.target = lib.mkOption {
+              type = lib.types.path;
               description = "The mount point of the directory inside the virtual machine";
             };
-            options.securityModel = mkOption {
-              type = types.enum [
+            options.securityModel = lib.mkOption {
+              type = lib.types.enum [
                 "passthrough"
                 "mapped-xattr"
                 "mapped-file"
@@ -206,12 +191,12 @@ in
         '';
       };
 
-      nics = mkOption {
-        type = types.attrsOf (
-          types.submodule {
+      nics = lib.mkOption {
+        type = lib.types.attrsOf (
+          lib.types.submodule {
             options = {
-              args = mkOption {
-                type = with types; listOf str;
+              args = lib.mkOption {
+                type = with lib.types; listOf str;
                 default = [ ];
                 example = [ "model=virtio-net-pci" ];
               };
@@ -224,10 +209,10 @@ in
         '';
       };
 
-      mountHostNixStore = mkOption {
-        type = types.bool;
+      mountHostNixStore = lib.mkOption {
+        type = lib.types.bool;
         default = !useBootLoader;
-        defaultText = literalExpression ''config.virtualisation.qemu.bootMode == "kernel"'';
+        defaultText = lib.literalExpression ''config.virtualisation.qemu.bootMode == "kernel"'';
         description = ''
           Mount the host Nix store as a 9p mount.
         '';
@@ -246,9 +231,9 @@ in
     ]
     ++ lib.optional (cfg.sharedDirectories != { }) "9pnet_virtio";
 
-    fileSystems = mkMerge (
+    fileSystems = lib.mkMerge (
       [
-        (mapAttrs' (tag: share: {
+        (lib.mapAttrs' (tag: share: {
           name = share.target;
           value.device = tag;
           value.fsType = "9p";
@@ -260,7 +245,7 @@ in
           ++ lib.optional (tag == "nix-store") "cache=loose";
         }) cfg.sharedDirectories)
       ]
-      ++ optional cfg.mountHostNixStore {
+      ++ lib.optional cfg.mountHostNixStore {
         "/nix/store" = {
           device = "/nix/.ro-store";
           fsType = "none";
@@ -278,30 +263,26 @@ in
         "-smp"
         (toString config.virtualisation.cores)
       ]
-      ++ (flatten (
-        mapAttrsToList (tag: share: [
+      ++ (lib.flatten (
+        lib.mapAttrsToList (tag: share: [
           "-virtfs"
           "local,path=${share.source},mount_tag=${tag},security_model=${share.securityModel},readonly=on"
         ]) cfg.sharedDirectories
       ))
-      ++ optionals config.testing.enable [
-        "-serial"
-        "mon:stdio"
-      ]
-      ++ flatten (
-        mapAttrsToList (
+      ++ lib.flatten (
+        lib.mapAttrsToList (
           name:
           { args }:
           [
             "-nic"
-            (concatStringsSep "," (args ++ [ "id=${name}" ]))
+            (lib.concatStringsSep "," (args ++ [ "id=${name}" ]))
           ]
         ) cfg.nics
       )
       ++ cfg.extraArgs;
 
     virtualisation.qemu.sharedDirectories = {
-      nix-store = mkIf cfg.mountHostNixStore {
+      nix-store = lib.mkIf cfg.mountHostNixStore {
         source = builtins.storeDir;
         # Always mount this to /nix/.ro-store because we never want to actually
         # write to the host Nix Store.

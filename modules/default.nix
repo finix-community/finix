@@ -17,7 +17,6 @@ let
       "elogind"
       "mdevd"
       "seatd"
-      "tmpfiles"
       "udev"
     ]
   );
@@ -46,11 +45,10 @@ in
       ./services/elogind
       ./services/mdevd
       ./services/seatd
-      ./services/tmpfiles
       ./services/udev
-      ./synit
       ./system/activation
       ./system/activation/specialisation.nix
+      ./system/nixos-rebuild-compat.nix
       ./time
       ./users
       ./xdg

@@ -6,11 +6,6 @@
     {
       nixosModules = import ./modules;
 
-      overlays = {
-        # software required for finix to operate
-        default = import ./overlays/default.nix;
-      };
-
       lib.finixSystem =
         {
           lib ? null,
@@ -37,7 +32,7 @@
         default = self.templates.desktop-greetd;
 
         desktop-greetd = {
-          path = ./templates/desktop-seattd;
+          path = ./templates/desktop-seatd;
           description = "A simple desktop running the niri scrollable-tiling wayland compositor";
         };
 

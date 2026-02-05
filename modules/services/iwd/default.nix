@@ -61,7 +61,7 @@ in
 
     services.dbus.packages = [ cfg.package ];
 
-    services.tmpfiles.iwd.rules = [
+    finit.tmpfiles.rules = [
       "d /var/lib/iwd 0700"
     ];
 

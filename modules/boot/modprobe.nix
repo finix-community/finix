@@ -40,22 +40,6 @@ in
       runlevels = "12345789";
     };
 
-    synit.daemons.modprobe = {
-      argv = [
-        "${pkgs.kmod}/bin/modprobe"
-        "--all"
-      ]
-      ++ config.boot.kernelModules;
-      restart = "on-error";
-      requires = lib.optional config.services.mdevd.enable {
-        key = [
-          "daemon"
-          "mdevd"
-        ];
-        state = "ready";
-      };
-    };
-
     system.activation.scripts.modprobe = lib.stringAfter [ "specialfs" ] ''
       # Allow the kernel to find our wrapped modprobe (which searches
       # in the right location in the Nix store for kernel modules).

@@ -47,6 +47,10 @@ in
             IdleTimeout = lib.mkOption {
               type = lib.types.int;
               default = 0;
+              description = ''
+                Idle timeout in seconds before the daemon exits.
+                Set to `0` to disable.
+              '';
             };
           };
         };
@@ -94,7 +98,7 @@ in
       nohup = true;
     };
 
-    services.tmpfiles.fwupd.rules = [
+    finit.tmpfiles.rules = [
       "/var/lib/fwupd"
       "/var/cache/fwupd"
     ];

@@ -83,6 +83,7 @@ in
 
     finit.tasks.openresolv = {
       command = "${lib.getExe cfg.package} -u";
+      remain = true;
     };
 
     environment.etc."finit.d/openresolv.conf".text = lib.mkAfter ''

@@ -79,7 +79,7 @@ in
       nohup = true;
     };
 
-    services.tmpfiles.jellyfin.rules = [
+    finit.tmpfiles.rules = [
       "d /var/cache/jellyfin 0700 ${cfg.user} ${cfg.group}"
       "d /var/log/jellyfin 0750 ${cfg.user} ${cfg.group}"
     ]

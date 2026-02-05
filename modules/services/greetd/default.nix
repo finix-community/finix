@@ -51,36 +51,6 @@ in
       cgroup.name = "user";
     };
 
-    synit.daemons.greetd = {
-      argv = [
-        "${pkgs.greetd}/bin/greetd"
-        "--config"
-        configFile
-      ];
-      persistent = true;
-      provides = [
-        [
-          "milestone"
-          "login"
-        ]
-      ];
-      requires = [
-        {
-          key = [
-            "milestone"
-            "wrappers"
-          ];
-        }
-      ]
-      ++ lib.optional config.services.seatd.enable {
-        key = [
-          "daemon"
-          "seatd"
-        ];
-        state = "ready";
-      };
-    };
-
     users.users = {
       greeter = {
         isSystemUser = true;
@@ -96,7 +66,7 @@ in
       greeter = { };
     };
 
-    services.tmpfiles.greetd.rules = [
+    finit.tmpfiles.rules = [
       "d /var/cache/tuigreet - greeter greeter"
     ];
 

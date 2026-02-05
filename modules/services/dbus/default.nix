@@ -87,7 +87,7 @@ in
       };
     };
 
-    services.tmpfiles.dbus.rules = [
+    finit.tmpfiles.rules = [
       "d /run/dbus 0755 messagebus messagebus"
       "d /run/lock/subsys 0755 messagebus messagebus"
       "d /var/lib/dbus 0755 messagebus messagebus"

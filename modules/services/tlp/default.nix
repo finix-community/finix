@@ -49,7 +49,7 @@ in
       cfg.package
     ];
 
-    services.tmpfiles.tlp.rules = [
+    finit.tmpfiles.rules = [
       "d /var/lib/tlp"
     ];
 
@@ -107,15 +107,5 @@ in
       # standard nixos trick to force a restart when something has changed
       # ${config.environment.etc."tlp.conf".source}
     '';
-
-    synit.daemons = {
-      tlp = {
-        argv = [
-          tlpExe
-          "start"
-        ];
-        restart = "on-error";
-      };
-    };
   };
 }
