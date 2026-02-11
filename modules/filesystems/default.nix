@@ -47,6 +47,7 @@ let
         "cifs"
         "prl_fs"
         "vmhgfs"
+        "ntfs3"
       ]
       ++
         lib.optionals false # (!config.boot.initrd.checkJournalingFS)
@@ -107,6 +108,7 @@ in
     ./vfat.nix
     ./xfs.nix
     ./zfs.nix
+    ./ntfs.nix
   ];
 
   config = {
