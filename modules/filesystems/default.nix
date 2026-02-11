@@ -103,12 +103,12 @@ in
     ./f2fs.nix
     ./fuse.mergerfs.nix
     ./fuse.nix
+    ./ntfs3.nix
     ./special.nix
     ./tmpfs.nix
     ./vfat.nix
     ./xfs.nix
     ./zfs.nix
-    ./ntfs.nix
   ];
 
   config = {
