@@ -37,6 +37,5 @@
     ];
 
     boot.supportedFilesystems.ext4.packages = [ pkgs.scrounge-ntfs ];
-    boot.initrd.supportedFilesystems.ext4.packages = [ pkgs.scrounge-ntfs ];
   };
 }
