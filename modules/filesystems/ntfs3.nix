@@ -36,6 +36,6 @@
       "ntfs3"
     ];
 
-    boot.supportedFilesystems.ext4.packages = [ pkgs.scrounge-ntfs ];
+    boot.supportedFilesystems.ntfs3.packages = [ pkgs.ntfsprogs-plus ];
   };
 }
