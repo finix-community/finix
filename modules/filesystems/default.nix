@@ -47,6 +47,7 @@ let
         "cifs"
         "prl_fs"
         "vmhgfs"
+        "ntfs3"
       ]
       ++
         lib.optionals false # (!config.boot.initrd.checkJournalingFS)
@@ -102,6 +103,7 @@ in
     ./f2fs.nix
     ./fuse.mergerfs.nix
     ./fuse.nix
+    ./ntfs3.nix
     ./special.nix
     ./tmpfs.nix
     ./vfat.nix
