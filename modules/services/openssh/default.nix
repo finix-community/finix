@@ -25,6 +25,7 @@ let
           throw "unsupported type ${builtins.typeOf v}: ${(lib.generators.toPretty { }) v}";
 
       base = pkgs.formats.keyValue {
+        listsAsDuplicateKeys = true;
         mkKeyValue = k: v: "${k} ${mkValueString v}";
       };
       # OpenSSH is very inconsistent with options that can take multiple values.
@@ -62,7 +63,7 @@ let
               else if lib.elem key spaceSeparated then
                 lib.concatStringsSep " " (map toString val)
               else
-                throw "list value for unknown key ${key}: ${(lib.generators.toPretty { }) val}"
+                val
             else
               val
           ) value;
@@ -189,6 +190,14 @@ in
             ];
             description = ''
               Whether the root user can login using ssh.
+            '';
+          };
+
+          ListenAddress = lib.mkOption {
+            type = with lib.types; coercedTo str lib.singleton (listOf str);
+            default = [ ];
+            description = ''
+              Specifies the local addresses {manpage}`sshd(8)` should listen on.
             '';
           };
 
