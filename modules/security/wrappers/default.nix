@@ -52,6 +52,11 @@ let
   wrapperType = lib.types.submodule (
     { name, ... }:
     {
+      options.enable = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = "Whether to enable the wrapper.";
+      };
       options.source = lib.mkOption {
         type = lib.types.path;
         description = "The absolute path to the program to be wrapped.";
@@ -166,7 +171,7 @@ let
 
   mkWrappedPrograms = builtins.map (
     opts: if opts.capabilities != "" then mkSetcapProgram opts else mkSetuidProgram opts
-  ) (lib.attrValues wrappers);
+  ) (lib.attrValues (lib.filterAttrs (_: wrapper: wrapper.enable) wrappers));
 
   wrappersScript = pkgs.writeShellScript "suid-sgid-wrappers.sh" ''
     set -e
