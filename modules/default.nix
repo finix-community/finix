@@ -38,6 +38,7 @@ in
       ./i18n
       ./misc
       ./networking
+      ./nixos
       ./nixpkgs
       ./programs/shadow
       ./security

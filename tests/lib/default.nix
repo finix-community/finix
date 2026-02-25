@@ -18,7 +18,6 @@ let
     lib.evalModules {
       specialArgs = {
         inherit nodes;
-        modulesPath = toString (pkgs.path + "/nixos/modules");
       };
       modules = [
         ./testing.nix

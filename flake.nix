@@ -13,17 +13,8 @@
           modules ? [ ],
           ...
         }:
-        let
-          sources = import ./lon.nix;
-          modulesPath = toString sources.nixpkgs + "/nixos/modules";
-        in
         lib.evalModules {
-          specialArgs =
-            lib.optionalAttrs (!specialArgs ? modulesPath) {
-              # pull in a pinned copy of nixpkgs if not provided by the caller
-              inherit modulesPath;
-            }
-            // specialArgs;
+          inherit specialArgs;
 
           modules = [ self.nixosModules.default ] ++ modules;
         };
