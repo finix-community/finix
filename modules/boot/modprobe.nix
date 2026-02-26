@@ -40,7 +40,7 @@ in
       runlevels = "12345789";
     };
 
-    system.activation.scripts.modprobe = lib.stringAfter [ "specialfs" ] ''
+    system.activation.scripts.modprobe = ''
       # Allow the kernel to find our wrapped modprobe (which searches
       # in the right location in the Nix store for kernel modules).
       # We need this when the kernel (or some module) auto-loads a

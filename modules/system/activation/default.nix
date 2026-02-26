@@ -124,10 +124,23 @@ in
       '';
 
     system.activation.scripts.specialfs = ''
-      echo "specialfs stub here..."
-      mkdir -p /bin /etc /run /tmp /usr /var/{cache,db,empty,lib,log,spool}
+      mkdir -p /run /tmp /var
       ln -sfn /run /var/run
     '';
+
+    finit.tmpfiles.rules = [
+      "d /etc"
+      "d /run"
+      "d /tmp"
+      "d /var"
+      "d /var/cache"
+      "d /var/db"
+      "d /var/empty"
+      "d /var/lib"
+      "d /var/log"
+      "d /var/spool"
+      "L+ /var/run - - - - /run"
+    ];
 
     system.activation.path =
       with pkgs;

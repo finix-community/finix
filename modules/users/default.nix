@@ -54,8 +54,9 @@ in
       }
     ];
 
-    system.activation.scripts.users = lib.stringAfter [ "specialfs" ] ''
-      echo "users stub here..."
+    system.activation.scripts.users = ''
+      mkdir -p /etc
+
       ${pkgs.userborn}/bin/userborn ${configFile}
     '';
 

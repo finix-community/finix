@@ -73,9 +73,15 @@ in
       '')
     ];
 
-    system.activation.scripts.console = ''
-      ${pkgs.kbd}/bin/setvesablank ${if cfg.setvesablank then "on" else "off"}
-    '';
+    finit.tasks.setvesablank =
+      let
+        value = if cfg.setvesablank then "on" else "off";
+      in
+      {
+        description = "turn vesa screen blanking ${value}";
+        command = "${pkgs.kbd}/bin/setvesablank ${value}";
+        conditions = "service/syslogd/ready";
+      };
   };
 
   imports = [
