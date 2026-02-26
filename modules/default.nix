@@ -4,7 +4,11 @@ let
       "README.md"
 
       # required modules - included by default
+      "resolvconf"
       "shadow"
+
+      # deprecated, remove at some point
+      "openresolv"
     ]
   );
 
@@ -40,6 +44,7 @@ in
       ./networking
       ./nixos
       ./nixpkgs
+      ./programs/resolvconf
       ./programs/shadow
       ./security
       ./services/dbus

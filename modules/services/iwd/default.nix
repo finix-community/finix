@@ -52,7 +52,7 @@ in
       };
 
       Network = {
-        NameResolvingService = if config.programs.openresolv.enable or false then "resolvconf" else "none";
+        NameResolvingService = if config.programs.resolvconf.enable then "resolvconf" else "none";
       };
     };
 
@@ -72,8 +72,8 @@ in
       nohup = true;
       log = true;
 
-      path = lib.optionals (config.programs.openresolv.enable or false) [
-        config.programs.openresolv.package
+      path = lib.optionals config.programs.resolvconf.enable [
+        config.programs.resolvconf.package
       ];
     };
 
