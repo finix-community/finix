@@ -2,7 +2,7 @@
 { pkgs }:
 
 let
-  nixosTestDriver = pkgs.callPackage (pkgs.path + "/nixos/lib/test-driver") {
+  nixosTestDriver = pkgs.python3Packages.callPackage (pkgs.path + "/nixos/lib/test-driver") {
     nixosTests = { }; # stub, only used for passthru.tests
   };
 in

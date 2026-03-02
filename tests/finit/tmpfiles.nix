@@ -8,7 +8,7 @@
   nodes.machine =
     { pkgs, ... }:
     {
-      imports = [ ../lib/common.nix ];
+      services.mdevd.enable = true;
 
       # pre-create test tmpfiles.d configs for boot-time testing
       environment.etc."tmpfiles.d/test-boot.conf".text = ''

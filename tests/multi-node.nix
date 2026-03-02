@@ -8,13 +8,13 @@
   nodes.client =
     { ... }:
     {
-      imports = [ ./lib/common.nix ];
+      services.mdevd.enable = true;
     };
 
   nodes.server =
     { ... }:
     {
-      imports = [ ./lib/common.nix ];
+      services.mdevd.enable = true;
     };
 
   testScript = ''

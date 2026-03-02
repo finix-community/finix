@@ -8,7 +8,7 @@
   nodes.machine =
     { pkgs, ... }:
     {
-      imports = [ ../lib/common.nix ];
+      services.mdevd.enable = true;
 
       # test task with remain:yes that runs in runlevels S and 2
       finit.tasks.test-remain = {

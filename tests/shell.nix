@@ -8,7 +8,7 @@
   nodes.machine =
     { ... }:
     {
-      imports = [ ./lib/common.nix ];
+      services.mdevd.enable = true;
     };
 
   testScript = ''

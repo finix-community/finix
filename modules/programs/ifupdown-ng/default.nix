@@ -25,7 +25,7 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.callPackage ./package.nix { };
+      default = pkgs.ifupdown-ng;
       defaultText = lib.literalExpression "pkgs.ifupdown-ng";
       description = ''
         The package to use for `ifupdown-ng`.
