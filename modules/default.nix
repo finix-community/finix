@@ -4,7 +4,11 @@ let
       "README.md"
 
       # required modules - included by default
+      "resolvconf"
       "shadow"
+
+      # deprecated, remove at some point
+      "openresolv"
     ]
   );
 
@@ -17,7 +21,6 @@ let
       "elogind"
       "mdevd"
       "seatd"
-      "tmpfiles"
       "udev"
     ]
   );
@@ -39,18 +42,19 @@ in
       ./i18n
       ./misc
       ./networking
+      ./nixos
       ./nixpkgs
+      ./programs/resolvconf
       ./programs/shadow
       ./security
       ./services/dbus
       ./services/elogind
       ./services/mdevd
       ./services/seatd
-      ./services/tmpfiles
       ./services/udev
-      ./synit
       ./system/activation
       ./system/activation/specialisation.nix
+      ./system/nixos-compat.nix
       ./time
       ./users
       ./xdg

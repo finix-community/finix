@@ -194,7 +194,7 @@ in
       cfg.package
     ];
 
-    services.tmpfiles.cron.rules = [
+    finit.tmpfiles.rules = [
       "d /var/cron 0710"
       "d /var/spool 0755 - - -"
       "d /var/spool/cron 0755 - - -"

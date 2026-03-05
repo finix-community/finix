@@ -25,6 +25,7 @@ let
           throw "unsupported type ${builtins.typeOf v}: ${(lib.generators.toPretty { }) v}";
 
       base = pkgs.formats.keyValue {
+        listsAsDuplicateKeys = true;
         mkKeyValue = k: v: "${k} ${mkValueString v}";
       };
       # OpenSSH is very inconsistent with options that can take multiple values.
@@ -62,7 +63,7 @@ let
               else if lib.elem key spaceSeparated then
                 lib.concatStringsSep " " (map toString val)
               else
-                throw "list value for unknown key ${key}: ${(lib.generators.toPretty { }) val}"
+                val
             else
               val
           ) value;
@@ -93,15 +94,24 @@ in
       enable = lib.mkOption {
         type = lib.types.bool;
         default = true;
+        description = ''
+          Whether to enable the SFTP subsystem.
+        '';
       };
 
       executable = lib.mkOption {
         type = lib.types.str;
+        description = ''
+          Path to the SFTP server executable.
+        '';
       };
 
       flags = lib.mkOption {
         type = with lib.types; listOf str;
         default = [ ];
+        description = ''
+          Additional command-line flags to pass to the SFTP server.
+        '';
       };
     };
 
@@ -133,7 +143,9 @@ in
           HostKey = lib.mkOption {
             type = with lib.types; listOf path;
             default = [ ];
-            description = "TODO: description";
+            description = ''
+              Specifies a file containing a private host key used by {manpage}`sshd(8)`.
+            '';
           };
 
           LogLevel = lib.mkOption {
@@ -178,6 +190,14 @@ in
             ];
             description = ''
               Whether the root user can login using ssh.
+            '';
+          };
+
+          ListenAddress = lib.mkOption {
+            type = with lib.types; coercedTo str lib.singleton (listOf str);
+            default = [ ];
+            description = ''
+              Specifies the local addresses {manpage}`sshd(8)` should listen on.
             '';
           };
 
@@ -336,46 +356,9 @@ in
       cfg.package
     ];
 
-    services.tmpfiles.sshd.rules = [
+    finit.tmpfiles.rules = [
       "d /var/lib/sshd 0755"
     ];
-
-    synit.daemons.sshd = {
-      argv =
-        let
-          keygenScript = pkgs.execline.writeScript "ssh-keygen.el" "-s0" ''
-            foreground { s6-mkdir -m 0755 -p /var/lib/sshd }
-            foreground {
-              if -n { eltest -s "/var/lib/sshd/ssh_host_ed25519_key" }
-              ssh-keygen -t ed25519 -f "/var/lib/sshd/ssh_host_ed25519_key" -N ""
-            }
-            $@
-          '';
-        in
-        [
-          keygenScript
-          "${cfg.package}/bin/sshd"
-          "-D"
-          "-e"
-          "-f"
-          "/etc/ssh/sshd_config"
-        ];
-      path = [ cfg.package ];
-      provides = [
-        [
-          "milestone"
-          "login"
-        ]
-      ];
-      requires = [
-        {
-          key = [
-            "milestone"
-            "network"
-          ];
-        }
-      ];
-    };
 
     users.users.sshd = {
       group = "sshd";

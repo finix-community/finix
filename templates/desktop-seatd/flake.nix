@@ -12,20 +12,10 @@
     let
       pkgs = import nixpkgs {
         system = "x86_64-linux";
-
         config.allowUnfree = true;
-        overlays = [
-          finix.overlays.default
-        ];
       };
 
       os = pkgs.lib.evalModules {
-        specialArgs = {
-          inherit pkgs;
-          # inherit (pkgs) lib;
-          modulesPath = "${nixpkgs}/nixos/modules";
-        };
-
         modules = [
           { nixpkgs.pkgs = pkgs; }
           ./configuration.nix

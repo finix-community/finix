@@ -91,21 +91,17 @@
   };
 
   config = {
-
-    # Boot with a locale set as early as practical.
-    boot.init.pid1.env = {
-      LANG = config.i18n.defaultLocale;
-      LOCALE_ARCHIVE = "/run/current-system/sw/lib/locale/locale-archive";
-    }
-    // config.i18n.extraLocaleSettings;
-
     environment.systemPackages =
       # We increase the priority a little, so that plain glibc in systemPackages can't win.
       lib.optional (config.i18n.supportedLocales != [ ]) (lib.setPrio (-1) config.i18n.glibcLocales);
 
-    finit.environment = lib.mkIf (config.i18n.supportedLocales != [ ]) {
-      LOCALE_ARCHIVE = "${config.i18n.glibcLocales}/lib/locale/locale-archive";
-    };
+    finit.environment = lib.mkIf (config.i18n.supportedLocales != [ ]) (
+      {
+        LANG = config.i18n.defaultLocale;
+        LOCALE_ARCHIVE = "${config.i18n.glibcLocales}/lib/locale/locale-archive";
+      }
+      // config.i18n.extraLocaleSettings
+    );
 
     # ‘/etc/locale.conf’ is used by systemd.
     environment.etc."locale.conf".text = ''

@@ -1,3 +1,9 @@
+{ pkgs, ... }:
+let
+  finix-logo = pkgs.runCommand "finix-logo" { } ''
+    install -Dm644 ${../../assets/finix-logo.svg} $out/share/icons/hicolor/scalable/apps/finix-logo.svg
+  '';
+in
 {
   imports = [
     ./etc
@@ -6,6 +12,7 @@
   ];
 
   config = {
+    environment.systemPackages = [ finix-logo ];
     environment.etc."nsswitch.conf".text = ''
       # /etc/nsswitch.conf
       #
@@ -35,7 +42,7 @@
       DOCUMENTATION_URL="https://nixos.org/learn.html"
       HOME_URL="https://nixos.org/"
       ID=finix
-      LOGO="nix-snowflake"
+      LOGO=finix-logo
       NAME=finix
       PRETTY_NAME="finix 25.05"
       VERSION="25.05"

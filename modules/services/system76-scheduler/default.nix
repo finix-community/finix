@@ -36,6 +36,9 @@ in
 
     configFile = lib.mkOption {
       type = lib.types.path;
+      description = ''
+        Path to the `system76-scheduler` configuration file.
+      '';
     };
   };
 

@@ -139,7 +139,7 @@ in
       notify = "systemd";
     };
 
-    services.tmpfiles.php-fpm.rules = [
+    finit.tmpfiles.rules = [
       "d /run/php-fpm"
     ];
   };

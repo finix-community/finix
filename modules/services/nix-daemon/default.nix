@@ -294,7 +294,7 @@ in
       cfg.package
     ];
 
-    services.tmpfiles.nix-daemon.rules = [
+    finit.tmpfiles.rules = [
       "d /nix/var/nix/daemon-socket 0755 root root - -"
 
       "R! /nix/var/nix/gcroots/tmp           -    -    -    - -"
@@ -307,17 +307,6 @@ in
       "d /nix/var/nix/gcroots -"
       "L+ /nix/var/nix/gcroots/current-system - - - - /run/current-system"
     ];
-
-    synit.daemons.nix-daemon = {
-      argv = [
-        "nix-daemon"
-        "--daemon"
-      ];
-      path = [
-        pkgs.openssh
-        cfg.package
-      ];
-    };
 
     users.users = lib.listToAttrs (
       map (nr: {

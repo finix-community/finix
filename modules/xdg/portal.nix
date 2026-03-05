@@ -12,17 +12,32 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = true;
+      description = ''
+        Whether to enable XDG desktop portals.
+      '';
+    };
+
+    package = lib.mkOption {
+      type = lib.types.package;
+      default = pkgs.xdg-desktop-portal;
+      defaultText = lib.literalExpression "pkgs.xdg-desktop-portal";
+      description = ''
+        The package to use for `xdg-desktop-portal`.
+      '';
     };
 
     portals = lib.mkOption {
       type = with lib.types; listOf package;
       default = [ ];
+      description = ''
+        List of XDG desktop portal packages to install.
+      '';
     };
   };
 
   config = lib.mkIf cfg.enable {
-    services.dbus.packages = [ pkgs.xdg-desktop-portal ] ++ cfg.portals;
-    environment.systemPackages = [ pkgs.xdg-desktop-portal ] ++ cfg.portals;
+    services.dbus.packages = [ cfg.package ] ++ cfg.portals;
+    environment.systemPackages = [ cfg.package ] ++ cfg.portals;
 
     environment.pathsToLink = [
       # Portal definitions and upstream desktop environment portal configurations.

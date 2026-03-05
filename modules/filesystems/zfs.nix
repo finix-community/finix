@@ -10,11 +10,17 @@
       enable = lib.mkOption {
         type = lib.types.bool;
         default = false;
+        description = ''
+          Whether to enable support for the `zfs` filesystem in the initial ramdisk.
+        '';
       };
 
       packages = lib.mkOption {
         type = with lib.types; listOf package;
         default = [ pkgs.zfs ];
+        description = ''
+          Packages providing filesystem utilities for `zfs` in the initial ramdisk.
+        '';
       };
     };
 
@@ -22,11 +28,17 @@
       enable = lib.mkOption {
         type = lib.types.bool;
         default = false;
+        description = ''
+          Whether to enable support for the `zfs` filesystem.
+        '';
       };
 
       packages = lib.mkOption {
         type = with lib.types; listOf package;
         default = [ pkgs.zfs ];
+        description = ''
+          Packages providing filesystem utilities for `zfs`.
+        '';
       };
     };
 
@@ -80,7 +92,7 @@
       boot.initrd = {
         kernelModules = [ "zfs" ];
         fileSystemImportCommands =
-          map (name: "zpool import -f ${name}") config.boot.zfs.importPools
+          map (name: "zpool list ${name} >/dev/null 2>&1 || zpool import -f ${name}") config.boot.zfs.importPools
           ++ map (name: "zfs load-key ${name}") config.boot.zfs.loadKeys
           |> (lib.concatStringsSep "\n");
       };
