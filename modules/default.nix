@@ -54,7 +54,7 @@ in
       ./services/udev
       ./system/activation
       ./system/activation/specialisation.nix
-      ./system/nixos-rebuild-compat.nix
+      ./system/nixos-compat.nix
       ./time
       ./users
       ./xdg
