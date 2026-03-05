@@ -37,7 +37,6 @@ let
   fileSystemOpts =
     { name, config, ... }:
     {
-
       options = {
         mountPoint = lib.mkOption {
           example = "/mnt/usb";
@@ -108,7 +107,43 @@ let
         device = lib.mkIf (lib.elem config.fsType specialFSTypes) (lib.mkDefault config.fsType);
         neededForBoot = lib.mkIf (lib.elem config.mountPoint pathsNeededForBoot) (lib.mkForce true);
       };
+    };
 
+  swapDeviceOpts =
+    { ... }:
+    {
+      options = {
+        device = lib.mkOption {
+          example = "/dev/sda2";
+          type = lib.types.nonEmptyStr;
+          description = "Path of the swap device or file.";
+        };
+
+        label = lib.mkOption {
+          default = null;
+          example = "swap";
+          type = with lib.types; nullOr nonEmptyStr;
+          description = "Label of the swap device (if any).";
+        };
+
+        priority = lib.mkOption {
+          default = null;
+          example = 100;
+          type = with lib.types; nullOr int;
+          description = ''
+            Specify the priority of the swap device. Higher numbers
+            indicate higher priority. `null` lets the kernel choose
+            a priority, starting at -1 and going down.
+          '';
+        };
+
+        options = lib.mkOption {
+          default = [ "defaults" ];
+          example = [ "nofail" ];
+          type = with lib.types; nonEmptyListOf nonEmptyStr;
+          description = "Options used to set up the swap device.";
+        };
+      };
     };
 in
 {
@@ -141,6 +176,17 @@ in
         Instead of specifying `device`, you can also
         specify a volume label (`label`) for file
         systems that support it, such as ext2/ext3 (see {command}`mke2fs -L`).
+      '';
+    };
+
+    swapDevices = lib.mkOption {
+      type = with lib.types; listOf (submodule swapDeviceOpts);
+      default = [ ];
+      example = [
+        { device = "/dev/sda2"; }
+      ];
+      description = ''
+        The swap devices and swap files. These are activated at boot time.
       '';
     };
   };
