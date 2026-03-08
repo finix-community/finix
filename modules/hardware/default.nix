@@ -24,6 +24,8 @@ in
     ./console.nix
     ./graphics.nix
     ./i2c.nix
+
+    ./video/nvidia.nix
   ];
 
   options = {

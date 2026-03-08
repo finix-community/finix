@@ -1,0 +1,564 @@
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
+let
+  cfg = config.hardware.nvidia;
+
+  nvidiaEnabled = cfg.enable || lib.elem "nvidia" config.services.xserver.videoDrivers;
+  nvidia_x11 = if nvidiaEnabled || cfg.datacenter.enable then cfg.package else null;
+
+  useOpenModules = cfg.open == true;
+
+  primeCfg = cfg.prime;
+  syncCfg = primeCfg.sync;
+  offloadCfg = primeCfg.offload;
+  reverseSyncCfg = primeCfg.reverseSync;
+  primeEnabled = syncCfg.enable || reverseSyncCfg.enable || offloadCfg.enable;
+
+  busIDType = lib.types.strMatching "([[:print:]]+:[0-9]{1,3}(@[0-9]{1,10})?:[0-9]{1,2}:[0-9])?";
+  ibtSupport = useOpenModules || (nvidia_x11.ibtSupport or false);
+  settingsFormat = pkgs.formats.keyValue { };
+
+  useModeset = cfg.modesetting.enable == true;
+in
+{  
+  options = {
+    hardware.nvidia = {
+      enabled = lib.mkOption {
+        readOnly = true;
+        type = lib.types.bool;
+        default = nvidia_x11 != null;
+        defaultText = lib.literalMD "`true` if NVIDIA support is enabled";
+        description = "True if NVIDIA support is enabled";
+      };
+      enable = lib.mkEnableOption ''
+        NVIDIA driver support
+      '';
+      datacenter.enable = lib.mkEnableOption ''
+        Data Center drivers for NVIDIA cards on a NVLink topology
+      '';
+      datacenter.settings = lib.mkOption {
+        type = settingsFormat.type;
+        default = {
+          LOG_LEVEL = 4;
+          LOG_FILE_NAME = "/var/log/fabricmanager.log";
+          LOG_APPEND_TO_LOG = 1;
+          LOG_FILE_MAX_SIZE = 1024;
+          LOG_USE_SYSLOG = 0;
+          DAEMONIZE = 1;
+          BIND_INTERFACE_IP = "127.0.0.1";
+          STARTING_TCP_PORT = 16000;
+          FABRIC_MODE = 0;
+          FABRIC_MODE_RESTART = 0;
+          STATE_FILE_NAME = "/var/tmp/fabricmanager.state";
+          FM_CMD_BIND_INTERFACE = "127.0.0.1";
+          FM_CMD_PORT_NUMBER = 6666;
+          FM_STAY_RESIDENT_ON_FAILURES = 0;
+          ACCESS_LINK_FAILURE_MODE = 0;
+          TRUNK_LINK_FAILURE_MODE = 0;
+          NVSWITCH_FAILURE_MODE = 0;
+          ABORT_CUDA_JOBS_ON_FM_EXIT = 1;
+        };
+        defaultText = lib.literalExpression ''
+          {
+            LOG_LEVEL=4;
+            LOG_FILE_NAME="/var/log/fabricmanager.log";
+            LOG_APPEND_TO_LOG=1;
+            LOG_FILE_MAX_SIZE=1024;
+            LOG_USE_SYSLOG=0;
+            DAEMONIZE=1;
+            BIND_INTERFACE_IP="127.0.0.1";
+            STARTING_TCP_PORT=16000;
+            FABRIC_MODE=0;
+            FABRIC_MODE_RESTART=0;
+            STATE_FILE_NAME="/var/tmp/fabricmanager.state";
+            FM_CMD_BIND_INTERFACE="127.0.0.1";
+            FM_CMD_PORT_NUMBER=6666;
+            FM_STAY_RESIDENT_ON_FAILURES=0;
+            ACCESS_LINK_FAILURE_MODE=0;
+            TRUNK_LINK_FAILURE_MODE=0;
+            NVSWITCH_FAILURE_MODE=0;
+            ABORT_CUDA_JOBS_ON_FM_EXIT=1;
+          }
+        '';
+        description = ''
+          Additional configuration options for fabricmanager.
+        '';
+      };
+
+      powerManagement.enable = lib.mkEnableOption ''
+        experimental power management through systemd. For more information, see
+        the NVIDIA docs, on Chapter 21. Configuring Power Management Support
+      '';
+
+      powerManagement.finegrained = lib.mkEnableOption ''
+        experimental power management of PRIME offload. For more information, see
+        the NVIDIA docs, on Chapter 22. PCI-Express Runtime D3 (RTD3) Power Management
+      '';
+
+      powerManagement.kernelSuspendNotifier =
+        lib.mkEnableOption ''
+          NVIDIA driver support for kernel suspend notifiers, which allows the driver
+          to be notified of suspend and resume events by the kernel, rather than
+          relying on systemd services.
+          Requires NVIDIA driver version 595 or newer, and the open source kernel modules.
+        ''
+        // {
+          default = useOpenModules && lib.versionAtLeast nvidia_x11.version "595";
+          defaultText = lib.literalExpression ''
+            config.hardware.nvidia.open == true && lib.versionAtLeast config.hardware.nvidia.package.version "595"
+          '';
+        };
+
+      dynamicBoost.enable = lib.mkEnableOption ''
+        dynamic Boost balances power between the CPU and the GPU for improved
+        performance on supported laptops using the nvidia-powerd daemon. For more
+        information, see the NVIDIA docs, on Chapter 23. Dynamic Boost on Linux
+      '';
+
+      modesetting.enable =
+        lib.mkEnableOption ''
+          kernel modesetting when using the NVIDIA proprietary driver.
+
+          Enabling this fixes screen tearing when using Optimus via PRIME (see
+          {option}`hardware.nvidia.prime.sync.enable`. This is not enabled
+          by default because it is not officially supported by NVIDIA and would not
+          work with SLI.
+
+          Enabling this and using version 545 or newer of the proprietary NVIDIA
+          driver causes it to provide its own framebuffer device, which can cause
+          Wayland compositors to work when they otherwise wouldn't.
+        ''
+        // {
+          default = lib.versionAtLeast cfg.package.version "535";
+          defaultText = lib.literalExpression "lib.versionAtLeast cfg.package.version \"535\"";
+        };
+
+      prime.nvidiaBusId = lib.mkOption {
+        type = busIDType;
+        default = "";
+        example = "PCI:1@0:0:0";
+        description = ''
+          Bus ID of the NVIDIA GPU. You can find it using lspci; for example if lspci
+          shows the NVIDIA GPU at "0001:02:03.4", set this option to "PCI:2@1:3:4".
+
+          lspci might omit the PCI domain (0001 in above example) if it is zero.
+          In which case, use "@0" instead.
+
+          Please be aware that this option takes decimal address while lspci reports
+          hexadecimal address. So for device at domain "10000", use "@65536".
+        '';
+      };
+
+      prime.intelBusId = lib.mkOption {
+        type = busIDType;
+        default = "";
+        example = "PCI:0@0:2:0";
+        description = ''
+          Bus ID of the Intel GPU. You can find it using lspci; for example if lspci
+          shows the Intel GPU at "0001:02:03.4", set this option to "PCI:2@1:3:4".
+
+          lspci might omit the PCI domain (0001 in above example) if it is zero.
+          In which case, use "@0" instead.
+
+          Please be aware that this option takes decimal address while lspci reports
+          hexadecimal address. So for device at domain "10000", use "@65536".
+        '';
+      };
+
+      prime.amdgpuBusId = lib.mkOption {
+        type = busIDType;
+        default = "";
+        example = "PCI:4@0:0:0";
+        description = ''
+          Bus ID of the AMD APU. You can find it using lspci; for example if lspci
+          shows the AMD APU at "0001:02:03.4", set this option to "PCI:2@1:3:4".
+
+          lspci might omit the PCI domain (0001 in above example) if it is zero.
+          In which case, use "@0" instead.
+
+          Please be aware that this option takes decimal address while lspci reports
+          hexadecimal address. So for device at domain "10000", use "@65536".
+        '';
+      };
+
+      prime.sync.enable = lib.mkEnableOption ''
+        NVIDIA Optimus support using the NVIDIA proprietary driver via PRIME.
+        If enabled, the NVIDIA GPU will be always on and used for all rendering,
+        while enabling output to displays attached only to the integrated Intel/AMD
+        GPU without a multiplexer.
+
+        Note that this option only has any effect if the "nvidia" driver is specified
+        in {option}`services.xserver.videoDrivers`, and it should preferably
+        be the only driver there.
+
+        If this is enabled, then the bus IDs of the NVIDIA and Intel/AMD GPUs have to
+        be specified ({option}`hardware.nvidia.prime.nvidiaBusId` and
+        {option}`hardware.nvidia.prime.intelBusId` or
+        {option}`hardware.nvidia.prime.amdgpuBusId`).
+
+        If you enable this, you may want to also enable kernel modesetting for the
+        NVIDIA driver ({option}`hardware.nvidia.modesetting.enable`) in order
+        to prevent tearing.
+
+        Note that this configuration will only be successful when a display manager
+        for which the {option}`services.xserver.displayManager.setupCommands`
+        option is supported is used
+      '';
+
+      prime.allowExternalGpu = lib.mkEnableOption ''
+        configuring X to allow external NVIDIA GPUs when using Prime [Reverse] sync optimus
+      '';
+
+      prime.offload.enable = lib.mkEnableOption ''
+        render offload support using the NVIDIA proprietary driver via PRIME.
+
+        If this is enabled, then the bus IDs of the NVIDIA and Intel/AMD GPUs have to
+        be specified ({option}`hardware.nvidia.prime.nvidiaBusId` and
+        {option}`hardware.nvidia.prime.intelBusId` or
+        {option}`hardware.nvidia.prime.amdgpuBusId`)
+      '';
+
+      prime.offload.enableOffloadCmd = lib.mkEnableOption ''
+        adding a `nvidia-offload` convenience script to {option}`environment.systemPackages`
+        for offloading programs to an nvidia device. To work, you must also enable
+        {option}`hardware.nvidia.prime.offload.enable` or {option}`hardware.nvidia.prime.reverseSync.enable`.
+
+        Example usage: `nvidia-offload sauerbraten_client`
+
+        This script can be renamed with {option}`hardware.nvidia.prime.offload.enableOffloadCmd`.
+      '';
+      prime.offload.offloadCmdMainProgram = lib.mkOption {
+        type = lib.types.str;
+        description = ''
+          Specifies the CLI name of the {option}`hardware.nvidia.prime.offload.enableOffloadCmd`
+          convenience script for offloading programs to an nvidia device.
+        '';
+        default = "nvidia-offload";
+        example = "prime-run";
+      };
+
+      prime.reverseSync.enable = lib.mkEnableOption ''
+        NVIDIA Optimus support using the NVIDIA proprietary driver via reverse
+        PRIME. If enabled, the Intel/AMD GPU will be used for all rendering, while
+        enabling output to displays attached only to the NVIDIA GPU without a
+        multiplexer.
+
+        Warning: This feature is relatively new, depending on your system this might
+        work poorly. AMD support, especially so.
+        See: <https://forums.developer.nvidia.com/t/the-all-new-outputsink-feature-aka-reverse-prime/129828>
+
+        Note that this option only has any effect if the "nvidia" driver is specified
+        in {option}`services.xserver.videoDrivers`, and it should preferably
+        be the only driver there.
+
+        If this is enabled, then the bus IDs of the NVIDIA and Intel/AMD GPUs have to
+        be specified ({option}`hardware.nvidia.prime.nvidiaBusId` and
+        {option}`hardware.nvidia.prime.intelBusId` or
+        {option}`hardware.nvidia.prime.amdgpuBusId`).
+
+        If you enable this, you may want to also enable kernel modesetting for the
+        NVIDIA driver ({option}`hardware.nvidia.modesetting.enable`) in order
+        to prevent tearing.
+
+        Note that this configuration will only be successful when a display manager
+        for which the {option}`services.xserver.displayManager.setupCommands`
+        option is supported is used
+      '';
+
+      prime.reverseSync.setupCommands.enable =
+        (lib.mkEnableOption ''
+          configure the display manager to be able to use the outputs
+          attached to the NVIDIA GPU.
+          Disable in order to configure the NVIDIA GPU outputs manually using xrandr.
+          Note that this configuration will only be successful when a display manager
+          for which the {option}`services.xserver.displayManager.setupCommands`
+          option is supported is used
+        '')
+        // {
+          default = true;
+        };
+
+      nvidiaSettings =
+        (lib.mkEnableOption ''
+          nvidia-settings, NVIDIA's GUI configuration tool
+        '')
+        // {
+          default = true;
+        };
+
+      nvidiaPersistenced = lib.mkEnableOption ''
+        nvidia-persistenced a update for NVIDIA GPU headless mode, i.e.
+        It ensures all GPUs stay awake even during headless mode
+      '';
+
+      forceFullCompositionPipeline = lib.mkEnableOption ''
+        forcefully the full composition pipeline.
+        This sometimes fixes screen tearing issues.
+        This has been reported to reduce the performance of some OpenGL applications and may produce issues in WebGL.
+        It also drastically increases the time the driver needs to clock down after load
+      '';
+
+      package = lib.mkOption {
+        default =
+          config.boot.kernelPackages.nvidiaPackages."${if cfg.datacenter.enable then "dc" else "stable"}";
+        defaultText = lib.literalExpression ''
+          config.boot.kernelPackages.nvidiaPackages."\$\{if cfg.datacenter.enable then "dc" else "stable"}"
+        '';
+        example = "config.boot.kernelPackages.nvidiaPackages.legacy_470";
+        description = ''
+          The NVIDIA driver package to use.
+        '';
+      };
+
+      open = lib.mkOption {
+        example = true;
+        description = "Whether to enable the open source NVIDIA kernel module.";
+        type = lib.types.nullOr lib.types.bool;
+        default = if lib.versionOlder nvidia_x11.version "560" then false else null;
+        defaultText = lib.literalExpression ''
+          if lib.versionOlder config.hardware.nvidia.package.version "560" then false else null
+        '';
+      };
+
+      gsp.enable =
+        lib.mkEnableOption ''
+          the GPU System Processor (GSP) on the video card
+        ''
+        // {
+          default = useOpenModules || lib.versionAtLeast nvidia_x11.version "555";
+          defaultText = lib.literalExpression ''
+            config.hardware.nvidia.open == true || lib.versionAtLeast config.hardware.nvidia.package.version "555"
+          '';
+        };
+
+      videoAcceleration =
+        (lib.mkEnableOption ''
+          Whether video acceleration (VA-API) should be enabled.
+        '')
+        // {
+          default = true;
+        };
+    };
+  };
+
+  config = lib.mkIf cfg.enabled (
+    lib.mkMerge [
+      # Common
+      {
+        warnings = lib.optional (lib.elem "nvidia" config.services.xserver.videoDrivers && !cfg.enable)
+          "Enabling NVIDIA via services.xserver.videoDrivers is deprecated on Finix. Use hardware.nvidia.enable = true instead.";
+
+        assertions = [
+          # PRIME not yet implemented; remove assertion when xserver is capable of full implementation.
+          {
+            assertion = !primeEnabled;
+            message = "PRIME support is not yet implemented on Finix. Disable prime sync/offload/reverseSync.";
+          }
+
+          # Power management not yet implemented; remove assertion when suspend hooks can be implemented in finit.
+          {
+            assertion = !cfg.powerManagement.enable;
+            message = "Power management support is not yet implemented on Finix. Disable powerManagement.";
+          }
+
+          
+          {
+            assertion = !(nvidiaEnabled && cfg.datacenter.enable);
+            message = "You cannot configure both X11 and Data Center drivers at the same time.";
+          }
+
+          {
+            assertion = cfg.open != null || cfg.datacenter.enable;
+            message = ''
+              You must configure `hardware.nvidia.open` on NVIDIA driver versions >= 560.
+              It is suggested to use the open source kernel modules on Turing or later GPUs (RTX series, GTX 16xx), and the closed source modules otherwise.
+            '';
+          }
+
+          {
+            assertion = useOpenModules -> cfg.gsp.enable;
+            message = "The GSP cannot be disabled when using the opensource kernel driver.";
+          }
+
+                  {
+            assertion = cfg.gsp.enable -> (cfg.package ? firmware);
+            message = "This version of NVIDIA driver does not provide a GSP firmware.";
+          }
+
+          {
+            assertion = useOpenModules -> (cfg.package ? open);
+            message = "This version of NVIDIA driver does not provide a corresponding opensource kernel driver.";
+          }
+
+          {
+            assertion = cfg.dynamicBoost.enable -> lib.versionAtLeast nvidia_x11.version "510.39.01";
+            message = "NVIDIA's Dynamic Boost feature only exists on versions >= 510.39.01";
+          }
+        ];
+
+        environment.etc = {
+          # Don't add `nvidia-uvm` to `kernelModules`, because we want
+          # `nvidia-uvm` be loaded only after the GPU device is available, i.e. after `udev` rules
+          # for `nvidia` kernel module are applied.
+          # This matters on Azure GPU instances: https://github.com/NixOS/nixpkgs/pull/267335
+          #
+          # Instead, we use `softdep` to lazily load `nvidia-uvm` kernel module
+          # after `nvidia` kernel module is loaded and `udev` rules are applied.
+          "modprobe.d/nvidia-uvm.conf".text = ''
+            softdep nvidia post: nvidia_uvm
+          '';
+
+          "modprobe.d/nvidia-blacklists.conf".text = ''
+            blacklist nouveau
+            options nouveau modeset=0
+            blacklist nvidiafb
+            blacklist nova_core
+          '';
+
+          "nvidia/nvidia-application-profiles-rc" = lib.mkIf nvidia_x11.useProfiles {
+            source = "${nvidia_x11.bin}/share/nvidia/nvidia-application-profiles-rc";
+          };
+
+          # 'nvidia_x11' installs it's files to /run/opengl-driver/...
+          "egl/egl_external_platform.d".source = "/run/opengl-driver/share/egl/egl_external_platform.d/";
+        };
+
+        boot = {
+          extraModulePackages = if useOpenModules then [ nvidia_x11.open ] else [ nvidia_x11.bin ];
+
+          # Exception is the open-source kernel module failing to load nvidia-uvm using softdep
+          # for unknown reasons.
+          # It affects CUDA: https://github.com/NixOS/nixpkgs/issues/334180
+          # Previously nvidia-uvm was explicitly loaded only when xserver was enabled:
+          # https://github.com/NixOS/nixpkgs/pull/334340/commits/4548c392862115359e50860bcf658cfa8715bde9
+          # We are now loading the module eagerly for all users of the open driver (including headless).
+          kernelModules = lib.optionals useOpenModules [ "nvidia_uvm" ];
+          
+          kernelParams = lib.optional useOpenModules "nvidia.NVreg_OpenRmEnableUnsupportedGpus=1"
+            ++ lib.optional (config.boot.kernelPackages.kernel.kernelAtLeast "6.2" && !ibtSupport) "ibt=off";
+        };
+
+        services.udev.packages = [
+          (pkgs.writeTextDir "lib/udev/rules.d/60-nvidia.rules" ''
+            KERNEL=="nvidia", RUN+="${pkgs.runtimeShell} -c 'mknod -m 666 /dev/nvidiactl c 195 255'"
+            KERNEL=="nvidia", RUN+="${pkgs.runtimeShell} -c 'for i in $$(cat /proc/driver/nvidia/gpus/*/information | grep Minor | cut -d \  -f 4); do mknod -m 666 /dev/nvidia$${i} c 195 $${i}; done'"
+            KERNEL=="nvidia_modeset", RUN+="${pkgs.runtimeShell} -c 'mknod -m 666 /dev/nvidia-modeset c 195 254'"
+            KERNEL=="nvidia_uvm", RUN+="${pkgs.runtimeShell} -c 'mknod -m 666 /dev/nvidia-uvm c $$(grep nvidia-uvm /proc/devices | cut -d \  -f 1) 0'"
+            KERNEL=="nvidia_uvm", RUN+="${pkgs.runtimeShell} -c 'mknod -m 666 /dev/nvidia-uvm-tools c $$(grep nvidia-uvm /proc/devices | cut -d \  -f 1) 1'"
+            
+            KERNEL=="card*", SUBSYSTEM=="drm", GROUP="video", MODE="0660"
+            KERNEL=="renderD*", SUBSYSTEM=="drm", GROUP="render", MODE="0660"
+          '')
+        ];
+
+        services.dbus.packages = lib.optional cfg.dynamicBoost.enable nvidia_x11.bin;
+
+        hardware.graphics = {
+          extraPackages = [ nvidia_x11.out ] 
+            ++ lib.optional cfg.videoAcceleration pkgs.nvidia-vaapi-driver;
+          extraPackages32 = [ nvidia_x11.lib32 ];
+        };
+        hardware.firmware = lib.optional cfg.gsp.enable nvidia_x11.firmware;
+
+        finit.services = {
+          nvidia-persistenced = lib.mkIf cfg.nvidiaPersistenced {
+            description = "NVIDIA Persistence Daemon";
+            command = "${lib.getExe nvidia_x11.persistenced} --verbose";
+            type = "forking";
+            pid = "/var/run/nvidia-persistenced/nvidia-persistenced.pid";
+            post = "${pkgs.coreutils}/bin/rm -rf /var/run/nvidia-persistenced";
+            restart = -1;
+          };
+          
+          nvidia-powerd = lib.mkIf cfg.dynamicBoost.enable {
+            command = "${nvidia_x11.bin}/bin/nvidia-powerd";
+            path = [ pkgs.util-linux ]; # nvidia-powerd wants lscpu
+            restart = -1;
+          };
+        };
+
+        environment.systemPackages = [ nvidia_x11.bin ]
+          ++ lib.optional cfg.nvidiaSettings nvidia_x11.settings
+          ++ lib.optional cfg.nvidiaPersistenced nvidia_x11.persistenced;
+      }
+
+      # X11
+      (lib.mkIf nvidiaEnabled {
+        services.xserver.drivers = lib.singleton {
+            name = "nvidia";
+            modules = [ nvidia_x11.bin ];
+            display = true;
+            deviceSection = ''
+              Option "SidebandSocketPath" "/run/nvidia-xdriver/"
+            '';
+            screenSection = ''
+              Option "RandRRotation" "on"
+            ''
+            + lib.optionalString cfg.forceFullCompositionPipeline ''
+              Option         "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
+              Option         "AllowIndirectGLXProtocol" "off"
+              Option         "TripleBuffer" "on"
+            '';
+          };
+        
+        services.tmpfiles.finit.rules = [
+          # Remove the following log message:
+          #    (WW) NVIDIA: Failed to bind sideband socket to
+          #    (WW) NVIDIA:     '/var/run/nvidia-xdriver-b4f69129' Permission denied
+          #
+          # https://bbs.archlinux.org/viewtopic.php?pid=1909115#p1909115
+          "d /run/nvidia-xdriver 0770 root users"
+        ];
+
+        boot = {
+          # nvidia-uvm is required by CUDA applications.
+          kernelModules = [
+            "nvidia"
+            "nvidia_modeset"
+            "nvidia_drm"
+          ];
+
+          # If requested enable modesetting via kernel parameters.
+          kernelParams =
+            lib.optional useModeset "nvidia-drm.modeset=1"
+            ++ lib.optional (
+              useModeset && lib.versionAtLeast nvidia_x11.version "545"
+            ) "nvidia-drm.fbdev=1";
+        };
+      })
+
+       # Data Center
+      (lib.mkIf cfg.datacenter.enable {
+        finit.services = {
+          nvidia-fabricmanager = {
+            description = "Start NVIDIA NVLink Management";
+            command =
+              let
+                # Since these rely on the `nvidia_x11.fabricmanager` derivation, they're
+                # unsuitable to be mentioned in the configuration defaults, but they _can_
+                # be overridden in `cfg.datacenter.settings` if needed.
+                fabricManagerConfDefaults = {
+                  TOPOLOGY_FILE_PATH = "${nvidia_x11.fabricmanager}/share/nvidia-fabricmanager/nvidia/nvswitch";
+                  DATABASE_PATH = "${nvidia_x11.fabricmanager}/share/nvidia-fabricmanager/nvidia/nvswitch";
+                };
+                nv-fab-conf = settingsFormat.generate "fabricmanager.conf" (
+                  fabricManagerConfDefaults // cfg.datacenter.settings
+                );
+              in
+              "${lib.getExe nvidia_x11.fabricmanager} -c ${nv-fab-conf}";
+            type = "forking";
+            conditions = [ "net/online" ];
+            restart = -1;
+          };
+        };
+
+        environment.systemPackages = [ nvidia_x11.fabricmanager ]
+          ++ lib.optional cfg.nvidiaPersistenced nvidia_x11.persistenced;
+      })
+    ]
+  );
+}
