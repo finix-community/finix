@@ -25,6 +25,7 @@
               type = lib.types.enum [
                 "suspend"
                 "resume"
+                "hibernate"
               ];
               description = ''
                 The event type.
@@ -52,7 +53,7 @@
       );
       default = { };
       description = ''
-        A set of hooks which are to be run on system _suspend_ or _resume_.
+        A set of hooks which are to be run on system _suspend_, _hibernate_ or _resume_.
       '';
     };
   };
