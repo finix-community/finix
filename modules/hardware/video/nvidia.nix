@@ -358,13 +358,6 @@ in
             assertion = !primeEnabled;
             message = "PRIME support is not yet implemented on Finix. Disable prime sync/offload/reverseSync.";
           }
-
-          # Power management not yet implemented; remove assertion when suspend hooks can be implemented in finit.
-          {
-            assertion = !cfg.powerManagement.enable;
-            message = "Power management support is not yet implemented on Finix. Disable powerManagement.";
-          }
-
           
           {
             assertion = !(nvidiaEnabled && cfg.datacenter.enable);
@@ -372,19 +365,63 @@ in
           }
 
           {
-            assertion = cfg.open != null || cfg.datacenter.enable;
-            message = ''
-              You must configure `hardware.nvidia.open` on NVIDIA driver versions >= 560.
-              It is suggested to use the open source kernel modules on Turing or later GPUs (RTX series, GTX 16xx), and the closed source modules otherwise.
-            '';
+            assertion = primeEnabled -> primeCfg.intelBusId == "" || primeCfg.amdgpuBusId == "";
+            message = "You cannot configure both an Intel iGPU and an AMD APU. Pick the one corresponding to your processor.";
           }
 
           {
-            assertion = useOpenModules -> cfg.gsp.enable;
-            message = "The GSP cannot be disabled when using the opensource kernel driver.";
+            assertion = offloadCfg.enableOffloadCmd -> offloadCfg.enable || reverseSyncCfg.enable;
+            message = "Offload command requires offloading or reverse prime sync to be enabled.";
           }
 
-                  {
+          {
+            assertion =
+              primeEnabled -> primeCfg.nvidiaBusId != "" && (primeCfg.intelBusId != "" || primeCfg.amdgpuBusId != "");
+            message = "When NVIDIA PRIME is enabled, the GPU bus IDs must be configured.";
+          }
+
+          {
+            assertion = offloadCfg.enable -> lib.versionAtLeast nvidia_x11.version "435.21";
+            message = "NVIDIA PRIME render offload is currently only supported on versions >= 435.21.";
+          }
+
+          {
+            assertion =
+              (reverseSyncCfg.enable && primeCfg.amdgpuBusId != "") -> lib.versionAtLeast nvidia_x11.version "470.0";
+            message = "NVIDIA PRIME render offload for AMD APUs is currently only supported on versions >= 470 beta.";
+          }
+
+          {
+            assertion = !(syncCfg.enable && offloadCfg.enable);
+            message = "PRIME Sync and Offload cannot be both enabled";
+          }
+
+          {
+            assertion = !(syncCfg.enable && reverseSyncCfg.enable);
+            message = "PRIME Sync and PRIME Reverse Sync cannot be both enabled";
+          }
+
+          {
+            assertion = !(syncCfg.enable && cfg.powerManagement.finegrained);
+            message = "Sync precludes powering down the NVIDIA GPU.";
+          }
+
+          {
+            assertion = cfg.powerManagement.finegrained -> offloadCfg.enable;
+            message = "Fine-grained power management requires offload to be enabled.";
+          }
+
+          {
+            assertion = cfg.powerManagement.enable -> lib.versionAtLeast nvidia_x11.version "430.09";
+            message = "Required files for driver based power management only exist on versions >= 430.09.";
+          }
+
+          {
+            assertion = (cfg.powerManagement.enable && !cfg.powerManagement.kernelSuspendNotifier) -> config.programs.zzz.enable;
+            message = "Power management without `kernelSuspendNotifier` requires a sleep backend. Enable programs.zzz (programs.zzz.enable = true).";
+          }
+
+          {
             assertion = cfg.gsp.enable -> (cfg.package ? firmware);
             message = "This version of NVIDIA driver does not provide a GSP firmware.";
           }
@@ -395,8 +432,20 @@ in
           }
 
           {
+            assertion = useOpenModules -> cfg.gsp.enable;
+            message = "The GSP cannot be disabled when using the opensource kernel driver.";
+          }
+
+          {
             assertion = cfg.dynamicBoost.enable -> lib.versionAtLeast nvidia_x11.version "510.39.01";
             message = "NVIDIA's Dynamic Boost feature only exists on versions >= 510.39.01";
+          }
+
+          {
+            assertion =
+              cfg.powerManagement.kernelSuspendNotifier
+              -> (useOpenModules && lib.versionAtLeast nvidia_x11.version "595");
+            message = "NVIDIA driver support for kernel suspend notifiers requires NVIDIA driver version 595 or newer, and the open source kernel modules.";
           }
         ];
 
@@ -419,6 +468,12 @@ in
             blacklist nova_core
           '';
 
+          "modprobe.d/nvidia-power-management-finegrained.conf" = lib.mkIf cfg.powerManagement.finegrained {
+            text = ''
+              options nvidia "NVreg_DynamicPowerManagement=0x02"
+            '';
+          };
+
           "nvidia/nvidia-application-profiles-rc" = lib.mkIf nvidia_x11.useProfiles {
             source = "${nvidia_x11.bin}/share/nvidia/nvidia-application-profiles-rc";
           };
@@ -438,7 +493,12 @@ in
           # We are now loading the module eagerly for all users of the open driver (including headless).
           kernelModules = lib.optionals useOpenModules [ "nvidia_uvm" ];
           
-          kernelParams = lib.optional useOpenModules "nvidia.NVreg_OpenRmEnableUnsupportedGpus=1"
+          kernelParams = 
+            lib.optional useOpenModules "nvidia.NVreg_OpenRmEnableUnsupportedGpus=1"
+            ++ lib.optional (
+              cfg.powerManagement.enable && cfg.powerManagement.kernelSuspendNotifier
+            ) "nvidia.NVreg_UseKernelSuspendNotifiers=1"
+            ++ lib.optional cfg.powerManagement.enable "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
             ++ lib.optional (config.boot.kernelPackages.kernel.kernelAtLeast "6.2" && !ibtSupport) "ibt=off";
         };
 
@@ -452,7 +512,29 @@ in
             
             KERNEL=="card*", SUBSYSTEM=="drm", GROUP="video", MODE="0660"
             KERNEL=="renderD*", SUBSYSTEM=="drm", GROUP="render", MODE="0660"
-          '')
+          ''
+          + lib.optionalString cfg.powerManagement.finegrained (
+              lib.optionalString (lib.versionOlder config.boot.kernelPackages.kernel.version "5.5") ''
+                # Remove NVIDIA USB xHCI Host Controller devices, if present
+                ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c0330", ATTR{remove}="1"
+
+                # Remove NVIDIA USB Type-C UCSI devices, if present
+                ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c8000", ATTR{remove}="1"
+
+                # Remove NVIDIA Audio devices, if present
+                ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", ATTR{remove}="1"
+              ''
+              + ''
+                # Enable runtime PM for NVIDIA VGA/3D controller devices on driver bind
+                ACTION=="bind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="auto"
+                ACTION=="bind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="auto"
+
+                # Disable runtime PM for NVIDIA VGA/3D controller devices on driver unbind
+                ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="on"
+                ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="on"
+              ''
+            )
+          )
         ];
 
         services.dbus.packages = lib.optional cfg.dynamicBoost.enable nvidia_x11.bin;
@@ -481,12 +563,30 @@ in
           };
         };
 
+        providers.resumeAndSuspend.hooks = lib.mkIf (cfg.powerManagement.enable && !cfg.powerManagement.kernelSuspendNotifier) {
+          nvidia-suspend = {
+            event = "suspend";
+            action = "PATH=${pkgs.kbd}/bin:$PATH ${nvidia_x11.out}/bin/nvidia-sleep.sh 'suspend'";
+            priority = 100;
+          };
+          nvidia-hibernate = {
+            event = "hibernate";
+            action = "${nvidia_x11.out}/bin/nvidia-sleep.sh 'hibernate'";
+            priority = 100;
+          };
+          nvidia-resume = {
+            event = "resume";
+            action = "${nvidia_x11.out}/bin/nvidia-sleep.sh 'resume'";
+            priority = 900; # run after other resume hooks
+          };
+        };
+
         environment.systemPackages = [ nvidia_x11.bin ]
           ++ lib.optional cfg.nvidiaSettings nvidia_x11.settings
           ++ lib.optional cfg.nvidiaPersistenced nvidia_x11.persistenced;
       }
 
-      # X11
+      # Display
       (lib.mkIf nvidiaEnabled {
         services.xserver.drivers = lib.singleton {
             name = "nvidia";
