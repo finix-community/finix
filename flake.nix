@@ -18,16 +18,5 @@
 
           modules = [ self.nixosModules.default ] ++ modules;
         };
-
-      templates = {
-        default = self.templates.desktop-greetd;
-
-        desktop-greetd = {
-          path = ./templates/desktop-seatd;
-          description = "A simple desktop running the niri scrollable-tiling wayland compositor";
-        };
-
-        # TODO: desktop-logind
-      };
     };
 }
