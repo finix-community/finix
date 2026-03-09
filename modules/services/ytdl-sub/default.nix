@@ -159,7 +159,7 @@ in
     ]
     ++ lib.optionals cfg.debug [ "--log-level=debug" ];
 
-    services.tmpfiles.ytdl-sub.rules =
+    finit.tmpfiles.rules =
       lib.optionals (cfg.settings.configuration.persist_logs.logs_directory == "/var/log/ytdl-sub") [
         "d /var/log/ytdl-sub 0750 ${cfg.user} ${cfg.group}"
       ]

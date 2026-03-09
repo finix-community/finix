@@ -30,7 +30,7 @@ in
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [ cfg.package ];
 
-    services.tmpfiles.xwayland-satellite.rules = [
+    finit.tmpfiles.rules = [
       "D! /tmp/.X11-unix  1777 root root"
       "D! /tmp/.ICE-unix  1777 root root"
       "D! /tmp/.XIM-unix  1777 root root"

@@ -23,6 +23,14 @@ let
       # their assertions too
       (lib.attrValues config.fileSystems);
 
+  makeSwapEntry =
+    sw:
+    let
+      device = if sw.label != null then "/dev/disk/by-label/${sw.label}" else sw.device;
+      options = sw.options ++ lib.optional (sw.priority != null) "pri=${toString sw.priority}";
+    in
+    "${escape device} none swap ${escape (lib.concatStringsSep "," options)} 0 0\n";
+
   makeFstabEntries =
     let
       fsToSkipCheck = [
@@ -133,7 +141,8 @@ in
       # filesystems
       ${makeFstabEntries fileSystems { }}
 
-      # TODO: swap devices
+      # swap devices
+      ${lib.concatMapStrings makeSwapEntry config.swapDevices}
     '';
 
     boot.supportedFilesystems = lib.mapAttrs' (

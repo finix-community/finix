@@ -75,52 +75,13 @@ in
       extraConfig = "if:<!int/container>";
     };
 
-    services.tmpfiles.chrony.rules = [
+    finit.tmpfiles.rules = [
       "d /var/lib/chrony 0750 chrony chrony - -"
       "f /var/lib/chrony/chrony.drift 0640 chrony chrony - -"
       "f /var/lib/chrony/chrony.keys 0640 chrony chrony - -"
 
       # "f /var/lib/chrony/chrony.rtc 0640 chrony chrony - -"
     ];
-
-    synit.daemons.chronyd = {
-      argv = lib.quoteExecline ([
-        "if"
-        [
-          "s6-mkdir"
-          "-p"
-          "-m"
-          "750"
-          "/var/lib/chrony"
-        ]
-        "if"
-        [
-          "s6-envuidgid"
-          "chrony"
-          "s6-chown"
-          "-U"
-          "/var/lib/chrony"
-        ]
-        "chronyd"
-        "-d"
-        "-u"
-        "chrony"
-        "-f"
-        cfg.configFile
-      ]);
-      path = [ cfg.package ];
-      requires = [
-        {
-          key = [
-            "milestone"
-            "network"
-          ];
-        }
-      ];
-
-      # Suppress the default timestamping behavior.
-      logging.args = [ ];
-    };
 
     users.users = {
       chrony = {

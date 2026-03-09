@@ -156,7 +156,7 @@ in
     environment.etc."my.cnf".source = configFile;
 
     # FIXME: finit doesn't implement Z recursively...
-    services.tmpfiles.mariadb.rules = [
+    finit.tmpfiles.rules = [
       "d ${cfg.dataDir} 0700 ${cfg.user} ${cfg.group}"
       "Z ${cfg.dataDir} 0700 ${cfg.user} ${cfg.group}"
       "d /run/mysqld 0755 ${cfg.user} ${cfg.group}"

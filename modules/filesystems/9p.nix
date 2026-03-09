@@ -9,6 +9,9 @@
       enable = lib.mkOption {
         type = lib.types.bool;
         default = false;
+        description = ''
+          Whether to enable support for the `9p` filesystem in the initial ramdisk.
+        '';
       };
     };
 
@@ -16,6 +19,9 @@
       enable = lib.mkOption {
         type = lib.types.bool;
         default = false;
+        description = ''
+          Whether to enable support for the `9p` filesystem.
+        '';
       };
     };
   };

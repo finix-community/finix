@@ -169,11 +169,9 @@ in
       cfg.package
     ];
 
-    services.tmpfiles = lib.optionalAttrs (cfg.settings.fcrontabs == "/var/spool/fcron") {
-      fcron.rules = [
-        "d ${cfg.settings.fcrontabs} 0770 fcron fcron"
-      ];
-    };
+    finit.tmpfiles.rules = lib.optionals (cfg.settings.fcrontabs == "/var/spool/fcron") [
+      "d ${cfg.settings.fcrontabs} 0770 fcron fcron"
+    ];
 
     security.wrappers = {
       fcrontab = {

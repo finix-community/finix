@@ -66,7 +66,7 @@ in
       };
     };
 
-    services.tmpfiles.sddm.rules = [
+    finit.tmpfiles.rules = [
       # Home dir of the sddm user, also contains state.conf
       "d       /var/lib/sddm   0750    sddm    sddm"
       # This contains X11 auth files passed to Xorg and the greeter

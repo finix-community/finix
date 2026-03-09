@@ -52,6 +52,11 @@ let
   wrapperType = lib.types.submodule (
     { name, ... }:
     {
+      options.enable = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = "Whether to enable the wrapper.";
+      };
       options.source = lib.mkOption {
         type = lib.types.path;
         description = "The absolute path to the program to be wrapped.";
@@ -166,26 +171,32 @@ let
 
   mkWrappedPrograms = builtins.map (
     opts: if opts.capabilities != "" then mkSetcapProgram opts else mkSetuidProgram opts
-  ) (lib.attrValues wrappers);
+  ) (lib.attrValues (lib.filterAttrs (_: wrapper: wrapper.enable) wrappers));
 
   wrappersScript = pkgs.writeShellScript "suid-sgid-wrappers.sh" ''
-    PATH=$PATH:${pkgs.s6-portable-utils}/bin
     set -e
+
+    chmod 755 "${parentWrapperDir}"
+
     # We want to place the tmpdirs for the wrappers to the parent dir.
-    mkdir -p "${parentWrapperDir}"
     wrapperDir=$(mktemp --directory --tmpdir="${parentWrapperDir}" wrappers.XXXXXXXXXX)
     chmod a+rx "$wrapperDir"
 
     ${lib.concatStringsSep "\n" mkWrappedPrograms}
 
     if [ -L ${wrapperDir} ]; then
+      # Atomically replace the symlink
+      # See https://axialcorps.com/2013/07/03/atomically-replacing-files-and-directories/
       old=$(readlink -f ${wrapperDir})
-      # s6-ln is not POSIX, it does atomic replacement.
-      s6-ln -s -f -n "$wrapperDir" "${wrapperDir}"
-      s6-rmrf "$old"
+      if [ -e "${wrapperDir}-tmp" ]; then
+        rm --force --recursive "${wrapperDir}-tmp"
+      fi
+      ln --symbolic --force --no-dereference "$wrapperDir" "${wrapperDir}-tmp"
+      mv --no-target-directory "${wrapperDir}-tmp" "${wrapperDir}"
+      rm --force --recursive "$old"
     else
       # For initial setup
-      s6-ln -s "$wrapperDir" "${wrapperDir}"
+      ln --symbolic "$wrapperDir" "${wrapperDir}"
     fi
   '';
 
@@ -261,31 +272,6 @@ in
       log = true;
       command = wrappersScript;
       path = [ pkgs.coreutils ];
-    };
-
-    synit.milestones.wrappers = { };
-
-    synit.daemons.suid-sgid-wrappers = {
-      argv = lib.quoteExecline [
-        "if"
-        [ wrappersScript ]
-        "redirfd"
-        "-w"
-        "1"
-        "/run/synit/config/state/suid-sgid-wrappers.pr"
-        "echo"
-        "<service-state <daemon suid-sgid-wrappers> ready>"
-      ];
-      path = [ pkgs.coreutils ];
-      restart = "on-error";
-      readyOnStart = false;
-      logging.enable = lib.mkDefault false;
-      provides = [
-        [
-          "milestone"
-          "wrappers"
-        ]
-      ];
     };
   };
 }

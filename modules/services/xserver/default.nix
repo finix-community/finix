@@ -127,7 +127,9 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
-      description = "xserver";
+      description = ''
+        Whether to enable the X.Org display server.
+      '';
     };
 
     modules = lib.mkOption {
