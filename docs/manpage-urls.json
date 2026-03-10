@@ -23,6 +23,7 @@
   "login.defs(5)": "https://man.archlinux.org/man/login.defs.5",
   "mount(8)": "https://man.archlinux.org/man/mount.8",
   "nix.conf(5)": "https://man.archlinux.org/man/nix.conf.5",
+  "nvidia-persistenced(1)": "https://man.archlinux.org/man/nvidia-persistenced.1",
   "resolvconf.conf(5)": "https://man.archlinux.org/man/resolvconf.conf.5",
   "sshd(8)": "https://man.archlinux.org/man/sshd.8",
   "sshd_config(5)": "https://man.archlinux.org/man/sshd_config.5",
