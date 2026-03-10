@@ -13,12 +13,22 @@ let
     in
     padding + s;
 
-  mkHook = mode: prePost: k: v:
+  mkHook = mode: k: v:
     let
       name = "zzz.d/${zeroPad 4 v.priority}-${k}.sh";
       script = pkgs.writeShellScript k ''
-        [ "$ZZZ_MODE" = "${mode}" ] || exit 0
-        [ "$1" = "${prePost}" ] || exit 0
+        [ "''${ZZZ_MODE:-}" = "${mode}" ] || exit 0
+        [ "$1" = "pre" ] || exit 0
+        ${v.action}
+      '';
+    in
+    lib.nameValuePair name { source = script; };
+
+  mkResumeHook = k: v:
+    let
+      name = "zzz.d/${zeroPad 4 v.priority}-${k}.sh";
+      script = pkgs.writeShellScript k ''
+        [ "$1" = "post" ] || exit 0
         ${v.action}
       '';
     in
@@ -36,9 +46,9 @@ in
       let
         filtered = event: lib.filterAttrs (_: v: v.enable && v.event == event) config.providers.resumeAndSuspend.hooks;
 
-        suspend = lib.mapAttrs' (k: v: mkHook "suspend" "pre"  k v) (filtered "suspend");
-        hibernate = lib.mapAttrs' (k: v: mkHook "hibernate" "pre"  k v) (filtered "hibernate");
-        resume = lib.mapAttrs' (k: v: mkHook "suspend" "post" k v) (filtered "resume"); # for resume - it's suspend + post
+        suspend = lib.mapAttrs' (k: v: mkHook "suspend"  k v) (filtered "suspend");
+        hibernate = lib.mapAttrs' (k: v: mkHook "hibernate"  k v) (filtered "hibernate");
+        resume = lib.mapAttrs' (k: v: mkResumeHook k v) (filtered "resume");
       in
       lib.mkMerge [ suspend hibernate resume ];
   };
