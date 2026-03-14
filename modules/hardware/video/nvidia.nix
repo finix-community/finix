@@ -192,11 +192,6 @@ in
         '';
       };
 
-      prime.unsafeX11 = lib.mkEnableOption ''
-        Bypass errors with {option}`nvidia.prime.sync.enable` and {option}`nvidia.prime.reverseSync.enable` options on X11.
-        This handles a case where a user may use sync or reverseSync on Wayland - but have an xserver running in the background.
-      '';
-
       prime.sync.enable = lib.mkEnableOption ''
         NVIDIA Optimus support using the NVIDIA proprietary driver via PRIME.
         If enabled, the NVIDIA GPU will be always on and used for all rendering,
@@ -294,19 +289,6 @@ in
           default = true;
         };
 
-      nvidiaSettings =
-        (lib.mkEnableOption ''
-          nvidia-settings, NVIDIA's GUI configuration tool
-        '')
-        // {
-          default = true;
-        };
-
-      nvidiaPersistenced = lib.mkEnableOption ''
-        nvidia-persistenced a update for NVIDIA GPU headless mode, i.e.
-        It ensures all GPUs stay awake even during headless mode
-      '';
-
       forceFullCompositionPipeline = lib.mkEnableOption ''
         forcefully the full composition pipeline.
         This sometimes fixes screen tearing issues.
@@ -363,12 +345,12 @@ in
       {
         assertions = [
           { # x11 sync unimplemented
-            assertion = !(syncCfg.enable && nvidiaOnX11 && !primeCfg.unsafeX11);
-            message = "Currently `nvidia.prime.sync` is not implemented for X11. To bypass this, set `nvidia.prime.unsafeX11` to true.";
+            assertion = !(syncCfg.enable && nvidiaOnX11);
+            message = "Currently `nvidia.prime.sync` is not implemented for X11.";
           }
           { # x11 reverseSync unimplemented
-            assertion = !(reverseSyncCfg.enable && nvidiaOnX11 && !primeCfg.unsafeX11);
-            message = "Currently `nvidia.prime.reverseSync` is not implemented for X11. To bypass this, set `nvidia.prime.unsafeX11` to true.";
+            assertion = !(reverseSyncCfg.enable && nvidiaOnX11);
+            message = "Currently `nvidia.prime.reverseSync` is not implemented for X11.";
           }
 
           {
@@ -567,15 +549,6 @@ in
         hardware.firmware = lib.optional cfg.gsp.enable nvidiaPkg.firmware;
 
         finit.services = {
-          nvidia-persistenced = lib.mkIf cfg.nvidiaPersistenced {
-            description = "NVIDIA Persistence Daemon";
-            command = "${lib.getExe nvidiaPkg.persistenced} --verbose";
-            type = "forking";
-            pid = "/var/run/nvidia-persistenced/nvidia-persistenced.pid";
-            post = "${pkgs.coreutils}/bin/rm -rf /var/run/nvidia-persistenced";
-            restart = -1;
-          };
-          
           nvidia-powerd = lib.mkIf cfg.dynamicBoost.enable {
             command = "${nvidiaPkg.bin}/bin/nvidia-powerd";
             path = [ pkgs.util-linux ]; # nvidia-powerd wants lscpu
@@ -604,8 +577,6 @@ in
         services.acpid.enable = true;
 
         environment.systemPackages = [ nvidiaPkg.bin ]
-          ++ lib.optional cfg.nvidiaSettings nvidiaPkg.settings
-          ++ lib.optional cfg.nvidiaPersistenced nvidiaPkg.persistenced
           ++ lib.optional offloadCfg.enableOffloadCmd (
               pkgs.writeShellScriptBin offloadCfg.offloadCmdMainProgram ''
                 export __NV_PRIME_RENDER_OFFLOAD=1
@@ -618,7 +589,7 @@ in
       }
 
       # Display
-      (lib.mkIf nvidiaEnabled {
+      (lib.mkIf nvidiaStandardEnabled {
         services.xserver.drivers = 
           lib.optional primeEnabled {
             name = igpuDriver;
@@ -657,7 +628,7 @@ in
             '';
           };
         
-        services.tmpfiles.finit.rules = [
+        finit.tmpfiles.rules = [
           # Remove the following log message:
           #    (WW) NVIDIA: Failed to bind sideband socket to
           #    (WW) NVIDIA:     '/var/run/nvidia-xdriver-b4f69129' Permission denied
@@ -676,20 +647,6 @@ in
             EndSection
           '';
         };
-   
-        # If Optimus/PRIME is enabled, we:
-        # - Specify the configured NVIDIA GPU bus ID in the Device section for the
-        #   "nvidia" driver.
-        # - Add the AllowEmptyInitialConfiguration option to the Screen section for the
-        #   "nvidia" driver, in order to allow the X server to start without any outputs.
-        # - Add a separate Device section for the Intel GPU, using the "modesetting"
-        #   driver and with the configured BusID.
-        # - OR add a separate Device section for the AMD APU, using the "amdgpu"
-        #   driver and with the configures BusID.
-        # - Reference that Device section from the ServerLayout section as an inactive
-        #   device.
-        # - Configure the display manager to run specific `xrandr` commands which will
-        #   configure/enable displays connected to the Intel iGPU / AMD APU.
 
         # reverse sync implies offloading
         hardware.nvidia.prime.offload.enable = lib.mkDefault reverseSyncCfg.enable;
@@ -736,8 +693,7 @@ in
           };
         };
 
-        environment.systemPackages = [ nvidiaPkg.fabricmanager ]
-          ++ lib.optional cfg.nvidiaPersistenced nvidiaPkg.persistenced;
+        environment.systemPackages = [ nvidiaPkg.fabricmanager ];
       })
     ]
   );
