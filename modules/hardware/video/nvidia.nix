@@ -574,8 +574,6 @@ in
           };
         };
 
-        services.acpid.enable = true;
-
         environment.systemPackages = [ nvidiaPkg.bin ]
           ++ lib.optional offloadCfg.enableOffloadCmd (
               pkgs.writeShellScriptBin offloadCfg.offloadCmdMainProgram ''
