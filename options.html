@@ -3780,7 +3780,7 @@
     <details class="toc-category">
       <summary title="services">
         <span>services</span>
-        <span class="toc-count">298</span>
+        <span class="toc-count">302</span>
       </summary>
       <ul>
         
@@ -5709,6 +5709,38 @@
         <li>
           <a href='#option-services-system76-scheduler-package' title="services.system76-scheduler.package">
             system76-scheduler.package
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-thermald-debug' title="services.thermald.debug">
+            thermald.debug
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-thermald-enable' title="services.thermald.enable">
+            thermald.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-thermald-extraArgs' title="services.thermald.extraArgs">
+            thermald.extraArgs
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-thermald-package' title="services.thermald.package">
+            thermald.package
             
             
           </a>
@@ -15797,6 +15829,55 @@ ensuring the user exists before the <code>sonarr</code> service starts.</p>
 </body></html></div>
   <div class="option-default">Default: <code>pkgs.system76-scheduler</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/system76-scheduler" target="_blank">&lt;finix/modules/services/system76-scheduler&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-thermald-debug">
+  <h3 class="option-name">
+    <a href="#option-services-thermald-debug" class="option-anchor">services.thermald.debug</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/thermald" target="_blank">&lt;finix/modules/services/thermald&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-thermald-enable">
+  <h3 class="option-name">
+    <a href="#option-services-thermald-enable" class="option-anchor">services.thermald.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://github.com/intel/thermal_daemon">thermald</a> as a system service.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/thermald" target="_blank">&lt;finix/modules/services/thermald&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-thermald-extraArgs">
+  <h3 class="option-name">
+    <a href="#option-services-thermald-extraArgs" class="option-anchor">services.thermald.extraArgs</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <code>thermald</code>. See <a href="https://man.archlinux.org/man/thermald.8" class="manpage-reference">thermald(8)</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/thermald" target="_blank">&lt;finix/modules/services/thermald&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-thermald-package">
+  <h3 class="option-name">
+    <a href="#option-services-thermald-package" class="option-anchor">services.thermald.package</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>thermald</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.thermald</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/thermald" target="_blank">&lt;finix/modules/services/thermald&gt;</a></code></div>
 </div>
 <div class="option" id="option-services-tlp-enable">
   <h3 class="option-name">
