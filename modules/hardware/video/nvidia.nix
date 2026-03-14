@@ -688,7 +688,7 @@ in
               in
               "${lib.getExe nvidiaPkg.fabricmanager} -c ${nv-fab-conf}";
             type = "forking";
-            conditions = [ "net/online" ];
+            conditions = [ "net/route/default" ];
             restart = -1;
           };
         };
