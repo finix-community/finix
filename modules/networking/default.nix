@@ -26,6 +26,9 @@ in
     hostName = lib.mkOption {
       type = lib.types.str;
       default = "finix";
+      description = ''
+        The hostname of this system.
+      '';
     };
 
     hostId = lib.mkOption {

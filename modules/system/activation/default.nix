@@ -31,6 +31,9 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = true;
+      description = ''
+        Whether to enable system activation scripts.
+      '';
     };
 
     scripts = lib.mkOption {
@@ -62,6 +65,9 @@ in
     path = lib.mkOption {
       type = with lib.types; listOf package;
       default = [ ];
+      description = ''
+        Packages added to the `PATH` environment variable of activation scripts.
+      '';
     };
 
     out = lib.mkOption {
@@ -118,10 +124,23 @@ in
       '';
 
     system.activation.scripts.specialfs = ''
-      echo "specialfs stub here..."
-      mkdir -p /bin /etc /run /tmp /usr /var/{cache,db,empty,lib,log,spool}
-      s6-ln -s -f -n /run /var/run
+      mkdir -p /run /tmp /var
+      ln -sfn /run /var/run
     '';
+
+    finit.tmpfiles.rules = [
+      "d /etc"
+      "d /run"
+      "d /tmp"
+      "d /var"
+      "d /var/cache"
+      "d /var/db"
+      "d /var/empty"
+      "d /var/lib"
+      "d /var/log"
+      "d /var/spool"
+      "L+ /var/run - - - - /run"
+    ];
 
     system.activation.path =
       with pkgs;
@@ -134,7 +153,6 @@ in
         shadow
         nettools # needed for hostname
         util-linux # needed for mount and mountpoint
-        s6-portable-utils # s6-ln
       ];
 
     system.topLevel = checkAssertWarn (
@@ -145,13 +163,14 @@ in
         buildCommand = ''
           mkdir -p $out $out/bin
 
-          cp ${config.system.activation.out} $out/activate
-          cp ${config.boot.init.script} $out/init
+          echo -n "finix" > $out/nixos-version
 
-          ${pkgs.coreutils}/bin/ln -s ${config.environment.path} $out/sw
+          cp ${config.system.activation.out} $out/activate
 
           substituteInPlace $out/activate --subst-var-by systemConfig $out
-          substituteInPlace $out/init --subst-var-by systemConfig $out
+
+          ${pkgs.coreutils}/bin/ln -sr ${config.finit.package}/bin/finit $out/init
+          ${pkgs.coreutils}/bin/ln -s ${config.environment.path} $out/sw
 
           mkdir $out/specialisation
 
@@ -175,14 +194,6 @@ in
             --subst-var-by distroId finix \
             --subst-var-by finit ${config.finit.package} \
             --subst-var-by installHook ${config.providers.bootloader.installHook}
-        ''
-        + lib.optionalString config.synit.enable ''
-          cp ${config.synit.plan.activatePlan} $out/activatePlan
-          substituteInPlace $out/activatePlan --subst-var-by systemConfig $out
-
-          cp ${../../synit/switch-to-configuration.sh} $out/bin/switch-to-configuration
-          substituteInPlace $out/bin/switch-to-configuration \
-            --subst-var-by bash ${pkgs.bash}
         ''
         + lib.optionalString config.boot.bootspec.enable ''
           ${config.boot.bootspec.writer}

@@ -54,12 +54,13 @@ in
       }
     ];
 
-    system.activation.scripts.users = lib.stringAfter [ "specialfs" ] ''
-      echo "users stub here..."
+    system.activation.scripts.users = ''
+      mkdir -p /etc
+
       ${pkgs.userborn}/bin/userborn ${configFile}
     '';
 
-    services.tmpfiles.home.rules = [
+    finit.tmpfiles.rules = [
       "d /home"
     ]
     ++ lib.mapAttrsToList (username: opts: "d ${opts.home} 0700 ${opts.name} ${opts.group}") (

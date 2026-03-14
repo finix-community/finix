@@ -8,6 +8,9 @@ let
   cfg = config.finit;
   format = pkgs.formats.keyValue { };
 
+  # finix-setup plugin for early boot initialization
+  finix-setup = pkgs.callPackage ../../pkgs/finix-setup { };
+
   pathOrStr = with lib.types; coercedTo path (x: "${x}") str;
   program =
     lib.types.coercedTo (
@@ -90,13 +93,33 @@ let
     };
   };
 
-  commonOpts =
+  # oneshotOpts: options specific to oneshot stanzas (task, run) - not services
+  oneshotOpts = {
+    options.remain = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        By default, a `run` or `task` will re-run each time its runlevel is
+        entered, and its `post:` script does not run on completion.
+
+        With `remain:yes`, the task runs once and does not re-run on runlevel. The
+        `post:` script will run if the task is explicitly stopped or when the task
+        leaves its valid runlevels.
+      '';
+    };
+  };
+
+  # baseOpts: options shared by ALL stanza types (service, task, run, tty, sysv)
+  baseOpts =
     { config, name, ... }:
     {
       options = {
         enable = lib.mkOption {
           type = lib.types.bool;
           default = true;
+          description = ''
+            Whether to enable this stanza.
+          '';
         };
 
         extraConfig = lib.mkOption {
@@ -114,30 +137,23 @@ let
           default = [ ];
           example = "pid/syslog";
           description = ''
-            See [upstream documentation](https://github.com/troglobit/finit/blob/master/doc/conditions.md) for details.
-          '';
-        };
-
-        caps = lib.mkOption {
-          type = with lib.types; coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr);
-          apply = lib.unique;
-          default = [ ];
-          example = [ "^cap_net_bind_service" ];
-          description = ''
-            Allow services to run with minimal required privileges instead of running as `root`.
+            See [upstream documentation](https://finit-project.github.io/conditions/) for details.
           '';
         };
 
         description = lib.mkOption {
           type = with lib.types; nullOr str;
           default = null;
+          description = ''
+            A human-readable description of this service, displayed by `initctl`.
+          '';
         };
 
         runlevels = lib.mkOption {
           type = lib.types.str; # TODO: string  matching 0-9S
           default = "234";
           description = ''
-            See [upstream documentation](https://github.com/troglobit/finit?tab=readme-ov-file#runlevels) for details.
+            See [upstream documentation](https://finit-project.github.io/runlevels/) for details.
           '';
         };
 
@@ -156,7 +172,7 @@ let
             description = ''
               For services that need to create their own child `cgroups` (container runtimes like `docker`, `podman`, `systemd-nspawn`, `lxc`, etc...).
 
-              See [ustream documentation](https://finit-project.github.io/config/cgroups/#cgroup-delegation) for details.
+              See [upstream documentation](https://finit-project.github.io/config/cgroups/#cgroup-delegation) for details.
             '';
           };
 
@@ -173,26 +189,24 @@ let
       };
     };
 
-  # TODO: move options common to finit.{run, tasks, ttys, services} from here into commonOpts
-  serviceOpts =
+  # execOpts: options shared by executable stanzas (service, task, run, sysv) but NOT tty
+  execOpts =
     { config, name, ... }:
     {
       options = {
         name = lib.mkOption {
           type = lib.types.str; # TODO: limit name, no : allowed, only valid chars
           readOnly = true;
+          description = ''
+            The name of this stanza, derived from the attribute name.
+          '';
         };
 
         id = lib.mkOption {
           type = with lib.types; nullOr str;
           readOnly = true;
-        };
-
-        nohup = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
           description = ''
-            Whether this service supports reload on SIGHUP.
+            The instance identifier, derived from the attribute name if it contains an `@` character.
           '';
         };
 
@@ -220,37 +234,14 @@ let
           '';
         };
 
-        restart = lib.mkOption {
-          type = lib.types.ints.between (-1) 255;
-          default = 10;
+        caps = lib.mkOption {
+          type = with lib.types; coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr);
+          apply = lib.unique;
+          default = [ ];
+          example = [ "^cap_net_bind_service" ];
           description = ''
-            The number of times `finit` tries to restart a crashing service. When
-            this limit is reached the service is marked crashed and must be restarted
-            manually with `initctl restart NAME`.
+            Allow services to run with minimal required privileges instead of running as `root`.
           '';
-        };
-
-        restart_sec = lib.mkOption {
-          type = with lib.types; nullOr ints.unsigned;
-          default = null;
-          description = ''
-            The number of seconds before Finit tries to restart a crashing service, default: `2`
-            seconds for the first five retries, then back-off to `5` seconds. The maximum of this
-            configured value and the above (`2` and `5`) will be used.
-          '';
-        };
-
-        pid = lib.mkOption {
-          type = with lib.types; nullOr str;
-          default = null;
-          description = ''
-            See [upstream documentation](https://github.com/troglobit/finit/blob/master/doc/service.md) for details.
-          '';
-        };
-
-        type = lib.mkOption {
-          type = with lib.types; nullOr (enum [ "forking" ]);
-          default = null;
         };
 
         path = lib.mkOption {
@@ -286,7 +277,7 @@ let
             tool. This is useful for programs that do not support `syslog` on their own, which is sometimes
             the case when running in the foreground.
 
-            See [upstream documentation](https://github.com/troglobit/finit/tree/master/doc#redirecting-output) for additional details.
+            See [upstream documentation](https://finit-project.github.io/config/logging/) for additional details.
           '';
         };
 
@@ -308,6 +299,118 @@ let
           '';
         };
 
+        command = lib.mkOption {
+          type = program;
+          description = ''
+            The command to execute.
+          '';
+        };
+
+        pre = lib.mkOption {
+          type = lib.types.nullOr program;
+          default = null;
+          description = ''
+            A script which will be called before the service is started.
+          '';
+        };
+
+        post = lib.mkOption {
+          type = lib.types.nullOr program;
+          default = null;
+          description = ''
+            A script which will be called after the service has stopped.
+          '';
+        };
+
+        cleanup = lib.mkOption {
+          type = lib.types.nullOr program;
+          default = null;
+          description = ''
+            A script which will be called when the service is removed.
+          '';
+        };
+
+        restart = lib.mkOption {
+          type = lib.types.ints.between (-1) 255;
+          default = 10;
+          description = ''
+            The number of times `finit` tries to restart a crashing service. When
+            this limit is reached the service is marked crashed and must be restarted
+            manually with `initctl restart NAME`.
+          '';
+        };
+
+        restart_sec = lib.mkOption {
+          type = with lib.types; nullOr ints.unsigned;
+          default = null;
+          description = ''
+            The number of seconds before Finit tries to restart a crashing service, default: `2`
+            seconds for the first five retries, then back-off to `5` seconds. The maximum of this
+            configured value and the above (`2` and `5`) will be used.
+          '';
+        };
+
+        respawn = lib.mkOption {
+          type = lib.types.bool;
+          default = false;
+          description = ''
+            Enable endless restarts without counting toward the retry limit. When set, the service
+            will be restarted indefinitely regardless of the `restart` limit.
+          '';
+        };
+      };
+
+      config =
+        let
+          value = lib.splitString "@" name;
+        in
+        {
+          name = lib.head value;
+          id =
+            if lib.hasSuffix "@" name then
+              "%i"
+            else if lib.hasInfix "@" name then
+              lib.elemAt value 1
+            else
+              null;
+
+          environment.PATH = lib.mkIf (config.path != [ ]) (lib.makeBinPath config.path);
+          env = lib.mkIf (config.environment != { }) (
+            format.generate "${config.name}.env" config.environment
+          );
+        };
+    };
+
+  # serviceOpts: options specific to service and sysv stanzas only
+  serviceOpts =
+    { config, name, ... }:
+    {
+      options = {
+        nohup = lib.mkOption {
+          type = lib.types.bool;
+          default = false;
+          description = ''
+            Whether this service supports reload on `SIGHUP`.
+          '';
+        };
+
+        pid = lib.mkOption {
+          type = with lib.types; nullOr str;
+          default = null;
+          description = ''
+            See [upstream documentation](https://finit-project.github.io/config/services/) for details.
+          '';
+        };
+
+        type = lib.mkOption {
+          type = with lib.types; nullOr (enum [ "forking" ]);
+          default = null;
+          description = ''
+            Service type. Set to `"forking"` for traditional daemons that fork
+            to the background and use PID files for process tracking.
+          '';
+        };
+
         notify = lib.mkOption {
           type =
             with lib.types;
@@ -320,12 +423,8 @@ let
           default = cfg.readiness;
           defaultText = lib.literalExpression "config.finit.readiness";
           description = ''
-            See [upstream documentation](https://github.com/troglobit/finit/tree/master/doc#service-synchronization) for details.
+            See [upstream documentation](https://finit-project.github.io/config/service-sync/) for details.
           '';
-        };
-
-        command = lib.mkOption {
-          type = program;
         };
 
         reload = lib.mkOption {
@@ -373,35 +472,11 @@ let
           '';
         };
 
-        pre = lib.mkOption {
-          type = lib.types.nullOr program;
-          default = null;
-          description = ''
-            A script which will be called before the service is started.
-          '';
-        };
-
-        post = lib.mkOption {
-          type = lib.types.nullOr program;
-          default = null;
-          description = ''
-            A script which will be called after the service has stopped.
-          '';
-        };
-
         ready = lib.mkOption {
           type = lib.types.nullOr program;
           default = null;
           description = ''
             A script which will be called when the service is ready.
-          '';
-        };
-
-        cleanup = lib.mkOption {
-          type = lib.types.nullOr program;
-          default = null;
-          description = ''
-            A script which will be called when the service is removed.
           '';
         };
 
@@ -420,36 +495,27 @@ let
         };
       };
 
-      config =
-        let
-          value = lib.splitString "@" name;
-        in
-        {
-          name = lib.head value;
-          id =
-            if lib.hasSuffix "@" name then
-              "%i"
-            else if lib.hasInfix "@" name then
-              lib.elemAt value 1
-            else
-              null;
-
-          nohup = lib.mkDefault (config.notify == "s6");
-          environment.PATH = lib.mkIf (config.path != [ ]) (lib.makeBinPath config.path);
-          env = lib.mkIf (config.environment != { }) (
-            format.generate "${config.name}.env" config.environment
-          );
-        };
+      config = {
+        nohup = lib.mkDefault (config.notify == "s6");
+      };
     };
 
   # tty [LVLS] <COND> DEV [BAUD] [noclear] [nowait] [nologin] [TERM]
   # tty [LVLS] <COND> CMD <ARGS> [noclear] [nowait]
   # TODO: assertions that make sure options make sense together
-  # TODO: figure out what service options are also allowed in ttys
   ttyOpts =
     { name, config, ... }:
     {
       options = {
+        id = lib.mkOption {
+          type = with lib.types; nullOr nonEmptyStr;
+          default = null;
+          description = ''
+            Explicit instance ID for the TTY. If not set, finit auto-derives it from the device name
+            (e.g., `tty1` becomes `:1`, `ttyS0` becomes `:S0`).
+          '';
+        };
+
         noclear = lib.mkOption {
           type = lib.types.bool;
           default = false;
@@ -476,6 +542,22 @@ let
           '';
         };
 
+        rescue = lib.mkOption {
+          type = lib.types.bool;
+          default = false;
+          description = ''
+            Start `sulogin` instead of a regular shell, requiring the root password. Useful for rescue/single-user mode.
+          '';
+        };
+
+        notty = lib.mkOption {
+          type = lib.types.bool;
+          default = false;
+          description = ''
+            No device node mode. This is insecure and intended only for board bringup or testing scenarios.
+          '';
+        };
+
         command = lib.mkOption {
           type = lib.types.nullOr program;
           default = null;
@@ -497,11 +579,17 @@ let
         baud = lib.mkOption {
           type = with lib.types; nullOr nonEmptyStr;
           default = null;
+          description = ''
+            Baud rate for serial TTYs.
+          '';
         };
 
         term = lib.mkOption {
           type = with lib.types; nullOr nonEmptyStr;
           default = null;
+          description = ''
+            The `TERM` environment variable value for the TTY.
+          '';
         };
       };
 
@@ -518,7 +606,7 @@ let
         description = ''
           An attribute set of resource limits that will be apply by `finit`.
 
-          See [upstream documentation](https://github.com/troglobit/finit/tree/master/doc/config.md#resource-limits) for additional details.
+          See [upstream documentation](https://finit-project.github.io/config/runlevels/#resource-limits) for additional details.
         '';
       };
     };
@@ -576,6 +664,7 @@ let
       ))
       ++ (lib.optional (svc.restart or false != false) "restart:${toString svc.restart}")
       ++ (lib.optional (svc.restart_sec or null != null) "restart_sec:${toString svc.restart_sec}")
+      ++ (lib.optional (svc.respawn or false) "respawn")
       ++ (lib.optional (svc.user or null != null) (
         "@${svc.user}"
         + lib.optionalString (svc.group != null) ":${svc.group}"
@@ -587,6 +676,7 @@ let
         "<${lib.optionalString (svc.nohup or false) "!"}${lib.concatStringsSep "," svc.conditions}>"
       )
       ++ (lib.optional (svc.manual or false) "manual:yes")
+      ++ (lib.optional (svc.remain or false) "remain:yes")
       ++ (lib.optional (svc.kill or null != null) "kill:${toString svc.kill}")
       ++ (lib.optional (svc.caps or [ ] != [ ]) ("caps:${lib.concatStringsSep "," svc.caps}"))
       ++ (lib.optional (svc.conflict or [ ] != [ ]) ("conflict:${lib.concatStringsSep "," svc.conflict}"))
@@ -610,6 +700,8 @@ let
       ++ (lib.optional (svc.noclear or false) "noclear")
       ++ (lib.optional (svc.nowait or false) "nowait")
       ++ (lib.optional (svc.nologin or false) "nologin")
+      ++ (lib.optional (svc.rescue or false) "rescue")
+      ++ (lib.optional (svc.notty or false) "notty")
       ++ (lib.optional (svc.term or null != null) svc.term)
       ++
 
@@ -617,11 +709,15 @@ let
     );
 in
 {
+  imports = [
+    ./initrd.nix
+    ./tmpfiles.nix
+  ];
+
   options.finit = {
     enable = lib.mkOption {
       type = lib.types.bool;
-      default = config.boot.serviceManager == "finit";
-      defaultText = lib.literalMD ''config.boot.serviceManager == "finit"'';
+      default = true;
       readOnly = true;
       description = ''
         Whether to enable [finit](${pkgs.finit.meta.homepage}) as the system service manager and pid `1`.
@@ -632,8 +728,21 @@ in
       type = lib.types.package;
       default = pkgs.finit;
       defaultText = lib.literalExpression "pkgs.finit";
+      apply =
+        package:
+        package.overrideAttrs (old: {
+          configureFlags = old.configureFlags ++ [
+            "--with-plugin-path=${finix-setup}/lib/finit/plugins"
+          ];
+        });
       description = ''
         The package to use for `finit`.
+
+        ::: {.note}
+        The specified package will have its `configureFlags` appended to with
+        a finit plugin path (`--with-plugin-path`) set to the required
+        `finix-setup` plugin.
+        :::
       '';
     };
 
@@ -679,7 +788,7 @@ in
       description = ''
         An attribute set of cgroups (v2) that will be created by `finit`.
 
-        See [upstream documentation](https://github.com/troglobit/finit/blob/master/doc/config.md#cgroups) for additional details.
+        See [upstream documentation](https://finit-project.github.io/config/cgroups/) for additional details.
       '';
     };
 
@@ -689,7 +798,7 @@ in
       description = ''
         An attribute set of resource limits that will be apply by `finit`.
 
-        See [upstream documentation](https://github.com/troglobit/finit/tree/master/doc/config.md#resource-limits) for additional details.
+        See [upstream documentation](https://finit-project.github.io/config/runlevels/#resource-limits) for additional details.
       '';
     };
 
@@ -697,7 +806,8 @@ in
       type =
         with lib.types;
         attrsOf (submodule [
-          commonOpts
+          baseOpts
+          execOpts
           serviceOpts
           rlimitOpts
         ]);
@@ -706,7 +816,7 @@ in
         An attribute set of services, or daemons, to be monitored and automatically
         restarted if they exit prematurely.
 
-        See [upstream documentation](https://github.com/troglobit/finit/tree/master/doc#services) for additional details.
+        See [upstream documentation](https://finit-project.github.io/config/services/) for additional details.
       '';
     };
 
@@ -714,15 +824,16 @@ in
       type =
         with lib.types;
         attrsOf (submodule [
-          commonOpts
-          serviceOpts
+          baseOpts
+          execOpts
+          oneshotOpts
           rlimitOpts
         ]);
       default = { };
       description = ''
         An attribute set of one-shot commands to be executed by `finit`.
 
-        See [upstream documentation](https://github.com/troglobit/finit/tree/master/doc#one-shot-commands-parallel) for additional details.
+        See [upstream documentation](https://finit-project.github.io/config/task-and-run/) for additional details.
       '';
     };
 
@@ -730,16 +841,17 @@ in
       type =
         with lib.types;
         attrsOf (submodule [
-          commonOpts
+          baseOpts
+          execOpts
+          oneshotOpts
           runOpts
-          serviceOpts
         ]);
       default = { };
       description = ''
         An attribute set of one-shot commands to run in sequence when entering a runlevel. `run` commands
         are guaranteed to be completed before running the next command. Useful when serialization is required.
 
-        See [upstream documentation](https://github.com/troglobit/finit/tree/master/doc#one-shot-commands-sequence) for additional details.
+        See [upstream documentation](https://finit-project.github.io/config/task-and-run/) for additional details.
       '';
     };
 
@@ -747,62 +859,43 @@ in
       type =
         with lib.types;
         attrsOf (submodule [
-          commonOpts
+          baseOpts
           ttyOpts
         ]);
       default = { };
       description = ''
         An attribute set of TTYs that `finit` should manage.
 
-        See [upstream documentation](https://github.com/troglobit/finit/tree/master/doc#ttys-and-consoles) for additional details.
+        See [upstream documentation](https://finit-project.github.io/config/tty/) for additional details.
+      '';
+    };
+
+    sysv = lib.mkOption {
+      type =
+        with lib.types;
+        attrsOf (submodule [
+          baseOpts
+          execOpts
+          serviceOpts
+          rlimitOpts
+        ]);
+      default = { };
+      description = ''
+        An attribute set of SysV init scripts to be managed by `finit`. These are
+        legacy init scripts that are called with `start`, `stop`, and `restart` arguments.
+
+        See [upstream documentation](https://finit-project.github.io/config/sysv/) for additional details.
       '';
     };
   };
 
   config = lib.mkIf cfg.enable {
-    boot.init.pid1 =
-      let
-        # finit needs to mount extra file systems not covered by boot
-        fsPackages =
-          config.boot.supportedFilesystems
-          |> lib.filterAttrs (_: v: v.enable)
-          |> lib.attrValues
-          |> lib.catAttrs "packages"
-          |> lib.flatten
-          |> lib.unique;
-      in
+    assertions = [
       {
-        env = {
-          # finit requires fsck, modprobe & mount commands
-          # before PATH can be read from finit.conf
-          PATH = lib.makeBinPath (
-            [
-              pkgs.unixtools.fsck
-              pkgs.kmod
-              pkgs.util-linux.mount
-            ]
-            ++ fsPackages
-          );
-        };
-        argv = {
-          # Initial profile activation.
-          activation = {
-            text = lib.quoteExecline [
-              "foreground"
-              [ "@systemConfig@/activate" ]
-            ];
-          };
-          pid1 = {
-            deps = [
-              "env"
-              "activation"
-            ];
-            text = [
-              "${config.finit.package}/bin/finit"
-            ];
-          };
-        };
-      };
+        assertion = lib.versionAtLeast cfg.package.version "4.16";
+        message = "finit version must be at least 4.16";
+      }
+    ];
 
     # TODO: decide a reasonable default here... user can override if needed
     finit.path = [
@@ -841,11 +934,18 @@ in
           value.text = mkConfigFile "task" task;
         }) (lib.filterAttrs (_: task: task.enable) cfg.tasks);
 
+        sysvTree = lib.mapAttrs' (name: sysv: {
+          name = if sysv.id != "%i" then "finit.d/${name}.conf" else "finit.d/available/${name}.conf";
+
+          value.mode = "direct-symlink";
+          value.text = mkConfigFile "sysv" sysv;
+        }) (lib.filterAttrs (_: sysv: sysv.enable) cfg.sysv);
+
         cgroup = lib.concatMapAttrsStringSep "\n" (
           _: cgroupOpts:
-          ''cgroup ${cgroupOpts.name} ${
+          "cgroup ${cgroupOpts.name} ${
             lib.concatMapAttrsStringSep "," (k: v: "${k}:${toString v}") cgroupOpts.settings
-          }''
+          }"
         ) cfg.cgroups;
 
         # TODO: split these out into their own files, while preserving order, and add rlimits option
@@ -888,6 +988,7 @@ in
       lib.mkMerge [
         serviceTree
         taskTree
+        sysvTree
         configFile
       ];
 
@@ -895,7 +996,7 @@ in
       cfg.package
     ];
 
-    services.tmpfiles.finit.rules = [
+    finit.tmpfiles.rules = [
       "d /etc/finit.d/enabled 0755"
     ];
   };

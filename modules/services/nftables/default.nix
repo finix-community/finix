@@ -6,21 +6,6 @@
 }:
 let
   cfg = config.services.nftables;
-
-  # https://github.com/orgs/finit-project/discussions/456#discussioncomment-15089136
-  nft-helper = pkgs.stdenv.mkDerivation {
-    name = "nft-helper";
-    src = pkgs.fetchFromGitHub {
-      owner = "kernelkit";
-      repo = "curiOS";
-      rev = "80ee64156672694992c866292c5d30ff5683d2db";
-      hash = "sha256-dS8PELYZifu+soMOePukUT93IFG/wPIyHABsabxcaxc=";
-    };
-
-    sourceRoot = "source/src/nft-helper";
-    installPhase = "install -Dm755 nft-helper $out/bin/nft-helper";
-    meta.mainProgram = "nft-helper";
-  };
 in
 {
   options.services.nftables = {
@@ -66,12 +51,14 @@ in
 
     environment.systemPackages = [ cfg.package ];
 
-    finit.services.nftables = {
+    finit.tasks.nftables = {
       conditions = "service/syslogd/ready";
-      command = "${lib.getExe nft-helper} ${cfg.configFile}";
+      command = "${lib.getExe cfg.package} -f ${cfg.configFile}";
+      post = pkgs.writeShellScript "nftables.sh" ''
+        ${lib.getExe cfg.package} flush ruleset
+      '';
       log = true;
-      nohup = true;
-      path = [ cfg.package ];
+      remain = true;
     };
   };
 }

@@ -150,7 +150,7 @@ in
         '';
       };
 
-    services.tmpfiles.nzbget.rules = [
+    finit.tmpfiles.rules = [
       "d ${logDir} 0750 ${cfg.user} ${cfg.group}"
     ]
     ++ lib.optionals (cfg.stateDir == "/var/lib/nzbget") [

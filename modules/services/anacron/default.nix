@@ -128,7 +128,7 @@ in
       '';
     };
 
-    services.tmpfiles.anacron.rules = [
+    finit.tmpfiles.rules = [
       "d /var/spool/anacron 0755"
     ];
 

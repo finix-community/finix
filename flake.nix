@@ -6,11 +6,6 @@
     {
       nixosModules = import ./modules;
 
-      overlays = {
-        # software required for finix to operate
-        default = import ./overlays/default.nix;
-      };
-
       lib.finixSystem =
         {
           lib ? null,
@@ -18,30 +13,10 @@
           modules ? [ ],
           ...
         }:
-        let
-          sources = import ./lon.nix;
-          modulesPath = toString sources.nixpkgs + "/nixos/modules";
-        in
         lib.evalModules {
-          specialArgs =
-            lib.optionalAttrs (!specialArgs ? modulesPath) {
-              # pull in a pinned copy of nixpkgs if not provided by the caller
-              inherit modulesPath;
-            }
-            // specialArgs;
+          inherit specialArgs;
 
           modules = [ self.nixosModules.default ] ++ modules;
         };
-
-      templates = {
-        default = self.templates.desktop-greetd;
-
-        desktop-greetd = {
-          path = ./templates/desktop-seattd;
-          description = "A simple desktop running the niri scrollable-tiling wayland compositor";
-        };
-
-        # TODO: desktop-logind
-      };
     };
 }

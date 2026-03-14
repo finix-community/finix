@@ -24,7 +24,7 @@ let
     }
   );
 
-  wlroots = pkgs.wlroots.override {
+  wlroots_0_19 = pkgs.wlroots_0_19.override {
     inherit libinput;
 
     # xwayland appears to cause issues with mdevd - and not required in this context, so no harm in removing
@@ -32,7 +32,7 @@ let
   };
 
   sway-unwrapped = pkgs.sway-unwrapped.override {
-    inherit libinput wlroots;
+    inherit libinput wlroots_0_19;
 
     # since we're recompiling go ahead and disable systemd
     systemdSupport = !config.services.mdevd.enable;
