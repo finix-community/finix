@@ -364,7 +364,7 @@ in
           }
 
           {
-            assertion = (cfg.powerManagement.enable && !cfg.powerManagement.kernelSuspendNotifier) -> config.programs.zzz.enable;
+            assertion = (cfg.powerManagement.enable && !cfg.powerManagement.kernelSuspendNotifier) -> config.providers.resumeAndSuspend.backend != "none";
             message = "Power management without `kernelSuspendNotifier` requires a sleep backend. Enable programs.zzz (programs.zzz.enable = true).";
           }
 
