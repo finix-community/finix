@@ -24,7 +24,6 @@ let
 
   busIDType = lib.types.strMatching "([[:print:]]+:[0-9]{1,3}(@[0-9]{1,10})?:[0-9]{1,2}:[0-9])?";
   ibtSupport = useOpenModules || (nvidiaPkg.ibtSupport or false);
-  settingsFormat = pkgs.formats.keyValue { };
 
   useModeset = offloadCfg.enable || cfg.modesetting.enable;
 
@@ -47,54 +46,6 @@ in
       datacenter.enable = lib.mkEnableOption ''
         Data Center drivers for NVIDIA cards on a NVLink topology
       '';
-      datacenter.settings = lib.mkOption {
-        type = settingsFormat.type;
-        default = {
-          LOG_LEVEL = 4;
-          LOG_FILE_NAME = "/var/log/fabricmanager.log";
-          LOG_APPEND_TO_LOG = 1;
-          LOG_FILE_MAX_SIZE = 1024;
-          LOG_USE_SYSLOG = 0;
-          DAEMONIZE = 1;
-          BIND_INTERFACE_IP = "127.0.0.1";
-          STARTING_TCP_PORT = 16000;
-          FABRIC_MODE = 0;
-          FABRIC_MODE_RESTART = 0;
-          STATE_FILE_NAME = "/var/tmp/fabricmanager.state";
-          FM_CMD_BIND_INTERFACE = "127.0.0.1";
-          FM_CMD_PORT_NUMBER = 6666;
-          FM_STAY_RESIDENT_ON_FAILURES = 0;
-          ACCESS_LINK_FAILURE_MODE = 0;
-          TRUNK_LINK_FAILURE_MODE = 0;
-          NVSWITCH_FAILURE_MODE = 0;
-          ABORT_CUDA_JOBS_ON_FM_EXIT = 1;
-        };
-        defaultText = lib.literalExpression ''
-          {
-            LOG_LEVEL=4;
-            LOG_FILE_NAME="/var/log/fabricmanager.log";
-            LOG_APPEND_TO_LOG=1;
-            LOG_FILE_MAX_SIZE=1024;
-            LOG_USE_SYSLOG=0;
-            DAEMONIZE=1;
-            BIND_INTERFACE_IP="127.0.0.1";
-            STARTING_TCP_PORT=16000;
-            FABRIC_MODE=0;
-            FABRIC_MODE_RESTART=0;
-            STATE_FILE_NAME="/var/tmp/fabricmanager.state";
-            FM_CMD_BIND_INTERFACE="127.0.0.1";
-            FM_CMD_PORT_NUMBER=6666;
-            FM_STAY_RESIDENT_ON_FAILURES=0;
-            ACCESS_LINK_FAILURE_MODE=0;
-            TRUNK_LINK_FAILURE_MODE=0;
-            NVSWITCH_FAILURE_MODE=0;
-            ABORT_CUDA_JOBS_ON_FM_EXIT=1;
-          }
-        '';
-        description = ''
-          Additional configuration options for fabricmanager.
-        '';
-      };
 
       powerManagement.enable = lib.mkEnableOption ''
         experimental power management through systemd. For more information, see
@@ -664,34 +615,6 @@ in
               useModeset && lib.versionAtLeast nvidiaPkg.version "545"
             ) "nvidia-drm.fbdev=1";
         };
-      })
-
-       # Data Center
-      (lib.mkIf nvidiaDatacenterEnabled {
-        finit.services = {
-          nvidia-fabricmanager = {
-            description = "Start NVIDIA NVLink Management";
-            command =
-              let
-                # Since these rely on the `nvidiaPkg.fabricmanager` derivation, they're
-                # unsuitable to be mentioned in the configuration defaults, but they _can_
-                # be overridden in `cfg.datacenter.settings` if needed.
-                fabricManagerConfDefaults = {
-                  TOPOLOGY_FILE_PATH = "${nvidiaPkg.fabricmanager}/share/nvidia-fabricmanager/nvidia/nvswitch";
-                  DATABASE_PATH = "${nvidiaPkg.fabricmanager}/share/nvidia-fabricmanager/nvidia/nvswitch";
-                };
-                nv-fab-conf = settingsFormat.generate "fabricmanager.conf" (
-                  fabricManagerConfDefaults // cfg.datacenter.settings
-                );
-              in
-              "${lib.getExe nvidiaPkg.fabricmanager} -c ${nv-fab-conf}";
-            type = "forking";
-            conditions = [ "net/route/default" ];
-            restart = -1;
-          };
-        };
-
-        environment.systemPackages = [ nvidiaPkg.fabricmanager ];
       })
     ]
   );
