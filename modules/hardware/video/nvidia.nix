@@ -71,12 +71,6 @@ in
           '';
         };
 
-      dynamicBoost.enable = lib.mkEnableOption ''
-        dynamic Boost balances power between the CPU and the GPU for improved
-        performance on supported laptops using the nvidia-powerd daemon. For more
-        information, see the NVIDIA docs, on Chapter 23. Dynamic Boost on Linux
-      '';
-
       modesetting.enable =
         lib.mkEnableOption ''
           kernel modesetting when using the NVIDIA proprietary driver.
@@ -390,11 +384,6 @@ in
           }
 
           {
-            assertion = cfg.dynamicBoost.enable -> lib.versionAtLeast nvidiaPkg.version "510.39.01";
-            message = "NVIDIA's Dynamic Boost feature only exists on versions >= 510.39.01";
-          }
-
-          {
             assertion =
               cfg.powerManagement.kernelSuspendNotifier
               -> (useOpenModules && lib.versionAtLeast nvidiaPkg.version "595");
@@ -490,22 +479,12 @@ in
           )
         ];
 
-        services.dbus.packages = lib.optional cfg.dynamicBoost.enable nvidiaPkg.bin;
-
         hardware.graphics = {
           extraPackages = [ nvidiaPkg.out ] 
             ++ lib.optional cfg.videoAcceleration pkgs.nvidia-vaapi-driver;
           extraPackages32 = [ nvidiaPkg.lib32 ];
         };
         hardware.firmware = lib.optional cfg.gsp.enable nvidiaPkg.firmware;
-
-        finit.services = {
-          nvidia-powerd = lib.mkIf cfg.dynamicBoost.enable {
-            command = "${nvidiaPkg.bin}/bin/nvidia-powerd";
-            path = [ pkgs.util-linux ]; # nvidia-powerd wants lscpu
-            restart = -1;
-          };
-        };
 
         providers.resumeAndSuspend.hooks = lib.mkIf (cfg.powerManagement.enable && !cfg.powerManagement.kernelSuspendNotifier) {
           nvidia-suspend = {
