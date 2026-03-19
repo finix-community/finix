@@ -1,5 +1,6 @@
 {
   pkgs,
+  options,
   config,
   lib,
   ...
@@ -11,7 +12,7 @@ let
   nvidiaDatacenterEnabled = cfg.datacenter.enable;
   nvidiaEnabled = nvidiaStandardEnabled || nvidiaDatacenterEnabled;
 
-  nvidiaOnX11 = lib.elem "nvidia" config.services.xserver.videoDrivers;
+  nvidiaOnX11 = lib.elem "nvidia" (config.services.xserver.videoDrivers or [ ]);
   nvidiaPkg = if nvidiaEnabled then cfg.package else null;
 
   useOpenModules = cfg.open == true;
@@ -518,43 +519,45 @@ in
 
       # Display
       (lib.mkIf nvidiaStandardEnabled {
-        services.xserver.drivers = 
-          lib.optional primeEnabled {
-            name = igpuDriver;
-            display = offloadCfg.enable;
-            modules = lib.optional (igpuDriver == "amdgpu") pkgs.xf86-video-amdgpu;
-            deviceSection = ''
-              BusID "${igpuBusId}"
-            ''
-            + lib.optionalString (syncCfg.enable && igpuDriver != "amdgpu") ''
-              Option "AccelMethod" "none"
-            '';
-          }
-          ++ lib.singleton {
-            name = "nvidia";
-            modules = [ nvidiaPkg.bin ];
-            display = !offloadCfg.enable;
-            deviceSection = ''
-              Option "SidebandSocketPath" "/run/nvidia-xdriver/"
-            '' 
-            + lib.optionalString primeEnabled ''
-              BusID "${primeCfg.nvidiaBusId}"
-            ''
-            + lib.optionalString primeCfg.allowExternalGpu ''
-              Option "AllowExternalGpus"
-            '';
-            screenSection = ''
-              Option "RandRRotation" "on"
-            ''
-            + lib.optionalString syncCfg.enable ''
-                Option "AllowEmptyInitialConfiguration"
-            ''
-            + lib.optionalString cfg.forceFullCompositionPipeline ''
-              Option         "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
-              Option         "AllowIndirectGLXProtocol" "off"
-              Option         "TripleBuffer" "on"
-            '';
-          };
+        services = lib.optionalAttrs (options.services ? xserver) {
+          xserver.drivers = 
+            lib.optional primeEnabled {
+              name = igpuDriver;
+              display = offloadCfg.enable;
+              modules = lib.optional (igpuDriver == "amdgpu") pkgs.xf86-video-amdgpu;
+              deviceSection = ''
+                BusID "${igpuBusId}"
+              ''
+              + lib.optionalString (syncCfg.enable && igpuDriver != "amdgpu") ''
+                Option "AccelMethod" "none"
+              '';
+            }
+            ++ lib.singleton {
+              name = "nvidia";
+              modules = [ nvidiaPkg.bin ];
+              display = !offloadCfg.enable;
+              deviceSection = ''
+                Option "SidebandSocketPath" "/run/nvidia-xdriver/"
+              '' 
+              + lib.optionalString primeEnabled ''
+                BusID "${primeCfg.nvidiaBusId}"
+              ''
+              + lib.optionalString primeCfg.allowExternalGpu ''
+                Option "AllowExternalGpus"
+              '';
+              screenSection = ''
+                Option "RandRRotation" "on"
+              ''
+              + lib.optionalString syncCfg.enable ''
+                  Option "AllowEmptyInitialConfiguration"
+              ''
+              + lib.optionalString cfg.forceFullCompositionPipeline ''
+                Option         "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
+                Option         "AllowIndirectGLXProtocol" "off"
+                Option         "TripleBuffer" "on"
+              '';
+            };
+        };
         
         finit.tmpfiles.rules = [
           # Remove the following log message:
