@@ -6,17 +6,26 @@
   ...
 }:
 {
-  options.system.build = {
-    nixos-rebuild = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.nixos-rebuild-ng;
-      internal = true;
-    };
+  options.system.build = lib.mkOption {
+    internal = true;
+    default = { };
 
-    toplevel = lib.mkOption {
-      type = lib.types.anything;
-      default = config.system.topLevel;
-      internal = true;
+    type = lib.types.submodule {
+      freeformType = lib.types.attrsOf lib.types.anything;
+
+      options = {
+        nixos-rebuild = lib.mkOption {
+          type = lib.types.package;
+          default = pkgs.nixos-rebuild-ng;
+          internal = true;
+        };
+
+        toplevel = lib.mkOption {
+          type = lib.types.anything;
+          default = config.system.topLevel;
+          internal = true;
+        };
+      };
     };
   };
 
