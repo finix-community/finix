@@ -160,47 +160,51 @@ in
         name = "finix-system";
         preferLocalBuild = true;
         allowSubstitutes = false;
-        buildCommand = ''
-          mkdir -p $out $out/bin
+        buildCommand =
+          let
+            inherit (pkgs.buildPackages) coreutils;
+          in
+          ''
+            mkdir -p $out $out/bin
 
-          echo -n "finix" > $out/nixos-version
+            echo -n "finix" > $out/nixos-version
 
-          cp ${config.system.activation.out} $out/activate
+            cp ${config.system.activation.out} $out/activate
 
-          substituteInPlace $out/activate --subst-var-by systemConfig $out
+            substituteInPlace $out/activate --subst-var-by systemConfig $out
 
-          ${pkgs.coreutils}/bin/ln -sr ${config.finit.package}/bin/finit $out/init
-          ${pkgs.coreutils}/bin/ln -s ${config.environment.path} $out/sw
+            ${coreutils}/bin/ln -sr ${config.finit.package}/bin/finit $out/init
+            ${coreutils}/bin/ln -s ${config.environment.path} $out/sw
 
-          mkdir $out/specialisation
+            mkdir $out/specialisation
 
-          ${lib.concatMapAttrsStringSep "\n" (
-            k: v: "ln -s ${v.system.topLevel} $out/specialisation/${lib.escapeShellArg k}"
-          ) config.specialisation}
-        ''
-        + lib.optionalString config.boot.kernel.enable ''
-          ${pkgs.coreutils}/bin/ln -s ${config.boot.kernelPackages.kernel}/bzImage $out/kernel
-          ${pkgs.coreutils}/bin/ln -s ${config.system.modulesTree} $out/kernel-modules
-          ${pkgs.coreutils}/bin/ln -s ${config.hardware.firmware}/lib/firmware $out/firmware
-        ''
-        + lib.optionalString config.boot.initrd.enable ''
-          ${pkgs.coreutils}/bin/ln -s ${config.boot.initrd.package}/initrd $out/initrd
-        ''
-        + lib.optionalString config.finit.enable ''
-          cp ${../../finit/switch-to-configuration.sh} $out/bin/switch-to-configuration
-          substituteInPlace $out/bin/switch-to-configuration \
-            --subst-var out \
-            --subst-var-by bash ${pkgs.bash} \
-            --subst-var-by distroId finix \
-            --subst-var-by finit ${config.finit.package} \
-            --subst-var-by installHook ${config.providers.bootloader.installHook}
-        ''
-        + lib.optionalString config.boot.bootspec.enable ''
-          ${config.boot.bootspec.writer}
-        ''
-        + lib.optionalString (config.boot.bootspec.enable && config.boot.bootspec.enableValidation) ''
-          ${config.boot.bootspec.validator} "$out/${config.boot.bootspec.filename}"
-        '';
+            ${lib.concatMapAttrsStringSep "\n" (
+              k: v: "ln -s ${v.system.topLevel} $out/specialisation/${lib.escapeShellArg k}"
+            ) config.specialisation}
+          ''
+          + lib.optionalString config.boot.kernel.enable ''
+            ${coreutils}/bin/ln -s ${config.boot.kernelPackages.kernel}/bzImage $out/kernel
+            ${coreutils}/bin/ln -s ${config.system.modulesTree} $out/kernel-modules
+            ${coreutils}/bin/ln -s ${config.hardware.firmware}/lib/firmware $out/firmware
+          ''
+          + lib.optionalString config.boot.initrd.enable ''
+            ${coreutils}/bin/ln -s ${config.boot.initrd.package}/initrd $out/initrd
+          ''
+          + lib.optionalString config.finit.enable ''
+            cp ${../../finit/switch-to-configuration.sh} $out/bin/switch-to-configuration
+            substituteInPlace $out/bin/switch-to-configuration \
+              --subst-var out \
+              --subst-var-by bash ${pkgs.bash} \
+              --subst-var-by distroId finix \
+              --subst-var-by finit ${config.finit.package} \
+              --subst-var-by installHook ${config.providers.bootloader.installHook}
+          ''
+          + lib.optionalString config.boot.bootspec.enable ''
+            ${config.boot.bootspec.writer}
+          ''
+          + lib.optionalString (config.boot.bootspec.enable && config.boot.bootspec.enableValidation) ''
+            ${config.boot.bootspec.validator} "$out/${config.boot.bootspec.filename}"
+          '';
       }
     );
   };
