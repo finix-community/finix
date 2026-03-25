@@ -730,10 +730,31 @@ in
       defaultText = lib.literalExpression "pkgs.finit";
       apply =
         package:
+        # if config.programs.plymouth.enable then
+        #   package.override {
+        #     plymouthSupport = true;
+        #     plymouth = config.programs.plymouth.package;
+        #   }
+        # else
+        #   package;
         package.overrideAttrs (old: {
-          configureFlags = old.configureFlags ++ [
-            "--with-plugin-path=${finix-setup}/lib/finit/plugins"
-          ];
+          configureFlags =
+            old.configureFlags
+            ++ [
+              "--with-plugin-path=${finix-setup}/lib/finit/plugins"
+            ]
+            ++ lib.optionals config.programs.plymouth.enable [
+              "--enable-plymouth-plugin=yes"
+            ];
+
+          env = lib.optionalAttrs config.programs.plymouth.enable {
+            NIX_CFLAGS_COMPILE = toString [
+              "-D_PATH_LOGIN=\"${pkgs.shadow}/bin/login\""
+              "-DSYSCTL_PATH=\"${pkgs.sysctl}/bin/sysctl\""
+              "-DPLYMOUTH_PATH=\"${config.programs.plymouth.package}/bin/plymouth\""
+              "-DPLYMOUTHD_PATH=\"${config.programs.plymouth.package}/bin/plymouthd\""
+            ];
+          };
         });
       description = ''
         The package to use for `finit`.
