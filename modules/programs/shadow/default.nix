@@ -187,6 +187,8 @@ in
         # Session management.
         session required pam_env.so conffile=/etc/security/pam_env.conf readenv=0 # env (order 10100)
         session required pam_unix.so # unix (order 10200)
+      ''
+      + lib.optionalString config.services.xserver.enable or false ''
         session optional pam_xauth.so systemuser=99 xauthpath=${pkgs.xorg.xauth}/bin/xauth # xauth (order 12100)
       '';
     };
