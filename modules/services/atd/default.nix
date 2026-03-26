@@ -46,6 +46,14 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    environment.etc."at/at.allow" = lib.mkIf (cfg.allow != null) {
+      text = lib.concatStringsSep "\n" cfg.allow;
+    };
+
+    environment.etc."at/at.deny" = lib.mkIf (cfg.deny != null) {
+      text = lib.concatStringsSep "\n" cfg.deny;
+    };
+
     finit.services.atd = {
       description = "deferred execution scheduler";
       conditions = "service/syslogd/ready";
