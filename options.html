@@ -3988,7 +3988,7 @@
     <details class="toc-category">
       <summary title="services">
         <span>services</span>
-        <span class="toc-count">314</span>
+        <span class="toc-count">318</span>
       </summary>
       <ul>
         
@@ -6133,6 +6133,38 @@
         <li>
           <a href='#option-services-udev-path' title="services.udev.path">
             udev.path
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-udisks2-debug' title="services.udisks2.debug">
+            udisks2.debug
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-udisks2-enable' title="services.udisks2.enable">
+            udisks2.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-udisks2-package' title="services.udisks2.package">
+            udisks2.package
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-udisks2-settings' title="services.udisks2.settings">
+            udisks2.settings
             
             
           </a>
@@ -16912,6 +16944,55 @@ automatically included.</p>
 </body></html></div>
   <div class="option-default">Default: <code>[ ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/udev" target="_blank">&lt;finix/modules/services/udev&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-udisks2-debug">
+  <h3 class="option-name">
+    <a href="#option-services-udisks2-debug" class="option-anchor">services.udisks2.debug</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/udisks2" target="_blank">&lt;finix/modules/services/udisks2&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-udisks2-enable">
+  <h3 class="option-name">
+    <a href="#option-services-udisks2-enable" class="option-anchor">services.udisks2.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://www.freedesktop.org/wiki/Software/udisks/">udisks2</a> as a system service.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/udisks2" target="_blank">&lt;finix/modules/services/udisks2&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-udisks2-package">
+  <h3 class="option-name">
+    <a href="#option-services-udisks2-package" class="option-anchor">services.udisks2.package</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>udisks2</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.udisks2</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/udisks2" target="_blank">&lt;finix/modules/services/udisks2&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-udisks2-settings">
+  <h3 class="option-name">
+    <a href="#option-services-udisks2-settings" class="option-anchor">services.udisks2.settings</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>open submodule of attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</code></div>
+  <div class="option-description"><html><head></head><body><p><code>udisks2</code> configuration. See <span class="manpage-reference">udisks2.conf(8)</span>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/udisks2" target="_blank">&lt;finix/modules/services/udisks2&gt;</a></code></div>
 </div>
 <div class="option" id="option-services-upower-enable">
   <h3 class="option-name">
