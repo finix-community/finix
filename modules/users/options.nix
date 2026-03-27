@@ -49,7 +49,7 @@ in
                   This automatically sets {option}`group` to `users`,
                   {option}`createHome` to `true`,
                   {option}`home` to {file}`/home/«username»`,
-                  {option}`useDefaultShell` to `true`,
+                  {option}`shell` to {option}`users.defaultUserShell`,
                   and {option}`isSystemUser` to `false`.
                   Exactly one of `isNormalUser` and `isSystemUser` must be true.
                 '';
@@ -159,13 +159,33 @@ in
 
             };
 
-            config = {
-              name = lib.mkDefault name;
-            };
+            config = lib.mkMerge [
+              {
+                name = lib.mkDefault name;
+              }
+              (lib.mkIf config.isNormalUser {
+                group = lib.mkDefault "users";
+                createHome = lib.mkDefault true;
+                home = lib.mkDefault "/home/${config.name}";
+                shell = lib.mkDefault cfg.defaultUserShell;
+                isSystemUser = lib.mkDefault false;
+              })
+            ];
           }
         )
       );
       default = { };
+    };
+
+    users.defaultUserShell = lib.mkOption {
+      type = with lib.types; either shellPackage (passwdEntry path);
+      default = pkgs.bashInteractive;
+      defaultText = lib.literalExpression "pkgs.bashInteractive";
+      example = lib.literalExpression "pkgs.zsh";
+      description = ''
+        The default shell assigned to user accounts created with
+        {option}`isNormalUser = true`.
+      '';
     };
 
     users.groups = lib.mkOption {
