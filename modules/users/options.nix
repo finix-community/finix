@@ -16,6 +16,16 @@ in
           {
             options = {
 
+              enable = lib.mkOption {
+                type = lib.types.bool;
+                default = true;
+                example = false;
+                description = ''
+                  If set to false, the user account will not be created. This is
+                  useful for when you wish to conditionally disable user accounts.
+                '';
+              };
+
               isSystemUser = lib.mkOption {
                 type = lib.types.bool;
                 default = false;
@@ -195,7 +205,7 @@ in
               name = lib.mkDefault name;
 
               members = lib.mapAttrsToList (n: u: u.name) (
-                lib.filterAttrs (n: u: lib.elem config.name u.extraGroups) cfg.users
+                lib.filterAttrs (n: u: u.enable && lib.elem config.name u.extraGroups) cfg.users
               );
             };
           }

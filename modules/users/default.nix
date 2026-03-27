@@ -40,7 +40,7 @@ let
       hashedPasswordFile = opts.passwordFile;
       isNormal = opts.isNormalUser;
       shell = toShellPath opts.shell;
-    }) cfg.users;
+    }) (lib.filterAttrs (_: u: u.enable) cfg.users);
   };
 in
 {
@@ -64,7 +64,9 @@ in
       "d /home"
     ]
     ++ lib.mapAttrsToList (username: opts: "d ${opts.home} 0700 ${opts.name} ${opts.group}") (
-      lib.filterAttrs (_: opts: opts.createHome && opts.home != "/var/empty") config.users.users
+      lib.filterAttrs (
+        _: opts: opts.enable && opts.createHome && opts.home != "/var/empty"
+      ) config.users.users
     );
 
     # default user & group definitions
