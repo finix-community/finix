@@ -110,13 +110,10 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    services.dropbear.extraArgs =
-      config.services.dropbear.hostKeys
-      |> map (key: [
-        "-r"
-        key.path
-      ])
-      |> lib.flatten;
+    services.dropbear.extraArgs = lib.concatMap (key: [
+      "-r"
+      key.path
+    ]) cfg.hostKeys;
 
     environment.systemPackages = [
       cfg.package

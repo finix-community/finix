@@ -50,8 +50,7 @@ in
     };
 
     environment = lib.mkOption {
-      description = "Set of rules for pam_env.";
-      type =
+      type = lib.types.attrsOf (
         lib.types.submodule {
           options =
             let
@@ -65,7 +64,9 @@ in
               override = opt;
             };
         }
-        |> lib.types.attrsOf;
+      );
+      default = { };
+      description = "Set of rules for pam_env.";
     };
   };
 

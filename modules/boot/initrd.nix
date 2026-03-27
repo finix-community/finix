@@ -87,10 +87,9 @@ in
   };
 
   config = {
-    boot.initrd.supportedFilesystems =
-      config.fileSystems
-      |> lib.filterAttrs (_: fs: fs.neededForBoot)
-      |> lib.mapAttrs' (_: v: lib.nameValuePair v.fsType { enable = true; });
+    boot.initrd.supportedFilesystems = lib.mapAttrs' (
+      _: v: lib.nameValuePair v.fsType { enable = true; }
+    ) (lib.filterAttrs (_: fs: fs.neededForBoot) config.fileSystems);
 
     boot.initrd.package = pkgs.makeInitrdNG {
       name = "initrd-" + config.boot.kernelPackages.kernel.name or "kernel";

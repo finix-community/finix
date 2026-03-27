@@ -432,7 +432,7 @@ let
           default = null;
           apply =
             value:
-            if value != null then "'" + (value |> lib.removePrefix "'" |> lib.removeSuffix "'") + "'" else null;
+            if value != null then "'" + (lib.removeSuffix "'" (lib.removePrefix "'" value)) + "'" else null;
           example = "kill -HUP $MAINPID";
           description = ''
             Some services do not support `SIGHUP` but may have other ways to update the configuration of a running daemon. When
@@ -451,7 +451,7 @@ let
           default = null;
           apply =
             value:
-            if value != null then "'" + (value |> lib.removePrefix "'" |> lib.removeSuffix "'") + "'" else null;
+            if value != null then "'" + (lib.removeSuffix "'" (lib.removePrefix "'" value)) + "'" else null;
           description = ''
             Some services may require alternate methods to be stopped. If `stop` is defined it is preferred over `SIGTERM`. Similar
             to `reload`, `finit` sets `$MAINPID`.
@@ -619,7 +619,7 @@ let
       mkValueString =
         value:
         if lib.isString value then
-          "'" + (value |> lib.removePrefix "'" |> lib.removeSuffix "'") + "'"
+          "'" + (lib.removeSuffix "'" (lib.removePrefix "'" value)) + "'"
         else
           toString value;
 
@@ -949,18 +949,13 @@ in
         ) cfg.cgroups;
 
         # TODO: split these out into their own files, while preserving order, and add rlimits option
-        run =
-          cfg.run
-          |> lib.filterAttrs (_: v: v.enable)
-          |> lib.attrValues
-          |> lib.sortProperties
-          |> lib.concatMapStringsSep "\n" (serviceStr "run");
+        run = lib.concatMapStringsSep "\n" (serviceStr "run") (
+          lib.sortProperties (lib.concatMap (v: lib.optional v.enable v) (lib.attrValues config.finit.run))
+        );
 
-        tty =
-          cfg.ttys
-          |> lib.filterAttrs (_: v: v.enable)
-          |> lib.mapAttrsToList (_: serviceStr "tty")
-          |> (lib.concatStringsSep "\n");
+        tty = lib.concatStringsSep "\n" (
+          lib.concatMap (v: lib.optional v.enable (serviceStr "tty" v)) (lib.attrValues config.finit.ttys)
+        );
 
         configFile = {
           "finit.conf".mode = "direct-symlink";

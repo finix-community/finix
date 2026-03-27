@@ -25,10 +25,9 @@ let
     ]
   );
 
-  providerModules =
-    builtins.removeAttrs (builtins.readDir ./providers) [ "README.md" ]
-    |> builtins.attrNames
-    |> builtins.map (value: ./providers/${value});
+  providerModules = builtins.map (value: ./providers/${value}) (
+    builtins.attrNames (builtins.removeAttrs (builtins.readDir ./providers) [ "README.md" ])
+  );
 in
 {
   default = {

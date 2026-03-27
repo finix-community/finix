@@ -23,12 +23,11 @@ let
       };
     };
 
-  configFile =
-    cfg.rules
-    |> lib.filterAttrs (_: v: v.enable)
-    |> lib.mapAttrsToList (_: v: v.text)
-    |> lib.concatStringsSep "\n"
-    |> pkgs.writeText "logrotate.conf";
+  configFile = pkgs.writeText "logrotate.conf" (
+    lib.concatStringsSep "\n" (
+      lib.mapAttrsToList (_: v: v.text) (lib.filterAttrs (_: v: v.enable) cfg.rules)
+    )
+  );
 in
 {
   options.services.logrotate = {

@@ -66,20 +66,22 @@
 
   config = lib.mkMerge [
     {
-      boot.zfs.importPools =
-        with builtins;
-        config.fileSystems
-        |> attrValues
-        |> filter ({ neededForBoot, fsType, ... }: neededForBoot && fsType == "zfs")
-        |> map (
-          { device, ... }:
+      boot.zfs.importPools = lib.unique (
+        lib.concatMap (
+          {
+            device,
+            fsType,
+            neededForBoot,
+            ...
+          }:
           let
-            pool = device |> lib.splitString "/" |> head;
+            pool = lib.head (lib.splitString "/" device);
           in
-          if pool == "" then device else pool
-        )
-        |> lib.unique;
+          lib.optional (neededForBoot && fsType == "zfs") (if pool == "" then device else pool)
+        ) (lib.attrValues config.fileSystems)
+      );
     }
+
     (lib.mkIf config.boot.supportedFilesystems.zfs.enable {
       boot.kernelModules = [ "zfs" ];
 
@@ -91,10 +93,12 @@
     (lib.mkIf config.boot.initrd.supportedFilesystems.zfs.enable {
       boot.initrd = {
         kernelModules = [ "zfs" ];
-        fileSystemImportCommands =
-          map (name: "zpool list ${name} >/dev/null 2>&1 || zpool import -f ${name}") config.boot.zfs.importPools
+        fileSystemImportCommands = lib.concatStringsSep "\n" (
+          map (
+            name: "zpool list ${name} >/dev/null 2>&1 || zpool import -f ${name}"
+          ) config.boot.zfs.importPools
           ++ map (name: "zfs load-key ${name}") config.boot.zfs.loadKeys
-          |> (lib.concatStringsSep "\n");
+        );
       };
     })
   ];

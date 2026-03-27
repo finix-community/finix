@@ -23,13 +23,13 @@ let
         ''
     );
 
-  fsPackages =
-    config.boot.initrd.supportedFilesystems
-    |> lib.filterAttrs (_: v: v.enable)
-    |> lib.attrValues
-    |> lib.catAttrs "packages"
-    |> lib.flatten
-    |> lib.unique;
+  fsPackages = lib.unique (
+    lib.flatten (
+      lib.concatMap (v: lib.optional v.enable v.packages or [ ]) (
+        lib.attrValues config.boot.initrd.supportedFilesystems
+      )
+    )
+  );
 
   path = pkgs.buildEnv {
     name = "initrd-path";

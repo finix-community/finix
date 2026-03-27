@@ -10,16 +10,17 @@ let
   format = pkgs.formats.ini { };
   toEnvVars =
     settings:
-    settings
-    |> (lib.mapAttrsRecursive (
-      path: value:
-      lib.optionalAttrs (value != null) {
-        name = lib.toUpper "SONARR__${lib.concatStringsSep "__" path}";
-        value = toString (if lib.isBool value then lib.boolToString value else value);
-      }
-    ))
-    |> (lib.collect (x: lib.isString x.name or false && lib.isString x.value or false))
-    |> lib.listToAttrs;
+    lib.listToAttrs (
+      lib.collect (x: lib.isString x.name or false && lib.isString x.value or false) (
+        lib.mapAttrsRecursive (
+          path: value:
+          lib.optionalAttrs (value != null) {
+            name = lib.toUpper "SONARR__${lib.concatStringsSep "__" path}";
+            value = toString (if lib.isBool value then lib.boolToString value else value);
+          }
+        ) settings
+      )
+    );
 in
 {
   options.services.sonarr = {

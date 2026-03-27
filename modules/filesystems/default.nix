@@ -124,13 +124,13 @@ in
     # system.fsPackages = [ pkgs.dosfstools ];
     # environment.systemPackages = with pkgs; [ fuse3 fuse ] ++ config.system.fsPackages;
 
-    environment.systemPackages =
-      config.boot.supportedFilesystems
-      |> lib.filterAttrs (_: v: v.enable)
-      |> lib.attrValues
-      |> lib.catAttrs "packages"
-      |> lib.flatten
-      |> lib.unique;
+    environment.systemPackages = lib.unique (
+      lib.flatten (
+        lib.concatMap (v: lib.optional v.enable v.packages or [ ]) (
+          lib.attrValues config.boot.supportedFilesystems
+        )
+      )
+    );
 
     environment.etc.fstab.text = ''
       # This is a generated file.  Do not edit!
