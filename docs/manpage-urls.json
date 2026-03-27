@@ -30,5 +30,6 @@
   "syd(5)": "https://man.archlinux.org/man/syd.5",
   "sysctl(8)": "https://man.archlinux.org/man/sysctl.8",
   "thermald(8)": "https://man.archlinux.org/man/thermald.8",
-  "tmpfiles.d(5)": "https://man.archlinux.org/man/tmpfiles.d.5"
+  "tmpfiles.d(5)": "https://man.archlinux.org/man/tmpfiles.d.5",
+  "udisks2.conf(5)": "https://man.archlinux.org/man/extra/udisks2/udisks2.conf.5"
 }
