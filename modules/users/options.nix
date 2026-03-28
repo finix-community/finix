@@ -12,7 +12,7 @@ in
     users.users = lib.mkOption {
       type = lib.types.attrsOf (
         lib.types.submodule (
-          { name, ... }:
+          { name, config, ... }:
           {
             options = {
 
