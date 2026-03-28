@@ -6692,11 +6692,19 @@
     <details class="toc-category">
       <summary title="users">
         <span>users</span>
-        <span class="toc-count">17</span>
+        <span class="toc-count">19</span>
       </summary>
       <ul>
         
 
+        
+        <li>
+          <a href='#option-users-defaultUserShell' title="users.defaultUserShell">
+            defaultUserShell
+            
+            
+          </a>
+        </li>
         
         <li>
           <a href='#option-users-groups' title="users.groups">
@@ -6749,6 +6757,14 @@
         <li>
           <a href='#option-users-users-&lt;name&gt;-description' title="users.users.&lt;name&gt;.description">
             users.&lt;name&gt;.description
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-users-users-&lt;name&gt;-enable' title="users.users.&lt;name&gt;.enable">
+            users.&lt;name&gt;.enable
             
             
           </a>
@@ -12968,6 +12984,7 @@ implementation for additional details.</p>
   <div class="option-type">Type: <code>attribute set of (submodule)</code></div>
   <div class="option-description"><html><head></head><body><p>Set of rules for pam_env.</p>
 </body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/security/pam" target="_blank">&lt;finix/modules/security/pam&gt;</a></code></div>
 </div>
 <div class="option" id="option-security-pam-environment-&lt;name&gt;-default">
@@ -17842,6 +17859,20 @@ for a list of valid time zone names.</p>
   <div class="option-example">Example: <code>"America/New_York"</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/time" target="_blank">&lt;finix/modules/time&gt;</a></code></div>
 </div>
+<div class="option" id="option-users-defaultUserShell">
+  <h3 class="option-name">
+    <a href="#option-users-defaultUserShell" class="option-anchor">users.defaultUserShell</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package or (absolute path, not containing newlines or colons)</code></div>
+  <div class="option-description"><html><head></head><body><p>The default shell assigned to user accounts created with
+<a class="option-reference" href="options.html#option-isNormalUser = true"><code>isNormalUser = true</code></a>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.bashInteractive</code></div>
+  <div class="option-example">Example: <code>pkgs.zsh</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/users/options.nix" target="_blank">&lt;finix/modules/users/options.nix&gt;</a></code></div>
+</div>
 <div class="option" id="option-users-groups">
   <h3 class="option-name">
     <a href="#option-users-groups" class="option-anchor">users.groups</a>
@@ -17932,6 +17963,20 @@ field in <code class="file-path">/etc/passwd</code>.</p>
   <div class="option-example">Example: <code>"Alice Q. User"</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/users/options.nix" target="_blank">&lt;finix/modules/users/options.nix&gt;</a></code></div>
 </div>
+<div class="option" id="option-users-users-&lt;name&gt;-enable">
+  <h3 class="option-name">
+    <a href="#option-users-users-&lt;name&gt;-enable" class="option-anchor">users.users.&lt;name&gt;.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>If set to false, the user account will not be created. This is
+useful for when you wish to conditionally disable user accounts.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>true</code></div>
+  <div class="option-example">Example: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/users/options.nix" target="_blank">&lt;finix/modules/users/options.nix&gt;</a></code></div>
+</div>
 <div class="option" id="option-users-users-&lt;name&gt;-extraGroups">
   <h3 class="option-name">
     <a href="#option-users-users-&lt;name&gt;-extraGroups" class="option-anchor">users.users.&lt;name&gt;.extraGroups</a>
@@ -17978,7 +18023,7 @@ field in <code class="file-path">/etc/passwd</code>.</p>
   <div class="option-description"><html><head></head><body><p>Indicates whether this is an account for a “real” user.
 This automatically sets <a class="option-reference" href="options.html#option-group"><code>group</code></a> to <code>users</code>,
 <a class="option-reference" href="options.html#option-createHome"><code>createHome</code></a> to <code>true</code>,
-<a class="option-reference" href="options.html#option-home"><code>home</code></a> to <code class="file-path">/home/«username»</code><a class="option-reference" href="options.html#option-useDefaultShell"><code>useDefaultShell</code></a> to <code>true</code>,
+<a class="option-reference" href="options.html#option-home"><code>home</code></a> to <code class="file-path">/home/«username»</code><a class="option-reference" href="options.html#option-shell"><code>shell</code></a> to <a class="option-reference" href="options.html#option-users-defaultUserShell"><code>users.defaultUserShell</code></a>,
 and <a class="option-reference" href="options.html#option-isSystemUser"><code>isSystemUser</code></a> to <code>false</code>.
 Exactly one of <code>isNormalUser</code> and <code>isSystemUser</code> must be true.</p>
 </body></html></div>
