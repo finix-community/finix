@@ -84,9 +84,11 @@ in
 
     finit.services.polkit = {
       description = "policykit authorization manager";
-      # TODO: conditions
+      conditions = [ "service/dbus/ready" ];
       command =
-        "${cfg.package.out}/lib/polkit-1/polkitd " + (lib.optionalString (!cfg.debug) "--no-debug");
+        "${cfg.package.out}/lib/polkit-1/polkitd --no-debug "
+        + lib.optionalString cfg.debug "--log-level=debug";
+      notify = "systemd";
     };
 
     # The polkit daemon reads action/rule files
