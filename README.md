@@ -1,6 +1,11 @@
 # finix
 
-> `finix` - an experimental os, featuring [finit](https://github.com/troglobit/finit) as pid 1, to explore the NixOS design space
+<p align="center">
+  <a href="https://nixos.org"><img src="https://img.shields.io/badge/Built_with-Nix-5277C3?logo=nixos&logoColor=white" alt="Built with Nix"></a>
+  <a href="https://discord.gg/RA98NxUd"><img src="https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
+</p>
+
+> `finix` - a daily-drivable experimental os, featuring [finit](https://github.com/finit-project/finit) as pid 1, to explore the NixOS design space
 
 While exploring the NixOS design space I had several topics in mind:
 
@@ -37,7 +42,7 @@ An example of defining a `finit` service in `nix`:
 - with `mdevd` instead of `eudev` as the device manager
 - using [niri](https://github.com/YaLTeR/niri) as my `wayland` compositor
 
-![niri-desktop-screenshot](https://github.com/user-attachments/assets/3567af60-b090-43b8-87a2-984bcea85a3c)
+![niri-desktop-screenshot](https://github.com/user-attachments/assets/1bcfab8d-d363-4a48-beb5-27ec9843a683)
 
 `finix` initially ran:
 - in an `incus` container
