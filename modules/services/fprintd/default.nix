@@ -49,10 +49,7 @@ in
     finit.services.fprintd = {
       description = "fingerprint authentication daemon";
       command = "${cfg.package}/libexec/fprintd --no-timeout";
-      conditions = [
-        "service/dbus/ready"
-        "service/polkit/ready"
-      ];
+      conditions = "service/polkit/ready";
       nohup = true;
       log = true;
 

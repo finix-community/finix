@@ -44,7 +44,7 @@ in
 
     finit.services.network-manager = {
       description = "network manager service";
-      conditions = "service/syslogd/ready";
+      conditions = "service/dbus/ready";
       command = "${cfg.package}/bin/NetworkManager -n";
     };
 

@@ -46,10 +46,7 @@ in
     finit.services.rtkit-daemon = {
       description = "RealtimeKit scheduling policy service";
       command = "${cfg.package}/libexec/rtkit-daemon" + lib.optionalString cfg.debug " --debug";
-      conditions = [
-        "service/dbus/ready"
-        "service/polkit/ready"
-      ];
+      conditions = "service/polkit/ready";
 
       cgroup.name = "root";
     };

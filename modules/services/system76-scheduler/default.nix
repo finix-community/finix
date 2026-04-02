@@ -51,10 +51,7 @@ in
       description = "system76 scheduler";
       command = "${lib.getExe cfg.package} daemon";
       reload = "${lib.getExe cfg.package} daemon reload";
-      conditions = [
-        "service/syslogd/ready"
-        "service/dbus/ready"
-      ];
+      conditions = "service/dbus/ready";
       log = true;
 
       # TODO: now we're hijacking `env` and no one else can use it...

@@ -154,7 +154,7 @@ in
       description = "sonarr";
       conditions = [
         "service/syslogd/ready"
-        "net/lo/up"
+        "net/route/default"
       ];
       command = "${lib.getExe cfg.package} -nobrowser -data=${cfg.dataDir}";
       nohup = true;

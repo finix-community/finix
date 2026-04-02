@@ -138,7 +138,7 @@ in
         inherit (cfg) user group;
 
         description = "nzbget daemon";
-        conditions = [ "service/syslogd/ready" ];
+        conditions = "service/syslogd/ready";
         command = "${script} --server";
         stop = "${script} --quit";
         reload = "${script} --reload";

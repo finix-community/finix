@@ -99,8 +99,9 @@ in
       runlevels = "34";
       conditions = [
         "service/syslogd/ready"
-        "services/elogind/ready"
-      ];
+      ]
+      ++ lib.optionals config.services.elogind.enable [ "service/elogind/ready" ]
+      ++ lib.optionals config.services.seatd.enable [ "service/seatd/ready" ];
       command = "/run/current-system/sw/bin/sddm";
     };
 

@@ -65,10 +65,7 @@ in
 
     finit.services.bluetooth = {
       description = "bluetooth service";
-      conditions = [
-        "service/syslogd/ready"
-        "service/dbus/ready"
-      ];
+      conditions = "service/dbus/ready";
       command =
         "${cfg.package}/libexec/bluetooth/bluetoothd -f /etc/bluetooth/main.conf"
         + lib.optionalString cfg.debug " -d";

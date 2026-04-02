@@ -67,10 +67,7 @@ in
     finit.services.udisks2 = {
       description = "disk manager";
       command = "${cfg.package}/libexec/udisks2/udisksd" + lib.optionalString cfg.debug " --debug";
-      conditions = [
-        "service/syslogd/ready"
-        "service/dbus/ready"
-      ];
+      conditions = "service/dbus/ready";
       log = true;
     };
   };

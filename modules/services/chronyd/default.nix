@@ -65,7 +65,7 @@ in
 
     finit.services.chronyd = {
       description = "chrony ntp daemon";
-      conditions = [ "service/syslogd/ready" ];
+      conditions = "service/syslogd/ready";
       command =
         "${cfg.package}/bin/chronyd -n -u chrony -f ${cfg.configFile}"
         + lib.optionalString cfg.debug " -L -1";

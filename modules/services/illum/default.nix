@@ -35,7 +35,7 @@ in
     finit.services.illum = {
       description = "backlight adjustment service";
       command = lib.getExe cfg.package;
-      conditions = [ "service/syslogd/ready" ];
+      conditions = "service/syslogd/ready";
       log = true;
       nohup = true;
     };

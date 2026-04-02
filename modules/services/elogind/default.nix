@@ -47,10 +47,7 @@ in
   config = lib.mkIf cfg.enable {
     finit.services.elogind = {
       description = "login manager";
-      conditions = [
-        "service/syslogd/ready"
-        "service/dbus/ready"
-      ];
+      conditions = "service/dbus/ready";
       command = "${cfg.package}/libexec/elogind";
     };
 

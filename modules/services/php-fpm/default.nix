@@ -133,7 +133,7 @@ in
     };
 
     finit.services.php-fpm = {
-      conditions = [ "service/syslogd/ready" ];
+      conditions = "service/syslogd/ready";
       command = "${cfg.package}/bin/php-fpm -y ${configFile}";
       reload = "${pkgs.coreutils}/bin/kill -USR2 $MAINPID";
       notify = "systemd";

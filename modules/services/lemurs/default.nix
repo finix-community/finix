@@ -111,7 +111,6 @@ in
 
     finit.services.lemurs = {
       description = "lemurs terminal user interface display/login manager";
-      runlevels = "34";
       conditions = "service/syslogd/ready";
       command = "${pkgs.util-linux}/bin/agetty -nil ${cfg.package}/bin/lemurs tty${toString cfg.settings.tty}";
       cgroup.name = "user";

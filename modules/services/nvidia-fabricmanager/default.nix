@@ -76,7 +76,10 @@ in
       description = "start NVIDIA NVLink management";
       command = "${lib.getExe cfg.package} " + lib.escapeShellArgs cfg.extraArgs;
       type = "forking";
-      conditions = [ "net/route/default" ];
+      conditions = [
+        "service/syslogd/ready"
+        "net/route/default"
+      ];
       restart = -1;
     };
   };

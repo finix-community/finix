@@ -48,10 +48,7 @@ in
 
     finit.services.upower = {
       description = "daemon for power management";
-      conditions = [
-        "service/syslogd/ready"
-        "service/dbus/ready"
-      ];
+      conditions = "service/dbus/ready";
       command = "${cfg.package}/libexec/upowerd";
     };
 

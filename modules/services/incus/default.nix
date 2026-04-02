@@ -42,7 +42,7 @@ in
 
     finit.services.incusd = {
       description = "incus container hypervisor";
-      conditions = [ "service/syslogd/ready" ];
+      conditions = "service/syslogd/ready";
 
       command = pkgs.writeShellApplication {
         name = "incusd";

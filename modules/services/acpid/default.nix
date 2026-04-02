@@ -60,7 +60,7 @@ in
 
     finit.services.acpid = {
       description = "acpi daemon";
-      conditions = [ "service/syslogd/ready" ];
+      conditions = "service/syslogd/ready";
       command = "${pkgs.acpid}/bin/acpid --foreground --netlink";
       log = true;
 
