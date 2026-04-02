@@ -6,6 +6,7 @@ localeArchive="@localeArchive@"
 distroId="@distroId@"
 installHook="@installHook@"
 finit="@finit@"
+logger="@logger@"
 
 action="${1-}"
 
@@ -43,7 +44,7 @@ fi
 #   exit 1
 # fi
 
-logger -t finix "starting switch-to-configuration ($action)"
+"$logger/bin/logger" -t finix "starting switch-to-configuration ($action)"
 
 # install bootloader
 if [[ "$action" == switch || "$action" == boot ]]; then
@@ -61,7 +62,7 @@ if [[ "$action" == boot ]]; then
   exit 0
 fi
 
-logger -t finix "switching to system configuration $out"
+"$logger/bin/logger" -t finix "switching to system configuration $out"
 echo "activating the configuration..." >&2
 
 res=0
@@ -75,9 +76,9 @@ if ! "$finit/bin/initctl" reload; then
 fi
 
 if (( res == 0 )); then
-  logger -t finix "finished switching to system configuration $out"
+  "$logger/bin/logger" -t finix "finished switching to system configuration $out"
 else
-  logger -t finix -p user.err "switching to system configuration $out failed (status $res)"
+  "$logger/bin/logger" -t finix -p user.err "switching to system configuration $out failed (status $res)"
 fi
 
 exit "$res"
