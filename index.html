@@ -2802,7 +2802,7 @@
     <details class="toc-category">
       <summary title="programs">
         <span>programs</span>
-        <span class="toc-count">94</span>
+        <span class="toc-count">97</span>
       </summary>
       <ul>
         
@@ -2891,6 +2891,30 @@
         <li>
           <a href='#option-programs-fish-package' title="programs.fish.package">
             fish.package
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs-gamemode-enable' title="programs.gamemode.enable">
+            gamemode.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs-gamemode-package' title="programs.gamemode.package">
+            gamemode.package
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs-gamemode-settings' title="programs.gamemode.settings">
+            gamemode.settings
             
             
           </a>
@@ -11581,6 +11605,61 @@ for additional details.</p>
 </body></html></div>
   <div class="option-default">Default: <code>pkgs.fish</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/fish" target="_blank">&lt;finix/modules/programs/fish&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs-gamemode-enable">
+  <h3 class="option-name">
+    <a href="#option-programs-gamemode-enable" class="option-anchor">programs.gamemode.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://feralinteractive.github.io/gamemode">gamemode</a>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/gamemode" target="_blank">&lt;finix/modules/programs/gamemode&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs-gamemode-package">
+  <h3 class="option-name">
+    <a href="#option-programs-gamemode-package" class="option-anchor">programs.gamemode.package</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>gamemode</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.gamemode</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/gamemode" target="_blank">&lt;finix/modules/programs/gamemode&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs-gamemode-settings">
+  <h3 class="option-name">
+    <a href="#option-programs-gamemode-settings" class="option-anchor">programs.gamemode.settings</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string) or a list of them for duplicate keys)</code></div>
+  <div class="option-description"><html><head></head><body><p><code>gamemode</code> configuration. See <span class="manpage-reference">gamemode(8)</span>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-example">Example: <pre><code>{
+  general = {
+    renice = 10;
+  };
+
+  # Warning: GPU optimisations have the potential to damage hardware
+  gpu = {
+    apply_gpu_optimisations = "accept-responsibility";
+    gpu_device = 0;
+    amd_performance_level = "high";
+  };
+
+  custom = {
+    start = "${pkgs.libnotify}/bin/notify-send 'GameMode started'";
+    end = "${pkgs.libnotify}/bin/notify-send 'GameMode ended'";
+  };
+}
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/gamemode" target="_blank">&lt;finix/modules/programs/gamemode&gt;</a></code></div>
 </div>
 <div class="option" id="option-programs-gnome-keyring-enable">
   <h3 class="option-name">
