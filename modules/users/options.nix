@@ -143,6 +143,17 @@ in
                 '';
               };
 
+              packages = lib.mkOption {
+                type = with lib.types; listOf package;
+                default = [ ];
+                example = lib.literalExpression "[ pkgs.firefox pkgs.thunderbird ]";
+                description = ''
+                  The set of packages that should be made available to the user.
+                  This is in contrast to {option}`environment.systemPackages`,
+                  which adds packages to all users.
+                '';
+              };
+
               shell = lib.mkOption {
                 type = with lib.types; nullOr (either shellPackage (passwdEntry path));
                 default = pkgs.shadow;

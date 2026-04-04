@@ -86,7 +86,7 @@ in
 
         pam_env."security/pam_env.conf".text =
           let
-            toField = key: val: lib.optionalString (val != null) " ${key}=${lib.escapeShellArg val}";
+            toField = key: val: lib.optionalString (val != null) " ${key}=${val}";
           in
           lib.concatMapAttrsStringSep "\n" (
             var: { default, override }: "${var}${toField "DEFAULT" default}${toField "OVERRIDE" override}"
@@ -102,7 +102,7 @@ in
       EDITOR = "micro";
       NIX_REMOTE = "daemon";
       NIX_XDG_DESKTOP_PORTAL_DIR = "/run/current-system/sw/share/xdg-desktop-portal/portals";
-      PATH = "${config.security.wrapperDir}:/run/current-system/sw/bin";
+      PATH = "${config.security.wrapperDir}:/etc/profiles/per-user/@{PAM_USER}/bin:/run/current-system/sw/bin";
       XCURSOR_PATH = "/run/current-system/sw/share/icons:/run/current-system/sw/share/pixmaps";
       XDG_CONFIG_DIRS = "/etc/xdg:/run/current-system/sw/etc/xdg";
       XDG_DATA_DIRS = "/run/current-system/sw/share";
