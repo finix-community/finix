@@ -15,6 +15,7 @@
   "fcron.conf(5)": "https://man.archlinux.org/man/fcron.conf.5",
   "fcrontab(5)": "https://man.archlinux.org/man/fcrontab.5",
   "fwupd.conf(5)": "https://man.archlinux.org/man/fwupd.conf.5",
+  "gamemoded(8)": "https://man.archlinux.org/man/gamemoded.8",
   "greetd(5)": "https://man.archlinux.org/man/greetd.5",
   "ifupdown-ng(8)": "https://manpages.debian.org/testing/ifupdown-ng/ifup-ng.8",
   "ifupdown-ng.conf(5)": "https://manpages.debian.org/unstable/ifupdown-ng/ifupdown-ng.conf.5",
