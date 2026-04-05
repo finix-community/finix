@@ -19,7 +19,9 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.gvfs;
+      default = pkgs.gvfs.override {
+        udevSupport = config.services.udev.enable;
+      };
       defaultText = lib.literalExpression "pkgs.gvfs";
       description = ''
         The package to use for `gvfs`.
