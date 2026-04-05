@@ -31,7 +31,7 @@ in
       type = format.type;
       default = { };
       description = ''
-        `gamemode` configuration. See {manpage}`gamemode(8)`
+        `gamemode` configuration. See {manpage}`gamemoded(8)`
         for additional details.
       '';
       example = lib.literalExpression ''
