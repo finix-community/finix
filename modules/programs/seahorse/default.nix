@@ -19,5 +19,9 @@ in
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [ pkgs.seahorse ];
     services.dbus.packages = [ pkgs.seahorse ];
+
+    security.pam.environment = {
+      SSH_ASKPASS.default = "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
+    };
   };
 }
