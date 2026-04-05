@@ -13,7 +13,7 @@ in
       type = lib.types.bool;
       default = false;
       description = ''
-        Whether to enable [gvfs](${pkgs.gvfs.meta.homepage}) as a `dbus` service.
+        Whether to enable [gvfs](https://gitlab.gnome.org/GNOME/gvfs) as a `dbus` service.
       '';
     };
 
