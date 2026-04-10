@@ -49,9 +49,11 @@
       "crc32c"
     ]
     ++ lib.optionals (config.boot.kernelPackages.kernel.kernelAtLeast "5.5") [
-      "xxhash_generic"
-      "blake2b_generic"
-      "sha256_generic"
+      # The canonical names of these modules are not very stable, so use the algorithm names that the btrfs module expects.
+      # See: https://github.com/torvalds/linux/blob/v6.19-rc1/fs/btrfs/super.c#L2705-L2708
+      "xxhash64"
+      "sha256" # Should be baked into our kernel, just to be sure
+      "blake2b-256"
     ];
   };
 }
