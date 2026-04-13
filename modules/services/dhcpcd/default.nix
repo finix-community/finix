@@ -44,6 +44,23 @@ in
       '';
     };
 
+    debug = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to enable debug logging.
+      '';
+    };
+
+    extraArgs = lib.mkOption {
+      type = with lib.types; listOf str;
+      default = [ ];
+      description = ''
+        Additional arguments to pass to `dhcpcd`. See {manpage}`dhcpcd(8)`
+        for additional details.
+      '';
+    };
+
     settings = lib.mkOption {
       type = lib.types.submodule {
         freeformType = format.type; # FIXME: types.record { }
@@ -52,110 +69,97 @@ in
           background = lib.mkOption {
             type = with lib.types; nullOr bool;
             default = null;
+            description = ''
+              Fork to the background immediately.
+            '';
           };
 
           broadcast = lib.mkOption {
             type = with lib.types; nullOr bool;
             default = null;
+            description = ''
+              Instructs the DHCP server to broadcast replies back to the client.
+            '';
           };
 
           duid = lib.mkOption {
             type = with lib.types; nullOr bool;
             default = null;
+            description = ''
+              Use a DHCP Unique Identifier.
+            '';
           };
 
           hostname = lib.mkOption {
             type = with lib.types; nullOr str;
             default = null;
+            description = ''
+              Sends the hostname name to the DHCP server so it can be registered in DNS.
+            '';
           };
 
           hostname_short = lib.mkOption {
             type = with lib.types; nullOr bool;
             default = null;
+            description = ''
+              Sends the short hostname to the DHCP server instead of the FQDN.
+            '';
           };
 
           ipv4only = lib.mkOption {
             type = with lib.types; nullOr bool;
             default = null;
+            description = ''
+              Only configure IPv4.
+            '';
           };
 
           ipv6only = lib.mkOption {
             type = with lib.types; nullOr bool;
             default = null;
-          };
-
-          ipv6ra_fork = lib.mkOption {
-            type = with lib.types; nullOr bool;
-            default = null;
-          };
-
-          ipv6ra_own = lib.mkOption {
-            type = with lib.types; nullOr bool;
-            default = null;
-          };
-
-          ipv6ra_own_default = lib.mkOption {
-            type = with lib.types; nullOr bool;
-            default = null;
-          };
-
-          ipv6rs = lib.mkOption {
-            type = with lib.types; nullOr bool;
-            default = null;
+            description = ''
+              Only configure IPv6.
+            '';
           };
 
           noalias = lib.mkOption {
             type = with lib.types; nullOr bool;
             default = null;
-          };
-
-          noarp = lib.mkOption {
-            type = with lib.types; nullOr bool;
-            default = null;
+            description = ''
+              Any pre-existing IPv4 addresses will be removed from the interface when adding a new IPv4 address.
+            '';
           };
 
           nogateway = lib.mkOption {
             type = with lib.types; nullOr bool;
             default = null;
-          };
-
-          noipv4ll = lib.mkOption {
-            type = with lib.types; nullOr bool;
-            default = null;
-          };
-
-          noipv6rs = lib.mkOption {
-            type = with lib.types; nullOr bool;
-            default = null;
-          };
-
-          nolink = lib.mkOption {
-            type = with lib.types; nullOr bool;
-            default = null;
+            description = ''
+              Don't install any default routes.
+            '';
           };
 
           quiet = lib.mkOption {
             type = with lib.types; nullOr bool;
             default = null;
-          };
-
-          release = lib.mkOption {
-            type = with lib.types; nullOr bool;
-            default = null;
+            description = ''
+              Suppress any `dhcpcd` output to the console, except for errors.
+            '';
           };
 
           waitip = lib.mkOption {
             type = with lib.types; nullOr bool;
             default = null;
-          };
-
-          xidhwaddr = lib.mkOption {
-            type = with lib.types; nullOr bool;
-            default = null;
+            description = ''
+              Wait for an address to be assigned before forking to the background.
+            '';
           };
         };
       };
       default = { };
+      description = ''
+        `dhcpcd` configuration. See {manpage}`dhcpcd.conf(5)`
+        for additional details.
+      '';
     };
 
     configFile = lib.mkOption {
@@ -166,6 +170,11 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    services.dhcpcd.extraArgs = [
+      "-f"
+      (toString cfg.configFile)
+    ];
+
     services.dhcpcd.settings = {
       # Inform the DHCP server of our hostname for DDNS.
       hostname = "";
@@ -206,12 +215,16 @@ in
 
       # Immediately fork to background if specified, otherwise wait for IP address to be assigned
       waitip = true;
+
+      debug = cfg.debug;
     };
 
-    # NOTE: temporarily disable this because it wasn't working properly
     finit.services.dhcpcd = {
       description = "dhcp client";
-      command = "${lib.getExe cfg.package} -f ${cfg.configFile}";
+      command = "${lib.getExe cfg.package} " + lib.escapeShellArgs cfg.extraArgs;
+      pid = "/run/dhcpcd/pid";
+      type = "forking";
+      conditions = "service/syslogd/ready";
     };
 
     finit.tmpfiles.rules = [
