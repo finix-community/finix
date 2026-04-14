@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://nixos.org"><img src="https://img.shields.io/badge/Built_with-Nix-5277C3?logo=nixos&logoColor=white" alt="Built with Nix"></a>
-  <a href="https://discord.gg/RA98NxUd"><img src="https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
+  <a href="https://discord.gg/sytwJrAu4"><img src="https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
 </p>
 
 > `finix` - a daily-drivable experimental os, featuring [finit](https://github.com/finit-project/finit) as pid 1, to explore the NixOS design space
