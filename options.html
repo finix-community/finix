@@ -4012,7 +4012,7 @@
     <details class="toc-category">
       <summary title="services">
         <span>services</span>
-        <span class="toc-count">312</span>
+        <span class="toc-count">321</span>
       </summary>
       <ul>
         
@@ -6229,6 +6229,78 @@
         <li>
           <a href='#option-services-uptime-kuma-user' title="services.uptime-kuma.user">
             uptime-kuma.user
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-vnstat-debug' title="services.vnstat.debug">
+            vnstat.debug
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-vnstat-enable' title="services.vnstat.enable">
+            vnstat.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-vnstat-extraArgs' title="services.vnstat.extraArgs">
+            vnstat.extraArgs
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-vnstat-group' title="services.vnstat.group">
+            vnstat.group
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-vnstat-package' title="services.vnstat.package">
+            vnstat.package
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-vnstat-settings' title="services.vnstat.settings">
+            vnstat.settings
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-vnstat-settings-DatabaseDir' title="services.vnstat.settings.DatabaseDir">
+            vnstat.settings.DatabaseDir
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-vnstat-settings-UseLogging' title="services.vnstat.settings.UseLogging">
+            vnstat.settings.UseLogging
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-vnstat-user' title="services.vnstat.user">
+            vnstat.user
             
             
           </a>
@@ -17133,6 +17205,128 @@ ensuring the user exists before the <code>uptime-kuma</code> service starts.</p>
 </body></html></div>
   <div class="option-default">Default: <code>"uptime-kuma"</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/uptime-kuma" target="_blank">&lt;finix/modules/services/uptime-kuma&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-vnstat-debug">
+  <h3 class="option-name">
+    <a href="#option-services-vnstat-debug" class="option-anchor">services.vnstat.debug</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/vnstat" target="_blank">&lt;finix/modules/services/vnstat&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-vnstat-enable">
+  <h3 class="option-name">
+    <a href="#option-services-vnstat-enable" class="option-anchor">services.vnstat.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://humdi.net/vnstat/">vnstat</a> as a system service.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/vnstat" target="_blank">&lt;finix/modules/services/vnstat&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-vnstat-extraArgs">
+  <h3 class="option-name">
+    <a href="#option-services-vnstat-extraArgs" class="option-anchor">services.vnstat.extraArgs</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <code>vnstat</code>. See <a href="https://man.archlinux.org/man/vnstatd.8" class="manpage-reference">vnstatd(8)</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/vnstat" target="_blank">&lt;finix/modules/services/vnstat&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-vnstat-group">
+  <h3 class="option-name">
+    <a href="#option-services-vnstat-group" class="option-anchor">services.vnstat.group</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>string</code></div>
+  <div class="option-description"><html><head></head><body><p>Group account under which <code>vnstat</code> runs.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this group will automatically be created
+on system activation, otherwise you are responsible for
+ensuring the group exists before the <code>vnstat</code> service starts.</p>
+</div>
+</body></html></div>
+  <div class="option-default">Default: <code>"vnstatd"</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/vnstat" target="_blank">&lt;finix/modules/services/vnstat&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-vnstat-package">
+  <h3 class="option-name">
+    <a href="#option-services-vnstat-package" class="option-anchor">services.vnstat.package</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>vnstat</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.vnstat</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/vnstat" target="_blank">&lt;finix/modules/services/vnstat&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-vnstat-settings">
+  <h3 class="option-name">
+    <a href="#option-services-vnstat-settings" class="option-anchor">services.vnstat.settings</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>open submodule of attribute set of (atom (null, bool, int, float or string))</code></div>
+  <div class="option-description"><html><head></head><body><p><code>vnstat</code> configuration. See <a href="https://man.archlinux.org/man/vnstat.conf.5" class="manpage-reference">vnstat.conf(5)</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/vnstat" target="_blank">&lt;finix/modules/services/vnstat&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-vnstat-settings-DatabaseDir">
+  <h3 class="option-name">
+    <a href="#option-services-vnstat-settings-DatabaseDir" class="option-anchor">services.vnstat.settings.DatabaseDir</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>string or absolute path</code></div>
+  <div class="option-description"><html><head></head><body><p>Specifies the directory where interface databases are to be stored.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>"/var/lib/vnstat"</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/vnstat" target="_blank">&lt;finix/modules/services/vnstat&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-vnstat-settings-UseLogging">
+  <h3 class="option-name">
+    <a href="#option-services-vnstat-settings-UseLogging" class="option-anchor">services.vnstat.settings.UseLogging</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>signed integer or one of "disabled", "logfile", "syslog"</code></div>
+  <div class="option-description"><html><head></head><body><p>Enable or disable logging.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>"syslog"</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/vnstat" target="_blank">&lt;finix/modules/services/vnstat&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-vnstat-user">
+  <h3 class="option-name">
+    <a href="#option-services-vnstat-user" class="option-anchor">services.vnstat.user</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>string</code></div>
+  <div class="option-description"><html><head></head><body><p>User account under which <code>vnstat</code> runs.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this user will automatically be created
+on system activation, otherwise you are responsible for
+ensuring the user exists before the <code>vnstat</code> service starts.</p>
+</div>
+</body></html></div>
+  <div class="option-default">Default: <code>"vnstatd"</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/vnstat" target="_blank">&lt;finix/modules/services/vnstat&gt;</a></code></div>
 </div>
 <div class="option" id="option-services-xserver-enable">
   <h3 class="option-name">
