@@ -55,8 +55,28 @@ in
           options =
             let
               opt = lib.mkOption {
-                type = with lib.types; nullOr str;
+                type =
+                  with lib.types;
+                  nullOr (oneOf [
+                    (listOf (oneOf [
+                      int
+                      str
+                      path
+                    ]))
+                    int
+                    str
+                    path
+                  ]);
                 default = null;
+                apply =
+                  let
+                    toStr = v: if lib.isPath v then "${v}" else toString v;
+                  in
+                  v: if lib.isList v then lib.concatMapStringsSep ":" toStr v else toStr v;
+                description = ''
+                  The environment variables to be set, unset or modified by {manpage}`pam_env(8)`. See
+                  {manpage}`pam_env.conf(5)` for additional details.
+                '';
               };
             in
             {
@@ -66,7 +86,7 @@ in
         }
       );
       default = { };
-      description = "Set of rules for pam_env.";
+      description = "Set of rules for {manpage}`pam_env(8)`.";
     };
   };
 
@@ -98,14 +118,24 @@ in
         etcTree
       ];
 
-    security.pam.environment = lib.mapAttrs (_: v: { default = lib.mkDefault v; }) {
-      EDITOR = "micro";
+    security.pam.environment = lib.mapAttrs (_: default: { inherit default; }) {
+      EDITOR = lib.mkDefault "micro";
       NIX_REMOTE = "daemon";
       NIX_XDG_DESKTOP_PORTAL_DIR = "/run/current-system/sw/share/xdg-desktop-portal/portals";
-      PATH = "${config.security.wrapperDir}:/etc/profiles/per-user/@{PAM_USER}/bin:/run/current-system/sw/bin";
-      XCURSOR_PATH = "/run/current-system/sw/share/icons:/run/current-system/sw/share/pixmaps";
-      XDG_CONFIG_DIRS = "/etc/xdg:/run/current-system/sw/etc/xdg";
-      XDG_DATA_DIRS = "/run/current-system/sw/share";
+      PATH = [
+        config.security.wrapperDir
+        "/etc/profiles/per-user/@{PAM_USER}/bin"
+        "/run/current-system/sw/bin"
+      ];
+      XCURSOR_PATH = [
+        "/run/current-system/sw/share/icons"
+        "/run/current-system/sw/share/pixmaps"
+      ];
+      XDG_CONFIG_DIRS = [
+        "/etc/xdg"
+        "/run/current-system/sw/etc/xdg"
+      ];
+      XDG_DATA_DIRS = [ "/run/current-system/sw/share" ];
     };
 
     security.pam.services.other = {
