@@ -123,7 +123,6 @@ in
       NIX_REMOTE = "daemon";
       NIX_XDG_DESKTOP_PORTAL_DIR = "/run/current-system/sw/share/xdg-desktop-portal/portals";
       PATH = [
-        config.security.wrapperDir
         "/etc/profiles/per-user/@{PAM_USER}/bin"
         "/run/current-system/sw/bin"
       ];

@@ -240,6 +240,9 @@ in
 
   ###### implementation
   config = {
+    security.pam.environment = {
+      PATH.default = lib.mkOrder 400 [ config.security.wrapperDir ];
+    };
 
     security.wrappers =
       let
