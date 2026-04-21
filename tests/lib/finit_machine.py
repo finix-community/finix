@@ -5,10 +5,10 @@ This extends the NixOS test driver's Machine class with finit-specific
 methods, replacing systemd-specific functionality.
 """
 
-from test_driver.machine import Machine
+from test_driver.machine import QemuMachine
 
 
-class FinitMachine(Machine):
+class FinitMachine(QemuMachine):
     """Machine with finit-specific methods instead of systemd."""
 
     def wait_for_condition(self, condition: str, timeout: int = 900) -> None:

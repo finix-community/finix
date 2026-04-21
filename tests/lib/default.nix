@@ -107,9 +107,6 @@ in
       # create vm derivations
       vms = lib.mapAttrs (nodeName: nodeEval: mkVmDerivation nodeName nodeEval.config) evaluatedNodes;
 
-      # get list of vm start scripts
-      vmStartScripts = lib.mapAttrsToList (name: vm: "${vm}/bin/run-${name}-vm") vms;
-
       # get unique vlans
       vlans = lib.unique (
         lib.mapAttrsToList (_: nodeEval: nodeEval.config.testing.network.vlan) evaluatedNodes
@@ -120,6 +117,21 @@ in
         if builtins.isFunction testScript then testScript { nodes = evaluatedNodes; } else testScript;
 
       pythonTestScript = pkgs.writeText "test-${name}.py" testScriptString;
+
+      # generate driver configuration JSON
+      driverConfiguration = {
+        vms = lib.mapAttrs (nodeName: vm: {
+          name = nodeName;
+          start_script = "${vm}/bin/run-${nodeName}-vm";
+        }) vms;
+        containers = { };
+        vlans = vlans;
+        global_timeout = 3600;
+        enable_ssh_backdoor = false;
+        test_script = pythonTestScript;
+      };
+
+      driverConfigurationFile = pkgs.writers.writeJSON "finix-driver-configuration-${name}.json" driverConfiguration;
 
       # build the test driver wrapper
       driver =
@@ -135,11 +147,8 @@ in
           }
           ''
             mkdir -p $out/bin
-            cp ${pythonTestScript} $out/test-script
             makeWrapper ${testDriver}/bin/nixos-test-driver $out/bin/finix-test-driver \
-              --set startScripts "${lib.concatStringsSep " " vmStartScripts}" \
-              --set testScript "$out/test-script" \
-              --set vlans "${toString vlans}" \
+              --add-flags "--config ${driverConfigurationFile}" \
               ${lib.escapeShellArgs (
                 lib.concatMap (arg: [
                   "--add-flags"
