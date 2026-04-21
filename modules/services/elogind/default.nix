@@ -19,18 +19,7 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.elogind.overrideAttrs (old: {
-        mesonFlags = old.mesonFlags ++ [
-          (lib.mesonOption "halt-path" "/run/current-system/sw/bin/halt")
-          (lib.mesonOption "poweroff-path" "/run/current-system/sw/bin/poweroff")
-          (lib.mesonOption "reboot-path" "/run/current-system/sw/bin/reboot")
-        ];
-        postPatch = old.postPatch + ''
-          # TODO: upstream
-          substituteInPlace ./rules.d/71-seat.rules.in \
-            --replace-fail "{{BINDIR}}/udevadm" "${pkgs.eudev}/bin/udevadm"
-        '';
-      });
+      default = pkgs.elogind;
       defaultText = lib.literalExpression "pkgs.elogind";
       description = ''
         The package to use for `elogind`.
