@@ -7162,6 +7162,7 @@ include it in <a class="option-reference" href="options.html#option-boot-initrd-
   <div class="option-type">Type: <code>list of (submodule)</code></div>
   <div class="option-description"><html><head></head><body><p>Contents of the initrd.</p>
 </body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/boot/initrd.nix" target="_blank">&lt;finix/modules/boot/initrd.nix&gt;</a></code></div>
 </div>
 <div class="option" id="option-boot-initrd-contents-*-source">
@@ -7274,7 +7275,7 @@ the device-manager and before mounting file-systems.</p>
   <div class="option-description"><html><head></head><body><p>Packages providing filesystem utilities for <code>btrfs</code> in the initial ramdisk.</p>
 </body></html></div>
   <div class="option-default">Default: <code>[
-  <derivation btrfs-progs-6.19>
+  <derivation btrfs-progs-6.19.1>
 ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/btrfs.nix" target="_blank">&lt;finix/modules/filesystems/btrfs.nix&gt;</a></code></div>
 </div>
@@ -7760,7 +7761,7 @@ that follow this format and can be used directly.</p>
   <div class="option-description"><html><head></head><body><p>Packages providing filesystem utilities for <code>btrfs</code>.</p>
 </body></html></div>
   <div class="option-default">Default: <code>[
-  <derivation btrfs-progs-6.19>
+  <derivation btrfs-progs-6.19.1>
 ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/btrfs.nix" target="_blank">&lt;finix/modules/filesystems/btrfs.nix&gt;</a></code></div>
 </div>
@@ -7994,6 +7995,7 @@ that follow this format and can be used directly.</p>
   <div class="option-description"><html><head></head><body><p>List of ZFS pools to import at boot.
 Defaults to the pools necessary for booting.</p>
 </body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
   <div class="option-example">Example: <pre><code>[
   "jug"
   "bucket"
@@ -8681,6 +8683,7 @@ are guaranteed to be completed before running the next command. Useful when seri
   <div class="option-type">Type: <code>null or string</code></div>
   <div class="option-description"><html><head></head><body><p>The instance identifier, derived from the attribute name if it contains an <code>@</code> character.</p>
 </body></html></div>
+  <div class="option-default">Default: <code>null</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
 </div>
 <div class="option" id="option-finit-run-&lt;name&gt;-log">
@@ -9078,6 +9081,7 @@ restarted if they exit prematurely.</p>
   <div class="option-type">Type: <code>null or string</code></div>
   <div class="option-description"><html><head></head><body><p>The instance identifier, derived from the attribute name if it contains an <code>@</code> character.</p>
 </body></html></div>
+  <div class="option-default">Default: <code>null</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
 </div>
 <div class="option" id="option-finit-services-&lt;name&gt;-kill">
@@ -9572,6 +9576,7 @@ legacy init scripts that are called with <code>start</code>, <code>stop</code>, 
   <div class="option-type">Type: <code>null or string</code></div>
   <div class="option-description"><html><head></head><body><p>The instance identifier, derived from the attribute name if it contains an <code>@</code> character.</p>
 </body></html></div>
+  <div class="option-default">Default: <code>null</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
 </div>
 <div class="option" id="option-finit-sysv-&lt;name&gt;-kill">
@@ -10065,6 +10070,7 @@ to the background and use PID files for process tracking.</p>
   <div class="option-type">Type: <code>null or string</code></div>
   <div class="option-description"><html><head></head><body><p>The instance identifier, derived from the attribute name if it contains an <code>@</code> character.</p>
 </body></html></div>
+  <div class="option-default">Default: <code>null</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
 </div>
 <div class="option" id="option-finit-tasks-&lt;name&gt;-log">
@@ -11473,6 +11479,7 @@ accidentally on a wrong machine.</p>
   <div class="option-type">Type: <code>attribute set of list of string</code></div>
   <div class="option-description"><html><head></head><body><p>Locally defined maps of hostnames to IP addresses.</p>
 </body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
   <div class="option-example">Example: <pre><code>{
   "127.0.0.1" = [ "foo.bar.baz" ];
   "192.168.0.2" = [ "fileserver.local" "nameserver.local" ];
@@ -11489,6 +11496,7 @@ accidentally on a wrong machine.</p>
   <div class="option-type">Type: <code>An evaluation of Nixpkgs; the top level attribute set of packages</code></div>
   <div class="option-description"><html><head></head><body><p>The <code>nixpkgs</code> package set to use for this system.</p>
 </body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/nixpkgs" target="_blank">&lt;finix/modules/nixpkgs&gt;</a></code></div>
 </div>
 <div class="option" id="option-programs-bash-enable">
@@ -12057,7 +12065,7 @@ Only works on EFI!</p>
     <span class="copy-feedback">Link copied!</span>
   </h3>
   <div class="option-type">Type: <code>strings concatenated with "\n"</code></div>
-  <div class="option-description"><html><head></head><body><p>A string which is appended to the end of limine.conf. The config format can be found <a href="https://codeberg.org/Limine/Limine/src/branch/v10.x/CONFIG.md">here</a>.</p>
+  <div class="option-description"><html><head></head><body><p>A string which is appended to the end of limine.conf. The config format can be found <a href="https://codeberg.org/Limine/Limine/src/branch/v11.x/CONFIG.md">here</a>.</p>
 </body></html></div>
   <div class="option-default">Default: <code>""</code></div>
   <div class="option-example">Example: <pre><code>/memtest86
@@ -12126,7 +12134,7 @@ garbage collected yet.</p>
     <span class="copy-feedback">Link copied!</span>
   </h3>
   <div class="option-type">Type: <code>open submodule of attribute set of (atom (null, bool, int, float or string))</code></div>
-  <div class="option-description"><html><head></head><body><p><code>limine</code> configuration. See <a href="https://codeberg.org/Limine/Limine/src/branch/v10.x/CONFIG.md">upstream documentation</a>
+  <div class="option-description"><html><head></head><body><p><code>limine</code> configuration. See <a href="https://codeberg.org/Limine/Limine/src/branch/v11.x/CONFIG.md">upstream documentation</a>
 for additional details.</p>
 </body></html></div>
   <div class="option-default">Default: <code>{ }</code></div>
@@ -15574,6 +15582,7 @@ to be built reproducibly.</p>
 of Nix packages.</p>
 <p>By default <a href="https://cache.nixos.org/">https://cache.nixos.org/</a> is added.</p>
 </body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nix-daemon" target="_blank">&lt;finix/modules/services/nix-daemon&gt;</a></code></div>
 </div>
 <div class="option" id="option-services-nix-daemon-settings-system-features">
@@ -15587,6 +15596,7 @@ of Nix packages.</p>
 can express dependencies on system features through the
 <code>requiredSystemFeatures</code> attribute.</p>
 </body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nix-daemon" target="_blank">&lt;finix/modules/services/nix-daemon&gt;</a></code></div>
 </div>
 <div class="option" id="option-services-nix-daemon-settings-trusted-public-keys">
@@ -15603,6 +15613,7 @@ if it is signed by <em>any</em> of the keys
 listed here. By default, only the key for
 <a href="options.html#option-cache-nixos-org" class="option-reference"><code>cache.nixos.org</code></a> is included.</p>
 </body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
   <div class="option-example">Example: <pre><code>[
   "hydra.nixos.org-1:CNHJZBh9K4tP3EKF6FkkgeVYsS3ohTl+oS0Qa8bezVs="
 ]</code></pre></div>
@@ -15641,6 +15652,7 @@ can also specify groups by prefixing them with
 <code>@wheel</code> means all users in the wheel
 group.</p>
 </body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
   <div class="option-example">Example: <pre><code>[
   "root"
   "alice"
