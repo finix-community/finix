@@ -8,41 +8,42 @@
 let
   cfg = config.services.ly;
 
-  configFile = pkgs.writeText "config.ini" ( lib.generators.toKeyValue {} cfg.settings );
+  format = pkgs.formats.keyValue { };
+
+  brightnessctl = config.programs.brightnessctl.package or pkgs.brightnessctl;
 in
 {
   options.services.ly = {
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
-      description = "Whether to enable ly, a lightweight TUI (ncurses-like) display manager for Linux and BSD.";
+      description = ''
+        Whether to enable [ly](${pkgs.ly.meta.homepage}) as a system service.
+      '';
     };
 
-    package = lib.mkPackageOption pkgs "ly" { };
+    package = lib.mkOption {
+      type = lib.types.package;
+      default = pkgs.ly;
+      defaultText = lib.literalExpression "pkgs.ly";
+      description = ''
+        The package to use for `ly`.
+      '';
+    };
 
     tty = lib.mkOption {
       type = lib.types.int;
       default = 2;
-      description = "The TTY that ly runs on. Changing this while logged in will exit your session.";
+      description = "The TTY that `ly` runs on. Changing this while logged in will exit your session.";
     };
 
     settings = lib.mkOption {
-      type = with lib.types; attrsOf (oneOf [ str int bool float ]);
+      type = format.type;
       defaultText = lib.literalExpression "See description.";
       description = ''
-        ly configuration written in nix. See [upstream example](https://github.com/fairyglade/ly/blob/master/res/config.ini)
-        for available options.
-
-        The following settings are set by default:
-        ```
-        path = "/run/current-system/sw/bin"
-        service_name = "ly"
-        waylandsessions = "/run/current-system/sw/share/wayland-sessions"
-        xsessions = "/run/current-system/sw/share/xsessions"
-        setup_cmd = "/etc/ly/setup.sh"
-        ```
+        `ly` configuration. See [upstream example](https://github.com/fairyglade/ly/blob/master/res/config.ini)
+        for additional details.
       '';
-
       example = lib.literalExpression ''
         {
           animation_frame_delay = 5 # Set delay between animation frames.
@@ -54,26 +55,39 @@ in
       '';
     };
   };
+
   config = lib.mkIf cfg.enable {
     services.ly.settings = {
-      path = lib.mkDefault "/run/current-system/sw/bin";
-      service_name = lib.mkDefault "ly";
-      waylandsessions = lib.mkDefault "/run/current-system/sw/share/wayland-sessions";
-      xsessions = lib.mkDefault "/run/current-system/sw/share/xsessions";
+      service_name = "ly";
+      waylandsessions = "/run/current-system/sw/share/wayland-sessions";
+
+      # TODO: these scripts should be included in the nixpkgs package
       setup_cmd = lib.mkDefault "/etc/ly/setup.sh";
+      # start_cmd = "";
+
+      # defer to pam for PATH
+      path = null;
+
+      restart_cmd = "${config.finit.package}/bin/initctl reboot";
+      shutdown_cmd = "${config.finit.package}/bin/initctl poweroff";
+      brightness_up_cmd = lib.mkDefault "${lib.getExe brightnessctl} -q s +10%";
+      brightness_down_cmd = lib.mkDefault "${lib.getExe brightnessctl} -q s 10%-";
+    }
+    // lib.optionalAttrs config.services.xserver.enable or false {
+      xsessions = "/run/current-system/sw/share/xsessions";
+      xauth_cmd = "${pkgs.xorg.xauth}/bin/xauth";
+
+      # TODO: x_cmd
     };
 
-    environment.etc."ly/config.ini".source = configFile;
+    environment.etc."ly/config.ini".source = format.generate "config.ini" cfg.settings;
     environment.etc."ly/setup.sh" = {
       source = ./setup.sh;
       mode = "0755";
     };
 
     environment.pathsToLink = [ "/share/ly" ];
-
     environment.systemPackages = [ cfg.package ];
-
-    services.dbus.packages = [ cfg.package ];
 
     security.pam.services.ly.text = ''
       # Account management.
@@ -105,6 +119,7 @@ in
       ++ lib.optionals config.services.elogind.enable [ "service/elogind/ready" ]
       ++ lib.optionals config.services.seatd.enable [ "service/seatd/ready" ];
       command = "${pkgs.util-linux}/bin/agetty -nil ${cfg.package}/bin/ly tty${toString cfg.tty}";
+      nohup = true;
       cgroup.name = "user";
     };
   };
