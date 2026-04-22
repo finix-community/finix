@@ -4012,7 +4012,7 @@
     <details class="toc-category">
       <summary title="services">
         <span>services</span>
-        <span class="toc-count">321</span>
+        <span class="toc-count">327</span>
       </summary>
       <ul>
         
@@ -4747,6 +4747,30 @@
         </li>
         
         <li>
+          <a href='#option-services-flatpak-enable' title="services.flatpak.enable">
+            flatpak.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-flatpak-extraGroups' title="services.flatpak.extraGroups">
+            flatpak.extraGroups
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-flatpak-package' title="services.flatpak.package">
+            flatpak.package
+            
+            
+          </a>
+        </li>
+        
+        <li>
           <a href='#option-services-fprintd-debug' title="services.fprintd.debug">
             fprintd.debug
             
@@ -4757,6 +4781,14 @@
         <li>
           <a href='#option-services-fprintd-enable' title="services.fprintd.enable">
             fprintd.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-fprintd-extraGroups' title="services.fprintd.extraGroups">
+            fprintd.extraGroups
             
             
           </a>
@@ -5691,6 +5723,14 @@
         </li>
         
         <li>
+          <a href='#option-services-power-profiles-daemon-extraGroups' title="services.power-profiles-daemon.extraGroups">
+            power-profiles-daemon.extraGroups
+            
+            
+          </a>
+        </li>
+        
+        <li>
           <a href='#option-services-power-profiles-daemon-package' title="services.power-profiles-daemon.package">
             power-profiles-daemon.package
             
@@ -5805,6 +5845,14 @@
         <li>
           <a href='#option-services-rtkit-enable' title="services.rtkit.enable">
             rtkit.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-rtkit-extraGroups' title="services.rtkit.extraGroups">
+            rtkit.extraGroups
             
             
           </a>
@@ -14656,6 +14704,45 @@ last resort the value from <code>/etc/passwd</code>.</p>
   <div class="option-default">Default: <code>[ ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fcron" target="_blank">&lt;finix/modules/services/fcron&gt;</a></code></div>
 </div>
+<div class="option" id="option-services-flatpak-enable">
+  <h3 class="option-name">
+    <a href="#option-services-flatpak-enable" class="option-anchor">services.flatpak.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://flatpak.org/">flatpak</a>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/flatpak" target="_blank">&lt;finix/modules/services/flatpak&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-flatpak-extraGroups">
+  <h3 class="option-name">
+    <a href="#option-services-flatpak-extraGroups" class="option-anchor">services.flatpak.extraGroups</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>A list of groups to <em>unconditionally</em> grant access, via <code>polkit</code>, to this services offerings. Useful
+on systems without <code>(e)logind</code>. See <a href="https://wiki.alpinelinux.org/wiki/Polkit#Using_polkit_with_seatd">Using polkit with seatd</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>null</code></div>
+  <div class="option-example">Example: <code>[ config.services.seatd.group ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/flatpak" target="_blank">&lt;finix/modules/services/flatpak&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-flatpak-package">
+  <h3 class="option-name">
+    <a href="#option-services-flatpak-package" class="option-anchor">services.flatpak.package</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>flatpak</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.flatpak.override { withSystemd = false; }</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/flatpak" target="_blank">&lt;finix/modules/services/flatpak&gt;</a></code></div>
+</div>
 <div class="option" id="option-services-fprintd-debug">
   <h3 class="option-name">
     <a href="#option-services-fprintd-debug" class="option-anchor">services.fprintd.debug</a>
@@ -14678,6 +14765,21 @@ last resort the value from <code>/etc/passwd</code>.</p>
   <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://fprint.freedesktop.org/">fprintd</a> as a system service.</p>
 </body></html></div>
   <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fprintd" target="_blank">&lt;finix/modules/services/fprintd&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-fprintd-extraGroups">
+  <h3 class="option-name">
+    <a href="#option-services-fprintd-extraGroups" class="option-anchor">services.fprintd.extraGroups</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>A list of groups to <em>unconditionally</em> grant access, via <code>polkit</code>, to this services offerings. Useful
+on systems without <code>(e)logind</code>. See <a href="https://wiki.alpinelinux.org/wiki/Polkit#Using_polkit_with_seatd">Using polkit with seatd</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-example">Example: <code>[ config.services.seatd.group ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fprintd" target="_blank">&lt;finix/modules/services/fprintd&gt;</a></code></div>
 </div>
 <div class="option" id="option-services-fprintd-package">
@@ -16333,6 +16435,21 @@ value).  By default, this is all users in the <code>wheel</code> group.</p>
   <div class="option-default">Default: <code>false</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/power-profiles-daemon" target="_blank">&lt;finix/modules/services/power-profiles-daemon&gt;</a></code></div>
 </div>
+<div class="option" id="option-services-power-profiles-daemon-extraGroups">
+  <h3 class="option-name">
+    <a href="#option-services-power-profiles-daemon-extraGroups" class="option-anchor">services.power-profiles-daemon.extraGroups</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>A list of groups to <em>unconditionally</em> grant access, via <code>polkit</code>, to this services offerings. Useful
+on systems without <code>(e)logind</code>. See <a href="https://wiki.alpinelinux.org/wiki/Polkit#Using_polkit_with_seatd">Using polkit with seatd</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-example">Example: <code>[ config.services.seatd.group ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/power-profiles-daemon" target="_blank">&lt;finix/modules/services/power-profiles-daemon&gt;</a></code></div>
+</div>
 <div class="option" id="option-services-power-profiles-daemon-package">
   <h3 class="option-name">
     <a href="#option-services-power-profiles-daemon-package" class="option-anchor">services.power-profiles-daemon.package</a>
@@ -16530,6 +16647,21 @@ ensuring the user exists before the <code>radarr</code> service starts.</p>
   <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://gitlab.freedesktop.org/pipewire/rtkit">rtkit</a> as a system service.</p>
 </body></html></div>
   <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/rtkit" target="_blank">&lt;finix/modules/services/rtkit&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-rtkit-extraGroups">
+  <h3 class="option-name">
+    <a href="#option-services-rtkit-extraGroups" class="option-anchor">services.rtkit.extraGroups</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>A list of groups to <em>unconditionally</em> grant access, via <code>polkit</code>, to this services offerings. Useful
+on systems without <code>(e)logind</code>. See <a href="https://wiki.alpinelinux.org/wiki/Polkit#Using_polkit_with_seatd">Using polkit with seatd</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-example">Example: <code>[ config.services.seatd.group ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/rtkit" target="_blank">&lt;finix/modules/services/rtkit&gt;</a></code></div>
 </div>
 <div class="option" id="option-services-rtkit-package">
