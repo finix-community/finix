@@ -25,13 +25,40 @@ in
         The package to use for `power-profiles-daemon`.
       '';
     };
+
+    extraGroups = lib.mkOption {
+      type = with lib.types; listOf str;
+      default = [ ];
+      example = lib.literalExpression "[ config.services.seatd.group ]";
+      description = ''
+        A list of groups to _unconditionally_ grant access, via `polkit`, to this services offerings. Useful
+        on systems without `(e)logind`. See [Using polkit with seatd](https://wiki.alpinelinux.org/wiki/Polkit#Using_polkit_with_seatd)
+        for additional details.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
 
     environment.systemPackages = [ cfg.package ];
+
     services.dbus.packages = [ cfg.package ];
     services.udev.packages = [ cfg.package ];
+    services.polkit.extraConfig = lib.optionalString (cfg.extraGroups != [ ]) ''
+      polkit.addRule(function(action, subject) {
+        if (action.id.startsWith("org.freedesktop.UPower.PowerProfiles.")) {
+          var groups = ${builtins.toJSON cfg.extraGroups};
+
+          if (groups.some(function(group) {
+            return subject.isInGroup(group);
+          })) {
+            return polkit.Result.YES;
+          }
+        }
+
+        return polkit.Result.NOT_HANDLED;
+      });
+    '';
 
     finit.services.power-profiles-daemon = {
       description = "power profiles daemon";

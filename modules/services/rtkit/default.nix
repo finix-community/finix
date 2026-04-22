@@ -33,6 +33,17 @@ in
         Whether to enable debug logging.
       '';
     };
+
+    extraGroups = lib.mkOption {
+      type = with lib.types; listOf str;
+      default = [ ];
+      example = lib.literalExpression "[ config.services.seatd.group ]";
+      description = ''
+        A list of groups to _unconditionally_ grant access, via `polkit`, to this services offerings. Useful
+        on systems without `(e)logind`. See [Using polkit with seatd](https://wiki.alpinelinux.org/wiki/Polkit#Using_polkit_with_seatd)
+        for additional details.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -43,6 +54,25 @@ in
       }
     ];
 
+    environment.systemPackages = [ cfg.package ];
+
+    services.dbus.packages = [ cfg.package ];
+    services.polkit.extraConfig = lib.optionalString (cfg.extraGroups != [ ]) ''
+      polkit.addRule(function(action, subject) {
+        if (action.id.startsWith("org.freedesktop.RealtimeKit1.")) {
+          var groups = ${builtins.toJSON cfg.extraGroups};
+
+          if (groups.some(function(group) {
+            return subject.isInGroup(group);
+          })) {
+            return polkit.Result.YES;
+          }
+        }
+
+        return polkit.Result.NOT_HANDLED;
+      });
+    '';
+
     finit.services.rtkit-daemon = {
       description = "RealtimeKit scheduling policy service";
       command = "${cfg.package}/libexec/rtkit-daemon" + lib.optionalString cfg.debug " --debug";
@@ -50,10 +80,6 @@ in
 
       cgroup.name = "root";
     };
-
-    environment.systemPackages = [ cfg.package ];
-
-    services.dbus.packages = [ cfg.package ];
 
     users.users.rtkit = {
       isSystemUser = true;
