@@ -4012,7 +4012,7 @@
     <details class="toc-category">
       <summary title="services">
         <span>services</span>
-        <span class="toc-count">327</span>
+        <span class="toc-count">331</span>
       </summary>
       <ul>
         
@@ -5077,6 +5077,38 @@
         <li>
           <a href='#option-services-logrotate-rules-&lt;name&gt;-text' title="services.logrotate.rules.&lt;name&gt;.text">
             logrotate.rules.&lt;name&gt;.text
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-ly-enable' title="services.ly.enable">
+            ly.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-ly-package' title="services.ly.package">
+            ly.package
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-ly-settings' title="services.ly.settings">
+            ly.settings
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-ly-tty' title="services.ly.tty">
+            ly.tty
             
             
           </a>
@@ -15248,6 +15280,63 @@ for additional details.</p>
 </body></html></div>
   <div class="option-default">Default: <code>""</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/logrotate" target="_blank">&lt;finix/modules/services/logrotate&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-ly-enable">
+  <h3 class="option-name">
+    <a href="#option-services-ly-enable" class="option-anchor">services.ly.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://codeberg.org/fairyglade/ly">ly</a> as a system service.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/ly" target="_blank">&lt;finix/modules/services/ly&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-ly-package">
+  <h3 class="option-name">
+    <a href="#option-services-ly-package" class="option-anchor">services.ly.package</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>ly</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.ly</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/ly" target="_blank">&lt;finix/modules/services/ly&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-ly-settings">
+  <h3 class="option-name">
+    <a href="#option-services-ly-settings" class="option-anchor">services.ly.settings</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>attribute set of (atom (null, bool, int, float or string))</code></div>
+  <div class="option-description"><html><head></head><body><p><code>ly</code> configuration. See <a href="https://github.com/fairyglade/ly/blob/master/res/config.ini">upstream example</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>See description.</code></div>
+  <div class="option-example">Example: <pre><code>{
+  animation_frame_delay = 5 # Set delay between animation frames.
+  asterisk = "*"; # Set the character used to mask the password.
+  bg = "0x20000000"; # Set the background color to black in 0xSSRRGGBB format.
+  bigclock_12hr = false; # Set bigclock to 12 hour format.
+  battery_id = "null" # Don't show battery (e.g. on a desktop)
+}
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/ly" target="_blank">&lt;finix/modules/services/ly&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-ly-tty">
+  <h3 class="option-name">
+    <a href="#option-services-ly-tty" class="option-anchor">services.ly.tty</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>signed integer</code></div>
+  <div class="option-description"><html><head></head><body><p>The TTY that <code>ly</code> runs on. Changing this while logged in will exit your session.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>2</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/ly" target="_blank">&lt;finix/modules/services/ly&gt;</a></code></div>
 </div>
 <div class="option" id="option-services-mariadb-dataDir">
   <h3 class="option-name">
