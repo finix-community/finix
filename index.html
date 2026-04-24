@@ -4012,7 +4012,7 @@
     <details class="toc-category">
       <summary title="services">
         <span>services</span>
-        <span class="toc-count">331</span>
+        <span class="toc-count">333</span>
       </summary>
       <ul>
         
@@ -4861,6 +4861,22 @@
         <li>
           <a href='#option-services-getty-enable' title="services.getty.enable">
             getty.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-getty-extraArgs' title="services.getty.extraArgs">
+            getty.extraArgs
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-getty-package' title="services.getty.package">
+            getty.package
             
             
           </a>
@@ -14927,6 +14943,34 @@ Set to <code>0</code> to disable.</p>
   <div class="option-description"><html><head></head><body><p>Whether to enable <code>getty</code>.</p>
 </body></html></div>
   <div class="option-default">Default: <code>true</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/getty" target="_blank">&lt;finix/modules/services/getty&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-getty-extraArgs">
+  <h3 class="option-name">
+    <a href="#option-services-getty-extraArgs" class="option-anchor">services.getty.extraArgs</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <a class="option-reference" href="options.html#option-services-getty-package"><code>services.getty.package</code></a>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/getty" target="_blank">&lt;finix/modules/services/getty&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-getty-package">
+  <h3 class="option-name">
+    <a href="#option-services-getty-package" class="option-anchor">services.getty.package</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>null or package</code></div>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>getty</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>null</code></div>
+  <div class="option-example">Example: <pre><code>pkgs.util-linux // {
+  mainProgram = "agetty";
+};
+</code></pre></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/getty" target="_blank">&lt;finix/modules/services/getty&gt;</a></code></div>
 </div>
 <div class="option" id="option-services-getty-ttys">
