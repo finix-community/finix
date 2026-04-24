@@ -24,7 +24,13 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.ly;
+      # TODO: drop override on next nixpkgs bump
+      default = pkgs.ly.overrideAttrs (o: {
+        postInstall = o.postInstall or "" + ''
+          install -Dm0644 res/config.ini "$out/etc/config.ini"
+          install -Dm0755 res/setup.sh "$out/etc/setup.sh"
+        '';
+      });
       defaultText = lib.literalExpression "pkgs.ly";
       description = ''
         The package to use for `ly`.
@@ -62,7 +68,7 @@ in
       waylandsessions = "/run/current-system/sw/share/wayland-sessions";
 
       # TODO: these scripts should be included in the nixpkgs package
-      setup_cmd = lib.mkDefault "/etc/ly/setup.sh";
+      setup_cmd = lib.mkDefault "${cfg.package}/etc/setup.sh";
       # start_cmd = "";
 
       # defer to pam for PATH
@@ -81,11 +87,6 @@ in
     };
 
     environment.etc."ly/config.ini".source = format.generate "config.ini" cfg.settings;
-    environment.etc."ly/setup.sh" = {
-      source = ./setup.sh;
-      mode = "0755";
-    };
-
     environment.pathsToLink = [ "/share/ly" ];
     environment.systemPackages = [ cfg.package ];
 
