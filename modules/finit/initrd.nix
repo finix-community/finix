@@ -60,7 +60,7 @@ let
   };
 in
 {
-  config = lib.mkIf config.finit.enable {
+  config = {
     boot.initrd.contents = [
       {
         target = "/init";

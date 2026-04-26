@@ -190,7 +190,7 @@ in
           + lib.optionalString config.boot.initrd.enable ''
             ${coreutils}/bin/ln -s ${config.boot.initrd.package}/initrd $out/initrd
           ''
-          + lib.optionalString config.finit.enable ''
+          + ''
             cp ${../../finit/switch-to-configuration.sh} $out/bin/switch-to-configuration
             substituteInPlace $out/bin/switch-to-configuration \
               --subst-var out \
