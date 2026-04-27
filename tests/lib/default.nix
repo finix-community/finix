@@ -12,6 +12,14 @@ let
   # build the nixos test driver with FinitMachine class
   testDriver = import ./driver.nix { inherit pkgs; };
 
+  qemuSerialDevice =
+    if pkgs.stdenv.hostPlatform.isx86 then
+      "ttyS0"
+    else if pkgs.stdenv.hostPlatform.isAarch then
+      "ttyAMA0"
+    else
+      throw "unknown QEMU serial device for ${pkgs.stdenv.hostPlatform.system}";
+
   # evaluate a finix VM configuration
   mkVm =
     nodes: name: nodeConfig:
@@ -27,7 +35,7 @@ let
           nixpkgs.pkgs = pkgs;
 
           boot.kernelParams = [
-            "console=ttyS0,115200n8"
+            "console=${qemuSerialDevice},115200n8"
           ];
 
           # tmpfs root - /nix/store is mounted via 9p from host

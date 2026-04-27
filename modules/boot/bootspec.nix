@@ -18,7 +18,7 @@ let
             // {
               "org.nixos.bootspec.v1" = {
                 system = config.boot.kernelPackages.stdenv.hostPlatform.system;
-                kernel = "${config.boot.kernelPackages.kernel}/bzImage";
+                kernel = "${config.boot.kernelPackages.kernel}/${config.boot.kernelPackages.stdenv.hostPlatform.linux-kernel.target}";
                 kernelParams = config.boot.kernelParams;
                 # label = "${config.system.nixos.distroName} ${config.system.nixos.codeName} ${config.system.nixos.label} (Linux ${config.boot.kernelPackages.kernel.modDirVersion})";
                 label = "finix (Linux ${config.boot.kernelPackages.kernel.modDirVersion})";
