@@ -111,6 +111,8 @@ in
     ./f2fs.nix
     ./fuse.mergerfs.nix
     ./fuse.nix
+    ./luks.nix
+    ./lvm.nix
     ./ntfs3.nix
     ./special.nix
     ./tmpfs.nix
@@ -141,7 +143,7 @@ in
       # <file system> <mount point>   <type>  <options>       <dump>  <pass>
 
       # filesystems
-      ${makeFstabEntries fileSystems { }}
+      ${makeFstabEntries (lib.filter (fs: !lib.elem fs.fsType [ "luks" "lvm" ]) fileSystems) { }}
 
       # swap devices
       ${lib.concatMapStrings makeSwapEntry config.swapDevices}
