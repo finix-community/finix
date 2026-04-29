@@ -17,6 +17,27 @@ in
       '';
     };
 
+    package = lib.mkOption {
+      type = with lib.types; nullOr package;
+      default = null;
+      description = ''
+        The package to use for `getty`.
+      '';
+      example = lib.literalExpression ''
+        pkgs.util-linux // {
+          mainProgram = "agetty";
+        };
+      '';
+    };
+
+    extraArgs = lib.mkOption {
+      type = with lib.types; listOf str;
+      default = [ ];
+      description = ''
+        Additional arguments to pass to {option}`services.getty.package`.
+      '';
+    };
+
     ttys = lib.mkOption {
       type = with lib.types; listOf str;
       default = [
@@ -42,9 +63,15 @@ in
       '';
     };
 
-    finit.ttys = lib.genAttrs cfg.ttys (device: {
-      description = "getty on ${device}";
-      nowait = true;
-    });
+    finit.ttys = lib.genAttrs cfg.ttys (
+      device:
+      {
+        description = "getty on ${device}";
+        nowait = true;
+      }
+      // lib.optionalAttrs (cfg.package != null) {
+        command = "${lib.getExe cfg.package} ${lib.escapeShellArgs cfg.extraArgs} ${device}";
+      }
+    );
   };
 }

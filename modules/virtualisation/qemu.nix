@@ -109,7 +109,7 @@ let
   bootModeArgs = {
     kernel = [
       "-kernel"
-      "${config.boot.kernelPackages.kernel}/bzImage"
+      "${config.boot.kernelPackages.kernel}/${pkgs.stdenv.hostPlatform.linux-kernel.target}"
       "-initrd"
       "${config.boot.initrd.package}/initrd"
       "-append"

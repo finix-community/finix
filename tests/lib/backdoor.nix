@@ -12,6 +12,14 @@
 let
   cfg = config.testing;
 
+  qemuSerialDevice =
+    if pkgs.stdenv.hostPlatform.isx86 then
+      "ttyS0"
+    else if pkgs.stdenv.hostPlatform.isAarch then
+      "ttyAMA0"
+    else
+      throw "unknown QEMU serial device for ${pkgs.stdenv.hostPlatform.system}";
+
   # backdoor script based on NixOS test-instrumentation.nix
   # runs a non-interactive bash that reads commands from /dev/hvc0
   backdoorScript = pkgs.writeShellScript "backdoor" ''
@@ -38,10 +46,10 @@ let
     # redirect stdin/stdout to virtio console
     exec < /dev/hvc0 > /dev/hvc0
 
-    # wait for ttyS0 to be available, then redirect stderr to serial console
+    # wait for the serial console to be available, then redirect stderr to it
     # this matches NixOS behavior and avoids escape sequences from programs
     # like initctl being sent back through the backdoor
-    while ! exec 2> /dev/ttyS0; do
+    while ! exec 2> /dev/${qemuSerialDevice}; do
       sleep 0.1
     done
     echo "connecting to host..." >&2

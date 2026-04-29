@@ -183,14 +183,14 @@ in
             ) config.specialisation}
           ''
           + lib.optionalString config.boot.kernel.enable ''
-            ${coreutils}/bin/ln -s ${config.boot.kernelPackages.kernel}/bzImage $out/kernel
+            ${coreutils}/bin/ln -s ${config.boot.kernelPackages.kernel}/${pkgs.stdenv.hostPlatform.linux-kernel.target} $out/kernel
             ${coreutils}/bin/ln -s ${config.system.modulesTree} $out/kernel-modules
             ${coreutils}/bin/ln -s ${config.hardware.firmware}/lib/firmware $out/firmware
           ''
           + lib.optionalString config.boot.initrd.enable ''
             ${coreutils}/bin/ln -s ${config.boot.initrd.package}/initrd $out/initrd
           ''
-          + lib.optionalString config.finit.enable ''
+          + ''
             cp ${../../finit/switch-to-configuration.sh} $out/bin/switch-to-configuration
             substituteInPlace $out/bin/switch-to-configuration \
               --subst-var out \

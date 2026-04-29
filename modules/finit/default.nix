@@ -715,15 +715,6 @@ in
   ];
 
   options.finit = {
-    enable = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      readOnly = true;
-      description = ''
-        Whether to enable [finit](${pkgs.finit.meta.homepage}) as the system service manager and pid `1`.
-      '';
-    };
-
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.finit;
@@ -889,7 +880,7 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
+  config = {
     assertions = [
       {
         assertion = lib.versionAtLeast cfg.package.version "4.16";
