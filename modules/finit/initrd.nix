@@ -126,7 +126,9 @@ in
           targetRoot=/sysroot
 
           ${lib.concatMapStringsSep "\n" mkMount (
-            lib.filter (lib.getAttr "neededForBoot") (lib.attrValues config.fileSystems)
+            lib.filter (lib.getAttr "neededForBoot") (
+              lib.filter (fs: !lib.elem fs.fsType [ "luks" "lvm" ]) (lib.attrValues config.fileSystems)
+            )
           )}
         '';
       }
@@ -185,7 +187,7 @@ in
             run [S] name:coldplug <service/mdevd/ready> mdevd-coldplug -O 2
           ''}
 
-          task [S] name:fs-import \
+          task [S] name:fs-import tty:@console \
             ${lib.optionalString config.services.mdevd.enable "<run/coldplug/success>"} \
             ${lib.optionalString config.services.udev.enable "<run/udevadm:5/success>"} \
             finix-fs-import
