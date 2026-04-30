@@ -14,8 +14,7 @@
           ...
         }:
         lib.evalModules {
-          inherit specialArgs;
-
+          specialArgs = lib.recursiveUpdate { modules = self.nixosModules; } specialArgs;
           modules = [ self.nixosModules.default ] ++ modules;
         };
     };
