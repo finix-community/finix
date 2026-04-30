@@ -119,7 +119,6 @@ in
       ];
 
     security.pam.environment = lib.mapAttrs (_: default: { inherit default; }) {
-      EDITOR = lib.mkDefault "micro";
       NIX_REMOTE = "daemon";
       NIX_XDG_DESKTOP_PORTAL_DIR = "/run/current-system/sw/share/xdg-desktop-portal/portals";
       PATH = [
