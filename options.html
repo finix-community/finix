@@ -86,7 +86,7 @@
     <details class="toc-category">
       <summary title="boot">
         <span>boot</span>
-        <span class="toc-count">71</span>
+        <span class="toc-count">79</span>
       </summary>
       <ul>
         
@@ -279,6 +279,38 @@
         <li>
           <a href='#option-boot-initrd-supportedFilesystems-fuse-enable' title="boot.initrd.supportedFilesystems.fuse.enable">
             initrd.supportedFilesystems.fuse.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-boot-initrd-supportedFilesystems-luks-enable' title="boot.initrd.supportedFilesystems.luks.enable">
+            initrd.supportedFilesystems.luks.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-boot-initrd-supportedFilesystems-luks-packages' title="boot.initrd.supportedFilesystems.luks.packages">
+            initrd.supportedFilesystems.luks.packages
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-boot-initrd-supportedFilesystems-lvm-enable' title="boot.initrd.supportedFilesystems.lvm.enable">
+            initrd.supportedFilesystems.lvm.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-boot-initrd-supportedFilesystems-lvm-packages' title="boot.initrd.supportedFilesystems.lvm.packages">
+            initrd.supportedFilesystems.lvm.packages
             
             
           </a>
@@ -559,6 +591,38 @@
         <li>
           <a href='#option-boot-supportedFilesystems-fuse-enable' title="boot.supportedFilesystems.fuse.enable">
             supportedFilesystems.fuse.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-boot-supportedFilesystems-luks-enable' title="boot.supportedFilesystems.luks.enable">
+            supportedFilesystems.luks.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-boot-supportedFilesystems-luks-packages' title="boot.supportedFilesystems.luks.packages">
+            supportedFilesystems.luks.packages
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-boot-supportedFilesystems-lvm-enable' title="boot.supportedFilesystems.lvm.enable">
+            supportedFilesystems.lvm.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-boot-supportedFilesystems-lvm-packages' title="boot.supportedFilesystems.lvm.packages">
+            supportedFilesystems.lvm.packages
             
             
           </a>
@@ -7554,6 +7618,58 @@ the device-manager and before mounting file-systems.</p>
   <div class="option-default">Default: <code>false</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/fuse.nix" target="_blank">&lt;finix/modules/filesystems/fuse.nix&gt;</a></code></div>
 </div>
+<div class="option" id="option-boot-initrd-supportedFilesystems-luks-enable">
+  <h3 class="option-name">
+    <a href="#option-boot-initrd-supportedFilesystems-luks-enable" class="option-anchor">boot.initrd.supportedFilesystems.luks.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable LUKS encrypted device support in the initial ramdisk.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/luks.nix" target="_blank">&lt;finix/modules/filesystems/luks.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-boot-initrd-supportedFilesystems-luks-packages">
+  <h3 class="option-name">
+    <a href="#option-boot-initrd-supportedFilesystems-luks-packages" class="option-anchor">boot.initrd.supportedFilesystems.luks.packages</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of package</code></div>
+  <div class="option-description"><html><head></head><body><p>Packages providing LUKS utilities in the initial ramdisk.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[
+  <derivation cryptsetup-2.8.6>
+]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/luks.nix" target="_blank">&lt;finix/modules/filesystems/luks.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-boot-initrd-supportedFilesystems-lvm-enable">
+  <h3 class="option-name">
+    <a href="#option-boot-initrd-supportedFilesystems-lvm-enable" class="option-anchor">boot.initrd.supportedFilesystems.lvm.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable LVM support in the initial ramdisk.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/lvm.nix" target="_blank">&lt;finix/modules/filesystems/lvm.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-boot-initrd-supportedFilesystems-lvm-packages">
+  <h3 class="option-name">
+    <a href="#option-boot-initrd-supportedFilesystems-lvm-packages" class="option-anchor">boot.initrd.supportedFilesystems.lvm.packages</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of package</code></div>
+  <div class="option-description"><html><head></head><body><p>Packages providing LVM utilities in the initial ramdisk.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[
+  <derivation lvm2-2.03.38>
+]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/lvm.nix" target="_blank">&lt;finix/modules/filesystems/lvm.nix&gt;</a></code></div>
+</div>
 <div class="option" id="option-boot-initrd-supportedFilesystems-none-enable">
   <h3 class="option-name">
     <a href="#option-boot-initrd-supportedFilesystems-none-enable" class="option-anchor">boot.initrd.supportedFilesystems.none.enable</a>
@@ -8051,6 +8167,58 @@ that follow this format and can be used directly.</p>
 </body></html></div>
   <div class="option-default">Default: <code>true</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/fuse.nix" target="_blank">&lt;finix/modules/filesystems/fuse.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-boot-supportedFilesystems-luks-enable">
+  <h3 class="option-name">
+    <a href="#option-boot-supportedFilesystems-luks-enable" class="option-anchor">boot.supportedFilesystems.luks.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable LUKS encrypted device support.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/luks.nix" target="_blank">&lt;finix/modules/filesystems/luks.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-boot-supportedFilesystems-luks-packages">
+  <h3 class="option-name">
+    <a href="#option-boot-supportedFilesystems-luks-packages" class="option-anchor">boot.supportedFilesystems.luks.packages</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of package</code></div>
+  <div class="option-description"><html><head></head><body><p>Packages providing LUKS utilities.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[
+  <derivation cryptsetup-2.8.6>
+]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/luks.nix" target="_blank">&lt;finix/modules/filesystems/luks.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-boot-supportedFilesystems-lvm-enable">
+  <h3 class="option-name">
+    <a href="#option-boot-supportedFilesystems-lvm-enable" class="option-anchor">boot.supportedFilesystems.lvm.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable LVM support.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/lvm.nix" target="_blank">&lt;finix/modules/filesystems/lvm.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-boot-supportedFilesystems-lvm-packages">
+  <h3 class="option-name">
+    <a href="#option-boot-supportedFilesystems-lvm-packages" class="option-anchor">boot.supportedFilesystems.lvm.packages</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of package</code></div>
+  <div class="option-description"><html><head></head><body><p>Packages providing lvm utilities.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[
+  <derivation lvm2-2.03.38>
+]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/lvm.nix" target="_blank">&lt;finix/modules/filesystems/lvm.nix&gt;</a></code></div>
 </div>
 <div class="option" id="option-boot-supportedFilesystems-none-enable">
   <h3 class="option-name">
