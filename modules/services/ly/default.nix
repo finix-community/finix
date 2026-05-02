@@ -79,6 +79,10 @@ in
       brightness_up_cmd = lib.mkDefault "${lib.getExe brightnessctl} -q s +10%";
       brightness_down_cmd = lib.mkDefault "${lib.getExe brightnessctl} -q s 10%-";
     }
+    // lib.optionalAttrs (lib.versionAtLeast cfg.package.version "1.5.0") {
+      # write to syslog
+      ly_log = lib.mkDefault null;
+    }
     // lib.optionalAttrs config.services.xserver.enable or false {
       xsessions = "/run/current-system/sw/share/xsessions";
       xauth_cmd = "${pkgs.xorg.xauth}/bin/xauth";
