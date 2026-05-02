@@ -49,7 +49,6 @@
         "dm_mod"
         "dm_crypt"
         "aes"
-        "aes_generic"
         "blowfish"
         "twofish"
         "serpent"
@@ -64,7 +63,7 @@
         "algif_skcipher"
         "cryptd"
         "input_leds"
-      ];
+      ] ++ lib.optionals (lib.versionOlder config.boot.kernelPackages.kernel.version "7.0") [ "aes_generic" ];
 
       boot.initrd.fileSystemImportCommands = lib.mkOrder 500 (lib.concatStringsSep "\n" (
         lib.mapAttrsToList (
