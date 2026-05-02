@@ -721,11 +721,13 @@ in
       defaultText = lib.literalExpression "pkgs.finit";
       apply =
         package:
-        package.overrideAttrs (old: {
-          configureFlags = old.configureFlags ++ [
-            "--with-plugin-path=${finix-setup}/lib/finit/plugins"
-          ];
-        });
+        (package.override {
+          plymouthSupport = config.programs.plymouth.enable;
+          plymouth = config.programs.plymouth.package;
+        }).overrideAttrs
+          (o: {
+            configureFlags = o.configureFlags ++ [ "--with-plugin-path=${finix-setup}/lib/finit/plugins" ];
+          });
       description = ''
         The package to use for `finit`.
 
