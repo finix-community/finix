@@ -20,6 +20,7 @@ let
         partitionIndex
         settings
         validateChecksums
+        secureBoot
         ;
 
       nixPath = config.services.nix-daemon.package;
@@ -31,6 +32,7 @@ let
       efiRemovable = cfg.efiInstallAsRemovable;
       maxGenerations = if cfg.maxGenerations == null then 0 else cfg.maxGenerations;
       hostArchitecture = pkgs.stdenv.hostPlatform.parsed.cpu;
+      fwupdEfiPath = lib.optionalAttrs config.services.fwupd.enable config.services.fwupd.package;
     }
   );
 in

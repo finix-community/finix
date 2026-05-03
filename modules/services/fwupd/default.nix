@@ -93,6 +93,9 @@ in
       conditions = "service/polkit/ready";
       log = true;
       nohup = true;
+      environment = lib.optionalAttrs (config.programs.limine.secureBoot.enable or false) {
+        FWUPD_EFIAPPDIR = "${cfg.package}/libexec/fwupd/efi";
+      };
     };
 
     finit.tmpfiles.rules = [
