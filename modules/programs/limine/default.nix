@@ -239,44 +239,125 @@ in
         Force installation even if the safety checks fail, use absolutely only if necessary!
       '';
     };
+
+    secureBoot = {
+      enable = lib.mkEnableOption null // {
+        description = ''
+          Whether to sign the limine binary with {command}`sbctl`.
+
+          ::: {.note}
+          Requires pre-generated secure boot keys. See {option}`programs.limine.secureBoot.autoGenerateKeys`
+          and {option}`programs.limine.secureBoot.autoEnrollKeys` to automate key management.
+          :::
+        '';
+      };
+
+      autoGenerateKeys = lib.mkEnableOption null // {
+        description = ''
+          Generate keys automatically when none exists during bootloader installation.
+        '';
+      };
+
+      autoEnrollKeys = {
+        enable = lib.mkEnableOption null // {
+          description = ''
+            Enroll automatically generated keys.
+          '';
+        };
+        extraArgs = lib.mkOption {
+          default = [
+            "--microsoft"
+            "--firmware-builtin"
+          ];
+          type = lib.types.listOf lib.types.str;
+          description = ''
+            Extra arguments passed to {command}`sbctl`.
+          '';
+        };
+      };
+
+      sbctl = lib.mkPackageOption pkgs "sbctl" { };
+    };
   };
 
-  config = lib.mkIf cfg.enable {
-    assertions = [
-      {
-        assertion =
-          pkgs.stdenv.hostPlatform.isx86_64
-          || pkgs.stdenv.hostPlatform.isi686
-          || pkgs.stdenv.hostPlatform.isAarch64;
-        message = "Limine can only be installed on aarch64 & x86 platforms";
-      }
-      {
-        assertion = cfg.efiSupport || cfg.biosSupport;
-        message = "Both UEFI support and BIOS support for Limine are disabled, this will result in an unbootable system";
-      }
-    ];
-
-    # TODO: move these somewhere more appropriate
-    boot.supportedFilesystems.efivarfs.enable = lib.mkIf config.boot.loader.efi.canTouchEfiVariables true;
-    fileSystems."/sys/firmware/efi/efivars" = lib.mkIf config.boot.loader.efi.canTouchEfiVariables {
-      device = "efivarfs";
-      fsType = "efivarfs";
-      options = [
-        "defaults"
-        "nofail"
+  config = lib.mkMerge [
+    (lib.mkIf cfg.enable {
+      assertions = [
+        {
+          assertion =
+            pkgs.stdenv.hostPlatform.isx86_64
+            || pkgs.stdenv.hostPlatform.isi686
+            || pkgs.stdenv.hostPlatform.isAarch64;
+          message = "Limine can only be installed on aarch64 & x86 platforms";
+        }
+        {
+          assertion = cfg.efiSupport || cfg.biosSupport;
+          message = "Both UEFI support and BIOS support for Limine are disabled, this will result in an unbootable system";
+        }
       ];
-    };
 
-    programs.limine.settings = {
-      graphics = true;
-      verbose = lib.mkIf cfg.debug true;
+      # TODO: move these somewhere more appropriate
+      boot.supportedFilesystems.efivarfs.enable = lib.mkIf config.boot.loader.efi.canTouchEfiVariables true;
+      fileSystems."/sys/firmware/efi/efivars" = lib.mkIf config.boot.loader.efi.canTouchEfiVariables {
+        device = "efivarfs";
+        fsType = "efivarfs";
+        options = [
+          "defaults"
+          "nofail"
+        ];
+      };
 
-      wallpaper = lib.mkDefault [ defaultWallpaper ];
-      backdrop = lib.mkDefault "2F302F";
-      wallpaper_style = lib.mkDefault "streched";
-    };
+      programs.limine.settings = {
+        graphics = true;
+        verbose = lib.mkIf cfg.debug true;
 
-    # this module supplies an implementation for `providers.bootloader`
-    providers.bootloader.backend = "limine";
-  };
+        wallpaper = lib.mkDefault [ defaultWallpaper ];
+        backdrop = lib.mkDefault "2F302F";
+        wallpaper_style = lib.mkDefault "streched";
+      };
+
+      # this module supplies an implementation for `providers.bootloader`
+      providers.bootloader.backend = "limine";
+    })
+    (lib.mkIf (cfg.enable && cfg.secureBoot.enable) {
+      assertions = [
+        {
+          assertion = cfg.enrollConfig;
+          message = "Disabling enrollConfig allows bypassing secure boot.";
+        }
+        {
+          assertion = cfg.validateChecksums;
+          message = "Disabling validateChecksums allows bypassing secure boot.";
+        }
+        {
+          assertion = cfg.settings.hash_mismatch_panic;
+          message = "Disabling hash_mismatch_panic allows bypassing secure boot.";
+        }
+        {
+          assertion = cfg.efiSupport;
+          message = "Secure boot is only supported on EFI systems.";
+        }
+        {
+          assertion = !cfg.settings.editor_enabled;
+          message = "Editor is unconditionally disabled by Limine.";
+        }
+      ];
+
+      programs.limine.enrollConfig = true;
+      programs.limine.validateChecksums = true;
+      programs.limine.settings.hash_mismatch_panic = true;
+      programs.limine.settings.editor_enabled = false;
+    })
+
+    (lib.mkIf (cfg.enable && cfg.secureBoot.enable && cfg.secureBoot.autoEnrollKeys.enable) {
+      assertions = [
+        {
+          assertion = cfg.secureBoot.autoGenerateKeys;
+          message = "autoEnrollKeys doesn't do anything without autoGenerateKeys.";
+        }
+      ];
+
+      programs.limine.secureBoot.autoGenerateKeys = true;
+    })
+  ];
 }
