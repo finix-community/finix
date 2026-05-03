@@ -13,9 +13,17 @@
           modules ? [ ],
           ...
         }:
-        lib.evalModules {
-          specialArgs = lib.recursiveUpdate { modules = self.nixosModules; } specialArgs;
-          modules = [ self.nixosModules.default ] ++ modules;
+        let
+          config = lib.evalModules {
+            class = "nixos";
+            specialArgs = lib.recursiveUpdate { modules = self.nixosModules; } specialArgs;
+            modules = [ self.nixosModules.default ] ++ modules;
+          };
+        in
+        config
+        // {
+          inherit (config._module.args) pkgs;
+          inherit lib;
         };
     };
 }
