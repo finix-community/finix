@@ -11,13 +11,13 @@ let
   knownVideoDrivers = {
     # Alias so people can keep using "virtualbox" instead of "vboxvideo".
     virtualbox = {
-      modules = [ pkgs.xorg.xf86videovboxvideo ];
+      modules = [ pkgs.xf86-video-vboxvideo ];
       driverName = "vboxvideo";
     };
 
     # Alias so that "radeon" uses the xf86-video-ati driver.
     radeon = {
-      modules = [ pkgs.xorg.xf86videoati ];
+      modules = [ pkgs.xf86-video-ati ];
       driverName = "ati";
     };
 
@@ -230,20 +230,21 @@ in
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [
-      pkgs.xorg.xorgserver.out
-      pkgs.xorg.xf86inputevdev.out # get evdev.4 man page
+      pkgs.xorg-server.out
+      pkgs.xf86-input-evdev.out # get evdev.4 man page
 
-      pkgs.xorg.xrandr
-      pkgs.xorg.xrdb
-      pkgs.xorg.setxkbmap
-      pkgs.xorg.iceauth # required for KDE applications (it's called by dcopserver)
-      pkgs.xorg.xlsclients
-      pkgs.xorg.xset
-      pkgs.xorg.xsetroot
-      pkgs.xorg.xinput
-      pkgs.xorg.xprop
-      pkgs.xorg.xauth
-      pkgs.xorg.xrefresh # optional (elem "virtualbox" cfg.videoDrivers)
+      pkgs.xrandr
+      pkgs.xrdb
+      pkgs.setxkbmap
+      pkgs.iceauth # required for KDE applications (it's called by dcopserver)
+      pkgs.xlsclients
+      pkgs.xset
+      pkgs.xsetroot
+      pkgs.xinput
+      pkgs.xprop
+      pkgs.xauth
+      pkgs.xrefresh # optional (elem "virtualbox" cfg.videoDrivers)
+      pkgs.xinit
 
       pkgs.xterm
     ];
@@ -251,7 +252,7 @@ in
     environment.etc = {
       "X11/xorg.conf".source = configFile;
       "X11/xorg.conf.d/10-evdev.conf".source =
-        "${pkgs.xorg.xf86inputevdev.out}/share/X11/xorg.conf.d/10-evdev.conf";
+        "${pkgs.xf86-input-evdev.out}/share/X11/xorg.conf.d/10-evdev.conf";
       "X11/xkb".source = "${config.services.xserver.xkb.dir}";
 
       "X11/xorg.conf.d/00-keyboard.conf".text = with config.services.xserver; ''
@@ -269,10 +270,10 @@ in
     environment.pathsToLink = [ "/share/X11" ];
 
     services.xserver.modules = lib.concatLists (lib.catAttrs "modules" cfg.drivers) ++ [
-      pkgs.xorg.xorgserver.out
-      pkgs.xorg.xf86inputevdev.out
+      pkgs.xorg-server.out
+      pkgs.xf86-input-evdev.out
 
-      pkgs.xorg.xf86inputlibinput
+      pkgs.xf86-input-libinput
     ];
 
     # FIXME: somehow check for unknown driver names.
@@ -280,10 +281,7 @@ in
       name:
       let
         driver = lib.attrByPath [ name ] (
-          if pkgs.xorg ? ${"xf86video" + name} then
-            { modules = [ pkgs.xorg.${"xf86video" + name} ]; }
-          else
-            null
+          if pkgs.xorg ? ${"xf8-6video" + name} then { modules = [ pkgs.${"xf86-video" + name} ]; } else null
         ) knownVideoDrivers;
       in
       lib.optional (driver != null) (

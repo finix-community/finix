@@ -189,7 +189,7 @@ in
         session required pam_unix.so # unix (order 10200)
       ''
       + lib.optionalString config.services.xserver.enable or false ''
-        session optional pam_xauth.so systemuser=99 xauthpath=${pkgs.xorg.xauth}/bin/xauth # xauth (order 12100)
+        session optional pam_xauth.so systemuser=99 xauthpath=${pkgs.xauth}/bin/xauth # xauth (order 12100)
       '';
     };
 

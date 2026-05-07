@@ -81,7 +81,7 @@ in
     }
     // lib.optionalAttrs config.services.xserver.enable or false {
       xsessions = "/run/current-system/sw/share/xsessions";
-      xauth_cmd = "${pkgs.xorg.xauth}/bin/xauth";
+      xauth_cmd = "${pkgs.xauth}/bin/xauth";
 
       # TODO: x_cmd
     };
