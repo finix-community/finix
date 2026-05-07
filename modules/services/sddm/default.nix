@@ -50,11 +50,11 @@ in
       };
       X11 = {
         # MinimumVT = 7;
-        ServerPath = "${pkgs.xorg.xorgserver.out}/bin/X";
-        XephyrPath = "${pkgs.xorg.xorgserver.out}/bin/Xephyr";
+        ServerPath = "${pkgs.xorg-server.out}/bin/X";
+        XephyrPath = "${pkgs.xorg-server.out}/bin/Xephyr";
         SessionCommand = "${pkgs.kdePackages.sddm}/share/sddm/scripts/Xsession";
         SessionDir = "${pkgs.openbox}/share/xsessions"; # "${dmcfg.sessionData.desktops}/share/xsessions";
-        XauthPath = "${pkgs.xorg.xauth}/bin/xauth";
+        XauthPath = "${pkgs.xauth}/bin/xauth";
         # DisplayCommand = toString Xsetup;
         # DisplayStopCommand = toString Xstop;
         # EnableHiDPI = cfg.enableHidpi;
