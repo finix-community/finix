@@ -44,6 +44,7 @@ libc = CDLL("libc.so.6")
 limine_install_dir: Optional[str] = None
 paths: Dict[str, bool] = {}
 
+
 def config(*path: str) -> Optional[Any]:
     result = install_config
     for component in path:
@@ -401,6 +402,10 @@ def install_bootloader() -> None:
             partition formatted as FAT.
         '''))
 
+    if config('secureBoot', 'enable') and not config('secureBoot', 'autoGenerateKeys') and not os.path.exists("/var/lib/sbctl"):
+        print("There are no sbctl secure boot keys present. Please generate some.")
+        sys.exit(1)
+
     if not os.path.exists(limine_install_dir):
         os.makedirs(limine_install_dir)
     else:
@@ -507,6 +512,42 @@ def install_bootloader() -> None:
             except:
                 print('error: failed to enroll limine config.', file=sys.stderr)
                 sys.exit(1)
+
+        if config('secureBoot', 'enable'):
+            sbctl = os.path.join(str(config('secureBoot', 'sbctl')), 'bin', 'sbctl')
+            if not os.path.exists("/var/lib/sbctl") and config('secureBoot', 'autoGenerateKeys'):
+                print('auto generating keys')
+                try:
+                    subprocess.run([sbctl, 'create-keys'])
+                except:
+                    print('error: failed to create keys', file=sys.stderr)
+                    sys.exit(1)
+                if config('secureBoot', 'autoEnrollKeys', 'enable'):
+                    try:
+                        command = [sbctl, 'enroll-keys']
+                        command.extend(config('secureBoot', 'autoEnrollKeys', 'extraArgs'))
+                        subprocess.run(command)
+                    except:
+                        print('error: failed to enroll keys', file=sys.stderr)
+                        sys.exit(1)
+
+            print('signing limine...')
+            try:
+                subprocess.run([sbctl, 'sign', dest_path])
+            except:
+                print('error: failed to sign limine', file=sys.stderr)
+                sys.exit(1)
+
+            import glob
+            fwupd_path = config('fwupdEfiPath')
+            if fwupd_path:
+                for efi in glob.glob(f'{fwupd_path}/libexec/fwupd/efi/*.efi'):
+                    print(f'signing fwupd: {os.path.basename(efi)}')
+                    try:
+                        subprocess.run([sbctl, 'sign', efi])
+                    except:
+                        print(f'error: failed to sign fwupd efi {efi}', file=sys.stderr)
+                        sys.exit(1)
 
         if not config('efiRemovable') and not config('canTouchEfiVariables'):
             print('warning: boot.loader.efi.canTouchEfiVariables is set to false while boot.loader.limine.efiInstallAsRemovable.\n  This may render the system unbootable.')
