@@ -281,7 +281,7 @@ in
       name:
       let
         driver = lib.attrByPath [ name ] (
-          if pkgs.xorg ? ${"xf8-6video" + name} then { modules = [ pkgs.${"xf86-video" + name} ]; } else null
+          if pkgs ? ${"xf86-video-" + name} then { modules = [ pkgs.${"xf86-video-" + name} ]; } else null
         ) knownVideoDrivers;
       in
       lib.optional (driver != null) (
