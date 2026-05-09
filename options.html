@@ -2858,7 +2858,7 @@
     <details class="toc-category">
       <summary title="programs">
         <span>programs</span>
-        <span class="toc-count">110</span>
+        <span class="toc-count">115</span>
       </summary>
       <ul>
         
@@ -3219,6 +3219,46 @@
         <li>
           <a href='#option-programs-limine-partitionIndex' title="programs.limine.partitionIndex">
             limine.partitionIndex
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs-limine-secureBoot-autoEnrollKeys-enable' title="programs.limine.secureBoot.autoEnrollKeys.enable">
+            limine.secureBoot.autoEnrollKeys.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs-limine-secureBoot-autoEnrollKeys-extraArgs' title="programs.limine.secureBoot.autoEnrollKeys.extraArgs">
+            limine.secureBoot.autoEnrollKeys.extraArgs
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs-limine-secureBoot-autoGenerateKeys' title="programs.limine.secureBoot.autoGenerateKeys">
+            limine.secureBoot.autoGenerateKeys
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs-limine-secureBoot-enable' title="programs.limine.secureBoot.enable">
+            limine.secureBoot.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs-limine-secureBoot-sbctl' title="programs.limine.secureBoot.sbctl">
+            limine.secureBoot.sbctl
             
             
           </a>
@@ -12471,6 +12511,77 @@ garbage collected yet.</p>
   <div class="option-description"><html><head></head><body><p>The 1-based index of the dedicated partition for limine's second stage.</p>
 </body></html></div>
   <div class="option-default">Default: <code>null</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/limine" target="_blank">&lt;finix/modules/programs/limine&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs-limine-secureBoot-autoEnrollKeys-enable">
+  <h3 class="option-name">
+    <a href="#option-programs-limine-secureBoot-autoEnrollKeys-enable" class="option-anchor">programs.limine.secureBoot.autoEnrollKeys.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Enroll automatically generated keys.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-example">Example: <code>true</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/limine" target="_blank">&lt;finix/modules/programs/limine&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs-limine-secureBoot-autoEnrollKeys-extraArgs">
+  <h3 class="option-name">
+    <a href="#option-programs-limine-secureBoot-autoEnrollKeys-extraArgs" class="option-anchor">programs.limine.secureBoot.autoEnrollKeys.extraArgs</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>Extra arguments passed to <code class="command">sbctl</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[
+  "--microsoft"
+  "--firmware-builtin"
+]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/limine" target="_blank">&lt;finix/modules/programs/limine&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs-limine-secureBoot-autoGenerateKeys">
+  <h3 class="option-name">
+    <a href="#option-programs-limine-secureBoot-autoGenerateKeys" class="option-anchor">programs.limine.secureBoot.autoGenerateKeys</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Generate keys automatically when none exists during bootloader installation.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-example">Example: <code>true</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/limine" target="_blank">&lt;finix/modules/programs/limine&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs-limine-secureBoot-enable">
+  <h3 class="option-name">
+    <a href="#option-programs-limine-secureBoot-enable" class="option-anchor">programs.limine.secureBoot.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to sign the limine binary with <code class="command">sbctl</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Requires pre-generated secure boot keys. See <a class="option-reference" href="options.html#option-programs-limine-secureBoot-autoGenerateKeys"><code>programs.limine.secureBoot.autoGenerateKeys</code></a>
+and <a class="option-reference" href="options.html#option-programs-limine-secureBoot-autoEnrollKeys"><code>programs.limine.secureBoot.autoEnrollKeys</code></a> to automate key management.</p>
+</div>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-example">Example: <code>true</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/limine" target="_blank">&lt;finix/modules/programs/limine&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs-limine-secureBoot-sbctl">
+  <h3 class="option-name">
+    <a href="#option-programs-limine-secureBoot-sbctl" class="option-anchor">programs.limine.secureBoot.sbctl</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The sbctl package to use.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.sbctl</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/limine" target="_blank">&lt;finix/modules/programs/limine&gt;</a></code></div>
 </div>
 <div class="option" id="option-programs-limine-settings">
