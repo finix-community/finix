@@ -7,6 +7,35 @@
 let
   cfg = config.services.xserver;
 
+  xorg-server' = pkgs.xorg-server.override (
+    lib.optionalAttrs config.services.mdevd.enable {
+      udev = pkgs.libudev-zero;
+    }
+  );
+
+  xf86-input-evdev' = pkgs.xf86-input-evdev.override (
+    lib.optionalAttrs config.services.mdevd.enable {
+      udev = pkgs.libudev-zero;
+      xorg-server = xorg-server';
+    }
+  );
+
+  xf86-input-libinput' = pkgs.xf86-input-libinput.override (
+    lib.optionalAttrs config.services.mdevd.enable {
+      xorg-server = xorg-server';
+      libinput = pkgs.libinput.override {
+        udev = pkgs.libudev-zero;
+        wacomSupport = false;
+      };
+    }
+  );
+
+  xinit' = pkgs.xinit.override (
+    lib.optionalAttrs config.services.mdevd.enable {
+      xorg-server = xorg-server';
+    }
+  );
+
   # Map video driver names to driver packages. FIXME: move into card-specific modules.
   knownVideoDrivers = {
     # Alias so people can keep using "virtualbox" instead of "vboxvideo".
@@ -230,8 +259,8 @@ in
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [
-      pkgs.xorg-server.out
-      pkgs.xf86-input-evdev.out # get evdev.4 man page
+      xorg-server'.out
+      xf86-input-evdev'.out # get evdev.4 man page
 
       pkgs.xrandr
       pkgs.xrdb
@@ -244,7 +273,7 @@ in
       pkgs.xprop
       pkgs.xauth
       pkgs.xrefresh # optional (elem "virtualbox" cfg.videoDrivers)
-      pkgs.xinit
+      xinit'
 
       pkgs.xterm
     ];
@@ -252,7 +281,7 @@ in
     environment.etc = {
       "X11/xorg.conf".source = configFile;
       "X11/xorg.conf.d/10-evdev.conf".source =
-        "${pkgs.xf86-input-evdev.out}/share/X11/xorg.conf.d/10-evdev.conf";
+        "${xf86-input-evdev'.out}/share/X11/xorg.conf.d/10-evdev.conf";
       "X11/xkb".source = "${config.services.xserver.xkb.dir}";
 
       "X11/xorg.conf.d/00-keyboard.conf".text = with config.services.xserver; ''
@@ -270,10 +299,9 @@ in
     environment.pathsToLink = [ "/share/X11" ];
 
     services.xserver.modules = lib.concatLists (lib.catAttrs "modules" cfg.drivers) ++ [
-      pkgs.xorg-server.out
-      pkgs.xf86-input-evdev.out
-
-      pkgs.xf86-input-libinput
+      xorg-server'.out
+      xf86-input-evdev'.out
+      xf86-input-libinput'
     ];
 
     # FIXME: somehow check for unknown driver names.
