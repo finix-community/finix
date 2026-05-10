@@ -2858,7 +2858,7 @@
     <details class="toc-category">
       <summary title="programs">
         <span>programs</span>
-        <span class="toc-count">115</span>
+        <span class="toc-count">123</span>
       </summary>
       <ul>
         
@@ -3315,6 +3315,70 @@
         <li>
           <a href='#option-programs-limine-validateChecksums' title="programs.limine.validateChecksums">
             limine.validateChecksums
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs-lxqt-enable' title="programs.lxqt.enable">
+            lxqt.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs-lxqt-excludePackages' title="programs.lxqt.excludePackages">
+            lxqt.excludePackages
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs-lxqt-extraPackages' title="programs.lxqt.extraPackages">
+            lxqt.extraPackages
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs-lxqt-iconTheme' title="programs.lxqt.iconTheme">
+            lxqt.iconTheme
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs-lxqt-wayland-compositor' title="programs.lxqt.wayland.compositor">
+            lxqt.wayland.compositor
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs-lxqt-wayland-enable' title="programs.lxqt.wayland.enable">
+            lxqt.wayland.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs-lxqt-xsession-enable' title="programs.lxqt.xsession.enable">
+            lxqt.xsession.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs-lxqt-xsession-windowManager' title="programs.lxqt.xsession.windowManager">
+            lxqt.xsession.windowManager
             
             
           </a>
@@ -12677,6 +12741,102 @@ If more than one is specified, a random one will be selected at boot.</p>
   <div class="option-default">Default: <code>true</code></div>
   <div class="option-example">Example: <code>true</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/limine" target="_blank">&lt;finix/modules/programs/limine&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs-lxqt-enable">
+  <h3 class="option-name">
+    <a href="#option-programs-lxqt-enable" class="option-anchor">programs.lxqt.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://lxqt-project.org/">LXQt</a>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/lxqt" target="_blank">&lt;finix/modules/programs/lxqt&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs-lxqt-excludePackages">
+  <h3 class="option-name">
+    <a href="#option-programs-lxqt-excludePackages" class="option-anchor">programs.lxqt.excludePackages</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of package</code></div>
+  <div class="option-description"><html><head></head><body><p>Which LXQt packages to exclude from the default environment.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/lxqt" target="_blank">&lt;finix/modules/programs/lxqt&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs-lxqt-extraPackages">
+  <h3 class="option-name">
+    <a href="#option-programs-lxqt-extraPackages" class="option-anchor">programs.lxqt.extraPackages</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of package</code></div>
+  <div class="option-description"><html><head></head><body><p>Extra packages to be installed system wide.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/lxqt" target="_blank">&lt;finix/modules/programs/lxqt&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs-lxqt-iconTheme">
+  <h3 class="option-name">
+    <a href="#option-programs-lxqt-iconTheme" class="option-anchor">programs.lxqt.iconTheme</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The package that provides a default icon theme.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.kdePackages.breeze-icons</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/lxqt" target="_blank">&lt;finix/modules/programs/lxqt&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs-lxqt-wayland-compositor">
+  <h3 class="option-name">
+    <a href="#option-programs-lxqt-wayland-compositor" class="option-anchor">programs.lxqt.wayland.compositor</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The default Wayland compositor package to use.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.labwc</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/lxqt" target="_blank">&lt;finix/modules/programs/lxqt&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs-lxqt-wayland-enable">
+  <h3 class="option-name">
+    <a href="#option-programs-lxqt-wayland-enable" class="option-anchor">programs.lxqt.wayland.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable the LXQt desktop environment's Wayland session.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>true</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/lxqt" target="_blank">&lt;finix/modules/programs/lxqt&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs-lxqt-xsession-enable">
+  <h3 class="option-name">
+    <a href="#option-programs-lxqt-xsession-enable" class="option-anchor">programs.lxqt.xsession.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable the LXQt desktop environment's X11 session.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/lxqt" target="_blank">&lt;finix/modules/programs/lxqt&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs-lxqt-xsession-windowManager">
+  <h3 class="option-name">
+    <a href="#option-programs-lxqt-xsession-windowManager" class="option-anchor">programs.lxqt.xsession.windowManager</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The default X11 window manager package to use.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.openbox</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/lxqt" target="_blank">&lt;finix/modules/programs/lxqt&gt;</a></code></div>
 </div>
 <div class="option" id="option-programs-mangowc-enable">
   <h3 class="option-name">
