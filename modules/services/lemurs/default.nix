@@ -80,7 +80,8 @@ in
         ];
       };
 
-      wayland.wayland_sessions_path = "/etc/wayland-sessions";
+      wayland.wayland_sessions_path = "/run/current-system/sw/share/wayland-sessions";
+      x11.xsessions_path = "/run/current-system/sw/share/xsessions";
     };
 
     security.pam.services.${cfg.settings.pam_service} = {
