@@ -66,10 +66,7 @@ in
     services.ly.settings = {
       service_name = "ly";
       waylandsessions = "/run/current-system/sw/share/wayland-sessions";
-
-      # TODO: these scripts should be included in the nixpkgs package
       setup_cmd = lib.mkDefault "${cfg.package}/etc/setup.sh";
-      # start_cmd = "";
 
       # defer to pam for PATH
       path = null;
@@ -80,33 +77,36 @@ in
       brightness_down_cmd = lib.mkDefault "${lib.getExe brightnessctl} -q s 10%-";
     }
     // lib.optionalAttrs config.services.xserver.enable or false {
+      xauth_cmd = "/run/current-system/sw/bin/xauth";
+      x_cmd = "/run/current-system/sw/bin/X";
       xsessions = "/run/current-system/sw/share/xsessions";
-      xauth_cmd = "${pkgs.xauth}/bin/xauth";
-
-      # TODO: x_cmd
     };
 
     environment.etc."ly/config.ini".source = format.generate "config.ini" cfg.settings;
     environment.pathsToLink = [ "/share/ly" ];
     environment.systemPackages = [ cfg.package ];
 
-    security.pam.services.ly.text = ''
-      # Account management.
-      account required pam_unix.so
-      # Authentication management.
-      auth optional pam_unix.so likeauth nullok
-      auth sufficient pam_unix.so likeauth nullok try_first_pass
-      auth required pam_deny.so
-      # Password management.
-      password sufficient pam_unix.so nullok yescrypt
-      # Session management.
-      session required pam_env.so debug conffile=/etc/security/pam_env.conf readenv=1
-      session required pam_unix.so
-      session optional pam_loginuid.so
-      ${lib.optionalString config.services.elogind.enable "session optional ${pkgs.elogind}/lib/security/pam_elogind.so"}
-      ${lib.optionalString config.services.seatd.enable "session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so"}
-      session required ${config.security.pam.package}/lib/security/pam_lastlog.so silent
-    '';
+    security.pam.services = lib.optionalAttrs (cfg.settings.service_name == "ly") {
+      ly = {
+        text = ''
+          # Account management.
+          account required pam_unix.so
+          # Authentication management.
+          auth optional pam_unix.so likeauth nullok
+          auth sufficient pam_unix.so likeauth nullok try_first_pass
+          auth required pam_deny.so
+          # Password management.
+          password sufficient pam_unix.so nullok yescrypt
+          # Session management.
+          session required pam_env.so debug conffile=/etc/security/pam_env.conf readenv=1
+          session required pam_unix.so
+          session optional pam_loginuid.so
+          ${lib.optionalString config.services.elogind.enable "session optional ${pkgs.elogind}/lib/security/pam_elogind.so"}
+          ${lib.optionalString config.services.seatd.enable "session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so"}
+          session required ${config.security.pam.package}/lib/security/pam_lastlog.so silent
+        '';
+      };
+    };
 
     # Disable the tty that ly runs on
     finit.ttys."tty${toString cfg.tty}".enable = false;
