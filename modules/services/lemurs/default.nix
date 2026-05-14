@@ -22,7 +22,11 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.lemurs;
+      default = pkgs.lemurs.overrideAttrs (o: {
+        postInstall = ''
+          install -Dm0755 extra/xsetup.sh "$out/etc/xsetup.sh"
+        '';
+      });
       defaultText = lib.literalExpression "pkgs.lemurs";
       description = ''
         The package to use for `lemurs`.
@@ -42,10 +46,8 @@ in
   config = lib.mkIf cfg.enable {
     services.lemurs.settings = {
       tty = 7;
-
       # TODO: sync with pam environment variables
-      initial_path = "${config.security.wrapperDir}:/run/current-system/sw/bin";
-
+      initial_path = "${config.security.wrapperDir}:/etc/profiles/per-user/$USER/bin:/run/current-system/sw/bin";
       pam_service = "lemurs";
 
       power_controls = {
@@ -81,34 +83,45 @@ in
       };
 
       wayland.wayland_sessions_path = "/run/current-system/sw/share/wayland-sessions";
-      x11.xsessions_path = "/run/current-system/sw/share/xsessions";
+
+      x11 = lib.mkIf (config.services.xserver.enable or false) {
+        xauth_path = "/run/current-system/sw/bin/xauth";
+        xserver_path = "/run/current-system/sw/bin/X";
+        xsessions_path = "/run/current-system/sw/share/xsessions";
+        xsetup_path = "${cfg.package}/etc/xsetup.sh";
+      };
     };
 
-    security.pam.services.${cfg.settings.pam_service} = {
-      text = ''
-        # Account management.
-        account required pam_unix.so # unix (order 10900)
+    security.pam.services = lib.optionalAttrs (cfg.settings.pam_service == "lemurs") {
+      lemurs = {
+        text = ''
+          # Account management.
+          account required pam_unix.so # unix (order 10900)
 
-        # Authentication management.
-        auth optional pam_unix.so likeauth nullok # unix-early (order 11500)
-        auth sufficient pam_unix.so likeauth nullok try_first_pass # unix (order 12800)
-        auth required pam_deny.so # deny (order 13600)
+          # Authentication management.
+          auth optional pam_unix.so likeauth nullok # unix-early (order 11500)
+          auth sufficient pam_unix.so likeauth nullok try_first_pass # unix (order 12800)
+          auth required pam_deny.so # deny (order 13600)
 
-        # Password management.
-        password sufficient pam_unix.so nullok yescrypt # unix (order 10200)
+          # Password management.
+          password sufficient pam_unix.so nullok yescrypt # unix (order 10200)
 
-        # Session management.
-        session required pam_env.so debug conffile=/etc/security/pam_env.conf readenv=1 # env (order 10100)
-        session required pam_unix.so # unix (order 10200)
-        # https://github.com/coastalwhite/lemurs/issues/166
-        session optional pam_loginuid.so # loginuid (order 10300)
-        # session optional ${pkgs.elogind}/lib/security/pam_elogind.so debug # need this i think
-        session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so
-        session required ${config.security.pam.package}/lib/security/pam_lastlog.so silent # lastlog (order 10700)
-      '';
+          # Session management.
+          session required pam_env.so debug conffile=/etc/security/pam_env.conf readenv=1 # env (order 10100)
+          session required pam_unix.so # unix (order 10200)
+          # https://github.com/coastalwhite/lemurs/issues/166
+          session optional pam_loginuid.so # loginuid (order 10300)
+          ${lib.optionalString config.services.elogind.enable "session optional ${pkgs.elogind}/lib/security/pam_elogind.so"}
+          ${lib.optionalString config.services.seatd.enable "session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so"}
+          session required ${config.security.pam.package}/lib/security/pam_lastlog.so silent # lastlog (order 10700)
+        '';
+      };
     };
 
     environment.etc."lemurs/config.toml".source = configFile;
+
+    # disable the tty that lemurs runs on
+    finit.ttys."tty${toString cfg.settings.tty}".enable = false;
 
     finit.services.lemurs = {
       description = "lemurs terminal user interface display/login manager";
