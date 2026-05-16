@@ -2452,7 +2452,7 @@
     <details class="toc-category">
       <summary title="hardware">
         <span>hardware</span>
-        <span class="toc-count">33</span>
+        <span class="toc-count">35</span>
       </summary>
       <ul>
         
@@ -2717,6 +2717,22 @@
         <li>
           <a href='#option-hardware-nvidia-videoAcceleration' title="hardware.nvidia.videoAcceleration">
             nvidia.videoAcceleration
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-hardware-uinput-enable' title="hardware.uinput.enable">
+            uinput.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-hardware-uinput-group' title="hardware.uinput.group">
+            uinput.group
             
             
           </a>
@@ -4308,7 +4324,7 @@
     <details class="toc-category">
       <summary title="services">
         <span>services</span>
-        <span class="toc-count">333</span>
+        <span class="toc-count">340</span>
       </summary>
       <ul>
         
@@ -5325,6 +5341,62 @@
         <li>
           <a href='#option-services-jellyfin-user' title="services.jellyfin.user">
             jellyfin.user
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-keyd-debug' title="services.keyd.debug">
+            keyd.debug
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-keyd-enable' title="services.keyd.enable">
+            keyd.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-keyd-keyboards' title="services.keyd.keyboards">
+            keyd.keyboards
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-keyd-keyboards-&lt;name&gt;-extraConfig' title="services.keyd.keyboards.&lt;name&gt;.extraConfig">
+            keyd.keyboards.&lt;name&gt;.extraConfig
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-keyd-keyboards-&lt;name&gt;-ids' title="services.keyd.keyboards.&lt;name&gt;.ids">
+            keyd.keyboards.&lt;name&gt;.ids
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-keyd-keyboards-&lt;name&gt;-settings' title="services.keyd.keyboards.&lt;name&gt;.settings">
+            keyd.keyboards.&lt;name&gt;.settings
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-keyd-package' title="services.keyd.package">
+            keyd.package
             
             
           </a>
@@ -11825,6 +11897,41 @@ option is supported is used
   <div class="option-example">Example: <code>true</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia.nix" target="_blank">&lt;finix/modules/hardware/video/nvidia.nix&gt;</a></code></div>
 </div>
+<div class="option" id="option-hardware-uinput-enable">
+  <h3 class="option-name">
+    <a href="#option-hardware-uinput-enable" class="option-anchor">hardware.uinput.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://kernel.org/doc/html/latest/input/uinput.html">uinput</a> support.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/uinput.nix" target="_blank">&lt;finix/modules/hardware/uinput.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-hardware-uinput-group">
+  <h3 class="option-name">
+    <a href="#option-hardware-uinput-group" class="option-anchor">hardware.uinput.group</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>string</code></div>
+  <div class="option-description"><html><head></head><body><p>Group to own the <code>uinput</code> devices.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you want non-<code>root</code> users to be able to access these <code>uinput</code> devices, add
+them to this group.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this group will automatically be created
+on system activation, otherwise you are responsible for
+ensuring the group exists before system activation has completed.</p>
+</div>
+</body></html></div>
+  <div class="option-default">Default: <code>"uinput"</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/uinput.nix" target="_blank">&lt;finix/modules/hardware/uinput.nix&gt;</a></code></div>
+</div>
 <div class="option" id="option-i18n-defaultLocale">
   <h3 class="option-name">
     <a href="#option-i18n-defaultLocale" class="option-anchor">i18n.defaultLocale</a>
@@ -15991,6 +16098,136 @@ ensuring the user exists before the <code>jellyfin</code> service starts.</p>
 </body></html></div>
   <div class="option-default">Default: <code>"jellyfin"</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/jellyfin" target="_blank">&lt;finix/modules/services/jellyfin&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-keyd-debug">
+  <h3 class="option-name">
+    <a href="#option-services-keyd-debug" class="option-anchor">services.keyd.debug</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/keyd" target="_blank">&lt;finix/modules/services/keyd&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-keyd-enable">
+  <h3 class="option-name">
+    <a href="#option-services-keyd-enable" class="option-anchor">services.keyd.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://github.com/rvaiya/keyd">keyd</a> as a system service.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/keyd" target="_blank">&lt;finix/modules/services/keyd&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-keyd-keyboards">
+  <h3 class="option-name">
+    <a href="#option-services-keyd-keyboards" class="option-anchor">services.keyd.keyboards</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>attribute set of (submodule)</code></div>
+  <div class="option-description"><html><head></head><body><p><code>keyd</code> configuration. See <a href="https://man.archlinux.org/man/extra/keyd/keyd.1" class="manpage-reference">keyd(1)</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-example">Example: <pre><code>{
+  default = {
+    ids = [ "*" ];
+    settings = {
+      main = {
+        capslock = "overload(control, esc)";
+      };
+    };
+  };
+  externalKeyboard = {
+    ids = [ "1ea7:0907" ];
+    settings = {
+      main = {
+        esc = capslock;
+      };
+    };
+  };
+}
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/keyd" target="_blank">&lt;finix/modules/services/keyd&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-keyd-keyboards-&lt;name&gt;-extraConfig">
+  <h3 class="option-name">
+    <a href="#option-services-keyd-keyboards-&lt;name&gt;-extraConfig" class="option-anchor">services.keyd.keyboards.&lt;name&gt;.extraConfig</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>strings concatenated with "\n"</code></div>
+  <div class="option-description"><html><head></head><body><p>Extra configuration that is appended to the end of the file.
+<strong>Do not</strong> write <code>ids</code> section here, use a separate option for it.
+You can use this option to define compound layers that must always be defined after the layer they are comprised.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>""</code></div>
+  <div class="option-example">Example: <pre><code>''
+  [control+shift]
+  h = left
+''</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/keyd" target="_blank">&lt;finix/modules/services/keyd&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-keyd-keyboards-&lt;name&gt;-ids">
+  <h3 class="option-name">
+    <a href="#option-services-keyd-keyboards-&lt;name&gt;-ids" class="option-anchor">services.keyd.keyboards.&lt;name&gt;.ids</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>Device identifiers, as shown by <a href="https://man.archlinux.org/man/extra/keyd/keyd.1" class="manpage-reference">keyd(1)</a>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[
+  ""
+]</code></div>
+  <div class="option-example">Example: <pre><code>[
+  "*"
+  "-0123:0456"
+]</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/keyd" target="_blank">&lt;finix/modules/services/keyd&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-keyd-keyboards-&lt;name&gt;-settings">
+  <h3 class="option-name">
+    <a href="#option-services-keyd-keyboards-&lt;name&gt;-settings" class="option-anchor">services.keyd.keyboards.&lt;name&gt;.settings</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</code></div>
+  <div class="option-description"><html><head></head><body><p>Configuration, except <code>ids</code> section, that is written to <code class="file-path">/etc/keyd/&lt;keyboard&gt;.conf</code>.
+Appropriate names can be used to write non-alpha keys, for example "equal" instead of "=" sign (see &lt;<a href="https://github.com/NixOS/nixpkgs/issues/236622">https://github.com/NixOS/nixpkgs/issues/236622</a>&gt;).
+See &lt;<a href="https://github.com/rvaiya/keyd">https://github.com/rvaiya/keyd</a>&gt; for how to configure.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-example">Example: <pre><code>{
+  main = {
+    capslock = "overload(control,esc)";
+    rightalt = "layer(rightalt)";
+  };
+  rightalt = {
+    h = "left";
+    j = "down";
+    k = "up";
+    l = "right";
+  };
+}</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/keyd" target="_blank">&lt;finix/modules/services/keyd&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-keyd-package">
+  <h3 class="option-name">
+    <a href="#option-services-keyd-package" class="option-anchor">services.keyd.package</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>keyd</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.keyd</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/keyd" target="_blank">&lt;finix/modules/services/keyd&gt;</a></code></div>
 </div>
 <div class="option" id="option-services-lemurs-enable">
   <h3 class="option-name">
