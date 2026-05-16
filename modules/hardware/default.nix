@@ -24,7 +24,7 @@ in
     ./console.nix
     ./graphics.nix
     ./i2c.nix
-
+    ./uinput.nix
     ./video/nvidia.nix
   ];
 
