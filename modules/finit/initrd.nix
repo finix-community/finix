@@ -7,6 +7,8 @@
 let
   cfg = config.boot.initrd;
 
+  grantAccess = cfg.emergencyAccess == true || lib.isString cfg.emergencyAccess;
+
   mkMount =
     mnt:
     ''
@@ -60,6 +62,21 @@ let
   };
 in
 {
+  options.boot.initrd.emergencyAccess = lib.mkOption {
+    type = with lib.types; nullOr (either bool (passwdEntry str));
+    default = false;
+    description = ''
+      Set to `true` for unauthenticated emergency access to the initramfs
+      rescue shell, and `false` or `null` for no access.
+
+      Can also be set to a hashed super user password to allow
+      authenticated access to the rescue mode.
+
+      When access is denied, finix prints the failure reason on console
+      and reboots after 10s instead of opening a shell.
+    '';
+  };
+
   config = {
     boot.initrd.contents = [
       {
@@ -127,7 +144,13 @@ in
 
           ${lib.concatMapStringsSep "\n" mkMount (
             lib.filter (lib.getAttr "neededForBoot") (
-              lib.filter (fs: !lib.elem fs.fsType [ "luks" "lvm" ]) (lib.attrValues config.fileSystems)
+              lib.filter (
+                fs:
+                !lib.elem fs.fsType [
+                  "luks"
+                  "lvm"
+                ]
+              ) (lib.attrValues config.fileSystems)
             )
           )}
         '';
@@ -148,9 +171,10 @@ in
         target = "/usr/local/bin/finix-switch-root";
         source = pkgs.writeScript "finix-switch-root" ''
           #!/bin/sh
+          set -u
 
           # process the kernel command line to find init=
-          export stage2Init=/init
+          stage2Init=/init
           for o in $(cat /proc/cmdline); do
             case $o in
               init=*)
@@ -160,8 +184,42 @@ in
             esac
           done
 
-          # pass the original stage2Init path - this becomes argv[0] in stage 2
-          # the finix-setup finit plugin uses argv[0] to derive systemConfig
+          # TODO: modify `initctl switch-root` call in finit to have a proper return code
+          if [ ! -d /sysroot ] || ! mountpoint -q /sysroot || [ ! -x "/sysroot$stage2Init" ]; then
+            cat > /dev/console <<EOF
+
+          ==========================================
+          ${
+            if !grantAccess then
+              ''
+                rescue shell is disabled
+
+                rebooting in 10s
+              ''
+            else
+              ''
+                to diagnose:   initctl status; initctl cond dump
+                to continue:   initctl switch-root /sysroot $stage2Init
+                to reboot:     reboot -f
+              ''
+          }
+
+          EOF
+            ${
+              if !grantAccess then
+                ''
+                  sleep 10
+                  exec reboot -f
+                ''
+              else
+                # exit non-zero so finit emits <run/switch-root/failure>,
+                # which triggers the rescue tty in finit.conf
+                ''
+                  exit 1
+                ''
+            }
+          fi
+
           exec initctl switch-root /sysroot "$stage2Init"
         '';
       }
@@ -202,7 +260,8 @@ in
             service [S] <!> notify:s6 /bin/udevd --ready-notify=%n
           ''}
 
-          run [1] finix-switch-root
+          run [1] name:switch-root finix-switch-root
+          tty [1] <run/switch-root/failure> @console rescue
         '';
       }
       {
@@ -228,9 +287,19 @@ in
       }
       {
         target = "/etc/shadow";
-        source = pkgs.writeText "shadow" ''
-          root::1:0:99999:7:::
-        '';
+        source =
+          let
+            password =
+              if !grantAccess then
+                "*"
+              else if lib.isString cfg.emergencyAccess then
+                cfg.emergencyAccess
+              else
+                "";
+          in
+          pkgs.writeText "shadow" ''
+            root:${password}:1:0:99999:7:::
+          '';
       }
       { source = "${config.finit.package}/libexec"; }
       { source = "${config.finit.package}/lib/finit/"; }
