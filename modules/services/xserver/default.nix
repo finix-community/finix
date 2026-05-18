@@ -334,13 +334,14 @@ in
 
     environment.pathsToLink = [ "/share/X11" ];
 
-    finit.tmpfiles.rules = lib.optional config.hardware.nvidia.enable
-      # Remove the following log message:
-      #    (WW) NVIDIA: Failed to bind sideband socket to
-      #    (WW) NVIDIA:     '/var/run/nvidia-xdriver-b4f69129' Permission denied
-      #
-      # https://bbs.archlinux.org/viewtopic.php?pid=1909115#p1909115
-      "d /run/nvidia-xdriver 0770 root users";
+    finit.tmpfiles.rules =
+      lib.optional config.hardware.nvidia.enable
+        # Remove the following log message:
+        #    (WW) NVIDIA: Failed to bind sideband socket to
+        #    (WW) NVIDIA:     '/var/run/nvidia-xdriver-b4f69129' Permission denied
+        #
+        # https://bbs.archlinux.org/viewtopic.php?pid=1909115#p1909115
+        "d /run/nvidia-xdriver 0770 root users";
 
     services.xserver.modules = lib.concatLists (lib.catAttrs "modules" cfg.drivers) ++ [
       xorg-server'.out
@@ -349,72 +350,73 @@ in
     ];
 
     # FIXME: somehow check for unknown driver names.
-    services.xserver.drivers = lib.flip lib.concatMap cfg.videoDrivers (
-      name:
-      let
-        driver = lib.attrByPath [ name ] (
-          if pkgs ? ${"xf86-video-" + name} then { modules = [ pkgs.${"xf86-video-" + name} ]; } else null
-        ) knownVideoDrivers;
-      in
-      lib.optional (driver != null) (
-        {
-          inherit name;
-          modules = [ ];
-          driverName = name;
-          display = true;
-        }
-        // driver
+    services.xserver.drivers =
+      lib.flip lib.concatMap cfg.videoDrivers (
+        name:
+        let
+          driver = lib.attrByPath [ name ] (
+            if pkgs ? ${"xf86-video-" + name} then { modules = [ pkgs.${"xf86-video-" + name} ]; } else null
+          ) knownVideoDrivers;
+        in
+        lib.optional (driver != null) (
+          {
+            inherit name;
+            modules = [ ];
+            driverName = name;
+            display = true;
+          }
+          // driver
+        )
       )
-    )
-    ++ (
-      let
-        nvidiaCfg = config.hardware.nvidia;
-        primeCfg = nvidiaCfg.prime;
-        syncCfg = primeCfg.sync;
-        offloadCfg = primeCfg.offload;
-        reverseSyncCfg = primeCfg.reverseSync;
-        primeEnabled = syncCfg.enable || reverseSyncCfg.enable || offloadCfg.enable;
-        igpuDriver = if primeCfg.intelBusId != "" then "modesetting" else "amdgpu";
-        igpuBusId = if primeCfg.intelBusId != "" then primeCfg.intelBusId else primeCfg.amdgpuBusId;
-      in
-      lib.optionals nvidiaCfg.enable (
-        lib.optional primeEnabled {
-          name = igpuDriver;
-          display = offloadCfg.enable;
-          modules = lib.optional (igpuDriver == "amdgpu") pkgs.xf86-video-amdgpu;
-          deviceSection = ''
-            BusID "${igpuBusId}"
-          ''
-          + lib.optionalString (syncCfg.enable && igpuDriver != "amdgpu") ''
-            Option "AccelMethod" "none"
-          '';
-        }
-        ++ lib.singleton {
-          name = "nvidia";
-          modules = [ nvidiaCfg.package.bin ];
-          display = !offloadCfg.enable;
-          deviceSection = ''
-            Option "SidebandSocketPath" "/run/nvidia-xdriver/"
-          ''
-          + lib.optionalString primeEnabled ''
-            BusID "${primeCfg.nvidiaBusId}"
-          ''
-          + lib.optionalString primeCfg.allowExternalGpu ''
-            Option "AllowExternalGpus"
-          '';
-          screenSection = ''
-            Option "RandRRotation" "on"
-          ''
-          + lib.optionalString syncCfg.enable ''
+      ++ (
+        let
+          nvidiaCfg = config.hardware.nvidia;
+          primeCfg = nvidiaCfg.prime;
+          syncCfg = primeCfg.sync;
+          offloadCfg = primeCfg.offload;
+          reverseSyncCfg = primeCfg.reverseSync;
+          primeEnabled = syncCfg.enable || reverseSyncCfg.enable || offloadCfg.enable;
+          igpuDriver = if primeCfg.intelBusId != "" then "modesetting" else "amdgpu";
+          igpuBusId = if primeCfg.intelBusId != "" then primeCfg.intelBusId else primeCfg.amdgpuBusId;
+        in
+        lib.optionals nvidiaCfg.enable (
+          lib.optional primeEnabled {
+            name = igpuDriver;
+            display = offloadCfg.enable;
+            modules = lib.optional (igpuDriver == "amdgpu") pkgs.xf86-video-amdgpu;
+            deviceSection = ''
+              BusID "${igpuBusId}"
+            ''
+            + lib.optionalString (syncCfg.enable && igpuDriver != "amdgpu") ''
+              Option "AccelMethod" "none"
+            '';
+          }
+          ++ lib.singleton {
+            name = "nvidia";
+            modules = [ nvidiaCfg.package.bin ];
+            display = !offloadCfg.enable;
+            deviceSection = ''
+              Option "SidebandSocketPath" "/run/nvidia-xdriver/"
+            ''
+            + lib.optionalString primeEnabled ''
+              BusID "${primeCfg.nvidiaBusId}"
+            ''
+            + lib.optionalString primeCfg.allowExternalGpu ''
+              Option "AllowExternalGpus"
+            '';
+            screenSection = ''
+              Option "RandRRotation" "on"
+            ''
+            + lib.optionalString syncCfg.enable ''
               Option "AllowEmptyInitialConfiguration"
-          ''
-          + lib.optionalString nvidiaCfg.forceFullCompositionPipeline ''
-            Option         "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
-            Option         "AllowIndirectGLXProtocol" "off"
-            Option         "TripleBuffer" "on"
-          '';
-        }
-      )
-    );
+            ''
+            + lib.optionalString nvidiaCfg.forceFullCompositionPipeline ''
+              Option         "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
+              Option         "AllowIndirectGLXProtocol" "off"
+              Option         "TripleBuffer" "on"
+            '';
+          }
+        )
+      );
   };
 }
