@@ -198,6 +198,7 @@ in
               --subst-var-by distroId finix \
               --subst-var-by finit ${config.finit.package} \
               --subst-var-by logger ${pkgs.util-linuxMinimal} \
+              --subst-var-by coreutils ${pkgs.coreutils} \
               --subst-var-by installHook ${config.providers.bootloader.installHook}
           ''
           + lib.optionalString config.boot.bootspec.enable ''

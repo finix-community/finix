@@ -7,6 +7,7 @@ distroId="@distroId@"
 installHook="@installHook@"
 finit="@finit@"
 logger="@logger@"
+coreutils="@coreutils@"
 
 action="${1-}"
 
@@ -55,7 +56,7 @@ fi
 
 # sync filesystem
 if [[ "${NIXOS_NO_SYNC-}" != 1 ]]; then
-  sync -f /nix/store || true
+  "$coreutils/bin/sync" -f /nix/store || true
 fi
 
 if [[ "$action" == boot ]]; then
