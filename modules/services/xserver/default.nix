@@ -258,6 +258,22 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    assertions =
+      let
+        nvidiaOnX11 = lib.elem "nvidia" cfg.videoDrivers;
+        primeCfg = config.hardware.nvidia.prime;
+      in
+      [
+        {
+          assertion = !(primeCfg.sync.enable && nvidiaOnX11);
+          message = "Currently `nvidia.prime.sync` is not implemented for X11.";
+        }
+        {
+          assertion = !(primeCfg.reverseSync.enable && nvidiaOnX11);
+          message = "Currently `nvidia.prime.reverseSync` is not implemented for X11.";
+        }
+      ];
+
     environment.systemPackages = [
       xorg-server'.out
       xf86-input-evdev'.out # get evdev.4 man page
@@ -294,9 +310,37 @@ in
           Option "XkbVariant" "${xkb.variant}"
         EndSection
       '';
+
+      "X11/xorg.conf.d/10-nvidia-prime-layout.conf" =
+        let
+          primeCfg = config.hardware.nvidia.prime;
+          syncCfg = primeCfg.sync;
+          offloadCfg = primeCfg.offload;
+          reverseSyncCfg = primeCfg.reverseSync;
+          primeEnabled = syncCfg.enable || reverseSyncCfg.enable || offloadCfg.enable;
+          igpuDriver = if primeCfg.intelBusId != "" then "modesetting" else "amdgpu";
+        in
+        lib.mkIf (config.hardware.nvidia.enable && primeEnabled) {
+          text = ''
+            Section "ServerLayout"
+              Identifier "layout"
+              ${lib.optionalString syncCfg.enable ''Inactive "Device-${igpuDriver}[0]"''}
+              ${lib.optionalString reverseSyncCfg.enable ''Inactive "Device-nvidia[0]"''}
+              ${lib.optionalString offloadCfg.enable ''Option "AllowNVIDIAGPUScreens"''}
+            EndSection
+          '';
+        };
     };
 
     environment.pathsToLink = [ "/share/X11" ];
+
+    finit.tmpfiles.rules = lib.optional config.hardware.nvidia.enable
+      # Remove the following log message:
+      #    (WW) NVIDIA: Failed to bind sideband socket to
+      #    (WW) NVIDIA:     '/var/run/nvidia-xdriver-b4f69129' Permission denied
+      #
+      # https://bbs.archlinux.org/viewtopic.php?pid=1909115#p1909115
+      "d /run/nvidia-xdriver 0770 root users";
 
     services.xserver.modules = lib.concatLists (lib.catAttrs "modules" cfg.drivers) ++ [
       xorg-server'.out
@@ -320,6 +364,56 @@ in
           display = true;
         }
         // driver
+      )
+    )
+    ++ (
+      let
+        nvidiaCfg = config.hardware.nvidia;
+        primeCfg = nvidiaCfg.prime;
+        syncCfg = primeCfg.sync;
+        offloadCfg = primeCfg.offload;
+        reverseSyncCfg = primeCfg.reverseSync;
+        primeEnabled = syncCfg.enable || reverseSyncCfg.enable || offloadCfg.enable;
+        igpuDriver = if primeCfg.intelBusId != "" then "modesetting" else "amdgpu";
+        igpuBusId = if primeCfg.intelBusId != "" then primeCfg.intelBusId else primeCfg.amdgpuBusId;
+      in
+      lib.optionals nvidiaCfg.enable (
+        lib.optional primeEnabled {
+          name = igpuDriver;
+          display = offloadCfg.enable;
+          modules = lib.optional (igpuDriver == "amdgpu") pkgs.xf86-video-amdgpu;
+          deviceSection = ''
+            BusID "${igpuBusId}"
+          ''
+          + lib.optionalString (syncCfg.enable && igpuDriver != "amdgpu") ''
+            Option "AccelMethod" "none"
+          '';
+        }
+        ++ lib.singleton {
+          name = "nvidia";
+          modules = [ nvidiaCfg.package.bin ];
+          display = !offloadCfg.enable;
+          deviceSection = ''
+            Option "SidebandSocketPath" "/run/nvidia-xdriver/"
+          ''
+          + lib.optionalString primeEnabled ''
+            BusID "${primeCfg.nvidiaBusId}"
+          ''
+          + lib.optionalString primeCfg.allowExternalGpu ''
+            Option "AllowExternalGpus"
+          '';
+          screenSection = ''
+            Option "RandRRotation" "on"
+          ''
+          + lib.optionalString syncCfg.enable ''
+              Option "AllowEmptyInitialConfiguration"
+          ''
+          + lib.optionalString nvidiaCfg.forceFullCompositionPipeline ''
+            Option         "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
+            Option         "AllowIndirectGLXProtocol" "off"
+            Option         "TripleBuffer" "on"
+          '';
+        }
       )
     );
   };

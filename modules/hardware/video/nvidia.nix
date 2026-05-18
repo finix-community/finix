@@ -1,14 +1,11 @@
 {
   pkgs,
-  options,
   config,
   lib,
   ...
 }:
 let
   cfg = config.hardware.nvidia;
-
-  nvidiaOnX11 = lib.elem "nvidia" (config.services.xserver.videoDrivers or [ ]);
 
   useOpenModules = cfg.open == true;
 
@@ -22,9 +19,6 @@ let
   ibtSupport = useOpenModules || (cfg.package.ibtSupport or false);
 
   useModeset = offloadCfg.enable || cfg.modesetting.enable;
-
-  igpuDriver = if primeCfg.intelBusId != "" then "modesetting" else "amdgpu";
-  igpuBusId = if primeCfg.intelBusId != "" then primeCfg.intelBusId else primeCfg.amdgpuBusId;
 in
 {
   options = {
@@ -269,20 +263,8 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable (
-    lib.mkMerge [
-      # Common
-      {
-        assertions = [
-          { # x11 sync unimplemented
-            assertion = !(syncCfg.enable && nvidiaOnX11);
-            message = "Currently `nvidia.prime.sync` is not implemented for X11.";
-          }
-          { # x11 reverseSync unimplemented
-            assertion = !(reverseSyncCfg.enable && nvidiaOnX11);
-            message = "Currently `nvidia.prime.reverseSync` is not implemented for X11.";
-          }
-
+  config = lib.mkIf cfg.enable {
+    assertions = [
           {
             assertion = cfg.open != null;
             message = ''
@@ -404,24 +386,37 @@ in
           "egl/egl_external_platform.d".source = "/run/opengl-driver/share/egl/egl_external_platform.d/";
         };
 
+        # reverse sync implies offloading
+        hardware.nvidia.prime.offload.enable = lib.mkDefault reverseSyncCfg.enable;
+
         boot = {
           extraModulePackages = if useOpenModules then [ cfg.package.open ] else [ cfg.package.bin ];
 
+          # nvidia-uvm is required by CUDA applications.
           # Exception is the open-source kernel module failing to load nvidia-uvm using softdep
           # for unknown reasons.
           # It affects CUDA: https://github.com/NixOS/nixpkgs/issues/334180
           # Previously nvidia-uvm was explicitly loaded only when xserver was enabled:
           # https://github.com/NixOS/nixpkgs/pull/334340/commits/4548c392862115359e50860bcf658cfa8715bde9
           # We are now loading the module eagerly for all users of the open driver (including headless).
-          kernelModules = lib.optionals useOpenModules [ "nvidia_uvm" ];
-          
-          kernelParams = 
+          kernelModules = [
+            "nvidia"
+            "nvidia_modeset"
+            "nvidia_drm"
+          ]
+          ++ lib.optionals useOpenModules [ "nvidia_uvm" ];
+
+          kernelParams =
             lib.optional useOpenModules "nvidia.NVreg_OpenRmEnableUnsupportedGpus=1"
             ++ lib.optional (
               cfg.powerManagement.enable && cfg.powerManagement.kernelSuspendNotifier
             ) "nvidia.NVreg_UseKernelSuspendNotifiers=1"
             ++ lib.optional cfg.powerManagement.enable "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
-            ++ lib.optional (config.boot.kernelPackages.kernel.kernelAtLeast "6.2" && !ibtSupport) "ibt=off";
+            ++ lib.optional (config.boot.kernelPackages.kernel.kernelAtLeast "6.2" && !ibtSupport) "ibt=off"
+            ++ lib.optional useModeset "nvidia-drm.modeset=1"
+            ++ lib.optional (
+              useModeset && lib.versionAtLeast cfg.package.version "545"
+            ) "nvidia-drm.fbdev=1";
         };
 
         services.udev.packages = [
@@ -494,89 +489,5 @@ in
                 exec "$@"
               ''
             );
-      }
-
-      # Display
-      {
-        services = lib.optionalAttrs (options.services ? xserver) {
-          xserver.drivers = 
-            lib.optional primeEnabled {
-              name = igpuDriver;
-              display = offloadCfg.enable;
-              modules = lib.optional (igpuDriver == "amdgpu") pkgs.xf86-video-amdgpu;
-              deviceSection = ''
-                BusID "${igpuBusId}"
-              ''
-              + lib.optionalString (syncCfg.enable && igpuDriver != "amdgpu") ''
-                Option "AccelMethod" "none"
-              '';
-            }
-            ++ lib.singleton {
-              name = "nvidia";
-              modules = [ cfg.package.bin ];
-              display = !offloadCfg.enable;
-              deviceSection = ''
-                Option "SidebandSocketPath" "/run/nvidia-xdriver/"
-              '' 
-              + lib.optionalString primeEnabled ''
-                BusID "${primeCfg.nvidiaBusId}"
-              ''
-              + lib.optionalString primeCfg.allowExternalGpu ''
-                Option "AllowExternalGpus"
-              '';
-              screenSection = ''
-                Option "RandRRotation" "on"
-              ''
-              + lib.optionalString syncCfg.enable ''
-                  Option "AllowEmptyInitialConfiguration"
-              ''
-              + lib.optionalString cfg.forceFullCompositionPipeline ''
-                Option         "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
-                Option         "AllowIndirectGLXProtocol" "off"
-                Option         "TripleBuffer" "on"
-              '';
-            };
-        };
-        
-        finit.tmpfiles.rules = [
-          # Remove the following log message:
-          #    (WW) NVIDIA: Failed to bind sideband socket to
-          #    (WW) NVIDIA:     '/var/run/nvidia-xdriver-b4f69129' Permission denied
-          #
-          # https://bbs.archlinux.org/viewtopic.php?pid=1909115#p1909115
-          "d /run/nvidia-xdriver 0770 root users"
-        ];
-
-        environment.etc."X11/xorg.conf.d/10-nvidia-prime-layout.conf" = lib.mkIf primeEnabled {
-          text = ''
-            Section "ServerLayout"
-              Identifier "layout"
-              ${lib.optionalString syncCfg.enable ''Inactive "Device-${igpuDriver}[0]"''}
-              ${lib.optionalString reverseSyncCfg.enable ''Inactive "Device-nvidia[0]"''}
-              ${lib.optionalString offloadCfg.enable ''Option "AllowNVIDIAGPUScreens"''}
-            EndSection
-          '';
-        };
-
-        # reverse sync implies offloading
-        hardware.nvidia.prime.offload.enable = lib.mkDefault reverseSyncCfg.enable;
-
-        boot = {
-          # nvidia-uvm is required by CUDA applications.
-          kernelModules = [
-            "nvidia"
-            "nvidia_modeset"
-            "nvidia_drm"
-          ];
-
-          # If requested enable modesetting via kernel parameters.
-          kernelParams =
-            lib.optional useModeset "nvidia-drm.modeset=1"
-            ++ lib.optional (
-              useModeset && lib.versionAtLeast cfg.package.version "545"
-            ) "nvidia-drm.fbdev=1";
-        };
-      }
-    ]
-  );
+  };
 }
