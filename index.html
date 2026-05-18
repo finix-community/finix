@@ -2452,7 +2452,7 @@
     <details class="toc-category">
       <summary title="hardware">
         <span>hardware</span>
-        <span class="toc-count">35</span>
+        <span class="toc-count">33</span>
       </summary>
       <ul>
         
@@ -2547,26 +2547,10 @@
         </li>
         
         <li>
-          <a href='#option-hardware-nvidia-datacenter-enable' title="hardware.nvidia.datacenter.enable">
-            nvidia.datacenter.enable
-            
-            
-          </a>
-        </li>
-        
-        <li>
           <a href='#option-hardware-nvidia-enable' title="hardware.nvidia.enable">
             nvidia.enable
             
             
-          </a>
-        </li>
-        
-        <li>
-          <a href='#option-hardware-nvidia-enabled' title="hardware.nvidia.enabled">
-            nvidia.enabled
-            
-            <span class="toc-readonly">read-only</span>
           </a>
         </li>
         
@@ -4324,7 +4308,7 @@
     <details class="toc-category">
       <summary title="services">
         <span>services</span>
-        <span class="toc-count">340</span>
+        <span class="toc-count">336</span>
       </summary>
       <ul>
         
@@ -5749,38 +5733,6 @@
         <li>
           <a href='#option-services-nix-daemon-settings-trusted-users' title="services.nix-daemon.settings.trusted-users">
             nix-daemon.settings.trusted-users
-            
-            
-          </a>
-        </li>
-        
-        <li>
-          <a href='#option-services-nvidia-fabricmanager-enable' title="services.nvidia-fabricmanager.enable">
-            nvidia-fabricmanager.enable
-            
-            
-          </a>
-        </li>
-        
-        <li>
-          <a href='#option-services-nvidia-fabricmanager-extraArgs' title="services.nvidia-fabricmanager.extraArgs">
-            nvidia-fabricmanager.extraArgs
-            
-            
-          </a>
-        </li>
-        
-        <li>
-          <a href='#option-services-nvidia-fabricmanager-package' title="services.nvidia-fabricmanager.package">
-            nvidia-fabricmanager.package
-            
-            
-          </a>
-        </li>
-        
-        <li>
-          <a href='#option-services-nvidia-fabricmanager-settings' title="services.nvidia-fabricmanager.settings">
-            nvidia-fabricmanager.settings
             
             
           </a>
@@ -11513,20 +11465,6 @@ ensuring the group exists before system activation has completed.</p>
   <div class="option-default">Default: <code>"i2c"</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/i2c.nix" target="_blank">&lt;finix/modules/hardware/i2c.nix&gt;</a></code></div>
 </div>
-<div class="option" id="option-hardware-nvidia-datacenter-enable">
-  <h3 class="option-name">
-    <a href="#option-hardware-nvidia-datacenter-enable" class="option-anchor">hardware.nvidia.datacenter.enable</a>
-    <span class="copy-link" title="Copy link to this option"></span>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-type">Type: <code>boolean</code></div>
-  <div class="option-description"><html><head></head><body><p>Whether to enable Data Center drivers for NVIDIA cards on a NVLink topology
-.</p>
-</body></html></div>
-  <div class="option-default">Default: <code>false</code></div>
-  <div class="option-example">Example: <code>true</code></div>
-  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia.nix" target="_blank">&lt;finix/modules/hardware/video/nvidia.nix&gt;</a></code></div>
-</div>
 <div class="option" id="option-hardware-nvidia-enable">
   <h3 class="option-name">
     <a href="#option-hardware-nvidia-enable" class="option-anchor">hardware.nvidia.enable</a>
@@ -11539,19 +11477,6 @@ ensuring the group exists before system activation has completed.</p>
 </body></html></div>
   <div class="option-default">Default: <code>false</code></div>
   <div class="option-example">Example: <code>true</code></div>
-  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia.nix" target="_blank">&lt;finix/modules/hardware/video/nvidia.nix&gt;</a></code></div>
-</div>
-<div class="option" id="option-hardware-nvidia-enabled">
-  <h3 class="option-name">
-    <a href="#option-hardware-nvidia-enabled" class="option-anchor">hardware.nvidia.enabled</a>
-    <span class="copy-link" title="Copy link to this option"></span>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-metadata">read-only</div>
-  <div class="option-type">Type: <code>boolean</code></div>
-  <div class="option-description"><html><head></head><body><p>True if NVIDIA support is enabled</p>
-</body></html></div>
-  <div class="option-default">Default: <code>`true` if NVIDIA support is enabled</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia.nix" target="_blank">&lt;finix/modules/hardware/video/nvidia.nix&gt;</a></code></div>
 </div>
 <div class="option" id="option-hardware-nvidia-forceFullCompositionPipeline">
@@ -11630,7 +11555,7 @@ Wayland compositors to work when they otherwise wouldn't.
   <div class="option-type">Type: <code>unspecified value</code></div>
   <div class="option-description"><html><head></head><body><p>The NVIDIA driver package to use.</p>
 </body></html></div>
-  <div class="option-default">Default: <code>config.boot.kernelPackages.nvidiaPackages."\$\{if cfg.datacenter.enable then "dc" else "stable"}"
+  <div class="option-default">Default: <code>config.boot.kernelPackages.nvidiaPackages.stable
 </code></div>
   <div class="option-example">Example: <code>"config.boot.kernelPackages.nvidiaPackages.legacy_470"</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia.nix" target="_blank">&lt;finix/modules/hardware/video/nvidia.nix&gt;</a></code></div>
@@ -16895,56 +16820,6 @@ group.</p>
   "@wheel"
 ]</code></pre></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nix-daemon" target="_blank">&lt;finix/modules/services/nix-daemon&gt;</a></code></div>
-</div>
-<div class="option" id="option-services-nvidia-fabricmanager-enable">
-  <h3 class="option-name">
-    <a href="#option-services-nvidia-fabricmanager-enable" class="option-anchor">services.nvidia-fabricmanager.enable</a>
-    <span class="copy-link" title="Copy link to this option"></span>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-type">Type: <code>boolean</code></div>
-  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://docs.nvidia.com/datacenter/tesla/fabric-manager-user-guide/index.html">nvidia-fabricmanager</a> as a system service.</p>
-</body></html></div>
-  <div class="option-default">Default: <code>false</code></div>
-  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nvidia-fabricmanager" target="_blank">&lt;finix/modules/services/nvidia-fabricmanager&gt;</a></code></div>
-</div>
-<div class="option" id="option-services-nvidia-fabricmanager-extraArgs">
-  <h3 class="option-name">
-    <a href="#option-services-nvidia-fabricmanager-extraArgs" class="option-anchor">services.nvidia-fabricmanager.extraArgs</a>
-    <span class="copy-link" title="Copy link to this option"></span>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-type">Type: <code>list of string</code></div>
-  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <code>nvidia-fabricmanager</code>. See <a href="https://docs.nvidia.com/datacenter/tesla/fabric-manager-user-guide/index.html#fabric-manager-startup-options">upstream documentation</a>
-for additional details.</p>
-</body></html></div>
-  <div class="option-default">Default: <code>[ ]</code></div>
-  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nvidia-fabricmanager" target="_blank">&lt;finix/modules/services/nvidia-fabricmanager&gt;</a></code></div>
-</div>
-<div class="option" id="option-services-nvidia-fabricmanager-package">
-  <h3 class="option-name">
-    <a href="#option-services-nvidia-fabricmanager-package" class="option-anchor">services.nvidia-fabricmanager.package</a>
-    <span class="copy-link" title="Copy link to this option"></span>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-type">Type: <code>package</code></div>
-  <div class="option-description"><html><head></head><body><p>The package to use for <code>nvidia-fabricmanager</code>.</p>
-</body></html></div>
-  <div class="option-default">Default: <code>config.hardware.nvidia.package.fabricmanager</code></div>
-  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nvidia-fabricmanager" target="_blank">&lt;finix/modules/services/nvidia-fabricmanager&gt;</a></code></div>
-</div>
-<div class="option" id="option-services-nvidia-fabricmanager-settings">
-  <h3 class="option-name">
-    <a href="#option-services-nvidia-fabricmanager-settings" class="option-anchor">services.nvidia-fabricmanager.settings</a>
-    <span class="copy-link" title="Copy link to this option"></span>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-type">Type: <code>attribute set of (atom (null, bool, int, float or string))</code></div>
-  <div class="option-description"><html><head></head><body><p><code>tlp</code> configuration. See <a href="https://docs.nvidia.com/datacenter/tesla/fabric-manager-user-guide/index.html#fabric-manager-config-options">upstream documentation</a>
-for additional details.</p>
-</body></html></div>
-  <div class="option-default">Default: <code>{ }</code></div>
-  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nvidia-fabricmanager" target="_blank">&lt;finix/modules/services/nvidia-fabricmanager&gt;</a></code></div>
 </div>
 <div class="option" id="option-services-nvidia-persistenced-debug">
   <h3 class="option-name">
