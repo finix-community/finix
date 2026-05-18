@@ -1,19 +1,11 @@
 {
   pkgs,
-  options,
   config,
   lib,
   ...
 }:
 let
   cfg = config.hardware.nvidia;
-
-  nvidiaStandardEnabled = cfg.enable;
-  nvidiaDatacenterEnabled = cfg.datacenter.enable;
-  nvidiaEnabled = nvidiaStandardEnabled || nvidiaDatacenterEnabled;
-
-  nvidiaOnX11 = lib.elem "nvidia" (config.services.xserver.videoDrivers or [ ]);
-  nvidiaPkg = if nvidiaEnabled then cfg.package else null;
 
   useOpenModules = cfg.open == true;
 
@@ -24,28 +16,51 @@ let
   primeEnabled = syncCfg.enable || reverseSyncCfg.enable || offloadCfg.enable;
 
   busIDType = lib.types.strMatching "([[:print:]]+:[0-9]{1,3}(@[0-9]{1,10})?:[0-9]{1,2}:[0-9])?";
-  ibtSupport = useOpenModules || (nvidiaPkg.ibtSupport or false);
+  ibtSupport = useOpenModules || (cfg.package.ibtSupport or false);
 
   useModeset = offloadCfg.enable || cfg.modesetting.enable;
 
-  igpuDriver = if primeCfg.intelBusId != "" then "modesetting" else "amdgpu";
-  igpuBusId = if primeCfg.intelBusId != "" then primeCfg.intelBusId else primeCfg.amdgpuBusId;
+  # EGL external-platform ICDs that the NVIDIA driver advertises to compositors.
+  icd = [
+    "egl-wayland"
+  ]
+  # GBM support was added in 495.
+  ++ lib.optionals (lib.versionAtLeast cfg.package.version "495") [
+    "egl-gbm"
+  ]
+  # ICDs below use a new driver interface, added in the 560 series drivers.
+  ++ lib.optionals (lib.versionAtLeast cfg.package.version "560") [
+    "egl-wayland2"
+    "egl-x11"
+  ];
+
+  combineIcdPkgs =
+    pkgs':
+    pkgs'.symlinkJoin {
+      name = "nvidia-egl-external-platforms${lib.optionalString pkgs'.stdenv.is32bit "-x32"}";
+      paths = lib.attrVals icd pkgs';
+      # Remediate reversed priorities in pre-595 drivers,
+      # https://github.com/NixOS/nixpkgs/pull/497342#issuecomment-4034876793
+      postBuild = lib.optionalString (lib.versionOlder cfg.package.version "595") ''
+        pushd $out/share/egl/egl_external_platform.d
+        for f in [0-9][0-9]_*; do
+          num=''${f:0:2}
+          rest=''${f:2}
+          new=$(printf "%02d" $((99 - 10#$num)))
+          mv -- "$f" "tmp-$new$rest"
+        done
+        for f in tmp-*; do
+          mv -- "$f" "''${f#tmp-}"
+        done
+        popd
+      '';
+    };
 in
-{  
+{
   options = {
     hardware.nvidia = {
-      enabled = lib.mkOption {
-        readOnly = true;
-        type = lib.types.bool;
-        default = nvidiaPkg != null;
-        defaultText = lib.literalMD "`true` if NVIDIA support is enabled";
-        description = "True if NVIDIA support is enabled";
-      };
       enable = lib.mkEnableOption ''
         NVIDIA driver support
-      '';
-      datacenter.enable = lib.mkEnableOption ''
-        Data Center drivers for NVIDIA cards on a NVLink topology
       '';
 
       powerManagement.enable = lib.mkEnableOption ''
@@ -66,7 +81,7 @@ in
           Requires NVIDIA driver version 595 or newer, and the open source kernel modules.
         ''
         // {
-          default = useOpenModules && lib.versionAtLeast nvidiaPkg.version "595";
+          default = useOpenModules && lib.versionAtLeast cfg.package.version "595";
           defaultText = lib.literalExpression ''
             config.hardware.nvidia.open == true && lib.versionAtLeast config.hardware.nvidia.package.version "595"
           '';
@@ -243,10 +258,9 @@ in
       '';
 
       package = lib.mkOption {
-        default =
-          config.boot.kernelPackages.nvidiaPackages."${if cfg.datacenter.enable then "dc" else "stable"}";
+        default = config.boot.kernelPackages.nvidiaPackages.stable;
         defaultText = lib.literalExpression ''
-          config.boot.kernelPackages.nvidiaPackages."\$\{if cfg.datacenter.enable then "dc" else "stable"}"
+          config.boot.kernelPackages.nvidiaPackages.stable
         '';
         example = "config.boot.kernelPackages.nvidiaPackages.legacy_470";
         description = ''
@@ -258,7 +272,7 @@ in
         example = true;
         description = "Whether to enable the open source NVIDIA kernel module.";
         type = lib.types.nullOr lib.types.bool;
-        default = if lib.versionOlder nvidiaPkg.version "560" then false else null;
+        default = if lib.versionOlder cfg.package.version "560" then false else null;
         defaultText = lib.literalExpression ''
           if lib.versionOlder config.hardware.nvidia.package.version "560" then false else null
         '';
@@ -269,7 +283,7 @@ in
           the GPU System Processor (GSP) on the video card
         ''
         // {
-          default = useOpenModules || lib.versionAtLeast nvidiaPkg.version "555";
+          default = useOpenModules || lib.versionAtLeast cfg.package.version "555";
           defaultText = lib.literalExpression ''
             config.hardware.nvidia.open == true || lib.versionAtLeast config.hardware.nvidia.package.version "555"
           '';
@@ -285,319 +299,244 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enabled (
-    lib.mkMerge [
-      # Common
+  config = lib.mkIf cfg.enable {
+    assertions = [
       {
-        assertions = [
-          { # x11 sync unimplemented
-            assertion = !(syncCfg.enable && nvidiaOnX11);
-            message = "Currently `nvidia.prime.sync` is not implemented for X11.";
-          }
-          { # x11 reverseSync unimplemented
-            assertion = !(reverseSyncCfg.enable && nvidiaOnX11);
-            message = "Currently `nvidia.prime.reverseSync` is not implemented for X11.";
-          }
+        assertion = cfg.open != null;
+        message = ''
+          You must configure `hardware.nvidia.open` on NVIDIA driver versions >= 560.
+          It is suggested to use the open source kernel modules on Turing or later GPUs (RTX series, GTX 16xx), and the closed source modules otherwise.
+        '';
+      }
 
-          {
-            assertion = !(nvidiaStandardEnabled && nvidiaDatacenterEnabled);
-            message = "You cannot configure both standard and Data Center drivers at the same time.";
-          }
+      {
+        assertion = primeEnabled -> primeCfg.intelBusId == "" || primeCfg.amdgpuBusId == "";
+        message = "You cannot configure both an Intel iGPU and an AMD APU. Pick the one corresponding to your processor.";
+      }
 
-          {
-            assertion = cfg.open != null || cfg.datacenter.enable;
-            message = ''
-              You must configure `hardware.nvidia.open` on NVIDIA driver versions >= 560.
-              It is suggested to use the open source kernel modules on Turing or later GPUs (RTX series, GTX 16xx), and the closed source modules otherwise.
-            '';
-          }
+      {
+        assertion = offloadCfg.enableOffloadCmd -> offloadCfg.enable || reverseSyncCfg.enable;
+        message = "Offload command requires offloading or reverse prime sync to be enabled.";
+      }
 
-          {
-            assertion = primeEnabled -> primeCfg.intelBusId == "" || primeCfg.amdgpuBusId == "";
-            message = "You cannot configure both an Intel iGPU and an AMD APU. Pick the one corresponding to your processor.";
-          }
+      {
+        assertion =
+          primeEnabled
+          -> primeCfg.nvidiaBusId != "" && (primeCfg.intelBusId != "" || primeCfg.amdgpuBusId != "");
+        message = "When NVIDIA PRIME is enabled, the GPU bus IDs must be configured.";
+      }
 
-          {
-            assertion = offloadCfg.enableOffloadCmd -> offloadCfg.enable || reverseSyncCfg.enable;
-            message = "Offload command requires offloading or reverse prime sync to be enabled.";
-          }
+      {
+        assertion = offloadCfg.enable -> lib.versionAtLeast cfg.package.version "435.21";
+        message = "NVIDIA PRIME render offload is currently only supported on versions >= 435.21.";
+      }
 
-          {
-            assertion =
-              primeEnabled -> primeCfg.nvidiaBusId != "" && (primeCfg.intelBusId != "" || primeCfg.amdgpuBusId != "");
-            message = "When NVIDIA PRIME is enabled, the GPU bus IDs must be configured.";
-          }
+      {
+        assertion =
+          (reverseSyncCfg.enable && primeCfg.amdgpuBusId != "")
+          -> lib.versionAtLeast cfg.package.version "470.0";
+        message = "NVIDIA PRIME render offload for AMD APUs is currently only supported on versions >= 470 beta.";
+      }
 
-          {
-            assertion = offloadCfg.enable -> lib.versionAtLeast nvidiaPkg.version "435.21";
-            message = "NVIDIA PRIME render offload is currently only supported on versions >= 435.21.";
-          }
+      {
+        assertion = !(syncCfg.enable && offloadCfg.enable);
+        message = "PRIME Sync and Offload cannot be both enabled";
+      }
 
-          {
-            assertion =
-              (reverseSyncCfg.enable && primeCfg.amdgpuBusId != "") -> lib.versionAtLeast nvidiaPkg.version "470.0";
-            message = "NVIDIA PRIME render offload for AMD APUs is currently only supported on versions >= 470 beta.";
-          }
+      {
+        assertion = !(syncCfg.enable && reverseSyncCfg.enable);
+        message = "PRIME Sync and PRIME Reverse Sync cannot be both enabled";
+      }
 
-          {
-            assertion = !(syncCfg.enable && offloadCfg.enable);
-            message = "PRIME Sync and Offload cannot be both enabled";
-          }
+      {
+        assertion = !(syncCfg.enable && cfg.powerManagement.finegrained);
+        message = "Sync precludes powering down the NVIDIA GPU.";
+      }
 
-          {
-            assertion = !(syncCfg.enable && reverseSyncCfg.enable);
-            message = "PRIME Sync and PRIME Reverse Sync cannot be both enabled";
-          }
+      {
+        assertion = cfg.powerManagement.finegrained -> offloadCfg.enable;
+        message = "Fine-grained power management requires offload to be enabled.";
+      }
 
-          {
-            assertion = !(syncCfg.enable && cfg.powerManagement.finegrained);
-            message = "Sync precludes powering down the NVIDIA GPU.";
-          }
+      {
+        assertion = cfg.powerManagement.enable -> lib.versionAtLeast cfg.package.version "430.09";
+        message = "Required files for driver based power management only exist on versions >= 430.09.";
+      }
 
-          {
-            assertion = cfg.powerManagement.finegrained -> offloadCfg.enable;
-            message = "Fine-grained power management requires offload to be enabled.";
-          }
+      {
+        assertion =
+          (cfg.powerManagement.enable && !cfg.powerManagement.kernelSuspendNotifier)
+          -> config.providers.resumeAndSuspend.backend != "none";
+        message = "Power management without `kernelSuspendNotifier` requires a sleep backend. Enable programs.zzz (programs.zzz.enable = true).";
+      }
 
-          {
-            assertion = cfg.powerManagement.enable -> lib.versionAtLeast nvidiaPkg.version "430.09";
-            message = "Required files for driver based power management only exist on versions >= 430.09.";
-          }
+      {
+        assertion = cfg.gsp.enable -> (cfg.package ? firmware);
+        message = "This version of NVIDIA driver does not provide a GSP firmware.";
+      }
 
-          {
-            assertion = (cfg.powerManagement.enable && !cfg.powerManagement.kernelSuspendNotifier) -> config.providers.resumeAndSuspend.backend != "none";
-            message = "Power management without `kernelSuspendNotifier` requires a sleep backend. Enable programs.zzz (programs.zzz.enable = true).";
-          }
+      {
+        assertion = useOpenModules -> (cfg.package ? open);
+        message = "This version of NVIDIA driver does not provide a corresponding opensource kernel driver.";
+      }
 
-          {
-            assertion = cfg.gsp.enable -> (cfg.package ? firmware);
-            message = "This version of NVIDIA driver does not provide a GSP firmware.";
-          }
+      {
+        assertion = useOpenModules -> cfg.gsp.enable;
+        message = "The GSP cannot be disabled when using the opensource kernel driver.";
+      }
 
-          {
-            assertion = useOpenModules -> (cfg.package ? open);
-            message = "This version of NVIDIA driver does not provide a corresponding opensource kernel driver.";
-          }
+      {
+        assertion =
+          cfg.powerManagement.kernelSuspendNotifier
+          -> (useOpenModules && lib.versionAtLeast cfg.package.version "595");
+        message = "NVIDIA driver support for kernel suspend notifiers requires NVIDIA driver version 595 or newer, and the open source kernel modules.";
+      }
+    ];
 
-          {
-            assertion = useOpenModules -> cfg.gsp.enable;
-            message = "The GSP cannot be disabled when using the opensource kernel driver.";
-          }
+    environment.etc = {
+      # Don't add `nvidia-uvm` to `kernelModules`, because we want
+      # `nvidia-uvm` be loaded only after the GPU device is available, i.e. after `udev` rules
+      # for `nvidia` kernel module are applied.
+      # This matters on Azure GPU instances: https://github.com/NixOS/nixpkgs/pull/267335
+      #
+      # Instead, we use `softdep` to lazily load `nvidia-uvm` kernel module
+      # after `nvidia` kernel module is loaded and `udev` rules are applied.
+      "modprobe.d/nvidia-uvm.conf".text = ''
+        softdep nvidia post: nvidia_uvm
+      '';
 
-          {
-            assertion =
-              cfg.powerManagement.kernelSuspendNotifier
-              -> (useOpenModules && lib.versionAtLeast nvidiaPkg.version "595");
-            message = "NVIDIA driver support for kernel suspend notifiers requires NVIDIA driver version 595 or newer, and the open source kernel modules.";
-          }
-        ];
+      "modprobe.d/nvidia-blacklists.conf".text = ''
+        blacklist nouveau
+        options nouveau modeset=0
+        blacklist nvidiafb
+        blacklist nova_core
+      '';
 
-        environment.etc = {
-          # Don't add `nvidia-uvm` to `kernelModules`, because we want
-          # `nvidia-uvm` be loaded only after the GPU device is available, i.e. after `udev` rules
-          # for `nvidia` kernel module are applied.
-          # This matters on Azure GPU instances: https://github.com/NixOS/nixpkgs/pull/267335
-          #
-          # Instead, we use `softdep` to lazily load `nvidia-uvm` kernel module
-          # after `nvidia` kernel module is loaded and `udev` rules are applied.
-          "modprobe.d/nvidia-uvm.conf".text = ''
-            softdep nvidia post: nvidia_uvm
-          '';
+      "modprobe.d/nvidia-power-management-finegrained.conf" = lib.mkIf cfg.powerManagement.finegrained {
+        text = ''
+          options nvidia "NVreg_DynamicPowerManagement=0x02"
+        '';
+      };
 
-          "modprobe.d/nvidia-blacklists.conf".text = ''
-            blacklist nouveau
-            options nouveau modeset=0
-            blacklist nvidiafb
-            blacklist nova_core
-          '';
+      "nvidia/nvidia-application-profiles-rc" = lib.mkIf cfg.package.useProfiles {
+        source = "${cfg.package.bin}/share/nvidia/nvidia-application-profiles-rc";
+      };
 
-          "modprobe.d/nvidia-power-management-finegrained.conf" = lib.mkIf cfg.powerManagement.finegrained {
-            text = ''
-              options nvidia "NVreg_DynamicPowerManagement=0x02"
-            '';
-          };
+      # 'cfg.package' installs it's files to /run/opengl-driver/...
+      "egl/egl_external_platform.d".source = "/run/opengl-driver/share/egl/egl_external_platform.d/";
+    };
 
-          "nvidia/nvidia-application-profiles-rc" = lib.mkIf nvidiaPkg.useProfiles {
-            source = "${nvidiaPkg.bin}/share/nvidia/nvidia-application-profiles-rc";
-          };
+    # reverse sync implies offloading
+    hardware.nvidia.prime.offload.enable = lib.mkDefault reverseSyncCfg.enable;
 
-          # 'nvidiaPkg' installs it's files to /run/opengl-driver/...
-          "egl/egl_external_platform.d".source = "/run/opengl-driver/share/egl/egl_external_platform.d/";
-        };
+    boot = {
+      extraModulePackages = if useOpenModules then [ cfg.package.open ] else [ cfg.package.bin ];
 
-        boot = {
-          extraModulePackages = if useOpenModules then [ nvidiaPkg.open ] else [ nvidiaPkg.bin ];
+      # nvidia-uvm is required by CUDA applications.
+      # Exception is the open-source kernel module failing to load nvidia-uvm using softdep
+      # for unknown reasons.
+      # It affects CUDA: https://github.com/NixOS/nixpkgs/issues/334180
+      # Previously nvidia-uvm was explicitly loaded only when xserver was enabled:
+      # https://github.com/NixOS/nixpkgs/pull/334340/commits/4548c392862115359e50860bcf658cfa8715bde9
+      # We are now loading the module eagerly for all users of the open driver (including headless).
+      kernelModules = [
+        "nvidia"
+        "nvidia_modeset"
+        "nvidia_drm"
+      ]
+      ++ lib.optionals useOpenModules [ "nvidia_uvm" ];
 
-          # Exception is the open-source kernel module failing to load nvidia-uvm using softdep
-          # for unknown reasons.
-          # It affects CUDA: https://github.com/NixOS/nixpkgs/issues/334180
-          # Previously nvidia-uvm was explicitly loaded only when xserver was enabled:
-          # https://github.com/NixOS/nixpkgs/pull/334340/commits/4548c392862115359e50860bcf658cfa8715bde9
-          # We are now loading the module eagerly for all users of the open driver (including headless).
-          kernelModules = lib.optionals useOpenModules [ "nvidia_uvm" ];
-          
-          kernelParams = 
-            lib.optional useOpenModules "nvidia.NVreg_OpenRmEnableUnsupportedGpus=1"
-            ++ lib.optional (
-              cfg.powerManagement.enable && cfg.powerManagement.kernelSuspendNotifier
-            ) "nvidia.NVreg_UseKernelSuspendNotifiers=1"
-            ++ lib.optional cfg.powerManagement.enable "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
-            ++ lib.optional (config.boot.kernelPackages.kernel.kernelAtLeast "6.2" && !ibtSupport) "ibt=off";
-        };
+      kernelParams =
+        lib.optional useOpenModules "nvidia.NVreg_OpenRmEnableUnsupportedGpus=1"
+        ++ lib.optional (
+          cfg.powerManagement.enable && cfg.powerManagement.kernelSuspendNotifier
+        ) "nvidia.NVreg_UseKernelSuspendNotifiers=1"
+        ++ lib.optional cfg.powerManagement.enable "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
+        ++ lib.optional (config.boot.kernelPackages.kernel.kernelAtLeast "6.2" && !ibtSupport) "ibt=off"
+        ++ lib.optional useModeset "nvidia-drm.modeset=1"
+        ++ lib.optional (useModeset && lib.versionAtLeast cfg.package.version "545") "nvidia-drm.fbdev=1";
+    };
 
-        services.udev.packages = [
-          (pkgs.writeTextDir "lib/udev/rules.d/60-nvidia.rules" ''
-            KERNEL=="nvidia", RUN+="${pkgs.runtimeShell} -c 'mknod -m 666 /dev/nvidiactl c 195 255'"
-            KERNEL=="nvidia", RUN+="${pkgs.runtimeShell} -c 'for i in $$(cat /proc/driver/nvidia/gpus/*/information | grep Minor | cut -d \  -f 4); do mknod -m 666 /dev/nvidia$${i} c 195 $${i}; done'"
-            KERNEL=="nvidia_modeset", RUN+="${pkgs.runtimeShell} -c 'mknod -m 666 /dev/nvidia-modeset c 195 254'"
-            KERNEL=="nvidia_uvm", RUN+="${pkgs.runtimeShell} -c 'mknod -m 666 /dev/nvidia-uvm c $$(grep nvidia-uvm /proc/devices | cut -d \  -f 1) 0'"
-            KERNEL=="nvidia_uvm", RUN+="${pkgs.runtimeShell} -c 'mknod -m 666 /dev/nvidia-uvm-tools c $$(grep nvidia-uvm /proc/devices | cut -d \  -f 1) 1'"
-            
-            KERNEL=="card*", SUBSYSTEM=="drm", GROUP="video", MODE="0660"
-            KERNEL=="renderD*", SUBSYSTEM=="drm", GROUP="render", MODE="0660"
+    services.udev.packages = [
+      (
+        pkgs.writeTextDir "lib/udev/rules.d/60-nvidia.rules" ''
+          KERNEL=="nvidia", RUN+="${pkgs.runtimeShell} -c 'mknod -m 666 /dev/nvidiactl c 195 255'"
+          KERNEL=="nvidia", RUN+="${pkgs.runtimeShell} -c 'for i in $$(cat /proc/driver/nvidia/gpus/*/information | grep Minor | cut -d \  -f 4); do mknod -m 666 /dev/nvidia$${i} c 195 $${i}; done'"
+          KERNEL=="nvidia_modeset", RUN+="${pkgs.runtimeShell} -c 'mknod -m 666 /dev/nvidia-modeset c 195 254'"
+          KERNEL=="nvidia_uvm", RUN+="${pkgs.runtimeShell} -c 'mknod -m 666 /dev/nvidia-uvm c $$(grep nvidia-uvm /proc/devices | cut -d \  -f 1) 0'"
+          KERNEL=="nvidia_uvm", RUN+="${pkgs.runtimeShell} -c 'mknod -m 666 /dev/nvidia-uvm-tools c $$(grep nvidia-uvm /proc/devices | cut -d \  -f 1) 1'"
+
+          KERNEL=="card*", SUBSYSTEM=="drm", GROUP="video", MODE="0660"
+          KERNEL=="renderD*", SUBSYSTEM=="drm", GROUP="render", MODE="0660"
+        ''
+        + lib.optionalString cfg.powerManagement.finegrained (
+          lib.optionalString (lib.versionOlder config.boot.kernelPackages.kernel.version "5.5") ''
+            # Remove NVIDIA USB xHCI Host Controller devices, if present
+            ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c0330", ATTR{remove}="1"
+
+            # Remove NVIDIA USB Type-C UCSI devices, if present
+            ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c8000", ATTR{remove}="1"
+
+            # Remove NVIDIA Audio devices, if present
+            ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", ATTR{remove}="1"
           ''
-          + lib.optionalString cfg.powerManagement.finegrained (
-              lib.optionalString (lib.versionOlder config.boot.kernelPackages.kernel.version "5.5") ''
-                # Remove NVIDIA USB xHCI Host Controller devices, if present
-                ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c0330", ATTR{remove}="1"
+          + ''
+            # Enable runtime PM for NVIDIA VGA/3D controller devices on driver bind
+            ACTION=="bind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="auto"
+            ACTION=="bind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="auto"
 
-                # Remove NVIDIA USB Type-C UCSI devices, if present
-                ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c8000", ATTR{remove}="1"
+            # Disable runtime PM for NVIDIA VGA/3D controller devices on driver unbind
+            ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="on"
+            ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="on"
+          ''
+        )
+      )
+    ];
 
-                # Remove NVIDIA Audio devices, if present
-                ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", ATTR{remove}="1"
-              ''
-              + ''
-                # Enable runtime PM for NVIDIA VGA/3D controller devices on driver bind
-                ACTION=="bind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="auto"
-                ACTION=="bind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="auto"
+    hardware.graphics = {
+      extraPackages = [
+        cfg.package.out
+        (combineIcdPkgs pkgs)
+      ]
+      ++ lib.optional cfg.videoAcceleration pkgs.nvidia-vaapi-driver;
+      extraPackages32 = [
+        cfg.package.lib32
+        (combineIcdPkgs pkgs.pkgsi686Linux)
+      ];
+    };
+    hardware.firmware = lib.optional cfg.gsp.enable cfg.package.firmware;
 
-                # Disable runtime PM for NVIDIA VGA/3D controller devices on driver unbind
-                ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="on"
-                ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="on"
-              ''
-            )
-          )
-        ];
-
-        hardware.graphics = {
-          extraPackages = [ nvidiaPkg.out ] 
-            ++ lib.optional cfg.videoAcceleration pkgs.nvidia-vaapi-driver;
-          extraPackages32 = [ nvidiaPkg.lib32 ];
-        };
-        hardware.firmware = lib.optional cfg.gsp.enable nvidiaPkg.firmware;
-
-        providers.resumeAndSuspend.hooks = lib.mkIf (cfg.powerManagement.enable && !cfg.powerManagement.kernelSuspendNotifier) {
+    providers.resumeAndSuspend.hooks =
+      lib.mkIf (cfg.powerManagement.enable && !cfg.powerManagement.kernelSuspendNotifier)
+        {
           nvidia-suspend = {
             event = "suspend";
-            action = "PATH=${pkgs.kbd}/bin:$PATH ${nvidiaPkg.out}/bin/nvidia-sleep.sh 'suspend'";
+            action = "PATH=${pkgs.kbd}/bin:$PATH ${cfg.package.out}/bin/nvidia-sleep.sh 'suspend'";
             priority = 100;
           };
           nvidia-hibernate = {
             event = "hibernate";
-            action = "${nvidiaPkg.out}/bin/nvidia-sleep.sh 'hibernate'";
+            action = "${cfg.package.out}/bin/nvidia-sleep.sh 'hibernate'";
             priority = 100;
           };
           nvidia-resume = {
             event = "resume";
-            action = "${nvidiaPkg.out}/bin/nvidia-sleep.sh 'resume'";
+            action = "${cfg.package.out}/bin/nvidia-sleep.sh 'resume'";
             priority = 900; # run after other resume hooks
           };
         };
 
-        environment.systemPackages = [ nvidiaPkg.bin ]
-          ++ lib.optional offloadCfg.enableOffloadCmd (
-              pkgs.writeShellScriptBin offloadCfg.offloadCmdMainProgram ''
-                export __NV_PRIME_RENDER_OFFLOAD=1
-                export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
-                export __GLX_VENDOR_LIBRARY_NAME=nvidia
-                export __VK_LAYER_NV_optimus=NVIDIA_only
-                exec "$@"
-              ''
-            );
-      }
-
-      # Display
-      (lib.mkIf nvidiaStandardEnabled {
-        services = lib.optionalAttrs (options.services ? xserver) {
-          xserver.drivers = 
-            lib.optional primeEnabled {
-              name = igpuDriver;
-              display = offloadCfg.enable;
-              modules = lib.optional (igpuDriver == "amdgpu") pkgs.xf86-video-amdgpu;
-              deviceSection = ''
-                BusID "${igpuBusId}"
-              ''
-              + lib.optionalString (syncCfg.enable && igpuDriver != "amdgpu") ''
-                Option "AccelMethod" "none"
-              '';
-            }
-            ++ lib.singleton {
-              name = "nvidia";
-              modules = [ nvidiaPkg.bin ];
-              display = !offloadCfg.enable;
-              deviceSection = ''
-                Option "SidebandSocketPath" "/run/nvidia-xdriver/"
-              '' 
-              + lib.optionalString primeEnabled ''
-                BusID "${primeCfg.nvidiaBusId}"
-              ''
-              + lib.optionalString primeCfg.allowExternalGpu ''
-                Option "AllowExternalGpus"
-              '';
-              screenSection = ''
-                Option "RandRRotation" "on"
-              ''
-              + lib.optionalString syncCfg.enable ''
-                  Option "AllowEmptyInitialConfiguration"
-              ''
-              + lib.optionalString cfg.forceFullCompositionPipeline ''
-                Option         "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
-                Option         "AllowIndirectGLXProtocol" "off"
-                Option         "TripleBuffer" "on"
-              '';
-            };
-        };
-        
-        finit.tmpfiles.rules = [
-          # Remove the following log message:
-          #    (WW) NVIDIA: Failed to bind sideband socket to
-          #    (WW) NVIDIA:     '/var/run/nvidia-xdriver-b4f69129' Permission denied
-          #
-          # https://bbs.archlinux.org/viewtopic.php?pid=1909115#p1909115
-          "d /run/nvidia-xdriver 0770 root users"
-        ];
-
-        environment.etc."X11/xorg.conf.d/10-nvidia-prime-layout.conf" = lib.mkIf primeEnabled {
-          text = ''
-            Section "ServerLayout"
-              Identifier "layout"
-              ${lib.optionalString syncCfg.enable ''Inactive "Device-${igpuDriver}[0]"''}
-              ${lib.optionalString reverseSyncCfg.enable ''Inactive "Device-nvidia[0]"''}
-              ${lib.optionalString offloadCfg.enable ''Option "AllowNVIDIAGPUScreens"''}
-            EndSection
-          '';
-        };
-
-        # reverse sync implies offloading
-        hardware.nvidia.prime.offload.enable = lib.mkDefault reverseSyncCfg.enable;
-
-        boot = {
-          # nvidia-uvm is required by CUDA applications.
-          kernelModules = [
-            "nvidia"
-            "nvidia_modeset"
-            "nvidia_drm"
-          ];
-
-          # If requested enable modesetting via kernel parameters.
-          kernelParams =
-            lib.optional useModeset "nvidia-drm.modeset=1"
-            ++ lib.optional (
-              useModeset && lib.versionAtLeast nvidiaPkg.version "545"
-            ) "nvidia-drm.fbdev=1";
-        };
-      })
+    environment.systemPackages = [
+      cfg.package.bin
     ]
-  );
+    ++ lib.optional offloadCfg.enableOffloadCmd (
+      pkgs.writeShellScriptBin offloadCfg.offloadCmdMainProgram ''
+        export __NV_PRIME_RENDER_OFFLOAD=1
+        export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
+        export __GLX_VENDOR_LIBRARY_NAME=nvidia
+        export __VK_LAYER_NV_optimus=NVIDIA_only
+        exec "$@"
+      ''
+    );
+  };
 }
