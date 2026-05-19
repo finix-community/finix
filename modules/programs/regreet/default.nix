@@ -18,7 +18,7 @@ let
     }
   );
 
-  wlroots_0_19 = pkgs.wlroots_0_19.override {
+  wlroots_0_20 = pkgs.wlroots_0_20.override {
     inherit libinput;
 
     # xwayland appears to cause issues - and not required in this context, so no harm in removing
@@ -70,7 +70,7 @@ in
       package = lib.mkOption {
         type = lib.types.package;
         default = pkgs.cage.override {
-          inherit wlroots_0_19;
+          inherit wlroots_0_20;
         };
         defaultText = lib.literalExpression "pkgs.cage";
         description = ''
@@ -103,6 +103,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    services.accounts-daemon.enable = true;
     services.greetd.enable = true;
     services.greetd.settings = {
       default_session = {
@@ -113,6 +114,10 @@ in
           + lib.optionalString cfg.debug " --log-level debug";
       };
     };
+
+    finit.services.greetd.conditions = [
+      "service/accounts-daemon/ready"
+    ];
 
     programs.regreet.settings = {
       GTK = {
