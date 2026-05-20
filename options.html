@@ -4308,11 +4308,35 @@
     <details class="toc-category">
       <summary title="services">
         <span>services</span>
-        <span class="toc-count">336</span>
+        <span class="toc-count">339</span>
       </summary>
       <ul>
         
 
+        
+        <li>
+          <a href='#option-services-accounts-daemon-debug' title="services.accounts-daemon.debug">
+            accounts-daemon.debug
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-accounts-daemon-enable' title="services.accounts-daemon.enable">
+            accounts-daemon.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-accounts-daemon-package' title="services.accounts-daemon.package">
+            accounts-daemon.package
+            
+            
+          </a>
+        </li>
         
         <li>
           <a href='#option-services-acpid-enable' title="services.acpid.enable">
@@ -7950,7 +7974,7 @@ the device-manager and before mounting file-systems.</p>
   <div class="option-description"><html><head></head><body><p>Packages providing filesystem utilities for <code>zfs</code> in the initial ramdisk.</p>
 </body></html></div>
   <div class="option-default">Default: <code>[
-  <derivation zfs-user-2.4.1>
+  <derivation zfs-user-2.4.2>
 ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/zfs.nix" target="_blank">&lt;finix/modules/filesystems/zfs.nix&gt;</a></code></div>
 </div>
@@ -8500,7 +8524,7 @@ that follow this format and can be used directly.</p>
   <div class="option-description"><html><head></head><body><p>Packages providing filesystem utilities for <code>zfs</code>.</p>
 </body></html></div>
   <div class="option-default">Default: <code>[
-  <derivation zfs-user-2.4.1>
+  <derivation zfs-user-2.4.2>
 ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/zfs.nix" target="_blank">&lt;finix/modules/filesystems/zfs.nix&gt;</a></code></div>
 </div>
@@ -12909,7 +12933,7 @@ If more than one is specified, a random one will be selected at boot.</p>
     <span class="copy-feedback">Link copied!</span>
   </h3>
   <div class="option-type">Type: <code>boolean</code></div>
-  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://github.com/DreamMaoMao/mangowc">mangowc</a>.</p>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://mangowm.github.io">mangowc</a>.</p>
 </body></html></div>
   <div class="option-default">Default: <code>false</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/mangowc" target="_blank">&lt;finix/modules/programs/mangowc&gt;</a></code></div>
@@ -14332,6 +14356,42 @@ symbolic or numeric file mode understood by <code class="command">chmod</code>.<
   <div class="option-description"><html><head></head><body><p>The absolute path to the program to be wrapped.</p>
 </body></html></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/security/wrappers" target="_blank">&lt;finix/modules/security/wrappers&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-accounts-daemon-debug">
+  <h3 class="option-name">
+    <a href="#option-services-accounts-daemon-debug" class="option-anchor">services.accounts-daemon.debug</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/accounts-daemon" target="_blank">&lt;finix/modules/services/accounts-daemon&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-accounts-daemon-enable">
+  <h3 class="option-name">
+    <a href="#option-services-accounts-daemon-enable" class="option-anchor">services.accounts-daemon.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://www.freedesktop.org/wiki/Software/AccountsService">accountsservice</a> as a system service.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/accounts-daemon" target="_blank">&lt;finix/modules/services/accounts-daemon&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-accounts-daemon-package">
+  <h3 class="option-name">
+    <a href="#option-services-accounts-daemon-package" class="option-anchor">services.accounts-daemon.package</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>accountsservice</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.accountsservice</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/accounts-daemon" target="_blank">&lt;finix/modules/services/accounts-daemon&gt;</a></code></div>
 </div>
 <div class="option" id="option-services-acpid-enable">
   <h3 class="option-name">
