@@ -5,11 +5,14 @@ let
   sources = import ../lon.nix;
   ndg = pkgs.callPackage (toString sources.ndg + "/flake/packages/ndg/package.nix") { };
   pkgs = import sources.nixpkgs { };
+  modules = import ../modules;
 
   eval = lib.evalModules {
+    class = "nixos";
+    specialArgs = { inherit modules; };
     modules = [
       {
-        imports = builtins.attrValues (import ../modules);
+        imports = builtins.attrValues modules;
         nixpkgs.pkgs = pkgs;
       }
       {
