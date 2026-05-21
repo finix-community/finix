@@ -6,6 +6,16 @@
 }:
 let
   cfg = config.programs.tuigreet;
+
+  xinit' = pkgs.xinit.override (
+    lib.optionalAttrs config.services.mdevd.enable {
+      xorg-server = pkgs.xorg-server.override (
+        lib.optionalAttrs config.services.mdevd.enable {
+          udev = pkgs.libudev-zero;
+        }
+      );
+    }
+  );
 in
 {
   options.programs.tuigreet = {
@@ -58,6 +68,10 @@ in
         "${config.providers.privileges.command} /run/current-system/sw/bin/poweroff"
         "--power-reboot"
         "${config.providers.privileges.command} /run/current-system/sw/bin/reboot"
+      ]
+      ++ lib.optionals config.services.xserver.enable or false [
+        "--xsession-wrapper"
+        "${lib.getExe' xinit' "startx"} ${lib.getExe' pkgs.coreutils "env"}"
       ];
 
     services.greetd.enable = true;

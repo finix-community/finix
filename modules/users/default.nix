@@ -96,6 +96,7 @@ in
           "kvm"
           "lp"
           "nogroup"
+          "render"
           "root"
           "sgx"
           "shadow"

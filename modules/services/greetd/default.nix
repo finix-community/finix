@@ -56,9 +56,14 @@ in
       greeter = {
         isSystemUser = true;
         group = "greeter";
-        extraGroups = lib.optionals config.services.seatd.enable [
-          config.services.seatd.group
+        extraGroups = [
           "video"
+        ]
+        ++ lib.optionals config.services.elogind.enable [
+          "render"
+        ]
+        ++ lib.optionals config.services.seatd.enable [
+          config.services.seatd.group
         ];
       };
     };

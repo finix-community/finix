@@ -24,6 +24,16 @@ let
     # xwayland appears to cause issues - and not required in this context, so no harm in removing
     enableXWayland = false;
   };
+
+  xinit' = pkgs.xinit.override (
+    lib.optionalAttrs config.services.mdevd.enable {
+      xorg-server = pkgs.xorg-server.override (
+        lib.optionalAttrs config.services.mdevd.enable {
+          udev = pkgs.libudev-zero;
+        }
+      );
+    }
+  );
 in
 {
   options.programs.regreet = {
@@ -120,12 +130,8 @@ in
     ];
 
     programs.regreet.settings = {
-      GTK = {
-        application_prefer_dark_theme = true;
-      };
-
-      commands = lib.mkMerge [
-        (lib.mkIf config.services.seatd.enable {
+      commands =
+        lib.optionalAttrs config.services.seatd.enable {
           reboot = [
             config.providers.privileges.command
             "/run/current-system/sw/bin/reboot"
@@ -134,9 +140,8 @@ in
             config.providers.privileges.command
             "/run/current-system/sw/bin/poweroff"
           ];
-        })
-
-        (lib.mkIf config.services.elogind.enable {
+        }
+        // lib.optionalAttrs config.services.elogind.enable {
           reboot = [
             "loginctl"
             "reboot"
@@ -145,8 +150,13 @@ in
             "loginctl"
             "poweroff"
           ];
-        })
-      ];
+        }
+        // lib.optionalAttrs config.services.xserver.enable or false {
+          x11_prefix = [
+            (lib.getExe' xinit' "startx")
+            (lib.getExe' pkgs.coreutils "env")
+          ];
+        };
     };
 
     providers.privileges.rules = lib.mkIf config.services.seatd.enable [
