@@ -1,4 +1,5 @@
 {
+  modules,
   config,
   pkgs,
   lib,
@@ -18,6 +19,8 @@ let
   );
 in
 {
+  imports = [ modules.greetd ];
+
   options.programs.tuigreet = {
     enable = lib.mkOption {
       type = lib.types.bool;

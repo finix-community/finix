@@ -1,4 +1,5 @@
 {
+  modules,
   config,
   pkgs,
   lib,
@@ -8,6 +9,8 @@ let
   cfg = config.services.gvfs;
 in
 {
+  imports = [ modules.udisks2 ];
+
   options.services.gvfs = {
     enable = lib.mkOption {
       type = lib.types.bool;

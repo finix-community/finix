@@ -39,6 +39,7 @@ in
 
     environment.systemPackages = packages;
 
+    services.dbus.enable = true;
     services.dbus.packages = packages;
     services.udev.packages = packages;
 

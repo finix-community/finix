@@ -1,4 +1,5 @@
 {
+  modules,
   config,
   pkgs,
   lib,
@@ -36,6 +37,11 @@ let
   );
 in
 {
+  imports = with modules; [
+    accounts-daemon
+    greetd
+  ];
+
   options.programs.regreet = {
     enable = lib.mkOption {
       type = lib.types.bool;

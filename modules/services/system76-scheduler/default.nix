@@ -45,6 +45,8 @@ in
   config = lib.mkIf cfg.enable {
     environment.etc."system76-scheduler/config.kdl".source = cfg.configFile;
     environment.systemPackages = [ cfg.package ];
+
+    services.dbus.enable = true;
     services.dbus.packages = [ cfg.package ];
 
     finit.services.system76-scheduler = {

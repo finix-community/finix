@@ -47,16 +47,11 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = config.services.polkit.enable;
-        message = "services.fprintd requires services.polkit.enable set to true";
-      }
-    ];
-
     environment.systemPackages = [ cfg.package ];
 
     services.dbus.packages = [ cfg.package ];
+
+    services.polkit.enable = true;
     services.polkit.extraConfig = lib.optionalString (cfg.extraGroups != [ ]) ''
       polkit.addRule(function(action, subject) {
         if (action.id.startsWith("net.reactivated.fprint.device.")) {

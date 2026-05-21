@@ -1,4 +1,5 @@
 {
+  modules,
   config,
   pkgs,
   lib,
@@ -12,7 +13,7 @@ in
     ./providers.scheduler.nix
 
     # anacron has a hard dependency on cron
-    ../cron
+    modules.cron
   ];
 
   options.services.anacron = {

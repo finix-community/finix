@@ -38,6 +38,7 @@ in
   config = lib.mkIf cfg.enable {
     environment.pathsToLink = [ "/share/accountsservice" ];
 
+    services.dbus.enable = true;
     services.dbus.packages = [ cfg.package ];
 
     finit.services.accounts-daemon = {

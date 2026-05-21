@@ -39,11 +39,13 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-
     environment.systemPackages = [ cfg.package ];
 
+    services.dbus.enable = true;
     services.dbus.packages = [ cfg.package ];
     services.udev.packages = [ cfg.package ];
+
+    services.polkit.enable = true;
     services.polkit.extraConfig = lib.optionalString (cfg.extraGroups != [ ]) ''
       polkit.addRule(function(action, subject) {
         if (action.id.startsWith("org.freedesktop.UPower.PowerProfiles.")) {

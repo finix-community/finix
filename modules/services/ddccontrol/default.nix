@@ -29,6 +29,7 @@ in
       pkgs.ddccontrol
     ];
 
+    services.dbus.enable = true;
     services.dbus.packages = [
       pkgs.ddccontrol
     ];

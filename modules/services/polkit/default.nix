@@ -104,6 +104,7 @@ in
       ${cfg.extraConfig}
     ''; # TODO: validation on compilation (at least against typos)
 
+    services.dbus.enable = true;
     services.dbus.packages = [ cfg.package.out ];
 
     security.pam.services.polkit-1 = {

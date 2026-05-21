@@ -60,6 +60,7 @@ in
     environment.systemPackages = [ cfg.package ];
     environment.etc."bluetooth/main.conf".source = format.generate "main.conf" cfg.settings;
 
+    services.dbus.enable = true;
     services.dbus.packages = [ cfg.package ];
     services.udev.packages = [ cfg.package ];
 

@@ -45,6 +45,7 @@ in
       command = "${cfg.package}/libexec/elogind";
     };
 
+    services.dbus.enable = true;
     services.dbus.packages = [ cfg.package ];
     services.udev.packages = [ cfg.package ];
 
