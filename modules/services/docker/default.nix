@@ -52,6 +52,10 @@ in
       default = [ "unix:///run/docker.sock" ];
       description = ''
         A list of unix and tcp sockets docker should listen to. 
+
+        ::: {.note}
+        The `fd://` listen option is unavailable on `finix`. 
+        :::
       '';
       example = [
         "unix:///run/docker.sock"
@@ -64,7 +68,7 @@ in
       type = types.bool;
       default = true;
       description = ''
-        When enabled dockerd is started on boot. This is required for
+        When enabled, `dockerd` is started on boot. This is required for
         containers which are created with the
         `--restart=always` flag to work. If this option is
         disabled, docker might be started on demand by socket activation.
@@ -161,7 +165,7 @@ in
         default = false;
         description = ''
           Whether to periodically prune Docker resources. If enabled, a
-          systemd timer will run `docker system prune -f`
+          cron job will run `docker system prune -f`
           as specified by the `dates` option.
         '';
       };
@@ -211,6 +215,13 @@ in
           useful to catch up on missed runs of the service when the
           system was powered down.
         '';
+      };
+
+      provider = mkoption {
+        default = "cron";
+        type = types.str;
+        example = "anacron";
+        description = "Name of the cron provider to use for the autoPrune functionality.";
       };
     };
 
