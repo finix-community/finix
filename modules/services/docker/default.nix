@@ -357,6 +357,10 @@ in
           assertion = cfg.autoPrune.enable -> config.services.${cfg.autoPrune.scheduler}.enable;
           message = "Option autoPrune.enable requires a cron scheduler to be enabled in your system configuration.";
         }
+        {
+          assertion = !any (s: hasPrefix "fd://" s) cfg.listenOptions;
+          message = "Option listenOptions cannot include any items with fd:// as a socket type.";
+        }
       ];
     }
   ]);
