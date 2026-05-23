@@ -16,6 +16,7 @@ let
   # proxy_env = config.networking.proxy.envVars;
   settingsFormat = pkgs.formats.json { };
   daemonSettingsFile = settingsFormat.generate "daemon.json" cfg.daemon.settings;
+  validPrefix = s: builtins.isString s && (hasPrefix "unix://" s || hasPrefix "tcp://" s);
 
 in
 
@@ -358,8 +359,8 @@ in
           message = "Option autoPrune.enable requires a cron scheduler to be enabled in your system configuration.";
         }
         {
-          assertion = !any (s: hasPrefix "fd://" s) cfg.listenOptions;
-          message = "Option listenOptions cannot include any items with fd:// as a socket type.";
+          assertion = all validPrefix values;
+          message = "Option listenOptions can only include unix:// and tcp:// as socket types.";
         }
       ];
     }
