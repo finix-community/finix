@@ -37,14 +37,16 @@ in
     '';
 
     environment.etc.os-release.text = ''
-      ANSI_COLOR="1;34"
+      ANSI_COLOR="0;38;2;231;56;71"
+      BUG_REPORT_URL="https://github.com/finix-community/finix/issues/"
       DEFAULT_HOSTNAME=finix
-      DOCUMENTATION_URL="https://nixos.org/learn.html"
-      HOME_URL="https://nixos.org/"
+      HOME_URL="https://github.com/finix-community/finix/"
       ID=finix
       LOGO=finix-logo
       NAME=finix
       PRETTY_NAME="finix 25.05"
+      VENDOR_NAME=finix
+      VENDOR_URL="https://github.com/finix-community/finix/"
       VERSION="25.05"
       VERSION_ID="25.05"
     '';
