@@ -47,6 +47,7 @@ in
       '';
     };
 
+    # TODO add assertion that prevents any listenOptions with `fd://` as a prefix
     listenOptions = mkOption {
       type = types.listOf types.str;
       default = [ "unix:///run/docker.sock" ];
@@ -63,7 +64,6 @@ in
       ];
     };
 
-    # TODO not implemented
     enableOnBoot = mkOption {
       type = types.bool;
       default = true;
@@ -167,26 +167,64 @@ in
           Whether to periodically prune Docker resources. If enabled, a
           cron job will run `docker system prune -f`
           as specified by the `dates` option.
+
+          Supported cron providers include `cron`, `fcron`, and `anacron`.
+
+          ::{.note}
+          By default this does not prune volumes. Anonymous volumes
+          can be pruned by passing "--volumes" to [autoPrune.flags](#opt-virtualisation.docker.autoPrune.flags).
+
+          To prune all volumes (not just anonymous ones) [`autoPrune.allVolumes.enable`](#opt-virtualisation.docker.autoPrune.allVolumes.enable)
+          must be used.
+
+          See [upstream documentation](https://docs.docker.com/reference/cli/docker/system/prune/#description) for further information.
         '';
       };
 
       flags = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        example = [ "--all" ];
+        example = [ "--filter=label=<label>" ];
         description = ''
           Any additional flags passed to {command}`docker system prune`.
         '';
       };
 
-      dates = mkOption {
+      interval = mkOption {
         default = "weekly";
         type = types.str;
         description = ''
-          Specification (in the format described by
-          {manpage}`systemd.time(7)`) of the time at
-          which the prune will occur.
+          The interval at which `docker system prune` should run. Accepts either a
+          standard {manpage}`crontab(5)` expression or one of: `hourly`, `daily`, `weekly`, `monthly`, or `yearly`.
+
+          If a standard {manpage}`crontab(5)` expression is provided this value will be passed directly
+          to the `scheduler` implementation and execute exactly as specified.
+
+          If one of the special values, `hourly`, `daily`, `monthly`, `weekly`, or `yearly`, is provided then the
+          underlying `scheduler` implementation will use its features to decide when best to run.
         '';
+      };
+
+      allVolumes = {
+        enable = mkOption {
+          type = types.bool;
+          default = false;
+          description = ''
+            Whether to periodically prune all Docker volumes when auto pruning other docker resources
+            by running {command}`docker volume prune --force --all`
+
+            To prune only anonymous volumes, instead pass `--volumes` to `autoPrune.flags`
+          '';
+        };
+
+        flags = mkOption {
+          type = types.listOf types.str;
+          default = [ ];
+          example = [ "--filter=label=<label>" ];
+          description = ''
+            Any additional flags passed to {command}`docker volume prune --force --all`.
+          '';
+        };
       };
 
       randomizedDelaySec = mkOption {
@@ -217,7 +255,7 @@ in
         '';
       };
 
-      provider = mkoption {
+      scheduler = mkOption {
         default = "cron";
         type = types.str;
         example = "anacron";
@@ -255,7 +293,7 @@ in
         cfg.package
       ];
 
-      users.groups = lib.optionalAttrs (cfg.group == "docker") {
+      users.groups = optionalAttrs (cfg.group == "docker") {
         docker = { };
       };
 
@@ -269,6 +307,7 @@ in
         command = "${cfg.package}/bin/dockerd --config-file=${daemonSettingsFile} ${cfg.extraOptions}";
         # environment = proxy_env;
         reload = "${pkgs.procps}/bin/kill -s HUP $MAINPID";
+        manual = !cfg.enableOnBoot;
         path = [
           pkgs.kmod
         ]
@@ -276,13 +315,31 @@ in
         ++ cfg.extraPackages;
       };
 
-      # TODO implement as cron job
-      # finit.run.docker-prune = {
-      #   description = "prune docker resources";
-      #   conditions = [
-      #     "service/docker/running"
-      #   ];
-      # };
+      providers.scheduler = mkIf cfg.autoPrune.enable {
+        backend = cfg.autoPrune.scheduler;
+        tasks.autoPrune = {
+          command = concatMapStringsSep (
+            [
+              "${cfg.package}/bin/docker"
+              "system"
+              "prune"
+              "-f"
+            ]
+            ++ cfg.autoPrune.flags
+            ++ optionals cfg.autoPrune.allVolumes.enable (
+              [
+                "${cfg.package}/bin/docker"
+                "volume"
+                "prune"
+                "--force"
+                "--all"
+              ]
+              ++ cfg.autoPrune.allVolumes.flags
+            )
+          );
+          interval = cfg.autoPrune.interval;
+        };
+      };
 
       services.docker.daemon.settings = {
         group = "${cfg.group}";
@@ -290,6 +347,17 @@ in
         log-driver = mkDefault cfg.logDriver;
         storage-driver = mkIf (cfg.storageDriver != null) (mkDefault cfg.storageDriver);
       };
+
+      assertions = [
+        {
+          assertion = cfg.autoPrune.allVolumes.enable -> cfg.autoPrune.enable;
+          message = "Option autoPrune.allVolumes.enable requires autoPrune.enable";
+        }
+        {
+          assertion = cfg.autoPrune.enable -> config.services.${cfg.autoPrune.scheduler}.enable;
+          message = "Option autoPrune.enable requires a cron scheduler to be enabled in your system configuration.";
+        }
+      ];
     }
   ]);
 }
