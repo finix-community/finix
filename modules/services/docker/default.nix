@@ -1,90 +1,135 @@
-# Docker service.
-
 {
   config,
-  lib,
   pkgs,
+  lib,
   ...
 }:
-
-with lib;
 
 let
 
   cfg = config.services.docker;
-  # TODO advanced proxy setup when?
-  # proxy_env = config.networking.proxy.envVars;
-  settingsFormat = pkgs.formats.json { };
-  daemonSettingsFile = settingsFormat.generate "daemon.json" cfg.daemon.settings;
 
+  format = pkgs.formats.json { };
+  configFile = format.generate "daemon.json" cfg.settings;
 in
-
 {
-  ###### interface
-
   options.services.docker = {
-    enable = mkOption {
-      type = types.bool;
+    enable = lib.mkOption {
+      type = lib.types.bool;
       default = false;
       description = ''
-        This option enables (docker)[https://www.docker.com/], a daemon that manages
-        linux containers. Users in the "docker" group can interact with
-        the daemon (e.g. to start or stop containers) using the
-        {command}`docker` command line tool.
+        Whether to enable [docker](${pkgs.docker.meta.homepage}) as a system service.
       '';
     };
 
-    group = mkOption {
-      type = types.str;
+    package = lib.mkOption {
+      type = lib.types.package;
+      default = pkgs.docker;
+      defaultText = lib.literalExpression "pkgs.docker";
+      description = ''
+        The package to use for `docker`.
+      '';
+    };
+
+    debug = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to enable debug logging.
+      '';
+    };
+
+    group = lib.mkOption {
+      type = lib.types.str;
       default = "docker";
       description = ''
-        Group to own any unix and tcp sockets defined in `services.docker.listenOptions`.
+        Group to own any `docker` sockets.
 
         ::: {.note}
-        If you want non-`root` users to be able to access `docker` daemon commands, add
+        If you want non-`root` users to be able to access the `docker` daemon commands, add
         them to this group.
         :::
       '';
     };
 
-    # TODO add assertion that prevents any listenOptions with `fd://` as a prefix
-    listenOptions = mkOption {
-      type = types.listOf types.str;
-      default = [ "unix:///run/docker.sock" ];
+    extraPackages = lib.mkOption {
+      type = with lib.types; listOf package;
+      default = [ ];
+      example = lib.literalExpression "with pkgs; [ criu ]";
       description = ''
-        A list of unix and tcp sockets docker should listen to. 
-
-        ::: {.note}
-        The `fd://` listen option is unavailable on `finix`. 
-        :::
-      '';
-      example = [
-        "unix:///run/docker.sock"
-        "tcp://0.0.0.0:2375"
-      ];
-    };
-
-    enableOnBoot = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        When enabled, `dockerd` is started on boot. This is required for
-        containers which are created with the
-        `--restart=always` flag to work. If this option is
-        disabled, docker might be started on demand by socket activation.
+        Extra packages to be be made available to the `docker` daemon process.
       '';
     };
 
-    daemon.settings = mkOption {
-      type = types.submodule {
-        freeformType = settingsFormat.type;
+    settings = lib.mkOption {
+      type = lib.types.submodule {
+        freeformType = format.type;
         options = {
-          live-restore = mkOption {
-            type = types.bool;
+          hosts = lib.mkOption {
+            type = with lib.types; listOf str;
+            default = [ "unix:///run/docker.sock" ];
+            description = ''
+              Specifies where the `docker` daemon listens for client connections.
+              :::
+            '';
+            example = [
+              "unix:///run/docker.sock"
+              "tcp://0.0.0.0:2375"
+            ];
+          };
+
+          live-restore = lib.mkOption {
+            type = lib.types.bool;
             default = false;
             description = ''
-              Allow dockerd to be restarted without affecting running container.
-              This option is incompatible with docker swarm.
+              Enable live restore of `docker` when containers are still running.
+            '';
+          };
+
+          log-driver = lib.mkOption {
+            type = lib.types.enum [
+              "none"
+              "json-file"
+              "syslog"
+              "journald"
+              "gelf"
+              "fluentd"
+              "awslogs"
+              "splunk"
+              "etwlogs"
+              "gcplogs"
+              "local"
+            ];
+            default = "syslog";
+            description = ''
+              Default driver for container logs.
+            '';
+          };
+
+          storage-driver = lib.mkOption {
+            type =
+              with lib.types;
+              nullOr (enum [
+                "aufs"
+                "btrfs"
+                "devicemapper"
+                "overlay"
+                "overlay2"
+                "zfs"
+              ]);
+            default = null;
+            description = ''
+              Storage driver to use.
+
+              See [upstream documentation](https://docs.docker.com/storage/storagedriver/select-storage-driver)
+              for additional details.
+
+              ::: {.warning}
+              When you change the storage driver, any existing images and containers become inaccessible. This is
+              because their layers can't be used by the new storage driver. If you revert your changes, you can
+              access the old images and containers again, but any that you pulled or created using the new driver
+              are then inaccessible.
+              :::
             '';
           };
         };
@@ -96,105 +141,48 @@ in
         "fixed-cidr-v6" = "fd00::/80";
       };
       description = ''
-        Configuration for docker daemon. The attributes are serialized to JSON used as daemon.conf.
-        See <https://docs.docker.com/engine/reference/commandline/dockerd/#daemon-configuration-file>
+        `docker` configuration. See [upstream documentation](https://docs.docker.com/engine/reference/commandline/dockerd/#daemon-configuration-file)
+        for additional details.
       '';
     };
 
-    storageDriver = mkOption {
-      type = types.nullOr (
-        types.enum [
-          "aufs"
-          "btrfs"
-          "devicemapper"
-          "overlay"
-          "overlay2"
-          "zfs"
-        ]
-      );
-      default = null;
+    extraArgs = lib.mkOption {
+      type = with lib.types; listOf str;
+      default = [ ];
       description = ''
-        This option determines which Docker
-        [storage driver](https://docs.docker.com/storage/storagedriver/select-storage-driver/)
-        to use.
-        By default it lets docker automatically choose the preferred storage
-        driver.
-        However, it is recommended to specify a storage driver explicitly, as
-        docker's default varies over versions.
-
-        ::: {.warning}
-        Changing the storage driver will cause any existing containers
-        and images to become inaccessible.
-        :::
+        Additional arguments to pass to `dockerd`. See [upstream documentation](https://docs.docker.com/reference/cli/dockerd)
+        for additional details.
       '';
     };
 
-    logDriver = mkOption {
-      type = types.enum [
-        "none"
-        "json-file"
-        "syslog"
-        "journald"
-        "gelf"
-        "fluentd"
-        "awslogs"
-        "splunk"
-        "etwlogs"
-        "gcplogs"
-        "local"
-      ];
-      default = "syslog";
-      description = ''
-        This option determines which Docker log driver to use.
-      '';
-    };
-
-    extraOptions = mkOption {
-      type = types.separatedString " ";
-      default = "";
-      description = ''
-        The extra command-line options to pass to
-        {command}`docker` daemon.
-      '';
-    };
-
-    # TODO not implemented
-    autoPrune = {
-      enable = mkOption {
-        type = types.bool;
+    prune = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
         default = false;
         description = ''
-          Whether to periodically prune Docker resources. If enabled, a
-          cron job will run `docker system prune -f`
-          as specified by the `dates` option.
-
-          Supported cron providers include `cron`, `fcron`, and `anacron`.
-
-          ::{.note}
-          By default this does not prune volumes. Anonymous volumes
-          can be pruned by passing "--volumes" to [autoPrune.flags](#opt-virtualisation.docker.autoPrune.flags).
-
-          To prune all volumes (not just anonymous ones) [`autoPrune.allVolumes.enable`](#opt-virtualisation.docker.autoPrune.allVolumes.enable)
-          must be used.
-
-          See [upstream documentation](https://docs.docker.com/reference/cli/docker/system/prune/#description) for further information.
+          Whether to periodically prune `docker` resources.
         '';
       };
 
-      flags = mkOption {
-        type = types.listOf types.str;
+      extraArgs = lib.mkOption {
+        type = with lib.types; listOf str;
         default = [ ];
-        example = [ "--filter=label=<label>" ];
+        example = [
+          "--all"
+          "--volumes"
+        ];
         description = ''
-          Any additional flags passed to {command}`docker system prune`.
+          Additional arguments to pass to {command}`docker system prune`. See [upstream documentation](https://docs.docker.com/reference/cli/docker/system/prune)
+          for additional details.
         '';
       };
 
-      interval = mkOption {
+      # TODO: share this type with options.providers.scheduler.tasks.*.interval
+      interval = lib.mkOption {
+        type = lib.types.str;
         default = "weekly";
-        type = types.str;
         description = ''
-          The interval at which `docker system prune` should run. Accepts either a
+          The interval at which this task should run its specified {option}`command`. Accepts either a
           standard {manpage}`crontab(5)` expression or one of: `hourly`, `daily`, `weekly`, `monthly`, or `yearly`.
 
           If a standard {manpage}`crontab(5)` expression is provided this value will be passed directly
@@ -205,159 +193,85 @@ in
         '';
       };
 
-      allVolumes = {
-        enable = mkOption {
-          type = types.bool;
-          default = false;
-          description = ''
-            Whether to periodically prune all Docker volumes when auto pruning other docker resources
-            by running {command}`docker volume prune --force --all`
-
-            To prune only anonymous volumes, instead pass `--volumes` to `autoPrune.flags`
-          '';
-        };
-
-        flags = mkOption {
-          type = types.listOf types.str;
-          default = [ ];
-          example = [ "--filter=label=<label>" ];
-          description = ''
-            Any additional flags passed to {command}`docker volume prune --force --all`.
-          '';
-        };
-      };
-
-      randomizedDelaySec = mkOption {
-        default = "0";
-        type = types.singleLineStr;
-        example = "45min";
-        description = ''
-          Add a randomized delay before each auto prune.
-          The delay will be chosen between zero and this value.
-          This value must be a time span in the format specified by
-          {manpage}`systemd.time(7)`
-        '';
-      };
-
-      persistent = mkOption {
-        default = true;
-        type = types.bool;
-        example = false;
-        description = ''
-          Takes a boolean argument. If true, the time when the service
-          unit was last triggered is stored on disk. When the timer is
-          activated, the service unit is triggered immediately if it
-          would have been triggered at least once during the time when
-          the timer was inactive. Such triggering is nonetheless
-          subject to the delay imposed by RandomizedDelaySec=. This is
-          useful to catch up on missed runs of the service when the
-          system was powered down.
-        '';
-      };
-
-      scheduler = mkOption {
-        default = "cron";
-        type = types.str;
-        example = "anacron";
-        description = "Name of the cron provider to use for the autoPrune functionality.";
-      };
-    };
-
-    package = mkPackageOption pkgs "docker" { };
-
-    extraPackages = mkOption {
-      type = types.listOf types.package;
-      default = [ ];
-      example = literalExpression "with pkgs; [ criu ]";
-      description = ''
-        Extra packages to add to PATH for the docker daemon process.
-      '';
+      # TODO: implement persistent and randomized delays in scheduler provider
     };
   };
 
-  ###### implementation
+  config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = cfg.prune.enable -> config.providers.scheduler.backend != "none";
+        message = "services.docker.prune.enable requires a scheduler backend to be enabled in your system configuration.";
+      }
+    ];
 
-  config = mkIf cfg.enable (mkMerge [
-    {
-      boot.kernelModules = [
-        "bridge"
-        "veth"
-        "br_netfilter"
-        "xt_nat"
+    services.docker.settings = {
+      inherit (cfg) group;
+    };
+
+    services.docker.extraArgs = [
+      "--config-file=/etc/docker/daemon.json"
+    ]
+    ++ lib.optionals cfg.debug [
+      "--debug"
+    ];
+
+    services.docker.extraPackages = [
+      config.services.nftables.package or pkgs.nftables
+    ]
+    ++ lib.optionals (cfg.settings.storage-driver == "zfs") [
+      config.boot.zfs.package
+    ];
+
+    boot.kernelModules = [
+      "bridge"
+      "veth"
+      "br_netfilter"
+      "xt_nat"
+    ];
+
+    boot.kernel.sysctl = {
+      "net.ipv4.conf.all.forwarding" = lib.mkOverride 98 true;
+      "net.ipv4.conf.default.forwarding" = lib.mkOverride 98 true;
+    };
+
+    environment.etc."docker/daemon.json".source = configFile;
+    environment.systemPackages = [
+      cfg.package
+    ];
+
+    users.groups = lib.optionalAttrs (cfg.group == "docker") {
+      docker = { };
+    };
+
+    finit.services.docker = {
+      description = "docker daemon";
+      conditions = [
+        "hook/net/up"
+        "service/syslogd/ready"
       ];
-      boot.kernel.sysctl = {
-        "net.ipv4.conf.all.forwarding" = mkOverride 98 true;
-        "net.ipv4.conf.default.forwarding" = mkOverride 98 true;
-      };
-      environment.systemPackages = [
-        cfg.package
-      ];
+      command = "${cfg.package}/bin/dockerd " + lib.escapeShellArgs cfg.extraArgs;
+      notify = "systemd";
+      reload = "${pkgs.procps}/bin/kill -s HUP $MAINPID";
+      path = [
+        pkgs.kmod
+      ]
+      ++ cfg.extraPackages;
+      log = true;
+    };
 
-      users.groups = optionalAttrs (cfg.group == "docker") {
-        docker = { };
-      };
+    providers.scheduler.tasks = lib.optionalAttrs cfg.prune.enable {
+      docker-prune = {
+        inherit (cfg.prune) interval;
 
-      finit.services.docker = {
-        description = "docker containerization service";
-        runlevels = "34";
-        conditions = [
-          "hook/net/up"
-          "service/syslogd/ready"
-        ];
-        command = "${cfg.package}/bin/dockerd --config-file=${daemonSettingsFile} ${cfg.extraOptions}";
-        # environment = proxy_env;
-        reload = "${pkgs.procps}/bin/kill -s HUP $MAINPID";
-        manual = !cfg.enableOnBoot;
-        path = [
-          pkgs.kmod
-        ]
-        ++ optional (cfg.storageDriver == "zfs") config.boot.zfs.package
-        ++ cfg.extraPackages;
+        command = "${lib.getExe pkgs.docker} system prune --force ${toString cfg.prune.extraArgs}";
       };
 
-      providers.scheduler = mkIf cfg.autoPrune.enable {
-        backend = cfg.autoPrune.scheduler;
-        tasks.autoPrune = {
-          command = concatMapStringsSep (
-            [
-              "${cfg.package}/bin/docker"
-              "system"
-              "prune"
-              "-f"
-            ]
-            ++ cfg.autoPrune.flags
-            ++ optionals cfg.autoPrune.allVolumes.enable (
-              [
-                "${cfg.package}/bin/docker"
-                "volume"
-                "prune"
-                "--force"
-                "--all"
-              ]
-              ++ cfg.autoPrune.allVolumes.flags
-            )
-          );
-          interval = cfg.autoPrune.interval;
-        };
-      };
+      docker-prune-all-volumes = lib.mkIf cfg.prune.allVolumes.enable {
+        inherit (cfg.prune) interval;
 
-      services.docker.daemon.settings = {
-        group = "${cfg.group}";
-        hosts = cfg.listenOptions;
-        log-driver = mkDefault cfg.logDriver;
-        storage-driver = mkIf (cfg.storageDriver != null) (mkDefault cfg.storageDriver);
+        command = "${lib.getExe pkgs.docker} volume prune --force --all ${toString cfg.prune.allVolumes.extraArgs}";
       };
-
-      assertions = [
-        {
-          assertion = cfg.autoPrune.allVolumes.enable -> cfg.autoPrune.enable;
-          message = "Option autoPrune.allVolumes.enable requires autoPrune.enable";
-        }
-        {
-          assertion = cfg.autoPrune.enable -> config.services.${cfg.autoPrune.scheduler}.enable;
-          message = "Option autoPrune.enable requires a cron scheduler to be enabled in your system configuration.";
-        }
-      ];
-    }
-  ]);
+    };
+  };
 }
