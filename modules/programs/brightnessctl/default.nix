@@ -23,7 +23,7 @@ in
       type = lib.types.package;
       default = package.override {
         logindSupport = config.services.elogind.enable;
-        udevSupport = config.services.udev.enable;
+        udevSupport = config.services.udev.enable || config.services.keventd.enable;
 
         systemdLibs = config.services.elogind.package;
       };
