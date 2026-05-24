@@ -358,10 +358,6 @@ in
           assertion = cfg.autoPrune.enable -> config.services.${cfg.autoPrune.scheduler}.enable;
           message = "Option autoPrune.enable requires a cron scheduler to be enabled in your system configuration.";
         }
-        {
-          assertion = all validPrefix values;
-          message = "Option listenOptions can only include unix:// and tcp:// as socket types.";
-        }
       ];
     }
   ]);
