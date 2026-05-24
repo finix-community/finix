@@ -16,7 +16,6 @@ let
   # proxy_env = config.networking.proxy.envVars;
   settingsFormat = pkgs.formats.json { };
   daemonSettingsFile = settingsFormat.generate "daemon.json" cfg.daemon.settings;
-  validPrefix = s: builtins.isString s && (hasPrefix "unix://" s || hasPrefix "tcp://" s);
 
 in
 
