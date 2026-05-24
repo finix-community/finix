@@ -47,6 +47,10 @@ let
       pkgs.execline
       pkgs.util-linux
     ]
+    ++ lib.optionals config.services.gardendevd.enable [
+      config.services.gardendevd.package
+      pkgs.util-linux
+    ]
     ++ lib.optionals config.services.udev.enable [ config.services.udev.package ]
     ++ fsPackages;
     pathsToLink = [
@@ -245,13 +249,27 @@ in
             run [S] name:coldplug <service/mdevd/ready> mdevd-coldplug -O 2
           ''}
 
+          ${lib.optionalString config.services.gardendevd.enable ''
+            run [S] name:gardendevctl :1 <service/gardendevd/ready> gardendevctl trigger -c add -t all
+            run [S] name:gardendevctl :2 <service/gardendevd/ready> gardendevctl settle -t 30
+          ''}
+
           task [S] name:fs-import tty:@console \
             ${lib.optionalString config.services.mdevd.enable "<run/coldplug/success>"} \
+            ${lib.optionalString config.services.gardendevd.enable "<run/gardendevctl:2/success>"} \
             ${lib.optionalString config.services.udev.enable "<run/udevadm:5/success>"} \
             ${lib.optionalString config.services.keventd.enable "<service/keventd/ready>"} \
             finix-fs-import
 
           task [S] name:mount-all <task/fs-import/success> finix-mount-all
+
+          ${lib.optionalString config.services.gardendevd.enable ''
+            service [S] name:gardendevd notify:s6 <!> gardendevd -K -D %n
+          ''}
+
+          ${lib.optionalString config.services.keventd.enable ''
+            service [S] name:keventd notify:pid <!> keventd -n -c
+          ''}
 
           ${lib.optionalString config.services.mdevd.enable ''
             service [S] name:mdevd notify:s6 <!> mdevd -D %n -O 2
@@ -259,10 +277,6 @@ in
 
           ${lib.optionalString config.services.udev.enable ''
             service [S] <!> notify:s6 /bin/udevd --ready-notify=%n
-          ''}
-
-          ${lib.optionalString config.services.keventd.enable ''
-            service [S] name:keventd notify:pid <!> keventd -n -c
           ''}
 
           run [1] name:switch-root finix-switch-root
@@ -328,6 +342,12 @@ in
       {
         target = "/etc/udev/rules.d"; # keventd reads /etc - avoids collision
         source = "${config.finit.package}/lib/udev/rules.d";
+      }
+    ]
+    ++ lib.optionals config.services.gardendevd.enable [
+      {
+        target = "/etc/udev/rules.d";
+        source = "${config.services.gardendevd.package}/lib/udev/rules.d";
       }
     ];
   };
