@@ -29,7 +29,7 @@ let
   '';
 
   libinput = pkgs.libinput.override (
-    lib.optionalAttrs config.services.mdevd.enable {
+    lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
       udev = pkgs.libudev-zero;
       wacomSupport = false;
     }
