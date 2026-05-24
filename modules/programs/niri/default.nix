@@ -16,20 +16,26 @@ let
     Type=Application
   '';
 
-  overrideAttrs =
-    # libudev-zero is a hard requirement when running mdevd or keventd
-    lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
-      eudev = pkgs.libudev-zero;
+  # gardendevd needs libudev-garden; mdevd/keventd need libudev-zero
+  udevApi =
+    if config.services.gardendevd.enable then
+      pkgs.libudev-garden
+    else if config.services.mdevd.enable || config.services.keventd.enable then
+      pkgs.libudev-zero
+    else
+      null;
 
-      libinput = pkgs.libinput.override {
-        udev = pkgs.libudev-zero;
-        wacomSupport = false;
-      };
-    }
-    // lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
-      # since we're recompiling go ahead and disable systemd
-      withSystemd = false;
+  overrideAttrs = lib.optionalAttrs (udevApi != null) {
+    eudev = udevApi;
+
+    libinput = pkgs.libinput.override {
+      udev = udevApi;
+      wacomSupport = false;
     };
+
+    # since we're recompiling go ahead and disable systemd
+    withSystemd = false;
+  };
 in
 {
   options.programs.niri = {
