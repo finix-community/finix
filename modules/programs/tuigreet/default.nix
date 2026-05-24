@@ -9,9 +9,9 @@ let
   cfg = config.programs.tuigreet;
 
   xinit' = pkgs.xinit.override (
-    lib.optionalAttrs config.services.mdevd.enable {
+    lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
       xorg-server = pkgs.xorg-server.override (
-        lib.optionalAttrs config.services.mdevd.enable {
+        lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
           udev = pkgs.libudev-zero;
         }
       );

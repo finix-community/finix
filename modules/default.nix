@@ -21,6 +21,7 @@ let
       # required modules - included by default
       "dbus"
       "elogind"
+      "keventd"
       "mdevd"
       "seatd"
       "udev"
@@ -52,6 +53,7 @@ in
       ./security
       ./services/dbus
       ./services/elogind
+      ./services/keventd
       ./services/mdevd
       ./services/seatd
       ./services/udev

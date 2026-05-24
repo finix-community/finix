@@ -17,16 +17,16 @@ let
     Keywords=tiling;wayland;compositor;
   '';
 
-  # libudev-zero is a hard requirement when running mdevd
+  # libudev-zero is a hard requirement when running mdevd or keventd
   libinput = pkgs.libinput.override (
-    lib.optionalAttrs config.services.mdevd.enable {
+    lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
       udev = pkgs.libudev-zero;
       wacomSupport = false;
     }
   );
 
   aquamarine = pkgs.aquamarine.override (
-    lib.optionalAttrs config.services.mdevd.enable {
+    lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
       inherit libinput;
 
       udev = pkgs.libudev-zero;
@@ -49,7 +49,7 @@ in
         inherit aquamarine libinput;
 
         # since we're recompiling go ahead and disable systemd
-        withSystemd = !config.services.mdevd.enable;
+        withSystemd = !(config.services.mdevd.enable || config.services.keventd.enable);
       };
       defaultText = lib.literalExpression "pkgs.hyprland";
       description = ''
