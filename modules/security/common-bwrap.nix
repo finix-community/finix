@@ -2,10 +2,13 @@
   config,
   pkgs,
   lib,
+
+  extraFlags ? [ ],
+  extraPaths ? [ ],
   ...
 }: let
   bwrap = {
-    base = [     
+    base = extraFlags ++ [     
       "--unshare-all"
       "--die-with-parent"
       "--hostname sandbox"
@@ -14,7 +17,7 @@
       "--seccomp 10"
     ];
 
-    roSys = [
+    roSys = extraPaths ++ [
       "--ro-bind /nix /nix"
       "--ro-bind /etc/resolv.conf /etc/resolv.conf"
     ] ++ (
@@ -55,4 +58,15 @@
     };
   };
 in
-  bwrap.trap
+  bwrap // {
+    override = args:
+      import ./common-bwrap.nix {
+        inherit
+          config
+          pkgs
+          lib
+          ;
+          extraFlags = extraFlags ++ (args.extraFlags or [ ]);
+          extraPaths = extraPaths ++ (args.extraPaths or [ ]);
+      };
+}
