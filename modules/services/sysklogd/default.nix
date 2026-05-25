@@ -58,13 +58,17 @@ in
       cfg.package
     ];
 
+    environment.systemPackages = [
+      cfg.package
+    ];
+
     finit.services.syslogd = {
       description = "system logging daemon";
       runlevels = "S0123456789";
       conditions =
         lib.optionals config.services.udev.enable [ "run/udevadm:5/success" ]
         ++ lib.optionals config.services.mdevd.enable [ "run/coldplug/success" ];
-      command = "${cfg.package}/bin/syslogd -F";
+      command = "/run/current-system/sw/bin/syslogd -F";
       notify = "pid";
     };
 
