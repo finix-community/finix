@@ -41,11 +41,11 @@
         
         SANDBOX_RUN=''$(mktemp -d /run/user/''$(id -u)/sandbox.XXXXXXXXXX)
 
-        trap 'rm -rf "$SANDBOX_RUN"' EXIT INT TERM
+        trap 'rm -rf "''$SANDBOX_RUN"' EXIT INT TERM
 
-        BWRAP_ARGS="${lib.concatStringsSep " " (bwrap.base ++ bwrap.roSys)} --bind $SANDBOX_RUN /run --bind $SANDBOX_RUN /tmp"
+        BWRAP_ARGS="${lib.concatStringsSep " " (bwrap.base ++ bwrap.roSys)} --bind ''$SANDBOX_RUN /run --bind ''$SANDBOX_RUN /tmp"
 
-        exec 10<"${./common.bpf}"
+        exec 10<"''${./common.bpf}"
 
         exec env -i \
             LANG="C.UTF-8" \
