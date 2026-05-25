@@ -4308,7 +4308,7 @@
     <details class="toc-category">
       <summary title="services">
         <span>services</span>
-        <span class="toc-count">339</span>
+        <span class="toc-count">353</span>
       </summary>
       <ul>
         
@@ -4869,6 +4869,118 @@
         <li>
           <a href='#option-services-dhcpcd-settings-waitip' title="services.dhcpcd.settings.waitip">
             dhcpcd.settings.waitip
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-docker-debug' title="services.docker.debug">
+            docker.debug
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-docker-enable' title="services.docker.enable">
+            docker.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-docker-extraArgs' title="services.docker.extraArgs">
+            docker.extraArgs
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-docker-extraPackages' title="services.docker.extraPackages">
+            docker.extraPackages
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-docker-group' title="services.docker.group">
+            docker.group
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-docker-package' title="services.docker.package">
+            docker.package
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-docker-prune-enable' title="services.docker.prune.enable">
+            docker.prune.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-docker-prune-extraArgs' title="services.docker.prune.extraArgs">
+            docker.prune.extraArgs
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-docker-prune-interval' title="services.docker.prune.interval">
+            docker.prune.interval
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-docker-settings' title="services.docker.settings">
+            docker.settings
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-docker-settings-hosts' title="services.docker.settings.hosts">
+            docker.settings.hosts
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-docker-settings-live-restore' title="services.docker.settings.live-restore">
+            docker.settings.live-restore
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-docker-settings-log-driver' title="services.docker.settings.log-driver">
+            docker.settings.log-driver
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services-docker-settings-storage-driver' title="services.docker.settings.storage-driver">
+            docker.settings.storage-driver
             
             
           </a>
@@ -15281,6 +15393,213 @@ for additional details.</p>
 </body></html></div>
   <div class="option-default">Default: <code>null</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/dhcpcd" target="_blank">&lt;finix/modules/services/dhcpcd&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-docker-debug">
+  <h3 class="option-name">
+    <a href="#option-services-docker-debug" class="option-anchor">services.docker.debug</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/docker" target="_blank">&lt;finix/modules/services/docker&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-docker-enable">
+  <h3 class="option-name">
+    <a href="#option-services-docker-enable" class="option-anchor">services.docker.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://www.docker.com/">docker</a> as a system service.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/docker" target="_blank">&lt;finix/modules/services/docker&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-docker-extraArgs">
+  <h3 class="option-name">
+    <a href="#option-services-docker-extraArgs" class="option-anchor">services.docker.extraArgs</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <code>dockerd</code>. See <a href="https://docs.docker.com/reference/cli/dockerd">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/docker" target="_blank">&lt;finix/modules/services/docker&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-docker-extraPackages">
+  <h3 class="option-name">
+    <a href="#option-services-docker-extraPackages" class="option-anchor">services.docker.extraPackages</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of package</code></div>
+  <div class="option-description"><html><head></head><body><p>Extra packages to be be made available to the <code>docker</code> daemon process.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-example">Example: <code>with pkgs; [ criu ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/docker" target="_blank">&lt;finix/modules/services/docker&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-docker-group">
+  <h3 class="option-name">
+    <a href="#option-services-docker-group" class="option-anchor">services.docker.group</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>string</code></div>
+  <div class="option-description"><html><head></head><body><p>Group to own any <code>docker</code> sockets.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you want non-<code>root</code> users to be able to access the <code>docker</code> daemon commands, add
+them to this group.</p>
+</div>
+</body></html></div>
+  <div class="option-default">Default: <code>"docker"</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/docker" target="_blank">&lt;finix/modules/services/docker&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-docker-package">
+  <h3 class="option-name">
+    <a href="#option-services-docker-package" class="option-anchor">services.docker.package</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>docker</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.docker</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/docker" target="_blank">&lt;finix/modules/services/docker&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-docker-prune-enable">
+  <h3 class="option-name">
+    <a href="#option-services-docker-prune-enable" class="option-anchor">services.docker.prune.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to periodically prune <code>docker</code> resources.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/docker" target="_blank">&lt;finix/modules/services/docker&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-docker-prune-extraArgs">
+  <h3 class="option-name">
+    <a href="#option-services-docker-prune-extraArgs" class="option-anchor">services.docker.prune.extraArgs</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <code class="command">docker system prune</code>. See <a href="https://docs.docker.com/reference/cli/docker/system/prune">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-example">Example: <pre><code>[
+  "--all"
+  "--volumes"
+]</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/docker" target="_blank">&lt;finix/modules/services/docker&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-docker-prune-interval">
+  <h3 class="option-name">
+    <a href="#option-services-docker-prune-interval" class="option-anchor">services.docker.prune.interval</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>string</code></div>
+  <div class="option-description"><html><head></head><body><p>The interval at which this task should run its specified <a class="option-reference" href="options.html#option-command"><code>command</code></a>. Accepts either a
+standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression or one of: <code>hourly</code>, <code>daily</code>, <code>weekly</code>, <code>monthly</code>, or <code>yearly</code>.</p>
+<p>If a standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression is provided this value will be passed directly
+to the <code>scheduler</code> implementation and execute exactly as specified.</p>
+<p>If one of the special values, <code>hourly</code>, <code>daily</code>, <code>monthly</code>, <code>weekly</code>, or <code>yearly</code>, is provided then the
+underlying <code>scheduler</code> implementation will use its features to decide when best to run.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>"weekly"</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/docker" target="_blank">&lt;finix/modules/services/docker&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-docker-settings">
+  <h3 class="option-name">
+    <a href="#option-services-docker-settings" class="option-anchor">services.docker.settings</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>open submodule of (JSON value)</code></div>
+  <div class="option-description"><html><head></head><body><p><code>docker</code> configuration. See <a href="https://docs.docker.com/engine/reference/commandline/dockerd/#daemon-configuration-file">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-example">Example: <pre><code>{
+  fixed-cidr-v6 = "fd00::/80";
+  ipv6 = true;
+  live-restore = true;
+}</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/docker" target="_blank">&lt;finix/modules/services/docker&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-docker-settings-hosts">
+  <h3 class="option-name">
+    <a href="#option-services-docker-settings-hosts" class="option-anchor">services.docker.settings.hosts</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>Specifies where the <code>docker</code> daemon listens for client connections.
+:::</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[
+  "unix:///run/docker.sock"
+]</code></div>
+  <div class="option-example">Example: <pre><code>[
+  "unix:///run/docker.sock"
+  "tcp://0.0.0.0:2375"
+]</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/docker" target="_blank">&lt;finix/modules/services/docker&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-docker-settings-live-restore">
+  <h3 class="option-name">
+    <a href="#option-services-docker-settings-live-restore" class="option-anchor">services.docker.settings.live-restore</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Enable live restore of <code>docker</code> when containers are still running.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/docker" target="_blank">&lt;finix/modules/services/docker&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-docker-settings-log-driver">
+  <h3 class="option-name">
+    <a href="#option-services-docker-settings-log-driver" class="option-anchor">services.docker.settings.log-driver</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>one of "none", "json-file", "syslog", "journald", "gelf", "fluentd", "awslogs", "splunk", "etwlogs", "gcplogs", "local"</code></div>
+  <div class="option-description"><html><head></head><body><p>Default driver for container logs.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>"syslog"</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/docker" target="_blank">&lt;finix/modules/services/docker&gt;</a></code></div>
+</div>
+<div class="option" id="option-services-docker-settings-storage-driver">
+  <h3 class="option-name">
+    <a href="#option-services-docker-settings-storage-driver" class="option-anchor">services.docker.settings.storage-driver</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>null or one of "aufs", "btrfs", "devicemapper", "overlay", "overlay2", "zfs"</code></div>
+  <div class="option-description"><html><head></head><body><p>Storage driver to use.</p>
+<p>See <a href="https://docs.docker.com/storage/storagedriver/select-storage-driver">upstream documentation</a>
+for additional details.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When you change the storage driver, any existing images and containers become inaccessible. This is
+because their layers can't be used by the new storage driver. If you revert your changes, you can
+access the old images and containers again, but any that you pulled or created using the new driver
+are then inaccessible.</p>
+</div>
+</body></html></div>
+  <div class="option-default">Default: <code>null</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/docker" target="_blank">&lt;finix/modules/services/docker&gt;</a></code></div>
 </div>
 <div class="option" id="option-services-dropbear-enable">
   <h3 class="option-name">
