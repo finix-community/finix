@@ -8,7 +8,7 @@ let
   cfg = config.programs.v2rayn;
   v2rayn-pkg = cfg.package.overrideAttrs (old: {
     nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ pkgs.makeWrapper ];
-    postInstall = (old.postInstall or "") + ''
+    postFixup = (old.postInstall or "") + ''
       wrapProgram $out/bin/v2rayN \
         --run 'mkdir -p "$HOME/.local/share/v2rayN/bin/xray" "$HOME/.local/share/v2rayN/bin/sing_box"' \
         --run 'ln -sf ${lib.getExe pkgs.xray}  "$HOME/.local/share/v2rayN/bin/xray/xray"' \
