@@ -68,3 +68,5 @@ For an installation guide, please see one of the following repositories on Codeb
 [Finit Project](https://finit-project.github.io/)
 
 [Finix Profiles](https://github.com/finix-community/profiles)
+
+[Finix Community Modules](https://github.com/finix-community/community-modules/)
