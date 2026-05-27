@@ -9,7 +9,7 @@ let
   inherit (builtins) concatMap;
   inherit (lib) maintainers;
   inherit (lib.attrsets) attrByPath mapAttrsToList;
-  inherit (lib.lists) flatten optional;
+  inherit (lib.lists) flatten;
   inherit (lib.modules) mkIf;
   inherit (lib.options) literalExpression mkOption;
   inherit (lib.strings) concatStringsSep makeSearchPath;
