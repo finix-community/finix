@@ -59,8 +59,7 @@ let
     )).overrideAttrs
       (o: {
         # https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/2398#note_2967898
-        patches =
-          o.patches or [ ] ++ lib.optionals config.services.mdevd.enable [ ./assets/pipewire/pipewire.patch ];
+        patches = o.patches or [ ] ++ lib.optionals config.services.mdevd.enable [ ./pipewire.patch ];
       });
 
   pipewire32' =
@@ -71,9 +70,7 @@ let
       }
     )).overrideAttrs
       (o: {
-        # https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/2398#note_2967898
-        patches =
-          o.patches or [ ] ++ lib.optionals config.services.mdevd.enable [ ./assets/pipewire/pipewire.patch ];
+        patches = o.patches or [ ] ++ lib.optionals config.services.mdevd.enable [ ./pipewire.patch ];
       });
 
   # The package doesn't output to $out/lib/pipewire directly so that the
@@ -320,38 +317,40 @@ in
       '';
     };
   };
+
   config = mkIf cfg.enable {
-    environment.systemPackages = [ cfg.package ] ++ optional cfg.jack.enable jack-libs;
+    environment.systemPackages = [
+      cfg.package
+
+      # ??? see 378
+      ladspaPlugins
+      lv2Plugins
+    ]
+    ++ optional cfg.jack.enable jack-libs;
+
+    services.udev.packages = mkIf config.services.udev.enable [ cfg.package ];
+    services.mdevd.hotplugRules = mkIf (config.services.mdevd.enable && cfg.alsa.enable) (
+      lib.mkAfter ''
+        # alsa sound devices and audio stuff
+        pcm.*       root:audio 0660 =snd/
+        control.*   root:audio 0660 =snd/
+        midi.*      root:audio 0660 =snd/
+        seq         root:audio 0660 =snd/
+        timer       root:audio 0660 =snd/
+
+        adsp        root:audio 0660 >sound/
+        audio       root:audio 0660 >sound/
+        dsp         root:audio 0660 >sound/
+        mixer       root:audio 0660 >sound/
+        sequencer.* root:audio 0660 >sound/
+      ''
+    );
+
     environment.etc."security/limits.conf".text = ''
       @audio   -   rtprio     95
       @audio   -   nice       -19
       @audio   -   memlock    4194304
     '';
-    services.udev.packages = mkIf config.services.udev.enable [ cfg.package ];
-    services.mdevd.hotplugRules = mkIf (config.services.mdevd.enable && cfg.alsa.enable) (
-      lib.mkMerge [
-        (lib.mkAfter ''
-          SUBSYSTEM=input;.* root:input 660
-          SUBSYSTEM=sound;.* root:audio 660
-        '')
-
-        ''
-          # alsa sound devices and audio stuff
-          pcm.*       root:audio 0660 =snd/
-          control.*   root:audio 0660 =snd/
-          midi.*      root:audio 0660 =snd/
-          seq         root:audio 0660 =snd/
-          timer       root:audio 0660 =snd/
-
-          adsp        root:audio 0660 >sound/
-          audio       root:audio 0660 >sound/
-          dsp         root:audio 0660 >sound/
-          mixer       root:audio 0660 >sound/
-          sequencer.* root:audio 0660 >sound/
-        ''
-      ]
-    );
-
     environment.etc = {
       "alsa/conf.d/49-pipewire-modules.conf" = mkIf cfg.alsa.enable {
         text = ''
@@ -376,10 +375,18 @@ in
       pipewire.source = "${configs}/share/pipewire";
     };
 
-    security.pam.environment = {
-      LD_LIBRARY_PATH.default = mkif cfg.jack.enable [ "${cfg.package.jack}/lib" ];
-      LV2_PATH.default = "${lv2Plugins}/lib/lv2";
-      LADSPA_PATH.default = "${ladspaPlugins}/lib/ladspa";
-    };
+    /*
+      TODO wtf do i do here?? this isn't a service so it doesn't have an environment,
+      but you need this junk to let JACK run properly and make the system aware of
+      any LV2 / LADSPA plugins. BUUUTTT, if any other module for whatever reason
+      wants to overwrite these values then they are SOL unless they mkForce or mkDefault
+      it which is NOT ideal for what should be obvious reasons
+    */
+
+    # security.pam.environment = {
+    #   LD_LIBRARY_PATH.default = mkIf cfg.jack.enable [ "${cfg.package.jack}/lib" ];
+    #   LV2_PATH.default = "${lv2Plugins}/lib/lv2";
+    #   LADSPA_PATH.default = "${ladspaPlugins}/lib/ladspa";
+    # };
   };
 }

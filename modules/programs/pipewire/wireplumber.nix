@@ -6,13 +6,10 @@
 }:
 
 let
-  inherit (builtins) concatMap;
-  inherit (lib) maintainers;
-  inherit (lib.attrsets) attrByPath mapAttrsToList;
-  inherit (lib.lists) flatten;
+  inherit (lib.attrsets) mapAttrsToList;
   inherit (lib.modules) mkIf;
   inherit (lib.options) literalExpression mkOption;
-  inherit (lib.strings) concatStringsSep makeSearchPath;
+  inherit (lib.strings) concatStringsSep;
   inherit (lib.types)
     bool
     listOf
@@ -58,7 +55,6 @@ let
     ) scripts;
 in
 {
-  meta.maintainers = [ maintainers.k900 ];
 
   options = {
     programs.pipewire.wireplumber = {
@@ -245,6 +241,7 @@ in
   };
 
   config =
+    # TODO wtf do i do with this shit??
     let
       extraConfigPkg = pkgs.buildEnv {
         name = "wireplumber-extra-config";
@@ -269,42 +266,13 @@ in
         pathsToLink = [ "/share/wireplumber" ];
       };
 
-      requiredLv2Packages = flatten (
-        concatMap (p: attrByPath [ "passthru" "requiredLv2Packages" ] [ ] p) configPackages
-      );
-
-      lv2Plugins = pkgs.buildEnv {
-        name = "wireplumber-lv2-plugins";
-        paths = cfg.extraLv2Packages ++ requiredLv2Packages;
-        pathsToLink = [ "/lib/lv2" ];
-      };
-
-      requiredLadspaPackages = flatten (
-        concatMap (p: attrByPath [ "passthru" "requiredLadspaPackages" ] [ ] p) configPackages
-      );
-
-      ladspaPlugins = pkgs.buildEnv {
-        name = "pipewire-ladspa-plugins";
-        paths = cfg.extraLadspaPackages ++ requiredLadspaPackages;
-        pathsToLink = [ "/lib/ladspa" ];
-      };
-
-      pluginsEnv = {
-        XDG_DATA_DIRS = makeSearchPath "share" [
-          configs
-          cfg.package
-        ];
-        LV2_PATH = "${lv2Plugins}/lib/lv2";
-        LADSPA_PATH = "${ladspaPlugins}/lib/ladspa";
-      };
     in
     mkIf cfg.enable {
-      environment.systemPackages = [ cfg.package ];
+      environment.systemPackages = [
+        cfg.package
 
-      security.pam.environment = with pluginsEnv; {
-        XDG_DATA_DIRS.default = XDG_DATA_DIRS;
-        LV2_PATH.default = LV2_PATH;
-        LADSPA_PATH.default = LADSPA_PATH;
-      };
+        # ???
+        configs
+      ];
     };
 }
