@@ -9,7 +9,7 @@ let
   inherit (lib.attrsets) mapAttrsToList;
   inherit (lib.modules) mkIf;
   inherit (lib.options) literalExpression mkOption;
-  inherit (lib.strings) concatStringsSep makeSearchPath;
+  inherit (lib.strings) concatStringsSep;
   inherit (lib.types)
     bool
     listOf
@@ -271,14 +271,14 @@ in
         cfg.package
       ];
 
-      # TODO https://github.com/finix-community/issues/83
+      # https://github.com/finix-community/issues/83
       security.pam.environment = {
-        XDG_DATA_DIRS.default = lib.mkBefore [
-          (makeSearchPath "share" [
+        XDG_DATA_DIRS.default = lib.mkBefore (
+          map (p: "${p}/share") [
             configs
             cfg.package
-          ])
-        ];
+          ]
+        );
       };
     };
 }
