@@ -375,18 +375,10 @@ in
       pipewire.source = "${configs}/share/pipewire";
     };
 
-    /*
-      TODO wtf do i do here?? this isn't a service so it doesn't have an environment,
-      but you need this junk to let JACK run properly and make the system aware of
-      any LV2 / LADSPA plugins. BUUUTTT, if any other module for whatever reason
-      wants to overwrite these values then they are SOL unless they mkForce or mkDefault
-      it which is NOT ideal for what should be obvious reasons
-    */
-
-    # security.pam.environment = {
-    #   LD_LIBRARY_PATH.default = mkIf cfg.jack.enable [ "${cfg.package.jack}/lib" ];
-    #   LV2_PATH.default = "${lv2Plugins}/lib/lv2";
-    #   LADSPA_PATH.default = "${ladspaPlugins}/lib/ladspa";
-    # };
+    security.pam.environment = {
+      LD_LIBRARY_PATH.default = mkIf cfg.jack.enable [ "${cfg.package.jack}/lib" ];
+      LV2_PATH.default = [ "${lv2Plugins}/lib/lv2" ];
+      LADSPA_PATH.default = [ "${ladspaPlugins}/lib/ladspa" ];
+    };
   };
 }

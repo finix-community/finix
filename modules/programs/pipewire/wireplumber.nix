@@ -9,7 +9,7 @@ let
   inherit (lib.attrsets) mapAttrsToList;
   inherit (lib.modules) mkIf;
   inherit (lib.options) literalExpression mkOption;
-  inherit (lib.strings) concatStringsSep;
+  inherit (lib.strings) concatStringsSep makeSearchPath;
   inherit (lib.types)
     bool
     listOf
@@ -241,7 +241,6 @@ in
   };
 
   config =
-    # TODO wtf do i do with this shit??
     let
       extraConfigPkg = pkgs.buildEnv {
         name = "wireplumber-extra-config";
@@ -270,9 +269,15 @@ in
     mkIf cfg.enable {
       environment.systemPackages = [
         cfg.package
-
-        # ???
-        configs
       ];
+
+      security.pam.environment = {
+        XDG_DATA_DIRS.default = lib.mkBefore [
+          (makeSearchPath "share" [
+            configs
+            cfg.package
+          ])
+        ];
+      };
     };
 }
