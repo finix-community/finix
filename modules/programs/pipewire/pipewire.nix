@@ -321,10 +321,6 @@ in
   config = mkIf cfg.enable {
     environment.systemPackages = [
       cfg.package
-
-      # ??? see 378
-      ladspaPlugins
-      lv2Plugins
     ]
     ++ optional cfg.jack.enable jack-libs;
 
