@@ -26,6 +26,7 @@ let
     lib.evalModules {
       specialArgs = {
         inherit nodes;
+        modules = import ../../modules;
       };
       modules = [
         ./testing.nix
@@ -95,7 +96,6 @@ let
         ln -s ${config.system.topLevel} $out/system
         ln -s ${mkVmScript name config} $out/bin/run-${name}-vm
       '';
-
 in
 {
   inherit testDriver pkgs lib;
@@ -181,7 +181,6 @@ in
             export LOGFILE=/dev/null
             ${driver}/bin/finix-test-driver -o $out
           '';
-
     in
     test;
 }
