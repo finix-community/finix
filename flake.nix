@@ -4,7 +4,7 @@
   outputs =
     { self }:
     {
-      nixosModules = import ./modules;
+      finixModules = import ./modules;
 
       lib.finixSystem =
         {
@@ -15,9 +15,9 @@
         }:
         let
           config = lib.evalModules {
-            class = "nixos";
-            specialArgs = lib.recursiveUpdate { modules = self.nixosModules; } specialArgs;
-            modules = [ self.nixosModules.default ] ++ modules;
+            class = "finix";
+            specialArgs = lib.recursiveUpdate { modules = self.finixModules; } specialArgs;
+            modules = [ self.finixModules.default ] ++ modules;
           };
         in
         config
