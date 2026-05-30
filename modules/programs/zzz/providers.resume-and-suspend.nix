@@ -13,7 +13,8 @@ let
     in
     padding + s;
 
-  mkHook = mode: k: v:
+  mkHook =
+    mode: k: v:
     let
       name = "zzz.d/${zeroPad 4 v.priority}-${k}.sh";
       script = pkgs.writeShellScript k ''
@@ -24,7 +25,8 @@ let
     in
     lib.nameValuePair name { source = script; };
 
-  mkResumeHook = k: v:
+  mkResumeHook =
+    k: v:
     let
       name = "zzz.d/${zeroPad 4 v.priority}-${k}.sh";
       script = pkgs.writeShellScript k ''
@@ -44,12 +46,17 @@ in
   config = lib.mkIf (config.providers.resumeAndSuspend.backend == "zzz") {
     environment.etc =
       let
-        filtered = event: lib.filterAttrs (_: v: v.enable && v.event == event) config.providers.resumeAndSuspend.hooks;
+        filtered =
+          event: lib.filterAttrs (_: v: v.enable && v.event == event) config.providers.resumeAndSuspend.hooks;
 
-        suspend = lib.mapAttrs' (k: v: mkHook "suspend"  k v) (filtered "suspend");
-        hibernate = lib.mapAttrs' (k: v: mkHook "hibernate"  k v) (filtered "hibernate");
+        suspend = lib.mapAttrs' (k: v: mkHook "suspend" k v) (filtered "suspend");
+        hibernate = lib.mapAttrs' (k: v: mkHook "hibernate" k v) (filtered "hibernate");
         resume = lib.mapAttrs' (k: v: mkResumeHook k v) (filtered "resume");
       in
-      lib.mkMerge [ suspend hibernate resume ];
+      lib.mkMerge [
+        suspend
+        hibernate
+        resume
+      ];
   };
 }
