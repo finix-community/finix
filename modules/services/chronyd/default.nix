@@ -6,6 +6,8 @@
 }:
 let
   cfg = config.services.chrony;
+
+  notifySupport = lib.versionAtLeast cfg.package.version "4.9";
 in
 {
   options.services.chrony = {
@@ -42,6 +44,15 @@ in
       '';
     };
 
+    extraArgs = lib.mkOption {
+      type = with lib.types; listOf str;
+      default = [ ];
+      description = ''
+        Additional arguments to pass to `dropbear`. See {manpage}`chronyd(8)`
+        for additional details.
+      '';
+    };
+
     configFile = lib.mkOption {
       type = lib.types.path;
       default = pkgs.writeText "chrony.conf" ''
@@ -61,15 +72,30 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    services.chrony.extraArgs = [
+      "-n"
+      "-u"
+      "chrony"
+      "-f"
+      cfg.configFile
+    ]
+    ++ lib.optionals cfg.debug [
+      "-L"
+      "-1"
+    ]
+    ++ lib.optionals notifySupport [
+      "-N"
+      "%n"
+    ];
+
     environment.systemPackages = [ cfg.package ];
 
     finit.services.chronyd = {
       description = "chrony ntp daemon";
       conditions = "service/syslogd/ready";
-      command =
-        "${cfg.package}/bin/chronyd -n -u chrony -f ${cfg.configFile}"
-        + lib.optionalString cfg.debug " -L -1";
+      command = "${cfg.package}/bin/chronyd " + lib.escapeShellArgs cfg.extraArgs;
       nohup = true;
+      notify = lib.mkIf notifySupport "s6";
 
       # TODO: add "if" to finit.services
       extraConfig = "if:<!int/container>";
