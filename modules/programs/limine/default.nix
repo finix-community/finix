@@ -100,10 +100,10 @@ in
           wallpaper_style = lib.mkOption {
             type = lib.types.enum [
               "centered"
-              "streched"
+              "stretched"
               "tiled"
             ];
-            default = "streched";
+            default = "stretched";
             description = ''
               The style which will be used to display the wallpaper image.
             '';
@@ -313,7 +313,7 @@ in
 
         wallpaper = lib.mkDefault [ defaultWallpaper ];
         backdrop = lib.mkDefault "2F302F";
-        wallpaper_style = lib.mkDefault "streched";
+        wallpaper_style = lib.mkDefault "stretched";
       };
 
       # this module supplies an implementation for `providers.bootloader`
