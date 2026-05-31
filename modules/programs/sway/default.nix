@@ -16,9 +16,9 @@ let
     DesktopNames=sway;wlroots
   '';
 
-  # libudev-zero is a hard requirement when running mdevd
+  # libudev-zero is a hard requirement when running mdevd or keventd
   libinput = pkgs.libinput.override (
-    lib.optionalAttrs config.services.mdevd.enable {
+    lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
       udev = pkgs.libudev-zero;
       wacomSupport = false;
     }
@@ -35,7 +35,7 @@ let
     inherit libinput wlroots_0_19;
 
     # since we're recompiling go ahead and disable systemd
-    systemdSupport = !config.services.mdevd.enable;
+    systemdSupport = !(config.services.mdevd.enable || config.services.keventd.enable);
   };
 in
 {

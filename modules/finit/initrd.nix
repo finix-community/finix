@@ -127,7 +127,13 @@ in
 
           ${lib.concatMapStringsSep "\n" mkMount (
             lib.filter (lib.getAttr "neededForBoot") (
-              lib.filter (fs: !lib.elem fs.fsType [ "luks" "lvm" ]) (lib.attrValues config.fileSystems)
+              lib.filter (
+                fs:
+                !lib.elem fs.fsType [
+                  "luks"
+                  "lvm"
+                ]
+              ) (lib.attrValues config.fileSystems)
             )
           )}
         '';
@@ -190,6 +196,7 @@ in
           task [S] name:fs-import tty:@console \
             ${lib.optionalString config.services.mdevd.enable "<run/coldplug/success>"} \
             ${lib.optionalString config.services.udev.enable "<run/udevadm:5/success>"} \
+            ${lib.optionalString config.services.keventd.enable "<service/keventd/ready>"} \
             finix-fs-import
 
           task [S] name:mount-all <task/fs-import/success> finix-mount-all
@@ -200,6 +207,10 @@ in
 
           ${lib.optionalString config.services.udev.enable ''
             service [S] <!> notify:s6 /bin/udevd --ready-notify=%n
+          ''}
+
+          ${lib.optionalString config.services.keventd.enable ''
+            service [S] name:keventd notify:pid <!> keventd -n -c
           ''}
 
           run [1] finix-switch-root
@@ -222,9 +233,13 @@ in
       }
       {
         target = "/etc/group";
-        source = pkgs.writeText "group" ''
-          root:x:0:
-        '';
+        source = pkgs.writeText "group" (
+          lib.concatStringsSep "\n" (
+            lib.concatMap (g: lib.optionals (g.gid != null) [ "${g.name}:x:${toString g.gid}" ]) (
+              lib.attrValues config.users.groups
+            )
+          )
+        );
       }
       {
         target = "/etc/shadow";
@@ -245,6 +260,12 @@ in
       { source = "${config.finit.package}/lib/finit/rescue.conf"; }
       { source = "${config.finit.package}/lib/finit/tmpfiles.d"; }
       { source = "${config.finit.package}/lib/tmpfiles.d"; }
+    ]
+    ++ lib.optionals config.services.keventd.enable [
+      {
+        target = "/etc/udev/rules.d"; # keventd reads /etc - avoids collision
+        source = "${config.finit.package}/lib/udev/rules.d";
+      }
     ];
   };
 }

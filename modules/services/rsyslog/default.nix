@@ -53,7 +53,8 @@ in
       runlevels = "S0123456789";
       conditions =
         lib.optionals config.services.udev.enable [ "run/udevadm:5/success" ]
-        ++ lib.optionals config.services.mdevd.enable [ "run/coldplug/success" ];
+        ++ lib.optionals config.services.mdevd.enable [ "run/coldplug/success" ]
+        ++ lib.optionals config.services.keventd.enable [ "pid/keventd" ];
       command = "${pkgs.rsyslog-light}/bin/rsyslogd -n -d -f ${configFile}";
     };
 
