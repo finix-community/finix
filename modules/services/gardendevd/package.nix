@@ -39,9 +39,9 @@ stdenv.mkDerivation (finalAttrs: {
   ];
 
   mesonFlags = [
-    "-Dopenrc=false"
-    "-Dmdevd=true"
-    "-Duaccess=${lib.boolToString uaccessSupport}"
+    "-Dopenrc=disabled"
+    "-Dmdevd=enabled"
+    "-Duaccess=${if uaccessSupport then "enabled" else "disabled"}"
   ];
 
   postPatch = ''
