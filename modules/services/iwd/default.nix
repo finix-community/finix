@@ -18,6 +18,14 @@ in
       '';
     };
 
+    enableEad = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to enable [iwd/ead](${pkgs.iwd.meta.homepage}) as a system service.
+      '';
+    };
+
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.iwd;
@@ -63,7 +71,8 @@ in
 
     finit.tmpfiles.rules = [
       "d /var/lib/iwd 0700"
-    ];
+    ]
+    ++ lib.optionals cfg.enableEad [ "d /var/lib/ead 0700" ];
 
     finit.services.iwd = {
       description = "wireless service";
@@ -75,6 +84,14 @@ in
       path = lib.optionals config.programs.resolvconf.enable [
         config.programs.resolvconf.package
       ];
+    };
+
+    finit.services.ead = lib.mkIf cfg.enableEad {
+      description = "ethernet authentication service";
+      conditions = "service/syslogd/ready";
+      command = "${pkgs.iwd}/libexec/ead" + lib.optionalString (cfg.enableEad && cfg.debug) " -d";
+      nohup = true;
+      log = true;
     };
 
     # TODO: add finit.services.restartTriggers option
