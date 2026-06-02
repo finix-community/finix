@@ -3,7 +3,6 @@ let
   inherit (pkgs) lib;
 
   sources = import ../lon.nix;
-  ndg = pkgs.callPackage (toString sources.ndg + "/flake/packages/ndg/package.nix") { };
   pkgs = import sources.nixpkgs { };
   modules = import ../modules;
 
@@ -46,7 +45,7 @@ let
       };
   };
 in
-pkgs.runCommandLocal "finix-options-doc" { nativeBuildInputs = [ ndg ]; } ''
+pkgs.runCommandLocal "finix-options-doc" { nativeBuildInputs = [ pkgs.ndg ]; } ''
   mkdir -p $out
 
   ndg html \
@@ -56,5 +55,6 @@ pkgs.runCommandLocal "finix-options-doc" { nativeBuildInputs = [ ndg ]; } ''
     --manpage-urls ${./manpage-urls.json} \
     --options-depth 1 \
     --generate-search \
+    --input-dir ${./.} \
     --output-dir "$out"
 ''
