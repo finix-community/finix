@@ -7,15 +7,21 @@
   kmod,
   util-linux,
   unixtools,
+
+  # extraPackages can supply fsck.* helpers like e2fsprogs, dosfstools, etc ...
+  extraPackages ? [ ],
 }:
 let
   # finit requires fsck, modprobe, mount & swap commands before PATH can be read from finit.conf
-  PATH = lib.makeBinPath [
-    kmod
-    unixtools.fsck
-    util-linux.mount
-    util-linux.swap
-  ];
+  PATH = lib.makeBinPath (
+    [
+      kmod
+      unixtools.fsck
+      util-linux.mount
+      util-linux.swap
+    ]
+    ++ extraPackages
+  );
 in
 stdenv.mkDerivation {
   pname = "finix-setup";
