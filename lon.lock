@@ -1,25 +1,15 @@
 {
   "version": "1",
   "sources": {
-    "ndg": {
-      "type": "GitHub",
-      "fetchType": "tarball",
-      "owner": "feel-co",
-      "repo": "ndg",
-      "branch": "main",
-      "revision": "0c898318cdb7b8288a58f6393b1d8ba0dd6b0a09",
-      "url": "https://github.com/feel-co/ndg/archive/0c898318cdb7b8288a58f6393b1d8ba0dd6b0a09.tar.gz",
-      "hash": "sha256-BedBcz5+dDHhNWMY4JndabYUMSOMusKzFGLV1PxvwBQ="
-    },
     "nixpkgs": {
       "type": "GitHub",
       "fetchType": "tarball",
       "owner": "nixos",
       "repo": "nixpkgs",
       "branch": "nixos-unstable",
-      "revision": "d233902339c02a9c334e7e593de68855ad26c4cb",
-      "url": "https://github.com/nixos/nixpkgs/archive/d233902339c02a9c334e7e593de68855ad26c4cb.tar.gz",
-      "hash": "sha256-30sZNZoA1cqF5JNO9fVX+wgiQYjB7HJqqJ4ztCDeBZE="
+      "revision": "64c08a7ca051951c8eae34e3e3cb1e202fe36786",
+      "url": "https://github.com/nixos/nixpkgs/archive/64c08a7ca051951c8eae34e3e3cb1e202fe36786.tar.gz",
+      "hash": "sha256-tpyBcxPpcQb8ukyNF7DoCwfSY3VPsxHoYwj00Cayv5o="
     }
   }
 }

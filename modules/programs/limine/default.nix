@@ -100,10 +100,10 @@ in
           wallpaper_style = lib.mkOption {
             type = lib.types.enum [
               "centered"
-              "streched"
+              "stretched"
               "tiled"
             ];
-            default = "streched";
+            default = "stretched";
             description = ''
               The style which will be used to display the wallpaper image.
             '';
@@ -133,7 +133,7 @@ in
       };
       default = { };
       description = ''
-        `limine` configuration. See [upstream documentation](https://codeberg.org/Limine/Limine/src/branch/v${lib.versions.major cfg.package.version}.x/CONFIG.md)
+        `limine` configuration. See [upstream documentation](https://github.com/Limine-Bootloader/Limine/blob/v${lib.versions.major cfg.package.version}.x/CONFIG.md)
         for additional details.
       '';
     };
@@ -159,7 +159,7 @@ in
           path: boot():///efi/memtest86/memtest86.efi
       '';
       description = ''
-        A string which is appended to the end of limine.conf. The config format can be found [here](https://codeberg.org/Limine/Limine/src/branch/v${lib.versions.major cfg.package.version}.x/CONFIG.md).
+        A string which is appended to the end of limine.conf. The config format can be found [here](https://github.com/Limine-Bootloader/Limine/blob/v${lib.versions.major cfg.package.version}.x/CONFIG.md).
       '';
     };
 
@@ -313,7 +313,7 @@ in
 
         wallpaper = lib.mkDefault [ defaultWallpaper ];
         backdrop = lib.mkDefault "2F302F";
-        wallpaper_style = lib.mkDefault "streched";
+        wallpaper_style = lib.mkDefault "stretched";
       };
 
       # this module supplies an implementation for `providers.bootloader`
