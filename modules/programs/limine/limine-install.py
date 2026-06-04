@@ -442,7 +442,7 @@ def install_bootloader() -> None:
       elif type(value) is list:
         if key == 'wallpaper':
           for elem in value:
-            config_file += f'''key: {get_copied_path_uri(elem, 'wallpapers')}\n'''
+            config_file += f'''{key}: {get_copied_path_uri(elem, 'wallpapers')}\n'''
         else:
           for elem in value:
             config_file += f'{key}: {elem}\n'

@@ -32,7 +32,7 @@ let
       efiRemovable = cfg.efiInstallAsRemovable;
       maxGenerations = if cfg.maxGenerations == null then 0 else cfg.maxGenerations;
       hostArchitecture = pkgs.stdenv.hostPlatform.parsed.cpu;
-      fwupdEfiPath = lib.optionalAttrs config.services.fwupd.enable config.services.fwupd.package;
+      fwupdEfiPath = config.services.fwupd.package or null;
     }
   );
 in
