@@ -54,34 +54,45 @@ in
         lib.types.submodule {
           options =
             let
-              opt = lib.mkOption {
-                type =
-                  with lib.types;
-                  nullOr (oneOf [
-                    (listOf (oneOf [
-                      int
-                      str
-                      path
-                    ]))
+              optionType =
+                with lib.types;
+                let
+                  atom = oneOf [
                     int
                     str
                     path
-                  ]);
+                  ];
+                in
+                nullOr (coercedTo atom lib.singleton (listOf atom));
+            in
+            {
+              default = lib.mkOption {
+                type = optionType;
                 default = null;
                 apply =
                   let
                     toStr = v: if lib.isPath v then "${v}" else toString v;
                   in
-                  v: if lib.isList v then lib.concatMapStringsSep ":" toStr v else toStr v;
+                  v: if v == null then null else lib.concatMapStringsSep ":" toStr v;
+                description = ''
+                  The `DEFAULT` environment variables to be set, unset or modified by {manpage}`pam_env(8)`. See
+                  {manpage}`pam_env.conf(5)` for additional details.
+                '';
+              };
+
+              override = lib.mkOption {
+                type = optionType;
+                default = null;
+                apply =
+                  let
+                    toStr = v: if lib.isPath v then "${v}" else toString v;
+                  in
+                  v: if v == null then null else lib.concatMapStringsSep ":" toStr v;
                 description = ''
                   The environment variables to be set, unset or modified by {manpage}`pam_env(8)`. See
                   {manpage}`pam_env.conf(5)` for additional details.
                 '';
               };
-            in
-            {
-              default = opt;
-              override = opt;
             };
         }
       );
