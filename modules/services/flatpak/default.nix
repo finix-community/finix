@@ -28,7 +28,7 @@ in
 
     extraGroups = lib.mkOption {
       type = with lib.types; listOf str;
-      default = null;
+      default = [ ];
       example = lib.literalExpression "[ config.services.seatd.group ]";
       description = ''
         A list of groups to _unconditionally_ grant access, via `polkit`, to this services offerings. Useful
