@@ -77,7 +77,7 @@ in
           sharedscripts
 
           postrotate
-            ${pkgs.coreutils}/bin/kill -s HUP $(cat /run/rsyslog.pid)
+            ${lib.getExe' config.programs.coreutils.package "kill"} -s HUP $(cat /run/rsyslog.pid)
           endscript
         }
       '';
