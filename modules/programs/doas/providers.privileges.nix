@@ -1,4 +1,7 @@
 { config, lib, ... }:
+let
+	optionalStringElse = cond: string: elseString: if cond then string else elseString;
+in
 {
   options.providers.privileges = {
     backend = lib.mkOption {
@@ -20,14 +23,16 @@
           runAs = lib.optionalString (rule.runAs != "*") "as ${rule.runAs}";
           opts =
             lib.optionalString (!rule.requirePassword) "nopass "
-            + "setenv { SSH_AUTH_SOCK TERMINFO TERMINFO_DIRS }";
+						+ lib.optionalString (rule.persist && rule.requirePassword) "persist "
+						+ optionalStringElse (rule.keepEnv) "keepenv" "setenv { SSH_AUTH_SOCK TERMINFO TERMINFO_DIRS }";
+					command = lib.optionalString (rule.command != "*") " cmd ${rule.command} ${toString rule.args}";
         in
         ''
           ${lib.concatMapStringsSep "\n" (
-            user: "permit ${opts} ${user} ${runAs} cmd ${rule.command} ${toString rule.args}"
+            user: "permit ${opts} ${user} ${runAs}${command}"
           ) rule.users}
           ${lib.concatMapStringsSep "\n" (
-            group: "permit ${opts} :${group} ${runAs} cmd ${rule.command} ${toString rule.args}"
+            group: "permit ${opts} :${group} ${runAs}${command}"
           ) rule.groups}
         ''
       ) config.providers.privileges.rules;

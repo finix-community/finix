@@ -84,6 +84,22 @@ in
               '';
             };
 
+						persist = lib.mkOption {
+              type = lib.types.bool;
+              default = false;
+              description = ''
+								Whether or not to allow credentials to persist temporarily.
+              '';
+						};
+
+						keepEnv = lib.mkOption {
+							type = lib.types.bool;
+							default = false;
+							description = ''
+								Whether or not to keep the users environment during privilege escalation.
+							'';
+						};
+
             runAs = lib.mkOption {
               type = lib.types.nonEmptyStr;
               default = "root";
