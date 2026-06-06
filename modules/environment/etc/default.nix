@@ -209,7 +209,7 @@ in
 
       # Create the required /bin/sh symlink; otherwise lots of things
       # (notably the system() function) won't work.
-      ln -sfn "${pkgs.bashInteractive}/bin/sh" /bin/sh
+      ln -sfn "${config.environment.binsh}" /bin/sh
     '';
   };
 }
