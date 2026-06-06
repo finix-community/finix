@@ -127,7 +127,13 @@ in
 
           ${lib.concatMapStringsSep "\n" mkMount (
             lib.filter (lib.getAttr "neededForBoot") (
-              lib.filter (fs: !lib.elem fs.fsType [ "luks" "lvm" ]) (lib.attrValues config.fileSystems)
+              lib.filter (
+                fs:
+                !lib.elem fs.fsType [
+                  "luks"
+                  "lvm"
+                ]
+              ) (lib.attrValues config.fileSystems)
             )
           )}
         '';

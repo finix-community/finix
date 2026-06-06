@@ -143,7 +143,13 @@ in
       # <file system> <mount point>   <type>  <options>       <dump>  <pass>
 
       # filesystems
-      ${makeFstabEntries (lib.filter (fs: !lib.elem fs.fsType [ "luks" "lvm" ]) fileSystems) { }}
+      ${makeFstabEntries (lib.filter (
+        fs:
+        !lib.elem fs.fsType [
+          "luks"
+          "lvm"
+        ]
+      ) fileSystems) { }}
 
       # swap devices
       ${lib.concatMapStrings makeSwapEntry config.swapDevices}

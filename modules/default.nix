@@ -27,42 +27,41 @@ let
   );
 
   providerModules = builtins.map (value: ./providers/${value}) (
-    builtins.attrNames (builtins.removeAttrs (builtins.readDir ./providers) ["README.md"])
+    builtins.attrNames (builtins.removeAttrs (builtins.readDir ./providers) [ "README.md" ])
   );
 in
-  {
-    default = {
-      imports =
-        [
-          ./boot
-          ./environment
-          ./filesystems
-          ./finit
-          ./fonts
-          ./hardware
-          ./i18n
-          ./misc
-          ./networking
-          ./nixos
-          ./nixpkgs
-          ./programs/plymouth
-          ./programs/resolvconf
-          ./programs/shadow
-          ./security
-          ./services/dbus
-          ./services/elogind
-          ./services/mdevd
-          ./services/seatd
-          ./services/udev
-          ./system/activation
-          ./system/activation/specialisation.nix
-          ./system/nixos-compat.nix
-          ./time
-          ./users
-          ./xdg
-        ]
-        ++ providerModules;
-    };
-  }
-  // programModules
-  // serviceModules
+{
+  default = {
+    imports = [
+      ./boot
+      ./environment
+      ./filesystems
+      ./finit
+      ./fonts
+      ./hardware
+      ./i18n
+      ./misc
+      ./networking
+      ./nixos
+      ./nixpkgs
+      ./programs/plymouth
+      ./programs/resolvconf
+      ./programs/shadow
+      ./security
+      ./services/dbus
+      ./services/elogind
+      ./services/mdevd
+      ./services/seatd
+      ./services/udev
+      ./system/activation
+      ./system/activation/specialisation.nix
+      ./system/nixos-compat.nix
+      ./time
+      ./users
+      ./xdg
+    ]
+    ++ providerModules;
+  };
+}
+// programModules
+// serviceModules
