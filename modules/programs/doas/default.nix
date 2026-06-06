@@ -6,6 +6,8 @@
 }:
 let
   cfg = config.programs.doas;
+
+	optionalStringElse = cond: string: elseString: if cond then string else elseString;
 in
 {
   imports = [
@@ -34,7 +36,15 @@ in
 			type = lib.types.bool;
 			default = false;
 			description = ''
-				Whether or not to allow credentials to persist for users for 5 minutes.""
+				Whether or not to allow credentials to persist for users for 5 minutes.
+			'';
+		};
+
+		keepEnv = lib.mkOption {
+			type = lib.types.bool;
+			default = false;
+			description = ''
+				Whether or not to keep the users environment during privilege escalation.
 			'';
 		};
   };
@@ -72,7 +82,7 @@ in
           permit nopass keepenv root
 
           # access for members of the "wheel" group
-          permit ${lib.optionalString cfg.persist "persist "}setenv { SSH_AUTH_SOCK TERMINFO TERMINFO_DIRS } :wheel
+          permit ${lib.optionalString cfg.persist "persist "}${optionalStringElse cfg.keepEnv "keepenv" "setenv { SSH_AUTH_SOCK TERMINFO TERMINFO_DIRS }"} :wheel
         '')
       ];
 
