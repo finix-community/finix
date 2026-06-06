@@ -29,6 +29,14 @@ in
         The package to use for `doas`.
       '';
     };
+
+		persist = lib.mkOption {
+			type = lib.types.bool;
+			default = false;
+			description = ''
+				Whether or not to allow credentials to persist for users for 5 minutes.""
+			'';
+		};
   };
 
   config = lib.mkIf cfg.enable {
@@ -64,7 +72,7 @@ in
           permit nopass keepenv root
 
           # access for members of the "wheel" group
-          permit setenv { SSH_AUTH_SOCK TERMINFO TERMINFO_DIRS } :wheel
+          permit ${lib.optionalString cfg.persist "persist "}setenv { SSH_AUTH_SOCK TERMINFO TERMINFO_DIRS } :wheel
         '')
       ];
 
