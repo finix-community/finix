@@ -122,10 +122,10 @@ in
 
       command = pkgs.writeShellApplication {
         name = "mariadb-init.sh";
-        runtimeInputs = with pkgs; [
-          coreutils
-          nettools
-          gnused
+        runtimeInputs = [
+          config.programs.coreutils.package
+          pkgs.nettools
+          pkgs.gnused
         ];
         text = ''
           if ! test -e '${cfg.dataDir}/mysql'; then

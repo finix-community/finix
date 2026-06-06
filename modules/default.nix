@@ -4,6 +4,7 @@ let
       "README.md"
 
       # required modules - included by default
+      "coreutils"
       "plymouth"
       "resolvconf"
       "shadow"
@@ -44,6 +45,7 @@ in
       ./networking
       ./nixos
       ./nixpkgs
+      ./programs/coreutils
       ./programs/plymouth
       ./programs/resolvconf
       ./programs/shadow

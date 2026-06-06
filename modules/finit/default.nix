@@ -892,7 +892,7 @@ in
 
     # TODO: decide a reasonable default here... user can override if needed
     finit.path = [
-      pkgs.coreutils
+      config.programs.coreutils.package
       pkgs.findutils
       pkgs.gnugrep
       pkgs.gnused
