@@ -74,7 +74,7 @@ in
       ]
       ++ lib.optionals config.services.xserver.enable or false [
         "--xsession-wrapper"
-        "${lib.getExe' xinit' "startx"} ${lib.getExe' pkgs.coreutils "env"}"
+        "${lib.getExe' xinit' "startx"} ${lib.getExe' config.programs.coreutils.package "env"}"
       ];
 
     services.greetd.enable = true;

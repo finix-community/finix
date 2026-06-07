@@ -59,7 +59,7 @@ in
           bash
           btrfs-progs
           cdrkit
-          coreutils
+          config.programs.coreutils.package
           criu
           dnsmasq
           e2fsprogs

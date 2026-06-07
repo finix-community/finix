@@ -160,7 +160,7 @@ in
         // lib.optionalAttrs config.services.xserver.enable or false {
           x11_prefix = [
             (lib.getExe' xinit' "startx")
-            (lib.getExe' pkgs.coreutils "env")
+            (lib.getExe' config.programs.coreutils.package "env")
           ];
         };
     };

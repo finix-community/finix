@@ -18,9 +18,9 @@
       runlevels = "S";
       command = pkgs.writeShellApplication {
         name = "remount-nix-store.sh";
-        runtimeInputs = with pkgs; [
-          coreutils
-          util-linux
+        runtimeInputs = [
+          config.programs.coreutils.package
+          pkgs.util-linux
         ];
         text = ''
           #!${pkgs.runtimeShell}

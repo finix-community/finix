@@ -197,11 +197,11 @@ in
       log = true;
 
       # TODO: now we're hijacking `env` and no one else can use it...
-      path = with pkgs; [
-        coreutils
-        execline
-        kmod
-        util-linux
+      path = [
+        config.programs.coreutils.package
+        pkgs.execline
+        pkgs.kmod
+        pkgs.util-linux
       ];
     };
 
