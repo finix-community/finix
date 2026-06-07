@@ -45,7 +45,7 @@ in
 
         eval "$(${pkgs.coreutils}/bin/dircolors -b)"
 
-        alias -- ls='ls --color=tty'
+        alias -- ls='ls --color=auto'
       fi
     '';
   };
