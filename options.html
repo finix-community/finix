@@ -2866,7 +2866,7 @@
     <details class="toc-category">
       <summary title="programs">
         <span>programs</span>
-        <span class="toc-count">127</span>
+        <span class="toc-count">128</span>
       </summary>
       <ul>
         
@@ -2899,6 +2899,14 @@
         <li>
           <a href='#option-programs.brightnessctl.package' title="programs.brightnessctl.package">
             brightnessctl.package
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs.coreutils.package' title="programs.coreutils.package">
+            coreutils.package
             
             
           </a>
@@ -12192,6 +12200,22 @@ accidentally on a wrong machine.</p>
 </code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/brightnessctl" target="_blank">&lt;finix/modules/programs/brightnessctl&gt;</a></code></div>
 </div>
+<div class="option" id="option-programs.coreutils.package">
+  <h3 class="option-name">
+    <a href="#option-programs.coreutils.package" class="option-anchor">programs.coreutils.package</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>Package providing the standard core utilities used by the system.</p>
+<p>Most modules should use this option instead of depending directly on
+<code>pkgs.coreutils</code>, allowing alternative implementations such as
+<code>uutils</code>, <code>busybox</code>, or <code>toybox</code> to be selected globally.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.coreutils</code></div>
+  <div class="option-example">Example: <code>pkgs.busybox</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/coreutils" target="_blank">&lt;finix/modules/programs/coreutils&gt;</a></code></div>
+</div>
 <div class="option" id="option-programs.dma.enable">
   <h3 class="option-name">
     <a href="#option-programs.dma.enable" class="option-anchor">programs.dma.enable</a>
@@ -15061,7 +15085,7 @@ of the crontab.</p>
 </body></html></div>
   <div class="option-default">Default: <code>[
   /run/wrappers
-  pkgs.coreutils
+  config.programs.coreutils.package
 ]
 </code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/cron" target="_blank">&lt;finix/modules/services/cron&gt;</a></code></div>
