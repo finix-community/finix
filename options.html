@@ -740,11 +740,19 @@
     <details class="toc-category">
       <summary title="environment">
         <span>environment</span>
-        <span class="toc-count">15</span>
+        <span class="toc-count">16</span>
       </summary>
       <ul>
         
 
+        
+        <li>
+          <a href='#option-environment.binsh' title="environment.binsh">
+            binsh
+            
+            
+          </a>
+        </li>
         
         <li>
           <a href='#option-environment.etc' title="environment.etc">
@@ -8665,6 +8673,20 @@ Defaults to the pools necessary for booting.</p>
 </body></html></div>
   <div class="option-default">Default: <code>[ ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/zfs.nix" target="_blank">&lt;finix/modules/filesystems/zfs.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-environment.binsh">
+  <h3 class="option-name">
+    <a href="#option-environment.binsh" class="option-anchor">environment.binsh</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>absolute path</code></div>
+  <div class="option-description"><html><head></head><body><p>Default shell linked system-wide to <code>/bin/sh</code>. Do your best to make sure any
+modifications to this shell are POSIX-compliant.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>"${pkgs.bashInteractive}/bin/sh"</code></div>
+  <div class="option-example">Example: <code>"${pkgs.dash}/bin/dash"</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/environment" target="_blank">&lt;finix/modules/environment&gt;</a></code></div>
 </div>
 <div class="option" id="option-environment.etc">
   <h3 class="option-name">
