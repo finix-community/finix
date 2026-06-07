@@ -77,7 +77,7 @@ in
       "-u"
       "chrony"
       "-f"
-      cfg.configFile
+      (toString cfg.configFile)
     ]
     ++ lib.optionals cfg.debug [
       "-L"
