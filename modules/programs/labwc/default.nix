@@ -17,9 +17,9 @@ let
     Type=Application
   '';
 
-  # libudev-zero is a hard requirement when running mdevd
+  # libudev-zero is a hard requirement when running mdevd or keventd
   libinput = pkgs.libinput.override (
-    lib.optionalAttrs config.services.mdevd.enable {
+    lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
       udev = pkgs.libudev-zero;
       wacomSupport = false;
     }
