@@ -4340,7 +4340,7 @@
     <details class="toc-category">
       <summary title="services">
         <span>services</span>
-        <span class="toc-count">354</span>
+        <span class="toc-count">358</span>
       </summary>
       <ul>
         
@@ -5501,6 +5501,38 @@
         <li>
           <a href='#option-services.jellyfin.user' title="services.jellyfin.user">
             jellyfin.user
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.keventd.debug' title="services.keventd.debug">
+            keventd.debug
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.keventd.enable' title="services.keventd.enable">
+            keventd.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.keventd.extraArgs' title="services.keventd.extraArgs">
+            keventd.extraArgs
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.keventd.path' title="services.keventd.path">
+            keventd.path
             
             
           </a>
@@ -16483,6 +16515,57 @@ ensuring the user exists before the <code>jellyfin</code> service starts.</p>
 </body></html></div>
   <div class="option-default">Default: <code>"jellyfin"</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/jellyfin" target="_blank">&lt;finix/modules/services/jellyfin&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.keventd.debug">
+  <h3 class="option-name">
+    <a href="#option-services.keventd.debug" class="option-anchor">services.keventd.debug</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/keventd" target="_blank">&lt;finix/modules/services/keventd&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.keventd.enable">
+  <h3 class="option-name">
+    <a href="#option-services.keventd.enable" class="option-anchor">services.keventd.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://troglobit.com/projects/finit/">keventd</a> as a system service.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/keventd" target="_blank">&lt;finix/modules/services/keventd&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.keventd.extraArgs">
+  <h3 class="option-name">
+    <a href="#option-services.keventd.extraArgs" class="option-anchor">services.keventd.extraArgs</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <code>keventd</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/keventd" target="_blank">&lt;finix/modules/services/keventd&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.keventd.path">
+  <h3 class="option-name">
+    <a href="#option-services.keventd.path" class="option-anchor">services.keventd.path</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of absolute path</code></div>
+  <div class="option-description"><html><head></head><body><p>Packages added to the <code class="env-var">PATH</code> environment variable when
+executing programs from Udev rules.</p>
+<p>coreutils, gnu{sed,grep}, util-linux
+automatically included.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/keventd" target="_blank">&lt;finix/modules/services/keventd&gt;</a></code></div>
 </div>
 <div class="option" id="option-services.keyd.debug">
   <h3 class="option-name">
