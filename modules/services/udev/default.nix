@@ -59,8 +59,8 @@ let
             --replace-quiet \"/sbin/blkid \"${pkgs.util-linux}/sbin/blkid \
             --replace-quiet \"/bin/mount \"${pkgs.util-linux}/bin/mount \
             --replace-quiet /usr/bin/readlink ${lib.getExe' config.programs.coreutils.package "readline"} \
-            --replace-quiet /usr/bin/cat ${lib.getExe' config.programs.coreutils.package "cat"}/bin/cat \
-            --replace-quiet /usr/bin/basename ${lib.getExe' config.programs.coreutils.package "basename"}/bin/basename 2>/dev/null
+            --replace-quiet /usr/bin/cat ${lib.getExe' config.programs.coreutils.package "cat"} \
+            --replace-quiet /usr/bin/basename ${lib.getExe' config.programs.coreutils.package "basename"} 2>/dev/null
         done
 
         echo -n "Checking that all programs called by relative paths in udev rules exist in ${udev}/lib/udev... "
