@@ -94,7 +94,7 @@
     <details class="toc-category">
       <summary title="boot">
         <span>boot</span>
-        <span class="toc-count">79</span>
+        <span class="toc-count">80</span>
       </summary>
       <ul>
         
@@ -175,6 +175,14 @@
         <li>
           <a href='#option-boot.initrd.contents._.target' title="boot.initrd.contents.*.target">
             initrd.contents.*.target
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-boot.initrd.emergencyAccess' title="boot.initrd.emergencyAccess">
+            initrd.emergencyAccess
             
             
           </a>
@@ -4332,7 +4340,7 @@
     <details class="toc-category">
       <summary title="services">
         <span>services</span>
-        <span class="toc-count">353</span>
+        <span class="toc-count">354</span>
       </summary>
       <ul>
         
@@ -4605,6 +4613,14 @@
         <li>
           <a href='#option-services.chrony.enable' title="services.chrony.enable">
             chrony.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.chrony.extraArgs' title="services.chrony.extraArgs">
+            chrony.extraArgs
             
             
           </a>
@@ -7763,6 +7779,23 @@ include it in <a class="option-reference" href="options.html#option-boot.initrd.
 </body></html></div>
   <div class="option-default">Default: <code>null</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/boot/initrd.nix" target="_blank">&lt;finix/modules/boot/initrd.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-boot.initrd.emergencyAccess">
+  <h3 class="option-name">
+    <a href="#option-boot.initrd.emergencyAccess" class="option-anchor">boot.initrd.emergencyAccess</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>null or boolean or (string, not containing newlines or colons)</code></div>
+  <div class="option-description"><html><head></head><body><p>Set to <code>true</code> for unauthenticated emergency access to the initramfs
+rescue shell, and <code>false</code> or <code>null</code> for no access.</p>
+<p>Can also be set to a hashed super user password to allow
+authenticated access to the rescue mode.</p>
+<p>When access is denied, finix prints the failure reason on console
+and reboots after 10s instead of opening a shell.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/initrd.nix" target="_blank">&lt;finix/modules/finit/initrd.nix&gt;</a></code></div>
 </div>
 <div class="option" id="option-boot.initrd.enable">
   <h3 class="option-name">
@@ -14944,6 +14977,19 @@ for additional details.</p>
   <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://chrony-project.org/">chrony</a> as a system service.</p>
 </body></html></div>
   <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/chronyd" target="_blank">&lt;finix/modules/services/chronyd&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.chrony.extraArgs">
+  <h3 class="option-name">
+    <a href="#option-services.chrony.extraArgs" class="option-anchor">services.chrony.extraArgs</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <code>dropbear</code>. See <a href="https://man.archlinux.org/man/chronyd.8" class="manpage-reference">chronyd(8)</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/chronyd" target="_blank">&lt;finix/modules/services/chronyd&gt;</a></code></div>
 </div>
 <div class="option" id="option-services.chrony.package">
