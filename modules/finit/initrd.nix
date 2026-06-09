@@ -38,14 +38,12 @@ let
     paths = [
       pkgs.busybox
       pkgs.kmod
-      (lib.hiPrio pkgs.util-linux.mount)
       pkgs.bash
       config.finit.package
     ]
     ++ lib.optionals config.services.mdevd.enable [
       config.services.mdevd.package
       pkgs.execline
-      pkgs.util-linux
     ]
     ++ lib.optionals config.services.udev.enable [ config.services.udev.package ]
     ++ fsPackages;

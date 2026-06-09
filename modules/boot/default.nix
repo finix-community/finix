@@ -20,7 +20,7 @@
         name = "remount-nix-store.sh";
         runtimeInputs = [
           config.programs.coreutils.package
-          pkgs.util-linux
+          pkgs.util-linuxMinimal
         ];
         text = ''
           #!${pkgs.runtimeShell}

@@ -44,7 +44,7 @@ in
     finit.services.nvidia-powerd = {
       description = "NVIDIA Dynamic Boost";
       command = "${cfg.package.bin}/bin/nvidia-powerd";
-      path = [ pkgs.util-linux ]; # nvidia-powerd wants lscpu
+      path = [ pkgs.util-linuxMinimal ]; # nvidia-powerd wants lscpu
       restart = -1;
     };
   };

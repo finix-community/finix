@@ -201,7 +201,7 @@ in
         config.programs.coreutils.package
         pkgs.execline
         pkgs.kmod
-        pkgs.util-linux
+        pkgs.util-linuxMinimal
       ];
     };
 

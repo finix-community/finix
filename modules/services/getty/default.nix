@@ -24,7 +24,7 @@ in
         The package to use for `getty`.
       '';
       example = lib.literalExpression ''
-        pkgs.util-linux // {
+        pkgs.util-linuxMinimal // {
           mainProgram = "agetty";
         };
       '';

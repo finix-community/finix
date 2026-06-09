@@ -150,7 +150,7 @@ in
       pkgs.stdenv.cc.libc # nscd in update-users-groups.pl
       pkgs.shadow
       pkgs.nettools # needed for hostname
-      pkgs.util-linux # needed for mount and mountpoint
+      pkgs.util-linuxMinimal # needed for mount and mountpoint
     ];
 
     system.topLevel = checkAssertWarn (

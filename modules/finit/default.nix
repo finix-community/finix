@@ -899,7 +899,7 @@ in
       cfg.package
 
       # required by finit on shutdown
-      pkgs.util-linux.mount
+      pkgs.util-linuxMinimal.mount
 
       # for finit log rotation
       pkgs.gzip

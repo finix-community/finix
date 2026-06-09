@@ -5,16 +5,13 @@
   libite,
   libuev,
   kmod,
-  util-linux,
-  unixtools,
+  util-linuxMinimal,
 }:
 let
   # finit requires fsck, modprobe, mount & swap commands before PATH can be read from finit.conf
   PATH = lib.makeBinPath [
     kmod
-    unixtools.fsck
-    util-linux.mount
-    util-linux.swap
+    (lib.getBin util-linuxMinimal)
   ];
 in
 stdenv.mkDerivation {

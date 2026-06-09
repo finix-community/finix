@@ -56,8 +56,8 @@ let
           substituteInPlace $i \
             --replace-quiet \"/sbin/modprobe \"${pkgs.kmod}/bin/modprobe \
             --replace-quiet \"/sbin/mdadm \"${pkgs.mdadm}/sbin/mdadm \
-            --replace-quiet \"/sbin/blkid \"${pkgs.util-linux}/sbin/blkid \
-            --replace-quiet \"/bin/mount \"${pkgs.util-linux}/bin/mount \
+            --replace-quiet \"/sbin/blkid \"${pkgs.util-linuxMinimal}/sbin/blkid \
+            --replace-quiet \"/bin/mount \"${pkgs.util-linuxMinimal}/bin/mount \
             --replace-quiet /usr/bin/readlink ${lib.getExe' config.programs.coreutils.package "readline"} \
             --replace-quiet /usr/bin/cat ${lib.getExe' config.programs.coreutils.package "cat"} \
             --replace-quiet /usr/bin/basename ${lib.getExe' config.programs.coreutils.package "basename"} 2>/dev/null
@@ -226,7 +226,7 @@ in
       config.programs.coreutils.package
       pkgs.gnused
       pkgs.gnugrep
-      pkgs.util-linux
+      pkgs.util-linuxMinimal
       cfg.package
     ];
 

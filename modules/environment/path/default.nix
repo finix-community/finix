@@ -51,7 +51,7 @@
       procps
       su
       time
-      util-linux
+      util-linuxMinimal
       which
       zstd
 
