@@ -308,7 +308,16 @@ in
       # Prevent the current configuration from being garbage-collected.
       "d /nix/var/nix/gcroots -"
       "L+ /nix/var/nix/gcroots/current-system - - - - /run/current-system"
-    ];
+
+      # Per-user profile and gcroots directories, required by nix-env and
+      # tools like home-manager that run nix operations as unprivileged users.
+      "d /nix/var/nix/profiles/per-user 1777 root root - -"
+      "d /nix/var/nix/gcroots/per-user  1777 root root - -"
+    ] ++ lib.mapAttrsToList (name: _: "d /nix/var/nix/profiles/per-user/${name} 0755 ${name} root - -") (
+      lib.filterAttrs (name: u: !u.isSystemUser) config.users.users
+    ) ++ lib.mapAttrsToList (name: _: "d /nix/var/nix/gcroots/per-user/${name}  0755 ${name} root - -") (
+      lib.filterAttrs (name: u: !u.isSystemUser) config.users.users
+    );
 
     users.users = lib.listToAttrs (
       map (nr: {
