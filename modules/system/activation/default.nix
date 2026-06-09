@@ -142,18 +142,16 @@ in
       "L+ /var/run - - - - /run"
     ];
 
-    system.activation.path =
-      with pkgs;
-      map lib.getBin [
-        coreutils
-        gnugrep
-        findutils
-        getent
-        stdenv.cc.libc # nscd in update-users-groups.pl
-        shadow
-        nettools # needed for hostname
-        util-linux # needed for mount and mountpoint
-      ];
+    system.activation.path = map lib.getBin [
+      config.programs.coreutils.package
+      pkgs.gnugrep
+      pkgs.findutils
+      pkgs.getent
+      pkgs.stdenv.cc.libc # nscd in update-users-groups.pl
+      pkgs.shadow
+      pkgs.nettools # needed for hostname
+      pkgs.util-linux # needed for mount and mountpoint
+    ];
 
     system.topLevel = checkAssertWarn (
       pkgs.stdenvNoCC.mkDerivation {
@@ -198,7 +196,7 @@ in
               --subst-var-by distroId finix \
               --subst-var-by finit ${config.finit.package} \
               --subst-var-by logger ${pkgs.util-linuxMinimal} \
-              --subst-var-by coreutils ${pkgs.coreutils} \
+              --subst-var-by coreutils ${config.programs.coreutils.package} \
               --subst-var-by installHook ${config.providers.bootloader.installHook}
           ''
           + lib.optionalString config.boot.bootspec.enable ''
