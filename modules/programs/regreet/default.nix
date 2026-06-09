@@ -11,9 +11,9 @@ let
 
   configFile = format.generate "regreet.toml" cfg.settings;
 
-  # libudev-zero is a hard requirement when running mdevd
+  # libudev-zero is a hard requirement when running mdevd or keventd
   libinput = pkgs.libinput.override (
-    lib.optionalAttrs config.services.mdevd.enable {
+    lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
       udev = pkgs.libudev-zero;
       wacomSupport = false;
     }
@@ -27,9 +27,9 @@ let
   };
 
   xinit' = pkgs.xinit.override (
-    lib.optionalAttrs config.services.mdevd.enable {
+    lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
       xorg-server = pkgs.xorg-server.override (
-        lib.optionalAttrs config.services.mdevd.enable {
+        lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
           udev = pkgs.libudev-zero;
         }
       );
@@ -160,7 +160,7 @@ in
         // lib.optionalAttrs config.services.xserver.enable or false {
           x11_prefix = [
             (lib.getExe' xinit' "startx")
-            (lib.getExe' pkgs.coreutils "env")
+            (lib.getExe' config.programs.coreutils.package "env")
           ];
         };
     };

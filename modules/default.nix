@@ -4,6 +4,7 @@ let
       "README.md"
 
       # required modules - included by default
+      "coreutils"
       "plymouth"
       "resolvconf"
       "shadow"
@@ -20,6 +21,7 @@ let
       # required modules - included by default
       "dbus"
       "elogind"
+      "keventd"
       "mdevd"
       "seatd"
       "udev"
@@ -44,12 +46,14 @@ in
       ./networking
       ./nixos
       ./nixpkgs
+      ./programs/coreutils
       ./programs/plymouth
       ./programs/resolvconf
       ./programs/shadow
       ./security
       ./services/dbus
       ./services/elogind
+      ./services/keventd
       ./services/mdevd
       ./services/seatd
       ./services/udev

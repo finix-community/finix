@@ -56,7 +56,6 @@
       zstd
 
       bashInteractive
-      coreutils-full
       gawk
       gnugrep
       gnupatch
