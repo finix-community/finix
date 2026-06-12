@@ -1,4 +1,5 @@
 {
+  modules,
   config,
   pkgs,
   lib,
@@ -112,6 +113,8 @@ let
 
 in
 {
+  imports = [ modules.labwc ];
+
   options.programs.lxqt = {
 
     enable = lib.mkOption {
@@ -153,12 +156,8 @@ in
 
       compositor = lib.mkOption {
         type = lib.types.package;
-        default = pkgs.labwc.override {
-          inherit libinput;
-
-          wlroots_0_20 = pkgs.wlroots_0_20.override { inherit libinput; };
-        };
-        defaultText = lib.literalExpression "pkgs.labwc";
+        default = config.programs.labwc.package;
+        defaultText = lib.literalExpression "config.programs.labwc.package";
         description = ''
           The default Wayland compositor package to use.
         '';
