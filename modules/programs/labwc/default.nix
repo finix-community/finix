@@ -40,7 +40,7 @@ in
       default = pkgs.labwc.override {
         inherit libinput;
 
-        wlroots_0_19 = pkgs.wlroots_0_19.override { inherit libinput; };
+        wlroots_0_20 = pkgs.wlroots_0_20.override { inherit libinput; };
       };
       defaultText = lib.literalExpression "pkgs.labwc";
       description = ''
