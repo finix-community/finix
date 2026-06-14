@@ -11,7 +11,7 @@ let
     [Desktop Entry]
     Comment=A wayland stacking compositor
     DesktopNames=labwc;wlroots
-    Exec=${pkgs.dbus}/bin/dbus-run-session -- ${lib.getExe cfg.package}
+    Exec=${pkgs.dbus}/bin/dbus-run-session -- ${lib.getExe cfg.package} ${lib.escapeShellArgs cfg.extraArgs}
     Icon=labwc
     Name=labwc
     Type=Application
@@ -53,6 +53,15 @@ in
       defaultText = lib.literalExpression "pkgs.labwc";
       description = ''
         The package to use for `labwc`.
+      '';
+    };
+
+    extraArgs = lib.mkOption {
+      type = with lib.types; listOf str;
+      default = [ ];
+      description = ''
+        Additional arguments to pass to `labwc`. See {manpage}`labwc(1)`
+        for additional details.
       '';
     };
   };

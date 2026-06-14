@@ -25,6 +25,7 @@
   "interfaces(5)": "https://manpages.debian.org/unstable/ifupdown-ng/interfaces.5",
   "iwd.config(5)": "https://man.archlinux.org/man/iwd.config.5",
   "keyd(1)": "https://man.archlinux.org/man/extra/keyd/keyd.1",
+  "labwc(1)": "https://man.archlinux.org/man/labwc.1",
   "login.defs(5)": "https://man.archlinux.org/man/login.defs.5",
   "mount(8)": "https://man.archlinux.org/man/mount.8",
   "nix.conf(5)": "https://man.archlinux.org/man/nix.conf.5",
