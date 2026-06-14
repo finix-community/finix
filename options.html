@@ -976,7 +976,7 @@
     <details class="toc-category">
       <summary title="finit">
         <span>finit</span>
-        <span class="toc-count">165</span>
+        <span class="toc-count">169</span>
       </summary>
       <ul>
         
@@ -1273,6 +1273,14 @@
         <li>
           <a href='#option-finit.run._name_.supplementary_groups' title="finit.run.&lt;name&gt;.supplementary_groups">
             run.&lt;name&gt;.supplementary_groups
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-finit.run._name_.tty' title="finit.run.&lt;name&gt;.tty">
+            run.&lt;name&gt;.tty
             
             
           </a>
@@ -1583,6 +1591,14 @@
         </li>
         
         <li>
+          <a href='#option-finit.services._name_.tty' title="finit.services.&lt;name&gt;.tty">
+            services.&lt;name&gt;.tty
+            
+            
+          </a>
+        </li>
+        
+        <li>
           <a href='#option-finit.services._name_.type' title="finit.services.&lt;name&gt;.type">
             services.&lt;name&gt;.type
             
@@ -1887,6 +1903,14 @@
         </li>
         
         <li>
+          <a href='#option-finit.sysv._name_.tty' title="finit.sysv.&lt;name&gt;.tty">
+            sysv.&lt;name&gt;.tty
+            
+            
+          </a>
+        </li>
+        
+        <li>
           <a href='#option-finit.sysv._name_.type' title="finit.sysv.&lt;name&gt;.type">
             sysv.&lt;name&gt;.type
             
@@ -2129,6 +2153,14 @@
         <li>
           <a href='#option-finit.tasks._name_.supplementary_groups' title="finit.tasks.&lt;name&gt;.supplementary_groups">
             tasks.&lt;name&gt;.supplementary_groups
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-finit.tasks._name_.tty' title="finit.tasks.&lt;name&gt;.tty">
+            tasks.&lt;name&gt;.tty
             
             
           </a>
@@ -4348,7 +4380,7 @@
     <details class="toc-category">
       <summary title="services">
         <span>services</span>
-        <span class="toc-count">358</span>
+        <span class="toc-count">361</span>
       </summary>
       <ul>
         
@@ -4517,6 +4549,30 @@
         <li>
           <a href='#option-services.atd.extraArgs' title="services.atd.extraArgs">
             atd.extraArgs
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.autologin.command' title="services.autologin.command">
+            autologin.command
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.autologin.enable' title="services.autologin.enable">
+            autologin.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.autologin.user' title="services.autologin.user">
+            autologin.user
             
             
           </a>
@@ -9590,6 +9646,21 @@ configured value and the above (<code>2</code> and <code>5</code>) will be used.
   <div class="option-default">Default: <code>[ ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
 </div>
+<div class="option" id="option-finit.run._name_.tty">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.tty" class="option-anchor">finit.run.&lt;name&gt;.tty</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>null or non-empty string</code></div>
+  <div class="option-description"><html><head></head><body><p>Give this stanza a controlling terminal on the given device, connecting its <code>stdin</code>, <code>stdout</code>, and
+<code>stderr</code> to the TTY. May be a device node like <code>/dev/ttyS0</code> or the special keyword <code>@console</code>.</p>
+<p>See <a href="https://finit-project.github.io/config/tty/">upstream documentation</a> for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>null</code></div>
+  <div class="option-example">Example: <code>"/dev/tty1"</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
+</div>
 <div class="option" id="option-finit.run._name_.user">
   <h3 class="option-name">
     <a href="#option-finit.run._name_.user" class="option-anchor">finit.run.&lt;name&gt;.user</a>
@@ -10082,6 +10153,21 @@ seconds at a time or never terminates.</p>
   <div class="option-description"><html><head></head><body><p>Explicitly specify supplementary groups, in addition to reading group membership from <code class="file-path">/etc/group</code>.</p>
 </body></html></div>
   <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
+</div>
+<div class="option" id="option-finit.services._name_.tty">
+  <h3 class="option-name">
+    <a href="#option-finit.services._name_.tty" class="option-anchor">finit.services.&lt;name&gt;.tty</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>null or non-empty string</code></div>
+  <div class="option-description"><html><head></head><body><p>Give this stanza a controlling terminal on the given device, connecting its <code>stdin</code>, <code>stdout</code>, and
+<code>stderr</code> to the TTY. May be a device node like <code>/dev/ttyS0</code> or the special keyword <code>@console</code>.</p>
+<p>See <a href="https://finit-project.github.io/config/tty/">upstream documentation</a> for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>null</code></div>
+  <div class="option-example">Example: <code>"/dev/tty1"</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
 </div>
 <div class="option" id="option-finit.services._name_.type">
@@ -10579,6 +10665,21 @@ seconds at a time or never terminates.</p>
   <div class="option-default">Default: <code>[ ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
 </div>
+<div class="option" id="option-finit.sysv._name_.tty">
+  <h3 class="option-name">
+    <a href="#option-finit.sysv._name_.tty" class="option-anchor">finit.sysv.&lt;name&gt;.tty</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>null or non-empty string</code></div>
+  <div class="option-description"><html><head></head><body><p>Give this stanza a controlling terminal on the given device, connecting its <code>stdin</code>, <code>stdout</code>, and
+<code>stderr</code> to the TTY. May be a device node like <code>/dev/ttyS0</code> or the special keyword <code>@console</code>.</p>
+<p>See <a href="https://finit-project.github.io/config/tty/">upstream documentation</a> for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>null</code></div>
+  <div class="option-example">Example: <code>"/dev/tty1"</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
+</div>
 <div class="option" id="option-finit.sysv._name_.type">
   <h3 class="option-name">
     <a href="#option-finit.sysv._name_.type" class="option-anchor">finit.sysv.&lt;name&gt;.type</a>
@@ -10975,6 +11076,21 @@ configured value and the above (<code>2</code> and <code>5</code>) will be used.
   <div class="option-description"><html><head></head><body><p>Explicitly specify supplementary groups, in addition to reading group membership from <code class="file-path">/etc/group</code>.</p>
 </body></html></div>
   <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
+</div>
+<div class="option" id="option-finit.tasks._name_.tty">
+  <h3 class="option-name">
+    <a href="#option-finit.tasks._name_.tty" class="option-anchor">finit.tasks.&lt;name&gt;.tty</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>null or non-empty string</code></div>
+  <div class="option-description"><html><head></head><body><p>Give this stanza a controlling terminal on the given device, connecting its <code>stdin</code>, <code>stdout</code>, and
+<code>stderr</code> to the TTY. May be a device node like <code>/dev/ttyS0</code> or the special keyword <code>@console</code>.</p>
+<p>See <a href="https://finit-project.github.io/config/tty/">upstream documentation</a> for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>null</code></div>
+  <div class="option-example">Example: <code>"/dev/tty1"</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit" target="_blank">&lt;finix/modules/finit&gt;</a></code></div>
 </div>
 <div class="option" id="option-finit.tasks._name_.user">
@@ -14861,6 +14977,48 @@ for additional details.</p>
 </body></html></div>
   <div class="option-default">Default: <code>[ ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/atd" target="_blank">&lt;finix/modules/services/atd&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.autologin.command">
+  <h3 class="option-name">
+    <a href="#option-services.autologin.command" class="option-anchor">services.autologin.command</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>absolute path</code></div>
+  <div class="option-description"><html><head></head><body><p>Command to execute once <code class="nixos-option">user</code> is logged in on <code>tty1</code>.</p>
+</body></html></div>
+  <div class="option-example">Example: <pre><code>pkgs.writeShellScript "autologin.sh" ''
+  exec ${pkgs.dbus}/bin/dbus-run-session -- ${lib.getExe pkgs.labwc}
+''
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/autologin" target="_blank">&lt;finix/modules/services/autologin&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.autologin.enable">
+  <h3 class="option-name">
+    <a href="#option-services.autologin.enable" class="option-anchor">services.autologin.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://sr.ht/~kennylevinsen/autologin">autologin</a> as a system service.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/autologin" target="_blank">&lt;finix/modules/services/autologin&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.autologin.user">
+  <h3 class="option-name">
+    <a href="#option-services.autologin.user" class="option-anchor">services.autologin.user</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>string</code></div>
+  <div class="option-description"><html><head></head><body><p>User account under which <code>autologin</code> runs.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You are responsible for ensuring the user exists before the <code>autologin</code> service starts.</p>
+</div>
+</body></html></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/autologin" target="_blank">&lt;finix/modules/services/autologin&gt;</a></code></div>
 </div>
 <div class="option" id="option-services.blocky.debug">
   <h3 class="option-name">
