@@ -288,7 +288,7 @@ in
         target = "/etc/group";
         source = pkgs.writeText "group" (
           lib.concatStringsSep "\n" (
-            lib.concatMap (g: lib.optionals (g.gid != null) [ "${g.name}:x:${toString g.gid}" ]) (
+            lib.concatMap (g: lib.optionals (g.gid != null) [ "${g.name}:x:${toString g.gid}:" ]) (
               lib.attrValues config.users.groups
             )
           )
