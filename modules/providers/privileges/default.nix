@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, config, ... }:
 let
   pathOrStr = with lib.types; coercedTo path (x: "${x}") str;
   program =
@@ -16,9 +16,12 @@ let
 in
 {
   options.providers.privileges = {
-    supportedFeatures = {
-      # TODO:
-    };
+    supportedFeatures =
+      with lib;
+      mkOption {
+        type = with types; listOf str;
+        default = [ "runAs" ];
+      };
 
     backend = lib.mkOption {
       type = lib.types.enum [ "none" ];
@@ -52,7 +55,7 @@ in
             };
 
             args = lib.mkOption {
-              type = with lib.types; listOf str;
+              type = with lib.types; nullOr (listOf str);
               default = [ ];
               description = ''
                 Arguments that must be provided to the command. When
@@ -61,7 +64,7 @@ in
             };
 
             users = lib.mkOption {
-              type = with lib.types; listOf nonEmptyStr;
+              type = with lib.types; nullOr (listOf nonEmptyStr);
               default = [ ];
               description = ''
                 The users that are able to run this command.
@@ -69,7 +72,7 @@ in
             };
 
             groups = lib.mkOption {
-              type = with lib.types; listOf nonEmptyStr;
+              type = with lib.types; nullOr (listOf nonEmptyStr);
               default = [ ];
               description = ''
                 The groups that are able to run this command.
@@ -77,7 +80,7 @@ in
             };
 
             requirePassword = lib.mkOption {
-              type = lib.types.bool;
+              type = with lib.types; nullOr bool;
               default = true;
               description = ''
                 Whether the user is required to enter a password.
@@ -85,7 +88,7 @@ in
             };
 
             persist = lib.mkOption {
-              type = lib.types.bool;
+              type = with lib.types; nullOr bool;
               default = false;
               description = ''
                 Whether or not to allow credentials to persist temporarily.
@@ -93,16 +96,24 @@ in
             };
 
             keepEnv = lib.mkOption {
-              type = lib.types.bool;
+              type = with lib.types; nullOr bool;
               default = false;
               description = ''
                 Whether or not to keep the users environment during privilege escalation.
               '';
             };
 
+            keepEnvVars = lib.mkOption {
+              type = with lib.types; nullOr (listOf str);
+              default = null;
+              description = ''
+                Which environment variables the user should carry forward into the escalated environment.
+              '';
+            };
+
             runAs = lib.mkOption {
-              type = lib.types.nonEmptyStr;
-              default = "root";
+              type = with lib.types; nullOr nonEmptyStr;
+              default = if lib.elem "runAs" config.providers.privileges.supportedFeatures then "root" else null;
               description = ''
                 The user the command is allowed to run as, or `"*"` for allowing the command to run as any user.
               '';

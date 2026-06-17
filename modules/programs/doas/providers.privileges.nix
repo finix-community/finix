@@ -1,4 +1,19 @@
 { config, lib, ... }:
+let
+  providerWarning =
+    rule:
+    if
+      (
+        (lib.attrsets.filterAttrs (
+          n: v: !(lib.elem n config.providers.privileges.supportedFeatures || v == null)
+        ) rule) != { }
+      )
+    then
+      "configuration has unsupported features for chosen privileges backend, ${config.providers.privileges.backend}. Attributes not on this list will be ignored:\n"
+      + (lib.concatStringsSep "\n" config.providers.privileges.supportedFeatures)
+    else
+      "";
+in
 {
   options.providers.privileges = {
     backend = lib.mkOption {
@@ -7,9 +22,22 @@
   };
 
   config = lib.mkIf (config.providers.privileges.backend == "doas") {
-    providers.privileges.supportedFeatures = {
-      # TODO:
-    };
+    providers.privileges.supportedFeatures = [
+      "command"
+      "args"
+      "users"
+      "groups"
+      "requirePassword"
+      "persist"
+      "keepEnv"
+      "keepEnvVars"
+      "runAs"
+    ];
+
+    warnings = [
+      "Vitrial still hasn't added all the rules they need to for privileges"
+    ]
+    ++ (lib.map providerWarning config.providers.privileges.rules);
 
     providers.privileges.command = "/run/wrappers/bin/doas";
 
