@@ -181,7 +181,9 @@ in
             ) config.specialisation}
           ''
           + lib.optionalString config.boot.kernel.enable ''
-            ${coreutils}/bin/ln -s ${config.boot.kernelPackages.kernel}/${pkgs.stdenv.hostPlatform.linux-kernel.target} $out/kernel
+            ${coreutils}/bin/ln -s ${config.boot.kernelPackages.kernel}/${
+              config.boot.kernelPackages.kernel.target or pkgs.stdenv.hostPlatform.linux-kernel.target
+            } $out/kernel
             ${coreutils}/bin/ln -s ${config.system.modulesTree} $out/kernel-modules
             ${coreutils}/bin/ln -s ${config.hardware.firmware}/lib/firmware $out/firmware
           ''
