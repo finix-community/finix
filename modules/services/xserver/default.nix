@@ -8,20 +8,20 @@ let
   cfg = config.services.xserver;
 
   xorg-server' = pkgs.xorg-server.override (
-    lib.optionalAttrs config.services.mdevd.enable {
+    lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
       udev = pkgs.libudev-zero;
     }
   );
 
   xf86-input-evdev' = pkgs.xf86-input-evdev.override (
-    lib.optionalAttrs config.services.mdevd.enable {
+    lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
       udev = pkgs.libudev-zero;
       xorg-server = xorg-server';
     }
   );
 
   xf86-input-libinput' = pkgs.xf86-input-libinput.override (
-    lib.optionalAttrs config.services.mdevd.enable {
+    lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
       xorg-server = xorg-server';
       libinput = pkgs.libinput.override {
         udev = pkgs.libudev-zero;
@@ -31,7 +31,7 @@ let
   );
 
   xinit' = pkgs.xinit.override (
-    lib.optionalAttrs config.services.mdevd.enable {
+    lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
       xorg-server = xorg-server';
     }
   );
