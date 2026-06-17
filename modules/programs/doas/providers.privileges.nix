@@ -1,9 +1,4 @@
 { config, lib, ... }:
-let
-  optionalStringElse =
-    cond: string: elseString:
-    if cond then string else elseString;
-in
 {
   options.providers.privileges = {
     backend = lib.mkOption {
@@ -26,7 +21,7 @@ in
           opts =
             lib.optionalString (!rule.requirePassword) "nopass "
             + lib.optionalString (rule.persist && rule.requirePassword) "persist "
-            + optionalStringElse (rule.keepEnv) "keepenv" "setenv { SSH_AUTH_SOCK TERMINFO TERMINFO_DIRS }";
+            + (if rule.keepEnv then "keepenv" else "setenv { SSH_AUTH_SOCK TERMINFO TERMINFO_DIRS }");
           command = lib.optionalString (rule.command != "*") " cmd ${rule.command} ${toString rule.args}";
         in
         ''

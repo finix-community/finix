@@ -88,7 +88,7 @@ in
               type = lib.types.bool;
               default = false;
               description = ''
-                								Whether or not to allow credentials to persist temporarily.
+                Whether or not to allow credentials to persist temporarily.
               '';
             };
 
@@ -96,8 +96,8 @@ in
               type = lib.types.bool;
               default = false;
               description = ''
-                								Whether or not to keep the users environment during privilege escalation.
-                							'';
+                Whether or not to keep the users environment during privilege escalation.
+              '';
             };
 
             runAs = lib.mkOption {
