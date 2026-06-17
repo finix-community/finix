@@ -2914,7 +2914,7 @@
     <details class="toc-category">
       <summary title="programs">
         <span>programs</span>
-        <span class="toc-count">129</span>
+        <span class="toc-count">132</span>
       </summary>
       <ul>
         
@@ -2993,8 +2993,32 @@
         </li>
         
         <li>
+          <a href='#option-programs.doas.keepEnv' title="programs.doas.keepEnv">
+            doas.keepEnv
+            
+            
+          </a>
+        </li>
+        
+        <li>
           <a href='#option-programs.doas.package' title="programs.doas.package">
             doas.package
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs.doas.persist' title="programs.doas.persist">
+            doas.persist
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs.doas.requirePassword' title="programs.doas.requirePassword">
+            doas.requirePassword
             
             
           </a>
@@ -12524,6 +12548,18 @@ for additional details.</p>
   <div class="option-default">Default: <code>false</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/doas" target="_blank">&lt;finix/modules/programs/doas&gt;</a></code></div>
 </div>
+<div class="option" id="option-programs.doas.keepEnv">
+  <h3 class="option-name">
+    <a href="#option-programs.doas.keepEnv" class="option-anchor">programs.doas.keepEnv</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether or not to keep users in the <code>wheel</code> group's environments during privilege escalation.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/doas" target="_blank">&lt;finix/modules/programs/doas&gt;</a></code></div>
+</div>
 <div class="option" id="option-programs.doas.package">
   <h3 class="option-name">
     <a href="#option-programs.doas.package" class="option-anchor">programs.doas.package</a>
@@ -12534,6 +12570,30 @@ for additional details.</p>
   <div class="option-description"><html><head></head><body><p>The package to use for <code>doas</code>.</p>
 </body></html></div>
   <div class="option-default">Default: <code>pkgs.doas</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/doas" target="_blank">&lt;finix/modules/programs/doas&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs.doas.persist">
+  <h3 class="option-name">
+    <a href="#option-programs.doas.persist" class="option-anchor">programs.doas.persist</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether or not to allow credentials to persist for <code>5</code> minutes for users in the <code>wheel</code> group.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/doas" target="_blank">&lt;finix/modules/programs/doas&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs.doas.requirePassword">
+  <h3 class="option-name">
+    <a href="#option-programs.doas.requirePassword" class="option-anchor">programs.doas.requirePassword</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether or not to prompt the users in the <code>wheel</code> group for their password.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>true</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/doas" target="_blank">&lt;finix/modules/programs/doas&gt;</a></code></div>
 </div>
 <div class="option" id="option-programs.fish.enable">
