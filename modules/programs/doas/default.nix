@@ -6,10 +6,6 @@
 }:
 let
   cfg = config.programs.doas;
-
-  optionalStringElse =
-    cond: string: elseString:
-    if cond then string else elseString;
 in
 {
   imports = [
@@ -38,7 +34,7 @@ in
       type = lib.types.bool;
       default = true;
       description = ''
-        				Whether or not to prompt the user for their password.
+        				Whether or not to prompt the users in the wheel group for their password.
         			'';
     };
 
@@ -46,7 +42,7 @@ in
       type = lib.types.bool;
       default = false;
       description = ''
-        				Whether or not to allow credentials to persist for users for 5 minutes.
+        				Whether or not to allow credentials to persist for 5 minutes for users in the wheel group.
         			'';
     };
 
@@ -54,7 +50,7 @@ in
       type = lib.types.bool;
       default = false;
       description = ''
-        				Whether or not to keep the users environment during privilege escalation.
+        				Whether or not to keep users in the wheel group's environments during privilege escalation.
         			'';
     };
   };
@@ -97,7 +93,7 @@ in
               permit ''
             (lib.optionalString (!cfg.requirePassword) "nopass ")
             (lib.optionalString (cfg.persist && cfg.requirePassword) "persist ")
-            (optionalStringElse cfg.keepEnv "keepenv " "setenv { SSH_AUTH_SOCK TERMINFO TERMINFO_DIRS } ")
+            (if cfg.keepEnv then "keepenv " else "setenv { SSH_AUTH_SOCK TERMINFO TERMINFO_DIRS } ")
             ''
               :wheel
             ''
