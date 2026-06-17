@@ -19,13 +19,15 @@ in
       };
     in
     {
-      boot = (fuseEnable true ''
-        Whether to enable support for the `fuse` filesystem.
-      '') // {
-        initrd = fuseEnable false ''
-          Whether to enable support for the `fuse` filesystem in the initial ramdisk.
-        '';
-      };
+      boot =
+        (fuseEnable true ''
+          Whether to enable support for the `fuse` filesystem.
+        '')
+        // {
+          initrd = fuseEnable false ''
+            Whether to enable support for the `fuse` filesystem in the initial ramdisk.
+          '';
+        };
     };
 
   config = lib.mkIf (cfg.enable || cfgInitrd.enable) {
