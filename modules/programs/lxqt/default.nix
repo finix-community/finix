@@ -212,7 +212,6 @@ in
       ];
 
     environment.pathsToLink = [
-      "/share"
       "/share/icons"
       "/share/pixmaps"
     ];
