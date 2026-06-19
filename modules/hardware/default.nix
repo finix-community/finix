@@ -26,6 +26,7 @@ in
     ./i2c.nix
     ./uinput.nix
     ./video/nvidia.nix
+    ./video/nvidia-xorg.nix
   ];
 
   options = {

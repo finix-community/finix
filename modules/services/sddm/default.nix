@@ -1,4 +1,5 @@
 {
+  modules,
   config,
   pkgs,
   lib,
@@ -11,6 +12,8 @@ let
   configFile = format.generate "sddm.conf" cfg.settings;
 in
 {
+  imports = [ modules.xorg ];
+
   options.services.sddm = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -36,6 +39,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    programs.xorg.enable = true;
 
     services.sddm.settings = {
       General = {
@@ -50,8 +54,8 @@ in
       };
       X11 = {
         # MinimumVT = 7;
-        ServerPath = "${pkgs.xorg-server.out}/bin/X";
-        XephyrPath = "${pkgs.xorg-server.out}/bin/Xephyr";
+        ServerPath = "${config.programs.xorg.package.out}/bin/X";
+        XephyrPath = "${config.programs.xorg.package.out}/bin/Xephyr";
         SessionCommand = "${pkgs.kdePackages.sddm}/share/sddm/scripts/Xsession";
         SessionDir = "${pkgs.openbox}/share/xsessions"; # "${dmcfg.sessionData.desktops}/share/xsessions";
         XauthPath = "${pkgs.xauth}/bin/xauth";
@@ -62,7 +66,7 @@ in
         # Path to the user session log file
         SessionLogFile = ".local/share/sddm/xorg-session.log";
 
-        ServerArguments = "-logverbose 6 -xkbdir ${config.services.xserver.xkb.dir} -terminate -verbose 7";
+        ServerArguments = "-logverbose 6 -xkbdir ${config.programs.xorg.xkb.dir} -terminate -verbose 7";
       };
     };
 

@@ -7,16 +7,6 @@
 }:
 let
   cfg = config.programs.tuigreet;
-
-  xinit' = pkgs.xinit.override (
-    lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
-      xorg-server = pkgs.xorg-server.override (
-        lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
-          udev = pkgs.libudev-zero;
-        }
-      );
-    }
-  );
 in
 {
   imports = [ modules.greetd ];
@@ -72,9 +62,9 @@ in
         "--power-reboot"
         "${config.providers.privileges.command} /run/current-system/sw/bin/reboot"
       ]
-      ++ lib.optionals config.services.xserver.enable or false [
+      ++ lib.optionals config.programs.xorg.enable or false [
         "--xsession-wrapper"
-        "${lib.getExe' xinit' "startx"} ${lib.getExe' config.programs.coreutils.package "env"}"
+        "${lib.getExe' config.programs.xinit "startx"} ${lib.getExe' config.programs.coreutils.package "env"}"
       ];
 
     services.greetd.enable = true;

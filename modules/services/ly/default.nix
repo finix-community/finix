@@ -80,7 +80,7 @@ in
       # write to syslog
       ly_log = lib.mkDefault null;
     }
-    // lib.optionalAttrs config.services.xserver.enable or false {
+    // lib.optionalAttrs config.programs.xorg.enable or false {
       xauth_cmd = "/run/current-system/sw/bin/xauth";
       x_cmd = "/run/current-system/sw/bin/X";
       xsessions = "/run/current-system/sw/share/xsessions";
