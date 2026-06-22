@@ -20,7 +20,7 @@ Copy the template below and fill in each section:
 - **Related:** Links to issues, PRs, or discussions (optional).
 ```
 
-### Do not evaluate modules by default
+### [Do not evaluate modules by default]
 
 - **Status:** `proposed`
 - **Author:** @willowispll
