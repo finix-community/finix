@@ -187,8 +187,8 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = cfg.xsession.enable -> config.services.xserver.enable or false;
-        message = "`config.services.xserver.enable` must be set to `true` in order to use the LXQt xorg session.";
+        assertion = cfg.xsession.enable -> config.programs.xorg.enable or false;
+        message = "`config.programs.xorg.enable` must be set to `true` in order to use the LXQt xorg session.";
       }
     ];
 

@@ -84,7 +84,7 @@ in
 
       wayland.wayland_sessions_path = "/run/current-system/sw/share/wayland-sessions";
 
-      x11 = lib.mkIf (config.services.xserver.enable or false) {
+      x11 = lib.mkIf config.programs.xorg.enable or false {
         xauth_path = "/run/current-system/sw/bin/xauth";
         xserver_path = "/run/current-system/sw/bin/X";
         xsessions_path = "/run/current-system/sw/share/xsessions";
