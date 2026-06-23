@@ -55,11 +55,11 @@ in
       ID=finix
       LOGO=finix-logo
       NAME=finix
-      PRETTY_NAME="finix 25.05"
+      PRETTY_NAME="finix"
       VENDOR_NAME=finix
       VENDOR_URL="https://github.com/finix-community/finix/"
-      VERSION="25.05"
-      VERSION_ID="25.05"
+      VERSION="rolling"
+      VERSION_ID="rolling"
     '';
   };
 }
