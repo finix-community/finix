@@ -82,7 +82,11 @@ in
     }
     // lib.optionalAttrs config.programs.xorg.enable or false {
       xauth_cmd = "/run/current-system/sw/bin/xauth";
-      x_cmd = "/run/current-system/sw/bin/X";
+      x_cmd =
+        if config.security.wrappers.X.enable or false then
+          "${config.security.wrapperDir}/X"
+        else
+          (lib.getExe config.programs.xorg.package);
       xsessions = "/run/current-system/sw/share/xsessions";
     };
 

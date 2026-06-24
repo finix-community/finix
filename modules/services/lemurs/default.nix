@@ -86,7 +86,11 @@ in
 
       x11 = lib.mkIf config.programs.xorg.enable or false {
         xauth_path = "/run/current-system/sw/bin/xauth";
-        xserver_path = "/run/current-system/sw/bin/X";
+        xserver_path =
+          if config.security.wrappers.X.enable or false then
+            "${config.security.wrapperDir}/X"
+          else
+            (lib.getExe config.programs.xorg.package);
         xsessions_path = "/run/current-system/sw/share/xsessions";
         xsetup_path = "${cfg.package}/etc/xsetup.sh";
       };
