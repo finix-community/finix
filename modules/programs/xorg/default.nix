@@ -19,7 +19,10 @@ let
   );
 in
 {
-  imports = [ modules.xinit ];
+  imports = [
+    ./nvidia.nix
+    modules.xinit
+  ];
 
   options.programs.xorg = {
     enable = lib.mkOption {
