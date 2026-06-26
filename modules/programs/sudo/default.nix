@@ -67,6 +67,9 @@ in
           # Keep terminfo database for root and %wheel.
           Defaults:root,%wheel env_keep+=TERMINFO_DIRS
           Defaults:root,%wheel env_keep+=TERMINFO
+
+          # keep NIXOS_NO_CHECK for `nixos-rebuild switch`
+          Defaults env_keep+=NIXOS_NO_CHECK
         '')
 
         ''
