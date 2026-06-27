@@ -11,7 +11,7 @@
     default = { };
 
     type = lib.types.submodule {
-      freeformType = lib.types.attrsOf lib.types.anything;
+      freeformType = lib.types.lazyAttrsOf lib.types.anything;
 
       options = {
         nixos-rebuild = lib.mkOption {
