@@ -313,5 +313,6 @@ in
       { source = "${pkgs.eudev}/lib/udev"; }
     ];
 
+    system.switch.inhibitors.device-manager = "udev";
   };
 }

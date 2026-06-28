@@ -231,5 +231,7 @@ in
         fi
       '';
     };
+
+    system.switch.inhibitors.device-manager = "mdevd";
   };
 }
