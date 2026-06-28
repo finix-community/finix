@@ -65,5 +65,5 @@ For an installation guide, please see one of the following repositories on Codeb
 
 - [finix options search](https://finix-community.github.io/finix/options.html)
 - [finit project](https://finit-project.github.io/)
-- [finix profiles](https://github.com/finix-community/profiles)
+- [finix profiles](https://github.com/finix-community/community-modules/tree/main/modules/profiles)
 - [finix community modules](https://github.com/finix-community/community-modules/)
