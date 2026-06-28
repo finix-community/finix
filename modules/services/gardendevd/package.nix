@@ -14,15 +14,15 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "gardendevd";
-  version = "0.2-unstable-2026-06-03";
+  version = "0.2-unstable-2026-06-28";
 
   __structuredAttrs = true;
 
   src = fetchFromCodeberg {
     owner = "Gardenhouse";
     repo = "gardendevd";
-    rev = "7e58bbd06dfab8a47b6f512eee802a23de79d890";
-    sha256 = "sha256-VecujIPKfKQN4EnQ+zCbUW8nN0/+ftsdIGNJUyMyPfY=";
+    rev = "a3f5ec34211b2dc71f8d63624522002ceb295a7a";
+    hash = "sha256-kVbaJ3Btk428s3pabAVXvy0X3Tx02kE6zwd1uO8N6ik=";
   };
 
   strictDeps = true;
@@ -39,7 +39,6 @@ stdenv.mkDerivation (finalAttrs: {
   ];
 
   mesonFlags = [
-    "-Dopenrc=disabled"
     "-Ddracut=disabled"
     "-Dmdevd=enabled"
     "-Duaccess=${if uaccessSupport then "enabled" else "disabled"}"
@@ -59,7 +58,7 @@ stdenv.mkDerivation (finalAttrs: {
 
   meta = {
     homepage = "https://codeberg.org/Gardenhouse/gardendevd";
-    description = "udev daemon running on top of mdevd to replace systemd-udev";
+    description = "udev-compatible daemon designed to be a lightweight and flexible alternative to systemd-udevd.";
     maintainers = with lib.maintainers; [
       aanderse
       choco98
