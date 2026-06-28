@@ -7328,7 +7328,7 @@
     <details class="toc-category">
       <summary title="system">
         <span>system</span>
-        <span class="toc-count">7</span>
+        <span class="toc-count">8</span>
       </summary>
       <ul>
         
@@ -7377,6 +7377,14 @@
         <li>
           <a href='#option-system.activation.scripts._name_.text' title="system.activation.scripts.&lt;name&gt;.text">
             activation.scripts.&lt;name&gt;.text
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-system.switch.inhibitors' title="system.switch.inhibitors">
+            switch.inhibitors
             
             
           </a>
@@ -19762,6 +19770,20 @@ idempotent and fast.</p>
   <div class="option-description"><html><head></head><body><p>The content of the script.</p>
 </body></html></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/system/activation" target="_blank">&lt;finix/modules/system/activation&gt;</a></code></div>
+</div>
+<div class="option" id="option-system.switch.inhibitors">
+  <h3 class="option-name">
+    <a href="#option-system.switch.inhibitors" class="option-anchor">system.switch.inhibitors</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>attribute set of string</code></div>
+  <div class="option-description"><html><head></head><body><p>Attribute set of strings that will prevent switching into a configuration when
+they change.
+The switch can be manually forced on the command line if required.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/system/activation/switchable-system.nix" target="_blank">&lt;finix/modules/system/activation/switchable-system.nix&gt;</a></code></div>
 </div>
 <div class="option" id="option-system.topLevel">
   <h3 class="option-name">
