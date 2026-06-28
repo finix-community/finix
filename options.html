@@ -4396,7 +4396,7 @@
     <details class="toc-category">
       <summary title="services">
         <span>services</span>
-        <span class="toc-count">358</span>
+        <span class="toc-count">359</span>
       </summary>
       <ul>
         
@@ -6701,6 +6701,14 @@
         <li>
           <a href='#option-services.sysklogd.enable' title="services.sysklogd.enable">
             sysklogd.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.sysklogd.extraConfig' title="services.sysklogd.extraConfig">
+            sysklogd.extraConfig
             
             
           </a>
@@ -18658,6 +18666,19 @@ for additional details.</p>
   <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://github.com/troglobit/sysklogd">sysklogd</a> as a system service.</p>
 </body></html></div>
   <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sysklogd" target="_blank">&lt;finix/modules/services/sysklogd&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.sysklogd.extraConfig">
+  <h3 class="option-name">
+    <a href="#option-services.sysklogd.extraConfig" class="option-anchor">services.sysklogd.extraConfig</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>strings concatenated with "\n"</code></div>
+  <div class="option-description"><html><head></head><body><p>Additional <code>sysklogd</code> configuration. See <a href="https://man.troglobit.com/man5/syslog.conf.5.html" class="manpage-reference">syslog.conf(5)</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>""</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sysklogd" target="_blank">&lt;finix/modules/services/sysklogd&gt;</a></code></div>
 </div>
 <div class="option" id="option-services.sysklogd.package">
