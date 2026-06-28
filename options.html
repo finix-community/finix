@@ -2826,7 +2826,7 @@
     <details class="toc-category">
       <summary title="programs">
         <span>programs</span>
-        <span class="toc-count">142</span>
+        <span class="toc-count">155</span>
       </summary>
       <ul>
         
@@ -3489,6 +3489,86 @@
         </li>
         
         <li>
+          <a href='#option-programs.pipewire.alsa.enable' title="programs.pipewire.alsa.enable">
+            pipewire.alsa.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs.pipewire.alsa.support32Bit' title="programs.pipewire.alsa.support32Bit">
+            pipewire.alsa.support32Bit
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs.pipewire.client.settings' title="programs.pipewire.client.settings">
+            pipewire.client.settings
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs.pipewire.enable' title="programs.pipewire.enable">
+            pipewire.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs.pipewire.jack.enable' title="programs.pipewire.jack.enable">
+            pipewire.jack.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs.pipewire.jack.settings' title="programs.pipewire.jack.settings">
+            pipewire.jack.settings
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs.pipewire.package' title="programs.pipewire.package">
+            pipewire.package
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs.pipewire.packages' title="programs.pipewire.packages">
+            pipewire.packages
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs.pipewire.pulse.settings' title="programs.pipewire.pulse.settings">
+            pipewire.pulse.settings
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs.pipewire.settings' title="programs.pipewire.settings">
+            pipewire.settings
+            
+            
+          </a>
+        </li>
+        
+        <li>
           <a href='#option-programs.plymouth.debug' title="programs.plymouth.debug">
             plymouth.debug
             
@@ -3851,6 +3931,30 @@
         <li>
           <a href='#option-programs.virtualbox.package' title="programs.virtualbox.package">
             virtualbox.package
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs.wireplumber.enable' title="programs.wireplumber.enable">
+            wireplumber.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs.wireplumber.package' title="programs.wireplumber.package">
+            wireplumber.package
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs.wireplumber.settings' title="programs.wireplumber.settings">
+            wireplumber.settings
             
             
           </a>
@@ -13243,6 +13347,182 @@ default editor using the <code>EDITOR</code> environment variable.</p>
   <div class="option-default">Default: <code>config.hardware.nvidia.package.settings</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/nvidia-settings" target="_blank">&lt;finix/modules/programs/nvidia-settings&gt;</a></code></div>
 </div>
+<div class="option" id="option-programs.pipewire.alsa.enable">
+  <h3 class="option-name">
+    <a href="#option-programs.pipewire.alsa.enable" class="option-anchor">programs.pipewire.alsa.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <code>ALSA</code> support.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/pipewire" target="_blank">&lt;finix/modules/programs/pipewire&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs.pipewire.alsa.support32Bit">
+  <h3 class="option-name">
+    <a href="#option-programs.pipewire.alsa.support32Bit" class="option-anchor">programs.pipewire.alsa.support32Bit</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable 32-bit <code>ALSA</code> support on 64-bit systems.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/pipewire" target="_blank">&lt;finix/modules/programs/pipewire&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs.pipewire.client.settings">
+  <h3 class="option-name">
+    <a href="#option-programs.pipewire.client.settings" class="option-anchor">programs.pipewire.client.settings</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>JSON value</code></div>
+  <div class="option-description"><html><head></head><body><p><code>pipewire</code> client configuration. See <span class="manpage-reference">pipewire-client.conf(5)</span>
+for additional details.</p>
+<h1 id="https---man-archlinux-org-man-extra-pipewire-pipewire-client-conf-5"><a href="https://man.archlinux.org/man/extra/pipewire/pipewire-client.conf.5">https://man.archlinux.org/man/extra/pipewire/pipewire-client.conf.5</a></h1>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-example">Example: <pre><code>{
+  "stream.properties" = {
+    "resample.disable" = true;
+  };
+}</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/pipewire" target="_blank">&lt;finix/modules/programs/pipewire&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs.pipewire.enable">
+  <h3 class="option-name">
+    <a href="#option-programs.pipewire.enable" class="option-anchor">programs.pipewire.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://pipewire.org/">pipewire</a>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/pipewire" target="_blank">&lt;finix/modules/programs/pipewire&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs.pipewire.jack.enable">
+  <h3 class="option-name">
+    <a href="#option-programs.pipewire.jack.enable" class="option-anchor">programs.pipewire.jack.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <code>JACK</code> support.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/pipewire" target="_blank">&lt;finix/modules/programs/pipewire&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs.pipewire.jack.settings">
+  <h3 class="option-name">
+    <a href="#option-programs.pipewire.jack.settings" class="option-anchor">programs.pipewire.jack.settings</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>JSON value</code></div>
+  <div class="option-description"><html><head></head><body><p><code>JACK</code> configuration. See <span class="manpage-reference">pipewire-jack.conf(5)</span>
+for additional details.</p>
+<h1 id="https---man-archlinux-org-man-extra-pipewire-jack-pipewire-jack-conf-5"><a href="https://man.archlinux.org/man/extra/pipewire-jack/pipewire-jack.conf.5">https://man.archlinux.org/man/extra/pipewire-jack/pipewire-jack.conf.5</a></h1>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-example">Example: <pre><code>{
+  "jack.properties" = {
+    "jack.show-midi" = false;
+  };
+}</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/pipewire" target="_blank">&lt;finix/modules/programs/pipewire&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs.pipewire.package">
+  <h3 class="option-name">
+    <a href="#option-programs.pipewire.package" class="option-anchor">programs.pipewire.package</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>pipewire</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.pipewire</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/pipewire" target="_blank">&lt;finix/modules/programs/pipewire&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs.pipewire.packages">
+  <h3 class="option-name">
+    <a href="#option-programs.pipewire.packages" class="option-anchor">programs.pipewire.packages</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of package</code></div>
+  <div class="option-description"><html><head></head><body><p>List of packages that provide <code>pipewire</code> configuration as
+<code>share/pipewire/&lt;location&gt;.conf.d/*.conf</code> files (for example loopback
+devices or filter chains).</p>
+<p>Their drop-ins are merged into <code>/etc/pipewire/&lt;location&gt;.conf.d</code>,
+alongside the drop-ins generated from <a class="option-reference" href="options.html#option-programs.pipewire.settings"><code class="nixos-option">programs.pipewire.settings</code></a>
+and friends.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-example">Example: <pre><code>[
+  (pkgs.writeTextDir "share/pipewire/pipewire.conf.d/10-loopback.conf" ''
+    context.modules = [
+      { name = libpipewire-module-loopback
+        args = { node.description = "Virtual source" }
+      }
+    ]
+  '')
+]</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/pipewire" target="_blank">&lt;finix/modules/programs/pipewire&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs.pipewire.pulse.settings">
+  <h3 class="option-name">
+    <a href="#option-programs.pipewire.pulse.settings" class="option-anchor">programs.pipewire.pulse.settings</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>JSON value</code></div>
+  <div class="option-description"><html><head></head><body><p><code>pulseaudio</code> server configuration. See <span class="manpage-reference">pipewire-pulse.conf(5)</span>
+for additional details.</p>
+<h1 id="https---man-archlinux-org-man-pipewire-pulse-conf-5"><a href="https://man.archlinux.org/man/pipewire-pulse.conf.5">https://man.archlinux.org/man/pipewire-pulse.conf.5</a></h1>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-example">Example: <pre><code>{
+  "pulse.rules" = [
+    {
+      actions = {
+        quirks = [
+          "force-s16-info"
+        ];
+      };
+      matches = [
+        {
+          "application.process.binary" = "my-broken-app";
+        }
+      ];
+    }
+  ];
+}</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/pipewire" target="_blank">&lt;finix/modules/programs/pipewire&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs.pipewire.settings">
+  <h3 class="option-name">
+    <a href="#option-programs.pipewire.settings" class="option-anchor">programs.pipewire.settings</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>JSON value</code></div>
+  <div class="option-description"><html><head></head><body><p><code>pipewire</code> configuration. See <span class="manpage-reference">pipewire.conf(5)</span>
+for additional details.</p>
+<h1 id="https---man-archlinux-org-man-pipewire-conf-5"><a href="https://man.archlinux.org/man/pipewire.conf.5">https://man.archlinux.org/man/pipewire.conf.5</a></h1>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-example">Example: <pre><code>{
+  "context.properties" = {
+    "default.clock.rate" = 44100;
+  };
+  "stream.properties" = {
+    "channelmix.upmix" = false;
+  };
+}</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/pipewire" target="_blank">&lt;finix/modules/programs/pipewire&gt;</a></code></div>
+</div>
 <div class="option" id="option-programs.plymouth.debug">
   <h3 class="option-name">
     <a href="#option-programs.plymouth.debug" class="option-anchor">programs.plymouth.debug</a>
@@ -13826,6 +14106,64 @@ needs to be added to the <code>vboxusers</code> group.</p>
 </body></html></div>
   <div class="option-default">Default: <code>pkgs.virtualbox</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/virtualbox" target="_blank">&lt;finix/modules/programs/virtualbox&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs.wireplumber.enable">
+  <h3 class="option-name">
+    <a href="#option-programs.wireplumber.enable" class="option-anchor">programs.wireplumber.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://pipewire.org">wireplumber</a>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/wireplumber" target="_blank">&lt;finix/modules/programs/wireplumber&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs.wireplumber.package">
+  <h3 class="option-name">
+    <a href="#option-programs.wireplumber.package" class="option-anchor">programs.wireplumber.package</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>wireplumber</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.wireplumber</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/wireplumber" target="_blank">&lt;finix/modules/programs/wireplumber&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs.wireplumber.settings">
+  <h3 class="option-name">
+    <a href="#option-programs.wireplumber.settings" class="option-anchor">programs.wireplumber.settings</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>JSON value</code></div>
+  <div class="option-description"><html><head></head><body><p><code>wireplumber</code> configuration. See <a href="https://pipewire.pages.freedesktop.org/wireplumber/daemon/configuration/conf_file.html">the configuration file</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-example">Example: <pre><code>{
+  "context.properties" = {
+    "log.level" = "D";
+  };
+  "monitor.bluez.rules" = [
+    {
+      actions = {
+        update-props = {
+          "bluez5.a2dp.ldac.quality" = "hq";
+        };
+      };
+      matches = [
+        {
+          "device.name" = "~bluez_card.*";
+          "device.product.id" = "0x0cd3";
+          "device.vendor.id" = "usb:054c";
+        }
+      ];
+    }
+  ];
+}</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/wireplumber" target="_blank">&lt;finix/modules/programs/wireplumber&gt;</a></code></div>
 </div>
 <div class="option" id="option-programs.xinit.enable">
   <h3 class="option-name">
