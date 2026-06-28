@@ -25,6 +25,15 @@ in
         The package to use for `sysklogd`.
       '';
     };
+
+    extraConfig = lib.mkOption {
+      type = lib.types.lines;
+      default = "";
+      description = ''
+        Additional `sysklogd` configuration. See {manpage}`syslog.conf(5)`
+        for additional details.
+      '';
+    };
   };
 
   # finit has explicit sysklogd support, requires `logger` to be available in `PATH`
@@ -69,7 +78,16 @@ in
       notify = "pid";
     };
 
+    environment.etc."syslog.d/nixos.conf".text = cfg.extraConfig;
     environment.etc."syslog.conf".source =
       lib.mkDefault "${cfg.package}/share/doc/sysklogd/syslog.conf";
+
+    # TODO: add finit.services.reloadTriggers option
+    environment.etc."finit.d/syslogd.conf".text = lib.mkAfter ''
+
+      # reload trigger
+      # ${config.environment.etc."syslog.d/nixos.conf".source}
+      # ${config.environment.etc."syslog.conf".source}
+    '';
   };
 }
