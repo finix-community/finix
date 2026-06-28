@@ -12,8 +12,6 @@ let
         passthru.targets = map (x: x.target) etc';
       }
       /* sh */ ''
-        # set -euo pipefail
-
         makeEtcEntry() {
           src="$1"
           target="$2"
