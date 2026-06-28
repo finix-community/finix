@@ -12,7 +12,7 @@ let
         passthru.targets = map (x: x.target) etc';
       }
       /* sh */ ''
-        set -euo pipefail
+        # set -euo pipefail
 
         makeEtcEntry() {
           src="$1"
@@ -21,7 +21,7 @@ let
           user="$4"
           group="$5"
 
-          if [[ "$src" = *'*'* ]]; then
+          if echo "$src" | grep -q "*"; then
             # If the source name contains '*', perform globbing.
             mkdir -p "$out/etc/$target"
             for fn in $src; do
@@ -42,7 +42,7 @@ let
               fi
             fi
 
-            if [ "$mode" != symlink ]; then
+            if [ "$mode" != "symlink" ]; then
               echo "$mode" > "$out/etc/$target.mode"
               echo "$user" > "$out/etc/$target.uid"
               echo "$group" > "$out/etc/$target.gid"
@@ -66,6 +66,9 @@ let
       '';
 
   etc' = lib.filter (f: f.enable) (lib.attrValues config.environment.etc);
+
+  setup-etc = pkgs.replaceVars ./setup-etc.sh { sed = (lib.getExe' pkgs.busybox "sed"); };
+
 in
 {
   options.environment.etc = lib.mkOption {
@@ -198,7 +201,7 @@ in
     # TODO: create an alternative implementation with... https://github.com/Gerg-L/linker
     system.activation.scripts.etc = lib.stringAfter [ "users" ] ''
       echo "setting up /etc..."
-      ${pkgs.perl.withPackages (p: [ p.FileSlurp ])}/bin/perl ${./setup-etc.pl} ${buildEtc}/etc
+      ${pkgs.dash}/bin/dash ${setup-etc} ${buildEtc}/etc
     '';
 
     system.activation.scripts.shebangCompatibility = ''
