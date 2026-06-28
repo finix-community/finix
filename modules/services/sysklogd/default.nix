@@ -89,5 +89,7 @@ in
       # ${config.environment.etc."syslog.d/nixos.conf".source}
       # ${config.environment.etc."syslog.conf".source}
     '';
+
+    system.switch.inhibitors.syslogd = config.finit.services.syslogd.command;
   };
 }
