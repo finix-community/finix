@@ -442,7 +442,7 @@ in
     })
 
     (lib.mkIf (cfg.enable && primeEnabled) {
-      services.xserver.config =
+      environment.etc."X11/xorg.conf.d/10-nvidia-prime.conf".text =
         let
           mkBusIdSection = busId: driver: extra: ''
             Section "Device"
@@ -485,7 +485,7 @@ in
             EndSection
           '';
         in
-        lib.mkAfter ''
+        ''
           ${intelSection}
           ${amdSection}
           ${nvidiaSection}
