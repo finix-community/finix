@@ -348,6 +348,7 @@ in
         ${lib.optionalString config.services.seatd.enable "session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so"}
 
         session required pam_loginuid.so debug # loginuid (order 10300)
+        session required pam_limits.so
       '';
     };
 
