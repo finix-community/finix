@@ -157,6 +157,70 @@ let
             enabled. If unset, then no discard policy is applied.
           '';
         };
+
+        randomEncryption = lib.mkOption {
+          default = { };
+          description = ''
+            Encrypt swap device with a random key. This way you won't have a
+            persistent swap device, the entire contents become unreadable
+            after every reboot. Mutually exclusive with {option}`label`,
+            since the underlying mapped device is regenerated on every boot
+            and is therefore not activated through `/etc/fstab` like a
+            regular swap device, but through a dedicated `finit` task.
+          '';
+          type = lib.types.submodule {
+            options = {
+              enable = lib.mkOption {
+                default = false;
+                type = lib.types.bool;
+                description = "Encrypt swap device with a random key.";
+              };
+
+              cipher = lib.mkOption {
+                default = "aes-xts-plain64";
+                type = lib.types.nonEmptyStr;
+                description = ''
+                  Specify the cipher to use, see {command}`cryptsetup
+                  benchmark` for a list of options.
+                '';
+              };
+
+              keySize = lib.mkOption {
+                default = 256;
+                type = lib.types.ints.positive;
+                description = "Specify the size of the randomly generated key, in bits.";
+              };
+
+              sectorSize = lib.mkOption {
+                default = 0;
+                type = lib.types.ints.unsigned;
+                description = ''
+                  Specify the sector size in bytes, or `0` to let
+                  {command}`cryptsetup` pick the default.
+                '';
+              };
+
+              source = lib.mkOption {
+                default = "/dev/urandom";
+                type = lib.types.nonEmptyStr;
+                description = ''
+                  Source of randomness used to generate the swap
+                  encryption key on every boot.
+                '';
+              };
+
+              allowDiscards = lib.mkOption {
+                default = false;
+                type = lib.types.bool;
+                description = ''
+                  Whether to allow TRIM requests to the underlying device.
+                  This option has security implications, see the
+                  upstream NixOS manual section on swap encryption.
+                '';
+              };
+            };
+          };
+        };
       };
     };
 in
