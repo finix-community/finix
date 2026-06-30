@@ -143,6 +143,20 @@ let
           type = with lib.types; nonEmptyListOf nonEmptyStr;
           description = "Options used to set up the swap device.";
         };
+
+        discardPolicy = lib.mkOption {
+          default = null;
+          example = "both";
+          type = with lib.types; nullOr (enum [ "once" "pages" "both" ]);
+          description = ''
+            Specify the discard policy for the swap device. If "once",
+            then the discard operation will be performed once, at swapon
+            invocation. If "pages", then the discard operation will be
+            performed on every freed page (this is "discard" semantics
+            in swap parlance, not TRIM). If "both", then both will be
+            enabled. If unset, then no discard policy is applied.
+          '';
+        };
       };
     };
 in

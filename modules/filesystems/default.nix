@@ -27,7 +27,11 @@ let
     sw:
     let
       device = if sw.label != null then "/dev/disk/by-label/${sw.label}" else sw.device;
-      options = sw.options ++ lib.optional (sw.priority != null) "pri=${toString sw.priority}";
+      options = sw.options
+        ++ lib.optional (sw.priority != null) "pri=${toString sw.priority}"
+        ++ lib.optional (sw.discardPolicy != null) (
+          if sw.discardPolicy == "both" then "discard" else "discard=${sw.discardPolicy}"
+        );
     in
     "${escape device} none swap ${escape (lib.concatStringsSep "," options)} 0 0\n";
 
