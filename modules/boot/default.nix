@@ -6,7 +6,7 @@
 {
   imports = [
     ./bootspec.nix
-    ./external.nix
+    ./efi.nix
     ./initrd.nix
     ./kernel.nix
     ./modprobe.nix
