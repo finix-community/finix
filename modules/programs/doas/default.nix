@@ -74,6 +74,7 @@ in
       # Session management.
       session required pam_env.so conffile=/etc/security/pam_env.conf readenv=0 # env (order 10100)
       session required pam_unix.so # unix (order 10200)
+      session required pam_limits.so
     '';
 
     environment.etc."doas.conf" =

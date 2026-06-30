@@ -93,6 +93,7 @@ in
         session required pam_env.so conffile=/etc/security/pam_env.conf readenv=0 # env (order 10100)
         session required pam_unix.so # unix (order 10200)
         session required pam_loginuid.so # loginuid (order 10300)
+        session required pam_limits.so
       ''
       + lib.optionalString config.services.elogind.enable "session optional ${pkgs.elogind}/lib/security/pam_elogind.so"
       + lib.optionalString config.services.seatd.enable "session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so";
