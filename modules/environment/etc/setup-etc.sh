@@ -1,5 +1,5 @@
 #!/bin/sh
-# POSIX compliant (plus sed) port of https://github.com/murdoa/finix-rk3506/blob/main/modules/setup-etc.nix
+# POSIX compliant port of https://github.com/murdoa/finix-rk3506/blob/main/modules/setup-etc.sh
 #
 # Drop-in replacement for setup-etc.pl — eliminates perl (~51 MiB) from the
 # system closure. Implements the same /etc/static symlink management logic.
@@ -45,16 +45,14 @@ fi
 
 clean_tmp="$(mktemp)"
 created_tmp="$(mktemp)"
-etcDirs="/tmp/etcDirs"
+etc_dirs="$(mktemp)"
 
-mkfifo $etcDirs
-
-find "$etc" -mindepth 1 >$etcDirs &
+find "$etc" -mindepth 1 >"$etc_dirs"
 
 # For every file in the etc tree, create a corresponding symlink in /etc.
 # Use process substitution to avoid subshell issues with pipes.
-cat $etcDirs | while IFS= read -r entry; do
-  fn="$(echo "$entry" | @sed@ "s,${etc},,")"
+while IFS= read -r entry; do
+  fn="${entry#"${etc}"}"
   [ -n "$fn" ] || continue
 
   # Skip sidecar metadata files
@@ -84,11 +82,11 @@ cat $etcDirs | while IFS= read -r entry; do
       gid="$(cat "$entry.gid" 2>/dev/null)" || gid="root"
       cp "$static/$fn" "$target.tmp" 2>/dev/null || continue
       case "$uid" in
-      +*) uid="$(echo "$uid" | @sed@ 's,+,,')" ;;
+      +*) uid="${uid#+}" ;;
       *) uid="$(id -u "$uid" 2>/dev/null)" || uid=0 ;;
       esac
       case "$gid" in
-      +*) gid="$(echo "$gid" | @sed@ 's,+,,')" ;;
+      +*) gid="${gid#+}" ;;
       *) gid="$(getent group "$gid" 2>/dev/null | cut -d: -f3)" || gid=0 ;;
       esac
       chown "$uid:$gid" "$target.tmp" 2>/dev/null
@@ -99,15 +97,16 @@ cat $etcDirs | while IFS= read -r entry; do
   elif [ -L "$entry" ]; then
     ln -sfn "$static/$fn" "$target"
   fi
-done
+done <"$etc_dirs"
 
 # Delete files that were copied in a previous version but not in the current.
-while [ "$1" != "" ]; do
-  if [ -n "$1" ]; then
+while [ "$#" != "0" ]; do
+  if [ ! -n "$1" ]; then
     shift
     continue
   fi
 
+  # dry running for testing
   if ! grep -qxF "$1" "$created_tmp" 2>/dev/null; then
     echo "removing obsolete file '/etc/$1'..." >&2
     rm -f "/etc/$1"
@@ -117,7 +116,7 @@ done
 
 # Rewrite /etc/.clean
 sort "$clean_tmp" >/etc/.clean 2>/dev/null || true
-rm -f "$clean_tmp" "$created_tmp" "$etcDirs"
+rm -f "$clean_tmp" "$created_tmp" "$etc_dirs"
 
 # Create /etc/NIXOS tag
 touch /etc/NIXOS

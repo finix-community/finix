@@ -64,9 +64,6 @@ let
       '';
 
   etc' = lib.filter (f: f.enable) (lib.attrValues config.environment.etc);
-
-  setup-etc = pkgs.replaceVars ./setup-etc.sh { sed = (lib.getExe' pkgs.busybox "sed"); };
-
 in
 {
   options.environment.etc = lib.mkOption {
@@ -199,7 +196,7 @@ in
     # TODO: create an alternative implementation with... https://github.com/Gerg-L/linker
     system.activation.scripts.etc = lib.stringAfter [ "users" ] ''
       echo "setting up /etc..."
-      ${pkgs.dash}/bin/dash ${setup-etc} ${buildEtc}/etc
+      ${pkgs.dash}/bin/dash ${./setup-etc.sh} ${buildEtc}/etc
     '';
 
     system.activation.scripts.shebangCompatibility = ''
