@@ -47,37 +47,56 @@ let
   # Use @ prefix to run via /bin/sh on add events.
   modaliasRule = ''-$MODALIAS=.* 0:0 660 @modprobe --quiet "$MODALIAS"'';
 
-  # We need symlinks in /dev/disk/{by-id,by-label,by-uuid}
+  # We need symlinks in /dev/disk/{by-id,by-label,by-uuid,by-partlabel,by-partuuid}
   # so we run this script for block device events.
   # Requires blkid from util-linux be on $PATH.
   #
   # Note: The by-id symlinks just use the device name as a placeholder.
   # Real unique IDs would require querying device serial numbers, etc.
-  devDiskScript = pkgs.writeShellScript "mdevd-disk.sh" ''
+  devDiskScript = pkgs.writeScript "mdevd-disk.sh" ''
+    #!/bin/sh
     case "$ACTION" in
       add)
-        # Create by-id symlink (using device name as placeholder ID)
+        # Create by-id symlink immediately (using device name as placeholder ID) -
+        # cheap, no reason to defer it.
         mkdir -p /dev/disk/by-id
         ln -sf "../../$MDEV" "/dev/disk/by-id/$MDEV"
 
-        # Create by-label and by-uuid symlinks from blkid output
-        blkid --output export "/dev/$MDEV" 2>/dev/null | while IFS='=' read -r key value; do
-          case "$key" in
-            LABEL)
-              mkdir -p /dev/disk/by-label
-              ln -sf "../../$MDEV" "/dev/disk/by-label/$value"
-              ;;
-            UUID)
-              mkdir -p /dev/disk/by-uuid
-              ln -sf "../../$MDEV" "/dev/disk/by-uuid/$value"
-              ;;
-          esac
-        done
+        # mdevd blocks its whole event loop until this script exits, so the blkid retry wait must run in the background, not foreground.
+        (
+          info=""
+          for _try in 1 2 3 4 5; do
+            info=$(blkid --output export "/dev/$MDEV" 2>/dev/null)
+            [ -n "$info" ] && break
+            sleep 0.2
+          done
+
+          echo "$info" | while IFS='=' read -r key value; do
+            case "$key" in
+              LABEL)
+                mkdir -p /dev/disk/by-label
+                ln -sf "../../$MDEV" "/dev/disk/by-label/$value"
+                ;;
+              UUID)
+                mkdir -p /dev/disk/by-uuid
+                ln -sf "../../$MDEV" "/dev/disk/by-uuid/$value"
+                ;;
+              PARTLABEL)
+                mkdir -p /dev/disk/by-partlabel
+                ln -sf "../../$MDEV" "/dev/disk/by-partlabel/$value"
+                ;;
+              PARTUUID)
+                mkdir -p /dev/disk/by-partuuid
+                ln -sf "../../$MDEV" "/dev/disk/by-partuuid/$value"
+                ;;
+            esac
+          done
+        ) &
         ;;
       remove)
         # Remove symlinks pointing to this device.
         # We scan directories instead of calling blkid since the device may already be gone.
-        for dir in /dev/disk/by-id /dev/disk/by-label /dev/disk/by-uuid; do
+        for dir in /dev/disk/by-id /dev/disk/by-label /dev/disk/by-uuid /dev/disk/by-partlabel /dev/disk/by-partuuid; do
           [ -d "$dir" ] || continue
           for link in "$dir"/*; do
             [ -L "$link" ] || continue
@@ -92,6 +111,9 @@ let
   '';
 
   # Use * prefix to run via /bin/sh on any action (add/remove).
+  #
+  # devDiskScript's own /nix/store path *is* present in the initrd, so referencing it directly here works for both the post-switch-root hotplug rules and the initrd coldplug rules.
+  # What must NOT happen is depending on any *other* /nix/store path from within the script at runtime - see the writeScript/#!/bin/sh note above.
   devDiskRule = "-SUBSYSTEM=block;.* 0:${gidOf "disk"} 660 *${devDiskScript}";
 in
 {
