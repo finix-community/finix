@@ -144,6 +144,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    environment.etc."security/limits.conf".text = lib.mkDefault "";
     environment.etc."login.defs".source = format.generate "login.defs" cfg.settings;
 
     security.pam.services.login = {
