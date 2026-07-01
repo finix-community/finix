@@ -7,5 +7,6 @@
     ./terminal-exec.nix
     ./packages.nix
     ./ca.nix
+    ./interop.nix
   ];
 }
