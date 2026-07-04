@@ -130,6 +130,16 @@ in
         Rejecting packets makes port scanning somewhat easier.
       '';
     };
+
+    extraPackages = lib.mkOption {
+      type = lib.types.listOf lib.types.package;
+      default = [ ];
+      example = lib.literalExpression "[ pkgs.ipset ]";
+      description = ''
+        Additional packages to be included in the system environment alongside
+        the firewall package.
+      '';
+    };
   }
   // commonOptions;
 
