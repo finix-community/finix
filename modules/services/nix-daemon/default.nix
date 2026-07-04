@@ -313,9 +313,11 @@ in
       # tools like home-manager that run nix operations as unprivileged users.
       "d /nix/var/nix/profiles/per-user 1777 root root - -"
       "d /nix/var/nix/gcroots/per-user  1777 root root - -"
-    ] ++ lib.mapAttrsToList (name: _: "d /nix/var/nix/profiles/per-user/${name} 0755 ${name} root - -") (
+    ]
+    ++ lib.mapAttrsToList (name: _: "d /nix/var/nix/profiles/per-user/${name} 0755 ${name} root - -") (
       lib.filterAttrs (name: u: !u.isSystemUser) config.users.users
-    ) ++ lib.mapAttrsToList (name: _: "d /nix/var/nix/gcroots/per-user/${name}  0755 ${name} root - -") (
+    )
+    ++ lib.mapAttrsToList (name: _: "d /nix/var/nix/gcroots/per-user/${name}  0755 ${name} root - -") (
       lib.filterAttrs (name: u: !u.isSystemUser) config.users.users
     );
 
