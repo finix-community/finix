@@ -50,6 +50,7 @@ in
       # Session management.
       session required pam_env.so conffile=/etc/security/pam_env.conf readenv=0 # env (order 10100)
       session required pam_unix.so # unix (order 10200)
+      session required pam_limits.so
     '';
 
     environment.etc.sudoers = {
@@ -67,6 +68,9 @@ in
           # Keep terminfo database for root and %wheel.
           Defaults:root,%wheel env_keep+=TERMINFO_DIRS
           Defaults:root,%wheel env_keep+=TERMINFO
+
+          # keep NIXOS_NO_CHECK for `nixos-rebuild switch`
+          Defaults env_keep+=NIXOS_NO_CHECK
         '')
 
         ''

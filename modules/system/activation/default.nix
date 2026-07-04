@@ -173,6 +173,7 @@ in
 
             ${coreutils}/bin/ln -sr ${config.finit.package}/bin/finit $out/init
             ${coreutils}/bin/ln -s ${config.environment.path} $out/sw
+            ${coreutils}/bin/ln -s ${config.system.build.inhibitSwitch} $out/switch-inhibitors
 
             mkdir $out/specialisation
 
@@ -181,7 +182,9 @@ in
             ) config.specialisation}
           ''
           + lib.optionalString config.boot.kernel.enable ''
-            ${coreutils}/bin/ln -s ${config.boot.kernelPackages.kernel}/${pkgs.stdenv.hostPlatform.linux-kernel.target} $out/kernel
+            ${coreutils}/bin/ln -s ${config.boot.kernelPackages.kernel}/${
+              config.boot.kernelPackages.kernel.target or pkgs.stdenv.hostPlatform.linux-kernel.target
+            } $out/kernel
             ${coreutils}/bin/ln -s ${config.system.modulesTree} $out/kernel-modules
             ${coreutils}/bin/ln -s ${config.hardware.firmware}/lib/firmware $out/firmware
           ''
@@ -197,7 +200,8 @@ in
               --subst-var-by finit ${config.finit.package} \
               --subst-var-by logger ${pkgs.util-linuxMinimal} \
               --subst-var-by coreutils ${config.programs.coreutils.package} \
-              --subst-var-by installHook ${config.providers.bootloader.installHook}
+              --subst-var-by installHook ${config.providers.bootloader.installHook} \
+              --subst-var-by inhibitCheck ${config.system.build.checkSwitchInhibitors}
           ''
           + lib.optionalString config.boot.bootspec.enable ''
             ${config.boot.bootspec.writer}

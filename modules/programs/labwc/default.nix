@@ -11,7 +11,7 @@ let
     [Desktop Entry]
     Comment=A wayland stacking compositor
     DesktopNames=labwc;wlroots
-    Exec=${pkgs.dbus}/bin/dbus-run-session -- ${lib.getExe cfg.package}
+    Exec=${pkgs.dbus}/bin/dbus-run-session -- ${lib.getExe cfg.package} ${lib.escapeShellArgs cfg.extraArgs}
     Icon=labwc
     Name=labwc
     Type=Application
@@ -37,14 +37,31 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.labwc.override {
-        inherit libinput;
+      default =
+        (pkgs.labwc.override {
+          inherit libinput;
 
-        wlroots_0_19 = pkgs.wlroots_0_19.override { inherit libinput; };
-      };
+          wlroots_0_20 = pkgs.wlroots_0_20.override { inherit libinput; };
+        }).overrideAttrs
+          (
+            o:
+            lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
+              # NOTE: temporary fix until https://github.com/NixOS/nixpkgs/pull/529579 lands
+              mesonFlags = o.mesonFlags ++ [ (lib.mesonEnable "systemd-session" false) ];
+            }
+          );
       defaultText = lib.literalExpression "pkgs.labwc";
       description = ''
         The package to use for `labwc`.
+      '';
+    };
+
+    extraArgs = lib.mkOption {
+      type = with lib.types; listOf str;
+      default = [ ];
+      description = ''
+        Additional arguments to pass to `labwc`. See {manpage}`labwc(1)`
+        for additional details.
       '';
     };
   };

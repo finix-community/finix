@@ -144,6 +144,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    environment.etc."security/limits.conf".text = lib.mkDefault "";
     environment.etc."login.defs".source = format.generate "login.defs" cfg.settings;
 
     security.pam.services.login = {
@@ -163,6 +164,7 @@ in
         session required pam_env.so conffile=/etc/security/pam_env.conf readenv=0 # env (order 10100)
         session required pam_unix.so # unix (order 10200)
         session required pam_loginuid.so # loginuid (order 10300)
+        session required pam_limits.so conf=/etc/security/limits.conf
         session required ${config.security.pam.package}/lib/security/pam_lastlog.so silent # lastlog (order 10700)
 
         ${lib.optionalString config.services.elogind.enable "session optional ${pkgs.elogind}/lib/security/pam_elogind.so"}
@@ -187,8 +189,9 @@ in
         # Session management.
         session required pam_env.so conffile=/etc/security/pam_env.conf readenv=0 # env (order 10100)
         session required pam_unix.so # unix (order 10200)
+        session required pam_limits.so
       ''
-      + lib.optionalString config.services.xserver.enable or false ''
+      + lib.optionalString config.programs.xorg.enable or false ''
         session optional pam_xauth.so systemuser=99 xauthpath=${pkgs.xauth}/bin/xauth # xauth (order 12100)
       '';
     };

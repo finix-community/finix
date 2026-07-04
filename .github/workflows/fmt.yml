@@ -1,0 +1,16 @@
+name: "apply nix fmt"
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+      - name: Check formatting
+        run: |
+          nix fmt
+          git diff --exit-code

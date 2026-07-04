@@ -59,6 +59,7 @@ in
       ./services/udev
       ./system/activation
       ./system/activation/specialisation.nix
+      ./system/activation/switchable-system.nix
       ./system/nixos-compat.nix
       ./time
       ./users

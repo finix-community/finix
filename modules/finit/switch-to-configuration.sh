@@ -5,6 +5,7 @@ out="@out@"
 localeArchive="@localeArchive@"
 distroId="@distroId@"
 installHook="@installHook@"
+inhibitCheck="@inhibitCheck@"
 finit="@finit@"
 logger="@logger@"
 coreutils="@coreutils@"
@@ -46,6 +47,12 @@ fi
 # fi
 
 "$logger/bin/logger" -t finix "starting switch-to-configuration ($action)"
+
+if [[ "$action" != boot && "${NIXOS_NO_CHECK-}" != 1 ]]; then
+  if ! "$inhibitCheck" "$out"; then
+    exit 1
+  fi
+fi
 
 # install bootloader
 if [[ "$action" == switch || "$action" == boot ]]; then

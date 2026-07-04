@@ -1,4 +1,5 @@
 {
+  modules,
   config,
   pkgs,
   lib,
@@ -112,6 +113,8 @@ let
 
 in
 {
+  imports = [ modules.labwc ];
+
   options.programs.lxqt = {
 
     enable = lib.mkOption {
@@ -153,12 +156,8 @@ in
 
       compositor = lib.mkOption {
         type = lib.types.package;
-        default = pkgs.labwc.override {
-          inherit libinput;
-
-          wlroots_0_19 = pkgs.wlroots_0_19.override { inherit libinput; };
-        };
-        defaultText = lib.literalExpression "pkgs.labwc";
+        default = config.programs.labwc.package;
+        defaultText = lib.literalExpression "config.programs.labwc.package";
         description = ''
           The default Wayland compositor package to use.
         '';
@@ -188,8 +187,8 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = cfg.xsession.enable -> config.services.xserver.enable or false;
-        message = "`config.services.xserver.enable` must be set to `true` in order to use the LXQt xorg session.";
+        assertion = cfg.xsession.enable -> config.programs.xorg.enable or false;
+        message = "`config.programs.xorg.enable` must be set to `true` in order to use the LXQt xorg session.";
       }
     ];
 
@@ -213,7 +212,6 @@ in
       ];
 
     environment.pathsToLink = [
-      "/share"
       "/share/icons"
       "/share/pixmaps"
     ];

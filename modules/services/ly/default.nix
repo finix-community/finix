@@ -80,9 +80,13 @@ in
       # write to syslog
       ly_log = lib.mkDefault null;
     }
-    // lib.optionalAttrs config.services.xserver.enable or false {
+    // lib.optionalAttrs config.programs.xorg.enable or false {
       xauth_cmd = "/run/current-system/sw/bin/xauth";
-      x_cmd = "/run/current-system/sw/bin/X";
+      x_cmd =
+        if config.security.wrappers.X.enable or false then
+          "${config.security.wrapperDir}/X"
+        else
+          (lib.getExe config.programs.xorg.package);
       xsessions = "/run/current-system/sw/share/xsessions";
     };
 
@@ -108,6 +112,7 @@ in
           ${lib.optionalString config.services.elogind.enable "session optional ${pkgs.elogind}/lib/security/pam_elogind.so"}
           ${lib.optionalString config.services.seatd.enable "session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so"}
           session required ${config.security.pam.package}/lib/security/pam_lastlog.so silent
+          session required pam_limits.so
         '';
       };
     };

@@ -84,9 +84,13 @@ in
 
       wayland.wayland_sessions_path = "/run/current-system/sw/share/wayland-sessions";
 
-      x11 = lib.mkIf (config.services.xserver.enable or false) {
+      x11 = lib.mkIf config.programs.xorg.enable or false {
         xauth_path = "/run/current-system/sw/bin/xauth";
-        xserver_path = "/run/current-system/sw/bin/X";
+        xserver_path =
+          if config.security.wrappers.X.enable or false then
+            "${config.security.wrapperDir}/X"
+          else
+            (lib.getExe config.programs.xorg.package);
         xsessions_path = "/run/current-system/sw/share/xsessions";
         xsetup_path = "${cfg.package}/etc/xsetup.sh";
       };
@@ -114,6 +118,7 @@ in
           ${lib.optionalString config.services.elogind.enable "session optional ${pkgs.elogind}/lib/security/pam_elogind.so"}
           ${lib.optionalString config.services.seatd.enable "session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so"}
           session required ${config.security.pam.package}/lib/security/pam_lastlog.so silent # lastlog (order 10700)
+          session required pam_limits.so
         '';
       };
     };

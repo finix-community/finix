@@ -9,7 +9,15 @@ let
   format = pkgs.formats.keyValue { };
 
   # finix-setup plugin for early boot initialization
-  finix-setup = pkgs.callPackage ../../pkgs/finix-setup { };
+  finix-setup = pkgs.callPackage ../../pkgs/finix-setup {
+    extraPackages = lib.unique (
+      lib.flatten (
+        lib.concatMap (v: lib.optional v.enable (v.packages or [ ])) (
+          lib.attrValues config.boot.supportedFilesystems
+        )
+      )
+    );
+  };
 
   pathOrStr = with lib.types; coercedTo path (x: "${x}") str;
   program =
@@ -278,6 +286,18 @@ let
             the case when running in the foreground.
 
             See [upstream documentation](https://finit-project.github.io/config/logging/) for additional details.
+          '';
+        };
+
+        tty = lib.mkOption {
+          type = with lib.types; nullOr nonEmptyStr;
+          default = null;
+          example = "/dev/tty1";
+          description = ''
+            Give this stanza a controlling terminal on the given device, connecting its `stdin`, `stdout`, and
+            `stderr` to the TTY. May be a device node like `/dev/ttyS0` or the special keyword `@console`.
+
+            See [upstream documentation](https://finit-project.github.io/config/tty/) for additional details.
           '';
         };
 
@@ -685,6 +705,7 @@ let
       ++ (lib.optional (svc.notify or null != null) "notify:${svc.notify}")
       ++ (lib.optional (svc.env or null != null) "env:${svc.env}")
       ++ (lib.optional (svc.log or false != false) (logToStr svc.log))
+      ++ (lib.optional (svc.tty or null != null) "tty:${svc.tty}")
       ++ (lib.optional (svc.reload or null != null) "reload:${svc.reload}")
       ++ (lib.optional (svc.stop or null != null) "stop:${svc.stop}")
       ++ (lib.optional (svc.pre or null != null) "pre:${svc.pre}")

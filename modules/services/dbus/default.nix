@@ -92,6 +92,8 @@ in
       "d /run/lock/subsys 0755 messagebus messagebus"
       "d /var/lib/dbus 0755 messagebus messagebus"
       "d /tmp/dbus 0755 messagebus messagebus"
+
+      "L /etc/machine-id - - - - /var/lib/dbus/machine-id"
     ];
 
     # users.groups.messagebus.gid = config.ids.gids.messagebus;

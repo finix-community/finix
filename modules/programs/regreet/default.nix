@@ -25,16 +25,6 @@ let
     # xwayland appears to cause issues - and not required in this context, so no harm in removing
     enableXWayland = false;
   };
-
-  xinit' = pkgs.xinit.override (
-    lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
-      xorg-server = pkgs.xorg-server.override (
-        lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
-          udev = pkgs.libudev-zero;
-        }
-      );
-    }
-  );
 in
 {
   imports = with modules; [
@@ -157,9 +147,9 @@ in
             "poweroff"
           ];
         }
-        // lib.optionalAttrs config.services.xserver.enable or false {
+        // lib.optionalAttrs config.programs.xorg.enable or false {
           x11_prefix = [
-            (lib.getExe' xinit' "startx")
+            (lib.getExe' config.programs.xinit.package "startx")
             (lib.getExe' config.programs.coreutils.package "env")
           ];
         };
