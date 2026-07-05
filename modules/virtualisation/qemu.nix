@@ -109,7 +109,9 @@ let
   bootModeArgs = {
     kernel = [
       "-kernel"
-      "${config.boot.kernelPackages.kernel}/${config.boot.kernelPackages.kernel.target or pkgs.stdenv.hostPlatform.linux-kernel.target}"
+      "${config.boot.kernelPackages.kernel}/${
+        config.boot.kernelPackages.kernel.target or config.boot.kernelPackages.stdenv.hostPlatform.linux-kernel.target
+      }"
       "-initrd"
       "${config.boot.initrd.package}/initrd"
       "-append"
