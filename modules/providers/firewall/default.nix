@@ -5,7 +5,7 @@
   ...
 }:
 let
-  cfg = config.networking.firewall;
+  cfg = config.providers.firewall;
 
   canonicalizePortList = ports: lib.unique (builtins.sort builtins.lessThan ports);
 
@@ -69,7 +69,7 @@ in
     ./nftables.nix
   ];
 
-  options.networking.firewall = {
+  options.providers.firewall = {
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -144,7 +144,7 @@ in
   // commonOptions;
 
   config = lib.mkIf cfg.enable {
-    networking.firewall.trustedInterfaces = [ "lo" ];
+    providers.firewall.trustedInterfaces = [ "lo" ];
 
     environment.systemPackages = [ cfg.package ] ++ cfg.extraPackages;
   };

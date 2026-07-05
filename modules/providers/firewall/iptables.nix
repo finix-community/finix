@@ -5,7 +5,7 @@
   ...
 }:
 let
-  cfg = config.networking.firewall;
+  cfg = config.providers.firewall;
 
   iptablesRestore = "${cfg.package}/bin/iptables-restore";
   ip6tablesRestore = "${cfg.package}/bin/ip6tables-restore";
@@ -83,11 +83,10 @@ in
     environment.etc."iptables/rules.v4".text = rulesV4;
     environment.etc."iptables/rules.v6".text = rulesV6;
 
-    finit.services.firewall = {
+    finit.tasks.firewall = {
       description = "firewall rules (iptables)";
       command = restoreScript;
       runlevels = "S";
-      type = "once";
     };
   };
 }

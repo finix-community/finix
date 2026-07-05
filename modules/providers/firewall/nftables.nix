@@ -4,7 +4,7 @@
   ...
 }:
 let
-  cfg = config.networking.firewall;
+  cfg = config.providers.firewall;
 
   nft = "${cfg.package}/bin/nft";
 
@@ -58,11 +58,10 @@ in
   config = lib.mkIf (cfg.enable && cfg.backend == "nftables") {
     environment.etc."nftables.conf".text = nftablesConf;
 
-    finit.services.firewall = {
+    finit.tasks.firewall = {
       description = "firewall rules (nftables)";
       command = "${nft} -f /etc/nftables.conf";
       runlevels = "S";
-      type = "once";
     };
   };
 }

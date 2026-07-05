@@ -22,8 +22,6 @@ let
   '';
 in
 {
-  imports = [ ./firewall ];
-
   options.networking = {
     hostName = lib.mkOption {
       type = lib.types.str;
