@@ -12,8 +12,11 @@
       machine.start()
       machine.wait_for_console_text("entering runlevel 2")
 
-      with subtest("xwayland-satellite is available"):
-          machine.succeed("xwayland-satellite --version 2>&1 || true")
+      with subtest("xwayland-satellite binary is in PATH"):
+          machine.succeed("which xwayland-satellite")
+
+      with subtest("X11 socket directory is created by tmpfiles"):
+          machine.succeed("test -d /tmp/.X11-unix")
 
       machine.shutdown()
     '';

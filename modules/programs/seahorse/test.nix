@@ -13,8 +13,8 @@
       machine.start()
       machine.wait_for_console_text("entering runlevel 2")
 
-      with subtest("seahorse is available"):
-          machine.succeed("seahorse --version || true")
+      with subtest("seahorse binary is in PATH"):
+          machine.succeed("which seahorse")
 
       machine.shutdown()
     '';

@@ -13,8 +13,8 @@
       machine.start()
       machine.wait_for_console_text("entering runlevel 2")
 
-      with subtest("nvidia-settings is available"):
-          machine.succeed("nvidia-settings --version || true")
+      with subtest("nvidia-settings binary is in PATH"):
+          machine.succeed("which nvidia-settings")
 
       machine.shutdown()
     '';

@@ -12,8 +12,11 @@
       machine.start()
       machine.wait_for_console_text("entering runlevel 2")
 
-      with subtest("sway is available"):
-          machine.succeed("sway --version || true")
+      with subtest("sway binary is in PATH"):
+          machine.succeed("which sway")
+
+      with subtest("wayland session desktop file is installed"):
+          machine.succeed("test -f /run/current-system/sw/share/wayland-sessions/sway.desktop")
 
       machine.shutdown()
     '';

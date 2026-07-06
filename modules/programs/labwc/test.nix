@@ -12,8 +12,11 @@
       machine.start()
       machine.wait_for_console_text("entering runlevel 2")
 
-      with subtest("labwc is available"):
-          machine.succeed("labwc --version || true")
+      with subtest("labwc binary is in PATH"):
+          machine.succeed("which labwc")
+
+      with subtest("wayland session desktop file is installed"):
+          machine.succeed("test -f /run/current-system/sw/share/wayland-sessions/labwc.desktop")
 
       machine.shutdown()
     '';

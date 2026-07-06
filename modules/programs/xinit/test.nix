@@ -12,8 +12,11 @@
       machine.start()
       machine.wait_for_console_text("entering runlevel 2")
 
-      with subtest("xinit is available"):
-          machine.succeed("xinit --version 2>&1 || true")
+      with subtest("xinit is in PATH"):
+          machine.succeed("which xinit")
+
+      with subtest("startx is in PATH"):
+          machine.succeed("which startx")
 
       machine.shutdown()
     '';

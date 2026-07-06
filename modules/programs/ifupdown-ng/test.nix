@@ -12,8 +12,14 @@
       machine.start()
       machine.wait_for_console_text("entering runlevel 2")
 
-      with subtest("ifupdown-ng is available"):
-          machine.succeed("ifup --version 2>&1 || true")
+      with subtest("ifup binary is in PATH"):
+          machine.succeed("which ifup")
+
+      with subtest("ifupdown-ng.conf is generated"):
+          machine.succeed("test -f /etc/network/ifupdown-ng.conf")
+
+      with subtest("interfaces file is generated"):
+          machine.succeed("test -f /etc/network/interfaces")
 
       machine.shutdown()
     '';

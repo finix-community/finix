@@ -12,8 +12,11 @@
       machine.start()
       machine.wait_for_console_text("entering runlevel 2")
 
-      with subtest("hyprlock is available"):
-          machine.succeed("hyprlock --version || true")
+      with subtest("hyprlock binary is in PATH"):
+          machine.succeed("which hyprlock")
+
+      with subtest("hyprlock PAM service is configured"):
+          machine.succeed("test -f /etc/pam.d/hyprlock")
 
       machine.shutdown()
     '';

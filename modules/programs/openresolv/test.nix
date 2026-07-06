@@ -20,9 +20,6 @@
       with subtest("resolvconf.conf is installed"):
           machine.succeed("test -f /etc/resolvconf.conf")
 
-      with subtest("resolvconf lists interfaces without error"):
-          machine.succeed("resolvconf -l 2>&1; true")
-
       machine.shutdown()
     '';
   };
