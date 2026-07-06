@@ -8,6 +8,8 @@ let
   cfg = config.services.elogind;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.elogind = {
     enable = lib.mkOption {
       type = lib.types.bool;

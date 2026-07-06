@@ -8,6 +8,8 @@ let
   cfg = config.services.tzupdate;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.tzupdate = {
     enable = lib.mkOption {
       type = lib.types.bool;

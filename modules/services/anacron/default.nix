@@ -10,6 +10,7 @@ let
 in
 {
   imports = [
+    ./test.nix
     ./providers.scheduler.nix
 
     # anacron has a hard dependency on cron

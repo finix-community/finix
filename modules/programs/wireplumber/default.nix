@@ -12,7 +12,7 @@ let
   format = pkgs.formats.json { };
 in
 {
-  imports = [ modules.pipewire ];
+  imports = [ ./test.nix modules.pipewire ];
 
   options.programs.wireplumber = {
     enable = lib.mkOption {

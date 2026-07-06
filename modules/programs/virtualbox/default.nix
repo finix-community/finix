@@ -25,6 +25,8 @@ let
   '';
 in
 {
+  imports = [ ./test.nix ];
+
   options.programs.virtualbox = {
     enable = lib.mkOption {
       type = lib.types.bool;

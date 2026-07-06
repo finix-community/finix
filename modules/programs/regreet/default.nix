@@ -27,10 +27,10 @@ let
   };
 in
 {
-  imports = with modules; [
+  imports = [ ./test.nix ] ++ (with modules; [
     accounts-daemon
     greetd
-  ];
+  ]);
 
   options.programs.regreet = {
     enable = lib.mkOption {

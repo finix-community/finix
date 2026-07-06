@@ -8,6 +8,8 @@ let
   cfg = config.services.system76-scheduler;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.system76-scheduler = {
     enable = lib.mkOption {
       type = lib.types.bool;

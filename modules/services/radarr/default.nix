@@ -23,6 +23,8 @@ let
     );
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.radarr = {
     enable = lib.mkOption {
       type = lib.types.bool;

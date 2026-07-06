@@ -8,6 +8,8 @@ let
   cfg = config.services.fstrim;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.fstrim = {
     enable = lib.mkOption {
       type = lib.types.bool;

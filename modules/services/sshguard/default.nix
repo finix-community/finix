@@ -11,7 +11,10 @@ let
   format = pkgs.formats.keyValue { };
 in
 {
-  imports = [ modules.nftables ];
+  imports = [
+    ./test.nix
+    modules.nftables
+  ];
 
   options.services.sshguard = {
     enable = lib.mkOption {
@@ -58,6 +61,7 @@ in
               # "null"
               # "pf"
             ];
+            default = "nft-sets";
             description = ''
               Backend executable.
             '';

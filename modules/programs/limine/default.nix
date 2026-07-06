@@ -13,6 +13,7 @@ let
 in
 {
   imports = [
+    ./test.nix
     ./providers.bootloader.nix
   ];
 

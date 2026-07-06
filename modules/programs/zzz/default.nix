@@ -9,6 +9,7 @@ let
 in
 {
   imports = [
+    ./test.nix
     ./providers.resume-and-suspend.nix
   ];
 

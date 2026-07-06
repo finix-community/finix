@@ -8,6 +8,8 @@ let
   cfg = config.programs.gnome-keyring;
 in
 {
+  imports = [ ./test.nix ];
+
   options.programs.gnome-keyring.enable = lib.mkOption {
     type = lib.types.bool;
     default = false;

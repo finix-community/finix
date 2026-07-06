@@ -9,6 +9,8 @@ let
   format = pkgs.formats.keyValue { };
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.uptime-kuma = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -111,8 +113,7 @@ in
       nohup = true;
       log = true;
 
-      # TODO: now we're hijacking `env` and no one else can use it...
-      env = cfg.settings;
+      environment = cfg.settings;
       path = [ pkgs.unixtools.ping ];
     };
 

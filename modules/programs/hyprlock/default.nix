@@ -8,6 +8,8 @@ let
   cfg = config.programs.hyprlock;
 in
 {
+  imports = [ ./test.nix ];
+
   options.programs.hyprlock = {
     enable = lib.mkOption {
       type = lib.types.bool;

@@ -10,6 +10,8 @@ let
   format = pkgs.formats.ini { };
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.upower = {
     enable = lib.mkOption {
       type = lib.types.bool;

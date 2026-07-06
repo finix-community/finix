@@ -16,6 +16,8 @@ let
   ];
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.zfs.autoSnapshot = {
     enable = lib.mkOption {
       default = false;

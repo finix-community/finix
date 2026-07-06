@@ -28,6 +28,7 @@ let
 in
 {
   imports = [
+    ./test.nix
     (lib.mkRenamedOptionModule [ "programs" "openresolv" ] [ "programs" "resolvconf" ])
   ];
 

@@ -8,6 +8,8 @@ let
   cfg = config.services.nvidia-powerd;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.nvidia-powerd = {
     enable = lib.mkOption {
       type = lib.types.bool;

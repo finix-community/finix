@@ -95,6 +95,8 @@ let
   devDiskRule = "-SUBSYSTEM=block;.* 0:${gidOf "disk"} 660 *${devDiskScript}";
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.mdevd = {
     enable = lib.mkOption {
       type = lib.types.bool;

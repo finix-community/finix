@@ -100,6 +100,8 @@ let
   '';
 in
 {
+  imports = [ ./test.nix ];
+
   options.programs.pipewire = {
     enable = lib.mkOption {
       type = lib.types.bool;

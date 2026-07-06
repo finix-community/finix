@@ -8,6 +8,8 @@ let
   cfg = config.services.rtkit;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.rtkit = {
     enable = lib.mkOption {
       type = lib.types.bool;

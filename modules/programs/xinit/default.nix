@@ -8,6 +8,8 @@ let
   cfg = config.programs.xinit;
 in
 {
+  imports = [ ./test.nix ];
+
   options.programs.xinit = {
     enable = lib.mkOption {
       type = lib.types.bool;

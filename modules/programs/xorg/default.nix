@@ -20,6 +20,7 @@ let
 in
 {
   imports = [
+    ./test.nix
     ./nvidia.nix
     modules.xinit
   ];

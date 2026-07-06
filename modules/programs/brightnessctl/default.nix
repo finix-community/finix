@@ -10,6 +10,8 @@ let
   package = pkgs.callPackage ./package.nix { };
 in
 {
+  imports = [ ./test.nix ];
+
   options.programs.brightnessctl = {
     enable = lib.mkOption {
       type = lib.types.bool;

@@ -8,6 +8,8 @@ let
   cfg = config.services.zerotierone;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.zerotierone = {
     enable = lib.mkOption {
       type = lib.types.bool;

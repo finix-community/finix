@@ -14,6 +14,8 @@ let
   multiValueType = with lib.types; nullOr (coercedTo str lib.singleton (listOf str));
 in
 {
+  imports = [ ./test.nix ];
+
   options.programs.ifupdown-ng = {
     enable = lib.mkOption {
       type = lib.types.bool;

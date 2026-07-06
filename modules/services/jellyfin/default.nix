@@ -8,6 +8,8 @@ let
   cfg = config.services.jellyfin;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.jellyfin = {
     enable = lib.mkOption {
       type = lib.types.bool;
