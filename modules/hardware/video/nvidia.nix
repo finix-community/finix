@@ -454,7 +454,7 @@ in
           '';
 
           intelSection = lib.optionalString (cfg.prime.intelBusId != null) (
-            mkBusIdSection cfg.prime.intelBusId "intel" ''
+            mkBusIdSection cfg.prime.intelBusId "modesetting" ''
               Option "DRI" "3"
             ''
           );
@@ -472,7 +472,7 @@ in
           );
 
           igpuId =
-            if cfg.prime.intelBusId != null then "intel"
+            if cfg.prime.intelBusId != null then "modesetting"
             else if cfg.prime.amdgpuBusId != null then "amdgpu"
             else null;
 
