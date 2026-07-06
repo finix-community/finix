@@ -36,41 +36,19 @@ let
 
   dirContents = builtins.readDir ./.;
 
-  # discover .nix files in the top-level directory
-  topLevelTests =
-    lib.mapAttrs'
-      (filename: _: {
-        name = lib.removeSuffix ".nix" filename;
-        value = runTest (./. + "/${filename}");
-      })
-      (
-        lib.filterAttrs (
-          name: type: type == "regular" && lib.hasSuffix ".nix" name && !(builtins.elem name excludes)
-        ) dirContents
-      );
+  missingTests = lib.attrNames (
+    lib.filterAttrs (name: _: !(builtins.hasAttr name registry)) (builtins.removeAttrs finixModules [ "default" ])
+  );
 
-  # discover subdirectories (excluding lib and other excludes)
-  subDirs = lib.filterAttrs (
-    name: type: type == "directory" && !(builtins.elem name excludes)
-  ) dirContents;
-
-  # for each subdirectory, create a nested attrset of tests
-  # e.g., finit/tmpfiles.nix -> finit.tmpfiles
-  # use recurseIntoAttrs so nix-build recurses into subdirectories
-  subDirTests = lib.mapAttrs (
-    dirName: _:
-    let
-      subDirContents = builtins.readDir (./. + "/${dirName}");
-      nixFiles = lib.filterAttrs (
-        name: type: type == "regular" && lib.hasSuffix ".nix" name
-      ) subDirContents;
-    in
-    lib.recurseIntoAttrs (
-      lib.mapAttrs' (filename: _: {
-        name = lib.removeSuffix ".nix" filename;
-        value = runTest (./. + "/${dirName}/${filename}");
-      }) nixFiles
-    )
-  ) subDirs;
 in
-topLevelTests // subDirTests
+lib.throwIfNot (callTest != null || missingTests == [ ])
+  "The following modules are missing tests: ${lib.concatStringsSep ", " missingTests}"
+  (
+    lib.foldlAttrs (
+      acc: moduleName: tests:
+      acc
+      // lib.mapAttrs (
+        testName: test: runTest (test // { name = "${moduleName}-${testName}"; })
+      ) tests
+    ) { } registry
+  )
