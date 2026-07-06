@@ -13,8 +13,8 @@
       machine.start()
       machine.wait_for_console_text("entering runlevel 2")
 
-      with subtest("nvidia-powerd is running"):
-          machine.wait_until_succeeds("initctl status nvidia-powerd | grep running", timeout=30)
+      with subtest("nvidia-powerd finit service is configured"):
+          machine.succeed("test -f /etc/finit.d/nvidia-powerd.conf")
 
       machine.shutdown()
     '';

@@ -15,6 +15,9 @@
       with subtest("illum is running"):
           machine.wait_until_succeeds("initctl status illum | grep running", timeout=30)
 
+      with subtest("illum finit service is configured"):
+          machine.succeed("test -f /etc/finit.d/illum.conf")
+
       machine.shutdown()
     '';
   };

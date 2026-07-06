@@ -15,6 +15,9 @@
       with subtest("dbus is running"):
           machine.wait_until_succeeds("initctl status dbus | grep running", timeout=30)
 
+      with subtest("dbus system socket exists"):
+          machine.succeed("test -S /run/dbus/system_bus_socket")
+
       machine.shutdown()
     '';
   };

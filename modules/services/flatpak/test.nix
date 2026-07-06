@@ -16,6 +16,10 @@
       with subtest("flatpak binary is available"):
           machine.succeed("flatpak --version")
 
+      with subtest("flatpak user and group exist"):
+          machine.succeed("id flatpak")
+          machine.succeed("getent group flatpak")
+
       machine.shutdown()
     '';
   };

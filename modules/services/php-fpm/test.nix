@@ -15,6 +15,9 @@
       with subtest("php-fpm is running"):
           machine.wait_until_succeeds("initctl status php-fpm | grep running", timeout=30)
 
+      with subtest("php-fpm socket directory exists"):
+          machine.succeed("test -d /run/php-fpm")
+
       machine.shutdown()
     '';
   };

@@ -12,8 +12,13 @@
     testScript = ''
       machine.start()
       machine.wait_for_console_text("entering runlevel 2")
+
       with subtest("udisks2 is running"):
           machine.wait_until_succeeds("initctl status udisks2 | grep running", timeout=30)
+
+      with subtest("udisksctl can query status"):
+          machine.succeed("udisksctl status")
+
       machine.shutdown()
     '';
   };

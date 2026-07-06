@@ -16,6 +16,9 @@
       with subtest("radarr is running"):
           machine.wait_until_succeeds("initctl status radarr | grep running", timeout=30)
 
+      with subtest("radarr HTTP API responds"):
+          machine.wait_until_succeeds("curl -sf http://localhost:7878/", timeout=60)
+
       machine.shutdown()
     '';
   };

@@ -17,6 +17,9 @@
       with subtest("sshguard is running"):
           machine.wait_until_succeeds("initctl status sshguard | grep running", timeout=30)
 
+      with subtest("sshguard config is installed"):
+          machine.succeed("test -f /etc/sshguard.conf")
+
       machine.shutdown()
     '';
   };

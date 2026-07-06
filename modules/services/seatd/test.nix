@@ -16,6 +16,9 @@
       with subtest("seatd is running"):
           machine.wait_until_succeeds("initctl status seatd | grep running", timeout=30)
 
+      with subtest("seat group exists"):
+          machine.succeed("getent group seat")
+
       machine.shutdown()
     '';
   };

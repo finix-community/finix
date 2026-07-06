@@ -16,6 +16,9 @@
       with subtest("networkmanager is running"):
           machine.wait_until_succeeds("initctl status network-manager | grep running", timeout=30)
 
+      with subtest("nmcli can list devices"):
+          machine.wait_until_succeeds("nmcli device status", timeout=30)
+
       machine.shutdown()
     '';
   };

@@ -17,6 +17,9 @@
       with subtest("zerotierone is running"):
           machine.wait_until_succeeds("initctl status zerotierone | grep running", timeout=30)
 
+      with subtest("zerotierone state directory exists"):
+          machine.succeed("test -d /var/lib/zerotier-one")
+
       machine.shutdown()
     '';
   };

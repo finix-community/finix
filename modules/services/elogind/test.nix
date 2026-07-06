@@ -16,6 +16,12 @@
       with subtest("elogind is running"):
           machine.wait_until_succeeds("initctl status elogind | grep running", timeout=30)
 
+      with subtest("elogind config is installed"):
+          machine.succeed("test -f /etc/elogind/logind.conf")
+
+      with subtest("loginctl is usable"):
+          machine.succeed("loginctl list-sessions")
+
       machine.shutdown()
     '';
   };

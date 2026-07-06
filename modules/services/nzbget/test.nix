@@ -15,6 +15,9 @@
       with subtest("nzbget is running"):
           machine.wait_until_succeeds("initctl status nzbget | grep running", timeout=30)
 
+      with subtest("nzbget state directory exists"):
+          machine.succeed("test -d /var/lib/nzbget")
+
       machine.shutdown()
     '';
   };

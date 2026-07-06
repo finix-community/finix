@@ -17,6 +17,9 @@
       with subtest("system76-scheduler is running"):
           machine.wait_until_succeeds("initctl status system76-scheduler | grep running", timeout=30)
 
+      with subtest("system76-scheduler config is installed"):
+          machine.succeed("test -f /etc/system76-scheduler/config.kdl")
+
       machine.shutdown()
     '';
   };

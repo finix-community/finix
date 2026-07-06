@@ -17,6 +17,9 @@
       with subtest("rtkit-daemon is running"):
           machine.wait_until_succeeds("initctl status rtkit-daemon | grep running", timeout=60)
 
+      with subtest("rtkit user exists"):
+          machine.succeed("id rtkit")
+
       machine.shutdown()
     '';
   };

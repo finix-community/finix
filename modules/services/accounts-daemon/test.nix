@@ -12,8 +12,13 @@
     testScript = ''
       machine.start()
       machine.wait_for_console_text("entering runlevel 2")
+
       with subtest("accounts-daemon is running"):
           machine.wait_until_succeeds("initctl status accounts-daemon | grep running", timeout=30)
+
+      with subtest("AccountsService state directory exists"):
+          machine.succeed("test -d /var/lib/AccountsService")
+
       machine.shutdown()
     '';
   };

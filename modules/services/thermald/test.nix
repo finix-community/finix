@@ -18,6 +18,9 @@
       with subtest("thermald is running"):
           machine.wait_until_succeeds("initctl status thermald | grep running", timeout=30)
 
+      with subtest("thermald finit service is configured"):
+          machine.succeed("test -f /etc/finit.d/thermald.conf")
+
       machine.shutdown()
     '';
   };

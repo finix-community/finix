@@ -16,6 +16,9 @@
       with subtest("uptime-kuma is running"):
           machine.wait_until_succeeds("initctl status uptime-kuma | grep running", timeout=30)
 
+      with subtest("uptime-kuma HTTP dashboard responds"):
+          machine.wait_until_succeeds("curl -sf http://localhost:3001/", timeout=60)
+
       machine.shutdown()
     '';
   };

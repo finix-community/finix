@@ -17,6 +17,9 @@
       with subtest("fwupd is running"):
           machine.wait_until_succeeds("initctl status fwupd | grep running", timeout=60)
 
+      with subtest("fwupd config is installed"):
+          machine.succeed("test -f /etc/fwupd/fwupd.conf")
+
       machine.shutdown()
     '';
   };

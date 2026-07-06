@@ -15,6 +15,9 @@
       with subtest("lemurs is running"):
           machine.wait_until_succeeds("initctl status lemurs | grep running", timeout=30)
 
+      with subtest("lemurs config is installed"):
+          machine.succeed("test -f /etc/lemurs/config.toml")
+
       machine.shutdown()
     '';
   };

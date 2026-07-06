@@ -16,6 +16,9 @@
       with subtest("bluetooth is running"):
           machine.wait_until_succeeds("initctl status bluetooth | grep running", timeout=30)
 
+      with subtest("bluetooth config is installed"):
+          machine.succeed("test -f /etc/bluetooth/main.conf")
+
       machine.shutdown()
     '';
   };

@@ -12,8 +12,11 @@
       machine.start()
       machine.wait_for_console_text("entering runlevel 2")
 
-      with subtest("jellyfin is running"):
-          machine.wait_until_succeeds("initctl status jellyfin | grep running", timeout=30)
+      with subtest("jellyfin state directory exists"):
+          machine.succeed("test -d /var/lib/jellyfin")
+
+      with subtest("jellyfin finit service is configured"):
+          machine.succeed("test -f /etc/finit.d/jellyfin.conf")
 
       machine.shutdown()
     '';

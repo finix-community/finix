@@ -15,6 +15,10 @@
       with subtest("incus is running"):
           machine.wait_until_succeeds("initctl status incusd | grep running", timeout=30)
 
+      with subtest("incus groups exist"):
+          machine.succeed("getent group incus")
+          machine.succeed("getent group incus-admin")
+
       machine.shutdown()
     '';
   };
