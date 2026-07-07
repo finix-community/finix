@@ -38,24 +38,24 @@ in
       type = lib.types.bool;
       default = true;
       description = ''
-        				Whether or not to prompt the user for their password.
-        			'';
+        Whether or not to prompt users in the `wheel` group for their password.
+      '';
     };
 
     persist = lib.mkOption {
       type = lib.types.bool;
       default = false;
       description = ''
-        				Whether or not to allow credentials to persist for users for 5 minutes.
-        			'';
+        Whether or not to allow credentials to persist for `5` minutes for users in the `wheel` group.
+      '';
     };
 
     keepEnv = lib.mkOption {
       type = lib.types.bool;
       default = false;
       description = ''
-        				Whether or not to keep the users environment during privilege escalation.
-        			'';
+        Whether or not to keep users in the `wheel` group's environments during privilege escalation.
+      '';
     };
   };
 
