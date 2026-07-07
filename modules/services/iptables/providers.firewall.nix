@@ -1,14 +1,10 @@
 {
   config,
-  pkgs,
   lib,
   ...
 }:
 let
   cfg = config.providers.firewall;
-
-  iptablesRestore = "${cfg.package}/bin/iptables-restore";
-  ip6tablesRestore = "${cfg.package}/bin/ip6tables-restore";
 
   refuseRules =
     if cfg.rejectPackets then
@@ -50,43 +46,42 @@ let
       -A finix-fw -p udp --dport ${toString from}:${toString to} -j finix-fw-accept
     '') cfg.allowedUDPPortRanges}
   '';
-
-  rulesV4 =
-    commonRules
-    + lib.optionalString cfg.allowPing ''
-      -A finix-fw -p icmp --icmp-type echo-request -j finix-fw-accept
-    ''
-    + ''
-      -A finix-fw -j finix-fw-log-refuse
-      -A INPUT -j finix-fw
-      COMMIT
-    '';
-
-  rulesV6 =
-    commonRules
-    + lib.optionalString cfg.allowPing ''
-      -A finix-fw -p icmpv6 --icmpv6-type echo-request -j finix-fw-accept
-    ''
-    + ''
-      -A finix-fw -j finix-fw-log-refuse
-      -A INPUT -j finix-fw
-      COMMIT
-    '';
-
-  restoreScript = pkgs.writeShellScript "firewall-restore" ''
-    ${iptablesRestore}  /etc/iptables/rules.v4
-    ${ip6tablesRestore} /etc/iptables/rules.v6
-  '';
 in
 {
-  config = lib.mkIf (cfg.enable && cfg.backend == "iptables") {
-    environment.etc."iptables/rules.v4".text = rulesV4;
-    environment.etc."iptables/rules.v6".text = rulesV6;
-
-    finit.tasks.firewall = {
-      description = "firewall rules (iptables)";
-      command = restoreScript;
-      runlevels = "S";
+  options.providers.firewall = {
+    backend = lib.mkOption {
+      type = lib.types.enum [ "iptables" ];
     };
   };
+
+  config = lib.mkMerge [
+    (lib.mkIf config.services.iptables.enable {
+      # this module supplies an implementation for `providers.firewall`
+      providers.firewall.backend = lib.mkDefault "iptables";
+    })
+
+    (lib.mkIf (cfg.enable && cfg.backend == "iptables") {
+      services.iptables.rulesetV4 =
+        commonRules
+        + lib.optionalString cfg.allowPing ''
+          -A finix-fw -p icmp --icmp-type echo-request -j finix-fw-accept
+        ''
+        + ''
+          -A finix-fw -j finix-fw-log-refuse
+          -A INPUT -j finix-fw
+          COMMIT
+        '';
+
+      services.iptables.rulesetV6 =
+        commonRules
+        + lib.optionalString cfg.allowPing ''
+          -A finix-fw -p icmpv6 --icmpv6-type echo-request -j finix-fw-accept
+        ''
+        + ''
+          -A finix-fw -j finix-fw-log-refuse
+          -A INPUT -j finix-fw
+          COMMIT
+        '';
+    })
+  ];
 }
