@@ -56,8 +56,11 @@ in
 
   config = lib.mkMerge [
     (lib.mkIf config.services.iptables.enable {
-      # this module supplies an implementation for `providers.firewall`
-      providers.firewall.backend = lib.mkDefault "iptables";
+      # this module supplies an implementation for `providers.firewall`.
+      # weaker than the nftables backend's mkDefault so that enabling both
+      # services does not conflict: nftables wins unless the backend is set
+      # explicitly
+      providers.firewall.backend = lib.mkOverride 1250 "iptables";
     })
 
     (lib.mkIf (cfg.enable && cfg.backend == "iptables") {
