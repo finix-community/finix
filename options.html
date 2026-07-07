@@ -4516,7 +4516,7 @@
     <details class="toc-category">
       <summary title="services">
         <span>services</span>
-        <span class="toc-count">359</span>
+        <span class="toc-count">368</span>
       </summary>
       <ul>
         
@@ -6485,6 +6485,78 @@
         <li>
           <a href='#option-services.polkit.package' title="services.polkit.package">
             polkit.package
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.postgresql.authentication' title="services.postgresql.authentication">
+            postgresql.authentication
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.postgresql.dataDir' title="services.postgresql.dataDir">
+            postgresql.dataDir
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.postgresql.enable' title="services.postgresql.enable">
+            postgresql.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.postgresql.extraArgs' title="services.postgresql.extraArgs">
+            postgresql.extraArgs
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.postgresql.identity' title="services.postgresql.identity">
+            postgresql.identity
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.postgresql.initdb.enable' title="services.postgresql.initdb.enable">
+            postgresql.initdb.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.postgresql.initdb.extraArgs' title="services.postgresql.initdb.extraArgs">
+            postgresql.initdb.extraArgs
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.postgresql.package' title="services.postgresql.package">
+            postgresql.package
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.postgresql.settings' title="services.postgresql.settings">
+            postgresql.settings
             
             
           </a>
@@ -18483,6 +18555,124 @@ value).  By default, this is all users in the <code>wheel</code> group.</p>
 </body></html></div>
   <div class="option-default">Default: <code>pkgs.polkit</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/polkit" target="_blank">&lt;finix/modules/services/polkit&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.postgresql.authentication">
+  <h3 class="option-name">
+    <a href="#option-services.postgresql.authentication" class="option-anchor">services.postgresql.authentication</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>strings concatenated with "\n"</code></div>
+  <div class="option-description"><html><head></head><body><p><code>postgresql</code> client authentication configuration. See <a href="https://www.postgresql.org/docs/current/auth-pg-hba-conf.html">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>""</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/postgresql" target="_blank">&lt;finix/modules/services/postgresql&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.postgresql.dataDir">
+  <h3 class="option-name">
+    <a href="#option-services.postgresql.dataDir" class="option-anchor">services.postgresql.dataDir</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>absolute path</code></div>
+  <div class="option-description"><html><head></head><body><p>The directory used to store all <code>postgresql</code> data.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this directory will automatically be created on
+system activation, otherwise you are responsible for ensuring the directory exists
+with appropriate ownership and permissions before the <code>postgresql</code> service starts.</p>
+</div>
+</body></html></div>
+  <div class="option-default">Default: <code>"/var/lib/postgresql/${config.services.postgresql.package.psqlSchema}"</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/postgresql" target="_blank">&lt;finix/modules/services/postgresql&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.postgresql.enable">
+  <h3 class="option-name">
+    <a href="#option-services.postgresql.enable" class="option-anchor">services.postgresql.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://www.postgresql.org">postgresql</a> as a system service.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/postgresql" target="_blank">&lt;finix/modules/services/postgresql&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.postgresql.extraArgs">
+  <h3 class="option-name">
+    <a href="#option-services.postgresql.extraArgs" class="option-anchor">services.postgresql.extraArgs</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <code>postgresql</code>. See <a href="https://man.archlinux.org/man/postgres.1" class="manpage-reference">postgres(1)</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/postgresql" target="_blank">&lt;finix/modules/services/postgresql&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.postgresql.identity">
+  <h3 class="option-name">
+    <a href="#option-services.postgresql.identity" class="option-anchor">services.postgresql.identity</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>strings concatenated with "\n"</code></div>
+  <div class="option-description"><html><head></head><body><p><code>postgresql</code> user name maps configuration. See <a href="https://www.postgresql.org/docs/current/auth-username-maps.html">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>""</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/postgresql" target="_blank">&lt;finix/modules/services/postgresql&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.postgresql.initdb.enable">
+  <h3 class="option-name">
+    <a href="#option-services.postgresql.initdb.enable" class="option-anchor">services.postgresql.initdb.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to create a new <code>postgresql</code> database cluster.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>true</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/postgresql" target="_blank">&lt;finix/modules/services/postgresql&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.postgresql.initdb.extraArgs">
+  <h3 class="option-name">
+    <a href="#option-services.postgresql.initdb.extraArgs" class="option-anchor">services.postgresql.initdb.extraArgs</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <code>initdb</code>. See <a href="https://man.archlinux.org/man/initdb.1" class="manpage-reference">initdb(1)</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/postgresql" target="_blank">&lt;finix/modules/services/postgresql&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.postgresql.package">
+  <h3 class="option-name">
+    <a href="#option-services.postgresql.package" class="option-anchor">services.postgresql.package</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>postgresql</code>.</p>
+</body></html></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/postgresql" target="_blank">&lt;finix/modules/services/postgresql&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.postgresql.settings">
+  <h3 class="option-name">
+    <a href="#option-services.postgresql.settings" class="option-anchor">services.postgresql.settings</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>attribute set of (atom (null, bool, int, float or string))</code></div>
+  <div class="option-description"><html><head></head><body><p><code>postgresql</code> configuration. See <a href="https://www.postgresql.org/docs/current/config-setting.html#CONFIG-SETTING-CONFIGURATION-FILE">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/postgresql" target="_blank">&lt;finix/modules/services/postgresql&gt;</a></code></div>
 </div>
 <div class="option" id="option-services.power-profiles-daemon.enable">
   <h3 class="option-name">
