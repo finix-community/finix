@@ -132,7 +132,7 @@
     boot.resumeDevice = lib.mkOption {
       type = lib.types.str;
       default = "";
-      description = "Device from which to resume after hibernation. Empty = disabled. Not implemented in finix.";
+      description = "Device from which to resume after hibernation. Empty = disabled. When set, adds resume=<device> to boot.kernelParams.";
     };
 
     boot.kernelParams = lib.mkOption {

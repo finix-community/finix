@@ -103,7 +103,7 @@ let
       + "\n"
     ) fstabFileSystems;
 
-  # Swap entries with randomEncryption.enable can't be stable fstab lines: the backing device is a fresh /dev/mapper/<name> created with a brand new random key on every boot, so they're set up imperatively instead, mirroring how modules/zram.nix builds its swap device
+  # Swap entries with randomEncryption.enable can't be stable fstab lines: the backing device is a fresh /dev/mapper/<name> created with a brand new random key on every boot, so they're set up imperatively instead
   isEncryptedSwap = sw: sw.randomEncryption.enable;
   plainSwapDevices = lib.filter (sw: !isEncryptedSwap sw) config.swapDevices;
   encryptedSwapDevices = lib.filter isEncryptedSwap config.swapDevices;
@@ -128,14 +128,14 @@ let
           pkgs.writeShellScript name ''
             set -eu
             ${pkgs.cryptsetup}/bin/cryptsetup plainOpen \
-              -c ${re.cipher} \
+              -c ${lib.escapeShellArg re.cipher} \
               -s ${toString re.keySize} \
               ${lib.optionalString (re.sectorSize != 0) "--sector-size ${toString re.sectorSize}"} \
               ${lib.optionalString re.allowDiscards "--allow-discards"} \
-              -d ${re.source} \
-              ${sw.device} ${name}
+              -d ${lib.escapeShellArg re.source} \
+              ${lib.escapeShellArg sw.device} ${lib.escapeShellArg name}
             ${pkgs.util-linux}/bin/mkswap /dev/mapper/${name}
-            ${pkgs.util-linux}/bin/swapon -o ${lib.concatStringsSep "," options} /dev/mapper/${name}
+            ${pkgs.util-linux}/bin/swapon -o ${lib.escapeShellArg (lib.concatStringsSep "," options)} /dev/mapper/${name}
           ''
         );
       };
@@ -170,10 +170,11 @@ in
 
     assertions = lib.map (sw: {
       assertion =
-        sw.randomEncryption.enable -> builtins.match "/dev/disk/by-(uuid|label)/.*" sw.device == null;
+         sw.label == null
+         && (builtins.match "/dev/disk/by-(uuid|label)/.*" sw.device == null);
       message = ''
-        Random-encrypted swap device ${sw.device} should not be referenced
-        by UUID or label, since those are erased and regenerated on every
+        Random-encrypted swap device ${sw.device} must not use swapDevices.*.label,
+        and should not be referenced by UUID or label, since those are erased and regenerated on every
         boot once the partition is encrypted. Use a stable path such as
         /dev/disk/by-partuuid/... instead.
       '';
