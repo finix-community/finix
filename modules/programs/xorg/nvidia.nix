@@ -13,7 +13,9 @@ let
     else null;
 
   screenDevice =
-    if cfg.prime.offload.enable && igpuId != null then igpuId else "Device-nvidia[0]";
+     if cfg.prime.offload.enable && igpuId != null then igpuId
+      else if cfg.prime.sync.enable && cfg.prime.nvidiaBusId != null then "nvidia"
+      else "Device-nvidia[0]";
 
 in
 {

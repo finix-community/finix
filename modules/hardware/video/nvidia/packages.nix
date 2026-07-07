@@ -27,7 +27,7 @@ in
 
     environment.systemPackages =
       [ cfg.package.bin ]
-      ++ lib.optionals cfg.nvidiaSettings [ cfg.package.bin ]
+      ++ lib.optionals cfg.nvidiaSettings [ cfg.package.settings ]
       ++ lib.optionals cfg.prime.offload.enableOffloadCmd [ offloadScript ];
   };
 }
