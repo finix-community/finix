@@ -479,7 +479,7 @@ in
           syncLayout = lib.optionalString (cfg.prime.sync.enable && igpuId != null) ''
             Section "ServerLayout"
               Identifier "layout"
-              Screen "nvidia"
+              Screen "Screen-nvidia[0]"
               Inactive "${igpuId}"
               Option "AllowNVIDIAGPUScreens"
             EndSection

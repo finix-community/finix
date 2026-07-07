@@ -6,6 +6,15 @@
 }:
 let
   cfg = config.hardware.nvidia;
+
+  igpuId =
+    if cfg.prime.intelBusId != null then "modesetting"
+    else if cfg.prime.amdgpuBusId != null then "amdgpu"
+    else null;
+
+  screenDevice =
+    if cfg.prime.offload.enable && igpuId != null then igpuId else "Device-nvidia[0]";
+
 in
 {
   options.hardware.nvidia.reduceTearing = lib.mkOption {
@@ -45,7 +54,7 @@ in
 
       Section "Screen"
         Identifier "Screen-nvidia[0]"
-        Device "Device-nvidia[0]"
+        Device "${screenDevice}"
         Option "RandRRotation" "on"
         ${lib.optionalString cfg.reduceTearing ''
           Option "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
