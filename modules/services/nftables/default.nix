@@ -8,6 +8,8 @@ let
   cfg = config.services.nftables;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.nftables = {
     enable = lib.mkOption {
       type = lib.types.bool;

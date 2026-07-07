@@ -1,16 +1,3 @@
-# finix test suite
-#
-# auto-discovers and exposes all tests in this directory and subdirectories.
-# similar to nixos/tests/all-tests.nix in nixpkgs.
-#
-# usage:
-#   nix-build tests                   # build all tests
-#   nix-build tests -A boot           # build specific test
-#   nix-build tests -A finit.tmpfiles # build test from subdirectory
-#
-# interactive mode:
-#   nix-build tests -A boot.driverInteractive
-#   ./result/bin/finix-test-driver
 {
   pkgs ?
     let
@@ -18,26 +5,33 @@
     in
     import sources.nixpkgs { },
 
-  # callTest wraps mkTest - allows caller to customize test invocation
-  # default is null, meaning use the standard testLib.mkTest
   callTest ? null,
 }:
 let
   inherit (pkgs) lib;
 
   testLib = import ./lib { inherit lib pkgs; };
-  runTest = if callTest != null then callTest else (file: testLib.mkTest (import file));
+  runTest = if callTest != null then callTest else testLib.mkTest;
 
-  # files/directories to exclude from auto-discovery
-  excludes = [
-    "default.nix"
-    "lib"
-  ];
+  finixModules = import ../modules;
+  eval = lib.evalModules {
+    modules = [
+      finixModules.default
+      ../modules/virtualisation
+      { config.nixpkgs.pkgs = pkgs; }
+    ]
+    ++ lib.attrValues (builtins.removeAttrs finixModules [ "default" ]);
+    specialArgs = {
+      modules = finixModules;
+    };
+  };
 
-  dirContents = builtins.readDir ./.;
+  registry = eval.config.testing.tests;
 
   missingTests = lib.attrNames (
-    lib.filterAttrs (name: _: !(builtins.hasAttr name registry)) (builtins.removeAttrs finixModules [ "default" ])
+    lib.filterAttrs (name: _: !(builtins.hasAttr name registry)) (
+      builtins.removeAttrs finixModules [ "default" ]
+    )
   );
 
 in
@@ -47,8 +41,6 @@ lib.throwIfNot (callTest != null || missingTests == [ ])
     lib.foldlAttrs (
       acc: moduleName: tests:
       acc
-      // lib.mapAttrs (
-        testName: test: runTest (test // { name = "${moduleName}-${testName}"; })
-      ) tests
+      // lib.mapAttrs (testName: test: runTest (test // { name = "${moduleName}-${testName}"; })) tests
     ) { } registry
   )

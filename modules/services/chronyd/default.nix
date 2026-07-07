@@ -10,6 +10,8 @@ let
   notifySupport = lib.versionAtLeast cfg.package.version "4.9";
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.chrony = {
     enable = lib.mkOption {
       type = lib.types.bool;

@@ -22,7 +22,7 @@ let
     $SystemLogRateLimitInterval 5
     $SystemLogRateLimitBurst 1000
 
-    # Logging rules
+    # Logging rules (var/log dirs created by tmpfiles-setup before rsyslog starts)
     *.*;auth,authpriv.none      -/var/log/syslog
     auth,authpriv.*             -/var/log/auth.log
     kern.*                      -/var/log/kern.log
@@ -37,6 +37,8 @@ let
   '';
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.rsyslog = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -51,10 +53,12 @@ in
     finit.services.syslogd = {
       description = "system logging daemon";
       runlevels = "S0123456789";
-      conditions =
-        lib.optionals config.services.udev.enable [ "run/udevadm:5/success" ]
-        ++ lib.optionals config.services.mdevd.enable [ "run/coldplug/success" ]
-        ++ lib.optionals config.services.keventd.enable [ "pid/keventd" ];
+      conditions = [
+        "task/tmpfiles-setup/success"
+      ]
+      ++ lib.optionals config.services.udev.enable [ "run/udevadm:5/success" ]
+      ++ lib.optionals config.services.mdevd.enable [ "run/coldplug/success" ]
+      ++ lib.optionals config.services.keventd.enable [ "pid/keventd" ];
       command = "${pkgs.rsyslog-light}/bin/rsyslogd -n -d -f ${configFile}";
     };
 

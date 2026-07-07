@@ -10,6 +10,7 @@
     ./kernel.nix
     ./modprobe.nix
     ./sysctl.nix
+    ./test.nix
   ];
 
   config = {

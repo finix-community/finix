@@ -50,10 +50,6 @@
 
       checks = forAllSystems (system: import ./tests { pkgs = pkgsFor system; });
 
-          pkgsFor = system: import sources.nixpkgs { inherit system; };
-        in
-        lib.genAttrs' [ "aarch64-linux" "x86_64-linux" ] (
-          system: lib.nameValuePair system (pkgsFor system).nixfmt-tree
-        );
+      formatter = forAllSystems (system: (pkgsFor system).nixfmt-tree);
     };
 }

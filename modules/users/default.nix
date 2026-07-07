@@ -44,7 +44,10 @@ let
   };
 in
 {
-  imports = [ ./options.nix ];
+  imports = [
+    ./options.nix
+    ./test.nix
+  ];
 
   config = {
     assertions = [

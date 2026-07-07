@@ -13,6 +13,8 @@ let
   mysqldOptions = "--user=${cfg.user} --datadir=${cfg.dataDir} --basedir=${cfg.package}";
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.mariadb = {
     enable = lib.mkOption {
       type = lib.types.bool;

@@ -10,6 +10,7 @@ in
 {
   imports = [
     ./providers.privileges.nix
+    ./test.nix
   ];
 
   options.programs.doas = {

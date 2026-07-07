@@ -19,6 +19,8 @@ let
   };
 in
 {
+  imports = [ ./test.nix ];
+
   options.programs.dma = {
     enable = lib.mkOption {
       type = lib.types.bool;

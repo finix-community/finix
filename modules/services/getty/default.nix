@@ -8,6 +8,8 @@ let
   cfg = config.services.getty;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.getty = {
     enable = lib.mkOption {
       type = lib.types.bool;

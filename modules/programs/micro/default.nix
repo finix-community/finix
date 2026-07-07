@@ -8,6 +8,8 @@ let
   cfg = config.programs.micro;
 in
 {
+  imports = [ ./test.nix ];
+
   options.programs.micro = {
     enable = lib.mkOption {
       type = lib.types.bool;

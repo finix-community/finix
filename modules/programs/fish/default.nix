@@ -8,6 +8,8 @@ let
   cfg = config.programs.fish;
 in
 {
+  imports = [ ./test.nix ];
+
   options.programs.fish = {
     enable = lib.mkOption {
       type = lib.types.bool;

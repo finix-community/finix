@@ -733,6 +733,7 @@ in
   imports = [
     ./initrd.nix
     ./tmpfiles.nix
+    ./tests
   ];
 
   options.finit = {

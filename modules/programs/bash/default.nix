@@ -8,6 +8,8 @@ let
   cfg = config.programs.bash;
 in
 {
+  imports = [ ./test.nix ];
+
   options.programs.bash = {
     enable = lib.mkOption {
       type = lib.types.bool;

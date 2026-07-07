@@ -113,7 +113,10 @@ let
 
 in
 {
-  imports = [ ./test.nix modules.labwc ];
+  imports = [
+    ./test.nix
+    modules.labwc
+  ];
 
   options.programs.lxqt = {
 

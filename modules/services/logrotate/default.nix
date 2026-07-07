@@ -30,6 +30,8 @@ let
   );
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.logrotate = {
     enable = lib.mkOption {
       type = lib.types.bool;

@@ -9,7 +9,10 @@ let
   cfg = config.programs.tuigreet;
 in
 {
-  imports = [ ./test.nix modules.greetd ];
+  imports = [
+    ./test.nix
+    modules.greetd
+  ];
 
   options.programs.tuigreet = {
     enable = lib.mkOption {

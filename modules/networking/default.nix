@@ -22,6 +22,11 @@ let
   '';
 in
 {
+  imports = [
+    ./test.nix
+    ./test-multi-node.nix
+  ];
+
   options.networking = {
     hostName = lib.mkOption {
       type = lib.types.str;
@@ -88,8 +93,8 @@ in
     };
 
     networking.hosts = {
-      localhost = [ "127.0.0.1" ];
-      ${config.networking.hostName} = [ "127.0.0.2" ];
+      "127.0.0.1" = [ "localhost" ];
+      "127.0.0.2" = [ config.networking.hostName ];
     };
 
     boot.initrd = {

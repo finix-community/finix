@@ -27,7 +27,10 @@ let
   };
 in
 {
-  imports = [ ./test.nix ] ++ (with modules; [
+  imports = [
+    ./test.nix
+  ]
+  ++ (with modules; [
     accounts-daemon
     greetd
   ]);

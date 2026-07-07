@@ -8,6 +8,8 @@ let
   cfg = config.services.atd;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.atd = {
     enable = lib.mkOption {
       type = lib.types.bool;

@@ -1,4 +1,7 @@
 { modules, ... }:
 {
-  imports = [ ./test.nix modules.xorg ];
+  imports = [
+    ./test.nix
+    modules.xorg
+  ];
 }

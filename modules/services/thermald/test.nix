@@ -7,8 +7,11 @@
         services.mdevd.enable = true;
         services.thermald.enable = true;
         # thermald is x86-only; provide a stub on other platforms
-        services.thermald.package = if pkgs.stdenv.hostPlatform.isx86_64 then pkgs.thermald
-          else pkgs.writeShellScriptBin "thermald" "exec true";
+        services.thermald.package =
+          if pkgs.stdenv.hostPlatform.isx86_64 then
+            pkgs.thermald
+          else
+            pkgs.writeShellScriptBin "thermald" "exec true";
       };
 
     testScript = ''

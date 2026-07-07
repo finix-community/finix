@@ -46,7 +46,7 @@ let
             options = [ "mode=755" ];
           };
 
-          networking.hostName = name;
+          networking.hostName = lib.mkDefault name;
 
           testing.enable = true;
 

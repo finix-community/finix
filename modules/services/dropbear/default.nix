@@ -59,6 +59,8 @@ let
     };
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.dropbear = {
     enable = lib.mkOption {
       type = lib.types.bool;
