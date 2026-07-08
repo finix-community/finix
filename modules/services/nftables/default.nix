@@ -135,6 +135,29 @@ in
       '';
     };
 
+    trustedInterfaces = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ "lo" ];
+      example = [
+        "lo"
+        "enp0s2"
+      ];
+      description = ''
+        Traffic from these interfaces will be accepted unconditionally
+        by the {option}`providers.firewall` implementation. The loopback
+        interface is trusted by default.
+      '';
+    };
+
+    allowPing = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Whether the {option}`providers.firewall` implementation responds
+        to incoming ICMPv4 echo requests ("pings").
+      '';
+    };
+
     flushRuleset = lib.mkEnableOption "flushing the entire ruleset on each start";
 
     extraDeletions = lib.mkOption {

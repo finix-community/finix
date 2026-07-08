@@ -28,24 +28,6 @@ in
       '';
     };
 
-    trustedInterfaces = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      default = [ ];
-      example = [ "enp0s2" ];
-      description = ''
-        Traffic from these interfaces will be accepted unconditionally.
-        The loopback interface is always trusted.
-      '';
-    };
-
-    allowPing = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = ''
-        Whether to respond to incoming ICMPv4 echo requests ("pings").
-      '';
-    };
-
     rejectPackets = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -120,7 +102,5 @@ in
         '';
       }
     ];
-
-    providers.firewall.trustedInterfaces = [ "lo" ];
   };
 }

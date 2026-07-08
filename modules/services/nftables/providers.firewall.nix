@@ -5,6 +5,7 @@
 }:
 let
   cfg = config.providers.firewall;
+  svcCfg = config.services.nftables;
 
   portsToNftSet =
     ports: portRanges:
@@ -12,7 +13,7 @@ let
       map toString ports ++ map ({ from, to }: "${toString from}-${toString to}") portRanges
     );
 
-  ifaceSet = lib.concatStringsSep ", " (map (x: ''"${x}"'') cfg.trustedInterfaces);
+  ifaceSet = lib.concatStringsSep ", " (map (x: ''"${x}"'') svcCfg.trustedInterfaces);
 
   tcpSet = portsToNftSet cfg.allowedTCPPorts cfg.allowedTCPPortRanges;
   udpSet = portsToNftSet cfg.allowedUDPPorts cfg.allowedUDPPortRanges;
@@ -59,7 +60,7 @@ in
             ${lib.optionalString (tcpSet != "") "tcp dport { ${tcpSet} } accept"}
             ${lib.optionalString (udpSet != "") "udp dport { ${udpSet} } accept"}
 
-            ${lib.optionalString cfg.allowPing ''
+            ${lib.optionalString svcCfg.allowPing ''
               icmp type echo-request accept comment "allow ping"
               icmpv6 type echo-request accept comment "allow ping6"
             ''}

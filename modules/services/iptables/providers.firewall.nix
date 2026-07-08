@@ -5,6 +5,7 @@
 }:
 let
   cfg = config.providers.firewall;
+  svcCfg = config.services.iptables;
 
   refuseRules =
     if cfg.rejectPackets then
@@ -31,7 +32,7 @@ let
     -A finix-fw-log-refuse -j finix-fw-refuse
     ${lib.concatMapStrings (iface: ''
       -A finix-fw -i ${iface} -j finix-fw-accept
-    '') cfg.trustedInterfaces}
+    '') svcCfg.trustedInterfaces}
     -A finix-fw -m conntrack --ctstate ESTABLISHED,RELATED -j finix-fw-accept
     ${lib.concatMapStrings (port: ''
       -A finix-fw -p tcp --dport ${toString port} -j finix-fw-accept
@@ -66,7 +67,7 @@ in
     (lib.mkIf (cfg.enable && cfg.backend == "iptables") {
       services.iptables.rulesetV4 =
         commonRules
-        + lib.optionalString cfg.allowPing ''
+        + lib.optionalString svcCfg.allowPing ''
           -A finix-fw -p icmp --icmp-type echo-request -j finix-fw-accept
         ''
         + ''
@@ -77,7 +78,7 @@ in
 
       services.iptables.rulesetV6 =
         commonRules
-        + lib.optionalString cfg.allowPing ''
+        + lib.optionalString svcCfg.allowPing ''
           -A finix-fw -p icmpv6 --icmpv6-type echo-request -j finix-fw-accept
         ''
         + ''

@@ -28,7 +28,7 @@
 
       providers.firewall.enable = true;
       providers.firewall.allowedTCPPorts = [ 8080 ];
-      providers.firewall.allowPing = false;
+      services.iptables.allowPing = false;
       providers.firewall.rejectPackets = true;
 
       finit.services.allowed-port = {
