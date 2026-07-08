@@ -98,7 +98,7 @@ in
         assertion = cfg.backend != "none";
         message = ''
           providers.firewall is enabled but no backend implements it. Enable an
-          implementation module, e.g. services.nftables or services.iptables.
+          implementation module, e.g. services.nftables.
         '';
       }
     ];
