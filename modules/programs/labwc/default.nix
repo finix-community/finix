@@ -45,19 +45,12 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default =
-        (pkgs.labwc.override {
-          inherit libinput;
+      default = pkgs.labwc.override {
+        inherit libinput;
 
-          wlroots_0_20 = pkgs.wlroots_0_20.override { inherit libinput; };
-        }).overrideAttrs
-          (
-            o:
-            lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
-              # NOTE: temporary fix until https://github.com/NixOS/nixpkgs/pull/529579 lands
-              mesonFlags = o.mesonFlags ++ [ (lib.mesonEnable "systemd-session" false) ];
-            }
-          );
+        wlroots_0_20 = pkgs.wlroots_0_20.override { inherit libinput; };
+        enableSystemd = false;
+      };
       defaultText = lib.literalExpression "pkgs.labwc";
       description = ''
         The package to use for `labwc`.
