@@ -282,8 +282,8 @@ in
     environment.etc."udev/hwdb.bin" = lib.mkIf (cfg.packages != [ ]) { source = hwdbBin; };
     environment.etc."udev/rules.d".source = udevRulesFor {
       name = "udev-rules";
-      udevPackages = cfg.packages;
-      binPackages = cfg.packages;
+      udevPackages = [ cfg.package ] ++ cfg.packages;
+      binPackages = [ cfg.package ] ++ cfg.packages;
       udev = cfg.package;
 
       inherit udevPath;
