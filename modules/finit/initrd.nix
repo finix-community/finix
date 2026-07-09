@@ -17,14 +17,11 @@ let
     + (
       if builtins.elem "bind" mnt.options then
         ''
-          mountpoint -q "$targetRoot${mnt.mountPoint}" || mount -o ${lib.concatStringsSep "," mnt.options} "$targetRoot${mnt.device}" "$targetRoot${mnt.mountPoint}"
+          mount -o ${lib.concatStringsSep "," mnt.options} "$targetRoot${mnt.device}" "$targetRoot${mnt.mountPoint}"
         ''
       else
         ''
-          mountpoint -q "$targetRoot${mnt.mountPoint}" || {
-            [ -e "${mnt.device}" ] # let finix-mount-all's outer retry handle waiting
-            mount -t ${mnt.fsType} -o ${lib.concatStringsSep "," mnt.options} "${mnt.device}" "$targetRoot${mnt.mountPoint}"
-          }
+          mount -t ${mnt.fsType} -o ${lib.concatStringsSep "," mnt.options} "${mnt.device}" "$targetRoot${mnt.mountPoint}"
         ''
     );
 
@@ -139,11 +136,9 @@ in
         '';
       }
       {
-        target = "/usr/local/bin/finix-mount-all-commands";
-        source = pkgs.writeScript "finix-mount-all-commands" ''
+        target = "/usr/local/bin/finix-mount-all";
+        source = pkgs.writeScript "finix-mount-all" ''
           #!/bin/sh
-
-          set -e
 
           targetRoot=/sysroot
 
@@ -158,23 +153,6 @@ in
               ) (lib.attrValues config.fileSystems)
             )
           )}
-        '';
-      }
-      {
-        target = "/usr/local/bin/finix-mount-all";
-        source = pkgs.writeScript "finix-mount-all" ''
-          #!/bin/sh
-
-          # coldplug finishing (task/coldplug/success) only means mdevd was told about every device in /sys
-          for trial in $(seq 1 30); do
-            if finix-mount-all-commands; then
-              exit 0
-            fi
-            sleep 1
-          done
-
-          # final attempt - exit code propagates to finit as task/mount-all/failure
-          finix-mount-all-commands
         '';
       }
       {
