@@ -46,7 +46,7 @@ in
     # nixpkgs builds NetworkManager with a hardcoded resolvconf path, so the
     # default rc-manager=auto always selects resolvconf, even when nothing
     # has set it up, silently dropping DNS updates.
-    environment.etc."NetworkManager/NetworkManager.conf".text = lib.generators.toINI { } {
+    environment.etc."NetworkManager/conf.d/00-nixos.conf".text = lib.generators.toINI { } {
       main.rc-manager = if config.programs.resolvconf.enable then "resolvconf" else "symlink";
     };
 
