@@ -6,6 +6,15 @@
 }:
 let
   cfg = config.services.illum;
+
+  # gardendevd needs libudev-garden; mdevd needs libudev-zero
+  udevApi =
+    if config.services.gardendevd.enable then
+      pkgs.libudev-garden
+    else if config.services.mdevd.enable then
+      pkgs.libudev-zero
+    else
+      null;
 in
 {
   options.services.illum = {
@@ -20,8 +29,8 @@ in
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.illum.override (
-        lib.optionalAttrs config.services.mdevd.enable {
-          udev = pkgs.libudev-zero;
+        lib.optionalAttrs (udevApi != null) {
+          udev = udevApi;
         }
       );
       defaultText = lib.literalExpression "pkgs.illum";
