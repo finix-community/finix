@@ -43,6 +43,13 @@ in
     services.dbus.packages = packages;
     services.udev.packages = packages;
 
+    # nixpkgs builds NetworkManager with a hardcoded resolvconf path, so the
+    # default rc-manager=auto always selects resolvconf, even when nothing
+    # has set it up, silently dropping DNS updates.
+    environment.etc."NetworkManager/NetworkManager.conf".text = lib.generators.toINI { } {
+      main.rc-manager = if config.programs.resolvconf.enable then "resolvconf" else "symlink";
+    };
+
     finit.services.network-manager = {
       description = "network manager service";
       conditions = "service/dbus/ready";
