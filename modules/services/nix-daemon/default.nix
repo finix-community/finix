@@ -65,6 +65,8 @@ let
     '';
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.nix-daemon = {
     enable = lib.mkOption {
       type = lib.types.bool;

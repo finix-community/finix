@@ -28,6 +28,8 @@ let
   };
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.acpid = {
     enable = lib.mkOption {
       type = lib.types.bool;

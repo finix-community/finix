@@ -125,6 +125,7 @@ in
 
     system.activation.scripts.specialfs = ''
       mkdir -p /run /tmp /var
+      chmod 1777 /tmp
       ln -sfn /run /var/run
     '';
 

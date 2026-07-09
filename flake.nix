@@ -3,6 +3,28 @@
 
   outputs =
     { self }:
+    let
+      sources = import ./lon.nix;
+      lib = import (sources.nixpkgs + "/lib");
+
+      systems = [
+        "aarch64-linux"
+        "x86_64-linux"
+      ];
+
+      pkgsFor =
+        system:
+        import sources.nixpkgs {
+          inherit system;
+          config = {
+            allowInsecurePredicate = _: true;
+            allowUnfreePredicate = _: true;
+          };
+
+        };
+
+      forAllSystems = lib.genAttrs systems;
+    in
     {
       nixosModules = import ./modules;
 
@@ -26,15 +48,8 @@
           inherit lib;
         };
 
-      formatter =
-        let
-          sources = import ./lon.nix;
-          lib = import (sources.nixpkgs + "/lib");
+      checks = forAllSystems (system: import ./tests { pkgs = pkgsFor system; });
 
-          pkgsFor = system: import sources.nixpkgs { inherit system; };
-        in
-        lib.genAttrs' [ "aarch64-linux" "x86_64-linux" ] (
-          system: lib.nameValuePair system (pkgsFor system).nixfmt-tree
-        );
+      formatter = forAllSystems (system: (pkgsFor system).nixfmt-tree);
     };
 }

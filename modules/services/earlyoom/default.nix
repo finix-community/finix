@@ -8,6 +8,8 @@ let
   cfg = config.services.earlyoom;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.earlyoom = {
     enable = lib.mkOption {
       type = lib.types.bool;

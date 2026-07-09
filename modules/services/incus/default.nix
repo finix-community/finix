@@ -8,6 +8,8 @@ let
   cfg = config.services.incus;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.incus = {
     enable = lib.mkOption {
       type = lib.types.bool;

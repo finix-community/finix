@@ -8,6 +8,8 @@ let
   cfg = config.services.illum;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.illum = {
     enable = lib.mkOption {
       type = lib.types.bool;

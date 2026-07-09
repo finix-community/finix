@@ -13,6 +13,7 @@ in
 {
   imports = [
     ./providers.scheduler.nix
+    ./test.nix
   ];
 
   options.services.fcron = {

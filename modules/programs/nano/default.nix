@@ -8,6 +8,8 @@ let
   cfg = config.programs.nano;
 in
 {
+  imports = [ ./test.nix ];
+
   options.programs.nano = {
     enable = lib.mkOption {
       type = lib.types.bool;

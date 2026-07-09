@@ -8,6 +8,8 @@ let
   cfg = config.services.fprintd;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.fprintd = {
     enable = lib.mkOption {
       type = lib.types.bool;

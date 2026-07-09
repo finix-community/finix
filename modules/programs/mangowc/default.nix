@@ -27,6 +27,8 @@ let
   );
 in
 {
+  imports = [ ./test.nix ];
+
   options.programs.mangowc = {
     enable = lib.mkOption {
       type = lib.types.bool;

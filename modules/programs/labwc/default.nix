@@ -26,6 +26,8 @@ let
   );
 in
 {
+  imports = [ ./test.nix ];
+
   options.programs.labwc = {
     enable = lib.mkOption {
       type = lib.types.bool;

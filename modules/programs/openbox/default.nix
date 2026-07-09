@@ -19,7 +19,10 @@ let
   '';
 in
 {
-  imports = [ modules.xorg ];
+  imports = [
+    ./test.nix
+    modules.xorg
+  ];
 
   options.programs.openbox = {
     enable = lib.mkOption {

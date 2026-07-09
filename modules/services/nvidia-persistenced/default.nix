@@ -10,6 +10,8 @@ let
   runtimeDir = "/var/run/nvidia-persistenced";
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.nvidia-persistenced = {
     enable = lib.mkOption {
       type = lib.types.bool;

@@ -12,6 +12,8 @@ let
   configFile = format.generate "plymouthd.conf" cfg.settings;
 in
 {
+  imports = [ ./test.nix ];
+
   options.programs.plymouth = {
     enable = lib.mkOption {
       type = lib.types.bool;

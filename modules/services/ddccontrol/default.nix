@@ -8,6 +8,8 @@ let
   cfg = config.services.ddccontrol;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.ddccontrol = {
     enable = lib.mkOption {
       type = lib.types.bool;

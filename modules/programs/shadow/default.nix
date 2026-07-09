@@ -12,6 +12,8 @@ let
   };
 in
 {
+  imports = [ ./test.nix ];
+
   options.programs.shadow = {
     enable = lib.mkOption {
       type = lib.types.bool;

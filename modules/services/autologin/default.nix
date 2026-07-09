@@ -8,6 +8,8 @@ let
   cfg = config.services.autologin;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.autologin = {
     enable = lib.mkOption {
       type = lib.types.bool;

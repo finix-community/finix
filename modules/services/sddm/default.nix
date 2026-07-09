@@ -12,7 +12,10 @@ let
   configFile = format.generate "sddm.conf" cfg.settings;
 in
 {
-  imports = [ modules.xorg ];
+  imports = [
+    ./test.nix
+    modules.xorg
+  ];
 
   options.services.sddm = {
     enable = lib.mkOption {

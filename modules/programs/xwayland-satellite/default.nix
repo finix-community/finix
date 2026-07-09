@@ -8,6 +8,8 @@ let
   cfg = config.programs.xwayland-satellite;
 in
 {
+  imports = [ ./test.nix ];
+
   options.programs.xwayland-satellite = {
     enable = lib.mkOption {
       type = lib.types.bool;

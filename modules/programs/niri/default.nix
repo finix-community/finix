@@ -32,6 +32,8 @@ let
     };
 in
 {
+  imports = [ ./test.nix ];
+
   options.programs.niri = {
     enable = lib.mkOption {
       type = lib.types.bool;

@@ -11,6 +11,8 @@ let
   configFile = format.generate "config.yaml" cfg.settings;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.blocky = {
     enable = lib.mkOption {
       type = lib.types.bool;

@@ -9,7 +9,10 @@ let
   cfg = config.services.gvfs;
 in
 {
-  imports = [ modules.udisks2 ];
+  imports = [
+    ./test.nix
+    modules.udisks2
+  ];
 
   options.services.gvfs = {
     enable = lib.mkOption {

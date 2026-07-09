@@ -8,6 +8,8 @@ let
   cfg = config.programs.seahorse;
 in
 {
+  imports = [ ./test.nix ];
+
   options.programs.seahorse.enable = lib.mkOption {
     type = lib.types.bool;
     default = false;

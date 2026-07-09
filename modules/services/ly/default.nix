@@ -13,6 +13,8 @@ let
   brightnessctl = config.programs.brightnessctl.package or pkgs.brightnessctl;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.ly = {
     enable = lib.mkOption {
       type = lib.types.bool;

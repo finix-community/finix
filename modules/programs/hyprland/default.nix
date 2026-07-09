@@ -34,6 +34,8 @@ let
   );
 in
 {
+  imports = [ ./test.nix ];
+
   options.programs.hyprland = {
     enable = lib.mkOption {
       type = lib.types.bool;

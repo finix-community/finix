@@ -11,6 +11,8 @@ let
   configFile = format.generate "config.toml" cfg.settings;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.lemurs = {
     enable = lib.mkOption {
       type = lib.types.bool;

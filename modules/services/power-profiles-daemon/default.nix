@@ -8,6 +8,8 @@ let
   cfg = config.services.power-profiles-daemon;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.power-profiles-daemon = {
     enable = lib.mkOption {
       type = lib.types.bool;

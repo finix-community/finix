@@ -39,6 +39,8 @@ let
   };
 in
 {
+  imports = [ ./test.nix ];
+
   options.programs.sway = {
     enable = lib.mkOption {
       type = lib.types.bool;

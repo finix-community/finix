@@ -11,6 +11,8 @@ let
   configFile = format.generate "greetd.toml" cfg.settings;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.greetd = {
     enable = lib.mkOption {
       type = lib.types.bool;

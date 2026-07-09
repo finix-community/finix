@@ -10,6 +10,8 @@ let
   configFile = "${cfg.stateDir}/nzbget.conf";
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.nzbget = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -145,7 +147,7 @@ in
 
         pre = pkgs.writeShellScript "nzbget-pre.sh" ''
           if [ ! -f ${configFile} ]; then
-            ${lib.getExe' config.programs.coreutils "install"} -o ${cfg.user} -g ${cfg.group} -m 0700 ${cfg.package}/share/nzbget/nzbget.conf ${configFile}
+            ${lib.getExe' config.programs.coreutils.package "install"} -o ${cfg.user} -g ${cfg.group} -m 0700 ${cfg.package}/share/nzbget/nzbget.conf ${configFile}
           fi
         '';
       };

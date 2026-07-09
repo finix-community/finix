@@ -7,6 +7,8 @@ let
   cfg = config.programs.nvidia-settings;
 in
 {
+  imports = [ ./test.nix ];
+
   options.programs.nvidia-settings = {
     enable = lib.mkOption {
       type = lib.types.bool;

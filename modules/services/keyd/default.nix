@@ -64,6 +64,8 @@ let
   };
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.keyd = {
     enable = lib.mkOption {
       type = lib.types.bool;

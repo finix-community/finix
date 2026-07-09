@@ -17,6 +17,8 @@ let
   inherit (lib) mkOption mkIf types;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.dbus = {
     enable = mkOption {
       type = types.bool;

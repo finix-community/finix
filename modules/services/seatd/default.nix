@@ -8,6 +8,8 @@ let
   cfg = config.services.seatd;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.seatd = {
     enable = lib.mkOption {
       type = lib.types.bool;

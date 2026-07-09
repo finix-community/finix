@@ -8,6 +8,8 @@ let
   cfg = config.services.flatpak;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.flatpak = {
     enable = lib.mkOption {
       type = lib.types.bool;

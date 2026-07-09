@@ -8,6 +8,8 @@ let
   cfg = config.services.polkit;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.polkit = {
     enable = lib.mkOption {
       type = lib.types.bool;

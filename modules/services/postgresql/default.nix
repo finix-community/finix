@@ -18,6 +18,8 @@ let
   };
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.postgresql = {
     enable = lib.mkOption {
       type = lib.types.bool;

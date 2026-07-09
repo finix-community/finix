@@ -9,6 +9,8 @@ let
   cfg = config.services.keventd;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.keventd = {
     enable = lib.mkOption {
       type = lib.types.bool;

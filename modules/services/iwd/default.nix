@@ -9,6 +9,8 @@ let
   format = pkgs.formats.ini { };
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.iwd = {
     enable = lib.mkOption {
       type = lib.types.bool;

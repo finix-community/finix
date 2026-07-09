@@ -9,6 +9,8 @@ let
   format = pkgs.formats.ini { listsAsDuplicateKeys = true; };
 in
 {
+  imports = [ ./test.nix ];
+
   options.programs.gamemode = {
     enable = lib.mkOption {
       type = lib.types.bool;

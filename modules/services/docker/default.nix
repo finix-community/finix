@@ -13,6 +13,8 @@ let
   configFile = format.generate "daemon.json" cfg.settings;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.docker = {
     enable = lib.mkOption {
       type = lib.types.bool;

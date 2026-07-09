@@ -8,6 +8,8 @@ let
   cfg = config.services.accounts-daemon;
 in
 {
+  imports = [ ./test.nix ];
+
   options.services.accounts-daemon = {
     enable = lib.mkOption {
       type = lib.types.bool;
