@@ -168,19 +168,6 @@ in
       ];
     };
 
-    # Mdevd coldplugs the system during the stage-1 init in initramfs.
-    # See ../../boot/initrd/default.nix
-    boot.initrd.contents = [
-      {
-        target = "/etc/mdev.conf";
-        source = pkgs.writeText "mdev.conf" config.services.mdevd.coldplugRules;
-      }
-      {
-        source = devDiskScript;
-        target = "/etc/mdevd-disk.sh";
-      }
-    ];
-
     environment.etc."mdev.conf".text = config.services.mdevd.hotplugRules;
 
     finit.services.mdevd = {
@@ -233,5 +220,34 @@ in
     };
 
     system.switch.inhibitors.device-manager = "mdevd";
+
+    # build out the default initramfs image
+    boot.initrd = {
+      finit.services.mdevd = {
+        command = "mdevd -D %n -O 2";
+        notify = "s6";
+      };
+
+      finit.run.coldplug = {
+        command = "mdevd-coldplug -O 2";
+        conditions = "service/mdevd/ready";
+        priority = 300;
+      };
+
+      finit.tasks.fs-import = {
+        conditions = [ "run/coldplug/success" ];
+      };
+
+      contents = [
+        {
+          target = "/etc/mdev.conf";
+          source = pkgs.writeText "mdev.conf" config.services.mdevd.coldplugRules;
+        }
+        {
+          source = devDiskScript;
+          target = "/etc/mdevd-disk.sh";
+        }
+      ];
+    };
   };
 }

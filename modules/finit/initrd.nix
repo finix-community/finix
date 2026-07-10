@@ -81,8 +81,36 @@ in
     '';
   };
 
-  config = {
-    boot.initrd.contents = [
+  # build out the default initramfs image
+  config.boot.initrd = {
+    finit.tasks.fs-import = {
+      command = "finix-fs-import";
+      tty = "@console";
+    };
+
+    finit.tasks.mount-all = {
+      command = "finix-mount-all";
+      conditions = "task/fs-import/success";
+    };
+
+    finit.run.setup-stdio = {
+      command = "finix-setup-stdio";
+      priority = 100;
+    };
+
+    finit.run.switch-root = {
+      command = "finix-switch-root";
+      runlevels = "1";
+    };
+
+    finit.ttys.rescue = {
+      runlevels = "1";
+      device = "@console";
+      conditions = "run/switch-root/failure";
+      rescue = true;
+    };
+
+    contents = [
       {
         target = "/init";
         source = "${config.finit.package}/bin/finit";
@@ -228,62 +256,6 @@ in
         '';
       }
       {
-        target = "/etc/finit.conf";
-        source = pkgs.writeText "finit.conf" ''
-          PATH=/bin:/sbin:/usr/bin:/usr/local/bin
-
-          readiness none
-          runlevel 1
-
-          run [S] finix-setup-stdio
-
-          ${lib.optionalString config.services.udev.enable ''
-            run [S] name:udevadm :1 <service/udevd/ready> udevadm settle -t 0
-            run [S] name:udevadm :2 <service/udevd/ready> udevadm control --reload
-            run [S] name:udevadm :3 <service/udevd/ready> udevadm trigger -c add -t devices
-            run [S] name:udevadm :4 <service/udevd/ready> udevadm trigger -c add -t subsystems
-            run [S] name:udevadm :5 <service/udevd/ready> udevadm settle -t 30
-          ''}
-
-          ${lib.optionalString config.services.mdevd.enable ''
-            run [S] name:coldplug <service/mdevd/ready> mdevd-coldplug -O 2
-          ''}
-
-          ${lib.optionalString config.services.gardendevd.enable ''
-            run [S] name:gardendevctl :1 <service/gardendevd/ready> gardendevctl trigger -c add -t all
-            run [S] name:gardendevctl :2 <service/gardendevd/ready> gardendevctl settle -t 30
-          ''}
-
-          task [S] name:fs-import tty:@console \
-            ${lib.optionalString config.services.mdevd.enable "<run/coldplug/success>"} \
-            ${lib.optionalString config.services.gardendevd.enable "<run/gardendevctl:2/success>"} \
-            ${lib.optionalString config.services.udev.enable "<run/udevadm:5/success>"} \
-            ${lib.optionalString config.services.keventd.enable "<service/keventd/ready>"} \
-            finix-fs-import
-
-          task [S] name:mount-all <task/fs-import/success> finix-mount-all
-
-          ${lib.optionalString config.services.gardendevd.enable ''
-            service [S] name:gardendevd notify:s6 <!> gardendevd -K -D %n
-          ''}
-
-          ${lib.optionalString config.services.keventd.enable ''
-            service [S] name:keventd notify:pid <!> keventd -n -c
-          ''}
-
-          ${lib.optionalString config.services.mdevd.enable ''
-            service [S] name:mdevd notify:s6 <!> mdevd -D %n -O 2
-          ''}
-
-          ${lib.optionalString config.services.udev.enable ''
-            service [S] <!> notify:s6 /bin/udevd --ready-notify=%n
-          ''}
-
-          run [1] name:switch-root finix-switch-root
-          tty [1] <run/switch-root/failure> @console rescue
-        '';
-      }
-      {
         target = "/etc/fstab";
         source = pkgs.writeText "fstab" ''
           # fstab.conf
@@ -337,18 +309,6 @@ in
       { source = "${config.finit.package}/lib/finit/rescue.conf"; }
       { source = "${config.finit.package}/lib/finit/tmpfiles.d"; }
       { source = "${config.finit.package}/lib/tmpfiles.d"; }
-    ]
-    ++ lib.optionals config.services.keventd.enable [
-      {
-        target = "/etc/udev/rules.d"; # keventd reads /etc - avoids collision
-        source = "${config.finit.package}/lib/udev/rules.d";
-      }
-    ]
-    ++ lib.optionals config.services.gardendevd.enable [
-      {
-        target = "/etc/udev/rules.d";
-        source = "${config.services.gardendevd.package}/lib/udev/rules.d";
-      }
     ];
   };
 }
