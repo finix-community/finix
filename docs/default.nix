@@ -53,8 +53,6 @@ pkgs.runCommandLocal "finix-options-doc" { nativeBuildInputs = [ pkgs.ndg ]; } '
     --title finix \
     --module-options ${doc.optionsJSON}/share/doc/nixos/options.json \
     --manpage-urls ${./manpage-urls.json} \
-    --options-depth 1 \
-    --generate-search \
     --input-dir ${./.} \
     --output-dir "$out"
 ''
