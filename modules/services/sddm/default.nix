@@ -65,7 +65,7 @@ in
         ServerPath = "${config.programs.xorg.package.out}/bin/X";
         XephyrPath = "${config.programs.xorg.package.out}/bin/Xephyr";
         SessionCommand = "${pkgs.kdePackages.sddm}/share/sddm/scripts/Xsession";
-        SessionDir = "${pkgs.openbox}/share/xsessions"; # "${dmcfg.sessionData.desktops}/share/xsessions";
+        SessionDir = "/run/current-system/sw/share/xsessions";
         XauthPath = "${pkgs.xauth}/bin/xauth";
         # DisplayCommand = toString Xsetup;
         # DisplayStopCommand = toString Xstop;
