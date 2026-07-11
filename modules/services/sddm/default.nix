@@ -139,6 +139,7 @@ in
         session  required       pam_succeed_if.so audit quiet_success user = sddm
         session  required       pam_env.so conffile=/etc/security/pam_env.conf readenv=0
         ${lib.optionalString config.services.elogind.enable "session   optional       ${pkgs.elogind}/lib/security/pam_elogind.so"}
+        ${lib.optionalString config.services.seatd.enable "session   optional       ${pkgs.pam_rundir}/lib/security/pam_rundir.so"}
         session  optional       pam_keyinit.so force revoke
         session  optional       pam_permit.so
       '';
