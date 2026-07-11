@@ -43,8 +43,16 @@ in
 
     services.sddm.settings = {
       General = {
-        HaltCommand = "/run/current-system/sw/bin/loginctl poweroff";
-        RebootCommand = "/run/current-system/sw/bin/loginctl reboot";
+        HaltCommand =
+          if config.services.elogind.enable then
+            "/run/current-system/sw/bin/loginctl poweroff"
+          else
+            "${config.providers.privileges.command} /run/current-system/sw/bin/poweroff";
+        RebootCommand =
+          if config.services.elogind.enable then
+            "/run/current-system/sw/bin/loginctl reboot"
+          else
+            "${config.providers.privileges.command} /run/current-system/sw/bin/reboot";
         Numlock = "none";
 
         # Implementation is done via pkgs/applications/display-managers/sddm/sddm-default-session.patch
@@ -96,6 +104,19 @@ in
     environment.etc."sddm.conf".source = configFile;
     environment.pathsToLink = [
       "/share/sddm"
+    ];
+
+    providers.privileges.rules = lib.mkIf config.services.seatd.enable [
+      {
+        command = "/run/current-system/sw/bin/reboot";
+        users = [ "sddm" ];
+        requirePassword = false;
+      }
+      {
+        command = "/run/current-system/sw/bin/poweroff";
+        users = [ "sddm" ];
+        requirePassword = false;
+      }
     ];
 
     finit.services.sddm = {
