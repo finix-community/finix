@@ -116,6 +116,29 @@ let
       };
     };
 
+  # scriptOpts: `script` convenience option for task and run stanzas only
+  scriptOpts =
+    { name, config, ... }:
+    {
+      options.script = lib.mkOption {
+        type = lib.types.lines;
+        default = "";
+        description = ''
+          Shell commands executed as the main process.
+        '';
+      };
+
+      config = lib.mkIf (config.script != "") {
+        command = lib.mkForce (
+          pkgs.writeScript (lib.replaceStrings [ "@" ] [ "_" ] name) ''
+            #!/bin/sh
+            set -eu
+            ${config.script}
+          ''
+        );
+      };
+    };
+
   # serviceOpts: options specific to service stanzas only
   serviceOpts = {
     options = {
@@ -307,6 +330,7 @@ in
         attrsOf (submodule [
           baseOpts
           execOpts
+          scriptOpts
         ]);
       default = { };
       description = ''
@@ -323,6 +347,7 @@ in
           baseOpts
           execOpts
           runOpts
+          scriptOpts
         ]);
       default = { };
       description = ''
@@ -371,6 +396,16 @@ in
         tty = lib.concatStringsSep "\n" (
           lib.concatMap (v: lib.optional v.enable (serviceStr "tty" v)) (lib.attrValues cfg.finit.ttys)
         );
+
+        mkScriptFile =
+          _: svc:
+          lib.optional (svc.enable && svc.script != "") {
+            source = svc.command;
+          };
+
+        scriptFiles = lib.concatLists (
+          lib.mapAttrsToList mkScriptFile cfg.finit.tasks ++ lib.mapAttrsToList mkScriptFile cfg.finit.run
+        );
       in
       [
         {
@@ -390,6 +425,7 @@ in
         }
       ]
       ++ serviceTree
-      ++ taskTree;
+      ++ taskTree
+      ++ scriptFiles;
   };
 }
