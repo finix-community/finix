@@ -76,6 +76,15 @@ in
 
         ServerArguments = "-logverbose 6 -xkbdir ${config.programs.xorg.xkb.dir} -terminate -verbose 7";
       };
+      Wayland = {
+        SessionCommand = "${pkgs.kdePackages.sddm}/share/sddm/scripts/wayland-session";
+        SessionDir = "/run/current-system/sw/share/wayland-sessions";
+
+        # Path to the user session log file
+        SessionLogFile = ".local/share/sddm/wayland-session.log";
+
+        # EnableHiDPI = cfg.enableHidpi;
+      };
     };
 
     finit.tmpfiles.rules = [
