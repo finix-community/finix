@@ -216,10 +216,6 @@ in
         };
       };
 
-      finit.tasks.fs-import = {
-        conditions = [ "run/gardendevctl:2/success" ];
-      };
-
       contents = [
         {
           target = "/etc/udev/rules.d";

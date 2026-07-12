@@ -341,10 +341,6 @@ in
         };
       };
 
-      finit.tasks.fs-import = {
-        conditions = [ "run/udevadm:5/success" ];
-      };
-
       contents = [
         {
           target = "/etc/udev/rules.d";

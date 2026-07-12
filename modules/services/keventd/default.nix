@@ -140,10 +140,6 @@ in
         notify = "pid";
       };
 
-      finit.tasks.fs-import = {
-        conditions = [ "service/keventd/ready" ];
-      };
-
       contents = [
         {
           target = "/etc/udev/rules.d";

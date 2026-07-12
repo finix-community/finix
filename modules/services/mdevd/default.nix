@@ -234,10 +234,6 @@ in
         priority = 300;
       };
 
-      finit.tasks.fs-import = {
-        conditions = [ "run/coldplug/success" ];
-      };
-
       contents = [
         {
           target = "/etc/mdev.conf";
