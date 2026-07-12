@@ -51,12 +51,19 @@
     (lib.mkIf config.boot.initrd.supportedFilesystems.lvm.enable {
       boot.initrd.kernelModules = [ "dm_mod" ];
 
-      boot.initrd.fileSystemImportCommands = lib.mkOrder 600 (
-        if config.services.udev.enable || !config.services.mdevd.enable then
-          "lvm vgchange -ay"
-        else
-          "lvm vgchange -ay --noudevsync\ndmsetup mknodes"
-      );
+      boot.initrd.finit.tasks.lvm = {
+        conditions =
+          lib.optionals config.services.mdevd.enable [ "run/coldplug/success" ]
+          ++ lib.optionals config.services.gardendevd.enable [ "run/gardendevctl:2/success" ]
+          ++ lib.optionals config.services.udev.enable [ "run/udevadm:5/success" ]
+          ++ lib.optionals config.services.keventd.enable [ "service/keventd/ready" ]
+          ++ lib.optional config.boot.initrd.supportedFilesystems.luks.enable [ "task/luks/success" ];
+
+        script = ''
+          lvm vgchange -ay --noudevsync
+          dmsetup mknodes
+        '';
+      };
     })
   ];
 }
