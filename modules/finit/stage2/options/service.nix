@@ -1,4 +1,8 @@
-{ lib, cfg, program }:
+{
+  lib,
+  cfg,
+  program,
+}:
 { config, ... }:
 {
   options = {
