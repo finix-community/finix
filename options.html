@@ -414,7 +414,7 @@
     <details class="toc-category">
       <summary title="boot.initrd">
         <span>boot.initrd</span>
-        <span class="toc-count">86</span>
+        <span class="toc-count">87</span>
       </summary>
       <ul>
         
@@ -911,6 +911,14 @@
         <li>
           <a href='#option-boot.initrd.package' title="boot.initrd.package">
             package
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-boot.initrd.prepend' title="boot.initrd.prepend">
+            prepend
             
             
           </a>
@@ -3239,6 +3247,52 @@
         <li>
           <a href='#option-hardware.console.setvesablank' title="hardware.console.setvesablank">
             setvesablank
+            
+            
+          </a>
+        </li>
+        
+      </ul>
+    </details>
+  </li>
+  
+  <li>
+    <details class="toc-category">
+      <summary title="hardware.cpu">
+        <span>hardware.cpu</span>
+        <span class="toc-count">4</span>
+      </summary>
+      <ul>
+        
+
+        
+        <li>
+          <a href='#option-hardware.cpu.amd.microcodePackage' title="hardware.cpu.amd.microcodePackage">
+            amd.microcodePackage
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-hardware.cpu.amd.updateMicrocode' title="hardware.cpu.amd.updateMicrocode">
+            amd.updateMicrocode
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-hardware.cpu.intel.microcodePackage' title="hardware.cpu.intel.microcodePackage">
+            intel.microcodePackage
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-hardware.cpu.intel.updateMicrocode' title="hardware.cpu.intel.updateMicrocode">
+            intel.updateMicrocode
             
             
           </a>
@@ -10978,6 +11032,18 @@ builds, during board bringup, or similar.</p>
 </body></html></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/boot/initrd.nix" target="_blank">&lt;finix/modules/boot/initrd.nix&gt;</a></code></div>
 </div>
+<div class="option" id="option-boot.initrd.prepend">
+  <h3 class="option-name">
+    <a href="#option-boot.initrd.prepend" class="option-anchor">boot.initrd.prepend</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>Other initrd files to prepend to the final initrd we are building.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/boot/initrd.nix" target="_blank">&lt;finix/modules/boot/initrd.nix&gt;</a></code></div>
+</div>
 <div class="option" id="option-boot.initrd.supportedFilesystems._9p_.enable">
   <h3 class="option-name">
     <a href="#option-boot.initrd.supportedFilesystems._9p_.enable" class="option-anchor">boot.initrd.supportedFilesystems."9p".enable</a>
@@ -14720,6 +14786,54 @@ hardware.console.binaryKeyMap is set.</p>
 </body></html></div>
   <div class="option-default">Default: <code>true</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/console.nix" target="_blank">&lt;finix/modules/hardware/console.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-hardware.cpu.amd.microcodePackage">
+  <h3 class="option-name">
+    <a href="#option-hardware.cpu.amd.microcodePackage" class="option-anchor">hardware.cpu.amd.microcodePackage</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>&lt;derivation amd-ucode-20260622&gt;</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/cpu/amd-ucode.nix" target="_blank">&lt;finix/modules/hardware/cpu/amd-ucode.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-hardware.cpu.amd.updateMicrocode">
+  <h3 class="option-name">
+    <a href="#option-hardware.cpu.amd.updateMicrocode" class="option-anchor">hardware.cpu.amd.updateMicrocode</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Update the CPU microcode for AMD processors.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/cpu/amd-ucode.nix" target="_blank">&lt;finix/modules/hardware/cpu/amd-ucode.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-hardware.cpu.intel.microcodePackage">
+  <h3 class="option-name">
+    <a href="#option-hardware.cpu.intel.microcodePackage" class="option-anchor">hardware.cpu.intel.microcodePackage</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>&lt;derivation microcode-intel-20260512&gt;</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/cpu/intel-ucode.nix" target="_blank">&lt;finix/modules/hardware/cpu/intel-ucode.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-hardware.cpu.intel.updateMicrocode">
+  <h3 class="option-name">
+    <a href="#option-hardware.cpu.intel.updateMicrocode" class="option-anchor">hardware.cpu.intel.updateMicrocode</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Update the CPU microcode for Intel processors.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/cpu/intel-ucode.nix" target="_blank">&lt;finix/modules/hardware/cpu/intel-ucode.nix&gt;</a></code></div>
 </div>
 <div class="option" id="option-hardware.firmware">
   <h3 class="option-name">
