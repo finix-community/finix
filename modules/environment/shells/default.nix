@@ -1,12 +1,9 @@
 {
   config,
-  pkgs,
   lib,
+  utils,
   ...
 }:
-let
-  utils = import (pkgs.path + "/nixos/lib/utils.nix") { inherit config pkgs lib; };
-in
 {
   options.environment.shells = lib.mkOption {
     type = with lib.types; listOf (either shellPackage path);

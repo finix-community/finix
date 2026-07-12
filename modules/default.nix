@@ -43,6 +43,7 @@ in
       ./fonts
       ./hardware
       ./i18n
+      ./lib
       ./misc
       ./networking
       ./nixos

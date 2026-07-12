@@ -195,5 +195,33 @@ in
         fi
       '';
     };
+
+    # build out the default initramfs image
+    boot.initrd = {
+      finit.services.gardendevd = {
+        command = "gardendevd -K -D %n";
+        notify = "s6";
+      };
+
+      finit.run = {
+        "gardendevctl@1" = {
+          command = "gardendevctl trigger -c add -t all";
+          conditions = "service/gardendevd/ready";
+          priority = 250;
+        };
+        "gardendevctl@2" = {
+          command = "gardendevctl settle -t 30";
+          conditions = "service/gardendevd/ready";
+          priority = 260;
+        };
+      };
+
+      contents = [
+        {
+          target = "/etc/udev/rules.d";
+          source = "${config.services.gardendevd.package}/lib/udev/rules.d";
+        }
+      ];
+    };
   };
 }

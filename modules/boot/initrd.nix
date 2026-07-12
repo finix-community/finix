@@ -87,6 +87,10 @@ in
   };
 
   config = {
+    warnings = lib.optionals (cfg.fileSystemImportCommands != "") [
+      "boot.initrd.fileSystemImportCommands has been deprecated; please use boot.initrd.finit.tasks instead"
+    ];
+
     boot.initrd.supportedFilesystems = lib.mapAttrs' (
       _: v: lib.nameValuePair v.fsType { enable = true; }
     ) (lib.filterAttrs (_: fs: fs.neededForBoot) config.fileSystems);

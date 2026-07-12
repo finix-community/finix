@@ -304,15 +304,50 @@ in
       '';
     };
 
-    boot.initrd.contents = [
-      # { target = "/etc/udev/rules.d"; source = "${pkgs.eudev}/var/lib/udev/rules.d"; }
-      {
-        target = "/etc/udev/rules.d";
-        source = udevRulesEarly;
-      }
-      { source = "${pkgs.eudev}/lib/udev"; }
-    ];
-
     system.switch.inhibitors.device-manager = "udev";
+
+    # build out the default initramfs image
+    boot.initrd = {
+      finit.services.udevd = {
+        command = "/bin/udevd --ready-notify=%n";
+        notify = "s6";
+      };
+
+      finit.run = {
+        "udevadm@1" = {
+          command = "udevadm settle -t 0";
+          conditions = "service/udevd/ready";
+          priority = 200;
+        };
+        "udevadm@2" = {
+          command = "udevadm control --reload";
+          conditions = "service/udevd/ready";
+          priority = 210;
+        };
+        "udevadm@3" = {
+          command = "udevadm trigger -c add -t devices";
+          conditions = "service/udevd/ready";
+          priority = 220;
+        };
+        "udevadm@4" = {
+          command = "udevadm trigger -c add -t subsystems";
+          conditions = "service/udevd/ready";
+          priority = 230;
+        };
+        "udevadm@5" = {
+          command = "udevadm settle -t 30";
+          conditions = "service/udevd/ready";
+          priority = 240;
+        };
+      };
+
+      contents = [
+        {
+          target = "/etc/udev/rules.d";
+          source = udevRulesEarly;
+        }
+        { source = "${pkgs.eudev}/lib/udev"; }
+      ];
+    };
   };
 }
