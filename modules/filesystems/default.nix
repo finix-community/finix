@@ -110,36 +110,41 @@ let
 
   sanitizeName = s: lib.replaceStrings [ "/" " " ] [ "-" "-" ] (lib.removePrefix "/" s);
 
-  makeEncryptedSwapTask = sw: rec {
-    name = "cryptswap-${sanitizeName sw.device}";
-    value =
-      let
-        re = sw.randomEncryption;
-        options = sw.options
-          ++ lib.optional (sw.priority != null) "pri=${toString sw.priority}"
-          ++ lib.optional (sw.discardPolicy != null) (
-            if sw.discardPolicy == "both" then "discard" else "discard=${sw.discardPolicy}"
+  makeEncryptedSwapTask =
+    sw:
+    let
+      name = "cryptswap-${sanitizeName sw.device}";
+    in
+    {
+      inherit name;
+      value =
+        let
+          re = sw.randomEncryption;
+          options = sw.options
+            ++ lib.optional (sw.priority != null) "pri=${toString sw.priority}"
+            ++ lib.optional (sw.discardPolicy != null) (
+              if sw.discardPolicy == "both" then "discard" else "discard=${sw.discardPolicy}"
+            );
+        in
+        {
+          description = "Encrypted swap device on ${sw.device}";
+          runlevels = "S";
+          command = toString (
+            pkgs.writeShellScript name ''
+              set -eu
+              ${pkgs.cryptsetup}/bin/cryptsetup plainOpen \
+                -c ${lib.escapeShellArg re.cipher} \
+                -s ${toString re.keySize} \
+                ${lib.optionalString (re.sectorSize != 0) "--sector-size ${toString re.sectorSize}"} \
+                ${lib.optionalString re.allowDiscards "--allow-discards"} \
+                -d ${lib.escapeShellArg re.source} \
+                ${lib.escapeShellArg sw.device} ${lib.escapeShellArg name}
+              ${pkgs.util-linuxMinimal}/bin/mkswap /dev/mapper/${name}
+              ${pkgs.util-linuxMinimal}/bin/swapon -o ${lib.escapeShellArg (lib.concatStringsSep "," options)} /dev/mapper/${name}
+            ''
           );
-      in
-      {
-        description = "Encrypted swap device on ${sw.device}";
-        runlevels = "S";
-        command = toString (
-          pkgs.writeShellScript name ''
-            set -eu
-            ${pkgs.cryptsetup}/bin/cryptsetup plainOpen \
-              -c ${lib.escapeShellArg re.cipher} \
-              -s ${toString re.keySize} \
-              ${lib.optionalString (re.sectorSize != 0) "--sector-size ${toString re.sectorSize}"} \
-              ${lib.optionalString re.allowDiscards "--allow-discards"} \
-              -d ${lib.escapeShellArg re.source} \
-              ${lib.escapeShellArg sw.device} ${lib.escapeShellArg name}
-            ${pkgs.util-linux}/bin/mkswap /dev/mapper/${name}
-            ${pkgs.util-linux}/bin/swapon -o ${lib.escapeShellArg (lib.concatStringsSep "," options)} /dev/mapper/${name}
-          ''
-        );
-      };
-  };
+        };
+    };
 in
 {
   imports = [
