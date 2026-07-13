@@ -68,17 +68,23 @@
         "aes_generic"
       ];
 
-      boot.initrd.fileSystemImportCommands = lib.mkOrder 500 (
-        lib.concatStringsSep "\n" (
-          lib.mapAttrsToList (
+      boot.initrd.finit.tasks.luks =
+        let
+          devices = lib.filterAttrs (_: fs: fs.fsType == "luks") config.fileSystems;
+        in
+        lib.mkIf (devices != { }) {
+          conditions =
+            lib.optionals config.services.mdevd.enable [ "run/coldplug/success" ]
+            ++ lib.optionals config.services.gardendevd.enable [ "run/gardendevctl:2/success" ]
+            ++ lib.optionals config.services.udev.enable [ "run/udevadm:5/success" ]
+            ++ lib.optionals config.services.keventd.enable [ "service/keventd/ready" ];
+
+          tty = "@console";
+          script = lib.concatMapAttrsStringSep "\n" (
             name: dev:
-            let
-              fsOpts = lib.concatStringsSep " " dev.options;
-            in
-            "cryptsetup open ${fsOpts} ${dev.device} ${name}"
-          ) (lib.filterAttrs (_: fs: fs.fsType == "luks") config.fileSystems)
-        )
-      );
+            "DM_DISABLE_UDEV=1 cryptsetup open ${lib.concatStringsSep " " dev.options} ${dev.device} ${name}"
+          ) devices;
+        };
     })
   ];
 }
