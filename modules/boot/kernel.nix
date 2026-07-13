@@ -128,7 +128,6 @@
       '';
     };
 
-
     boot.resumeDevice = lib.mkOption {
       type = lib.types.str;
       default = "";

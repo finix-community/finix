@@ -147,7 +147,13 @@ let
         discardPolicy = lib.mkOption {
           default = null;
           example = "both";
-          type = with lib.types; nullOr (enum [ "once" "pages" "both" ]);
+          type =
+            with lib.types;
+            nullOr (enum [
+              "once"
+              "pages"
+              "both"
+            ]);
           description = ''
             Specify the discard policy for the swap device. If "once",
             then the discard operation will be performed once, at swapon
