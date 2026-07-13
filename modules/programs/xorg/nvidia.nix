@@ -8,14 +8,20 @@ let
   cfg = config.hardware.nvidia;
 
   igpuId =
-    if cfg.prime.intelBusId != null then "modesetting"
-    else if cfg.prime.amdgpuBusId != null then "amdgpu"
-    else null;
+    if cfg.prime.intelBusId != null then
+      "modesetting"
+    else if cfg.prime.amdgpuBusId != null then
+      "amdgpu"
+    else
+      null;
 
   screenDevice =
-     if cfg.prime.offload.enable && igpuId != null then igpuId
-      else if cfg.prime.sync.enable && cfg.prime.nvidiaBusId != null then "nvidia"
-      else "Device-nvidia[0]";
+    if cfg.prime.offload.enable && igpuId != null then
+      igpuId
+    else if cfg.prime.sync.enable && cfg.prime.nvidiaBusId != null then
+      "nvidia"
+    else
+      "Device-nvidia[0]";
 
 in
 {

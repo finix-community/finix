@@ -1,6 +1,9 @@
 { config, lib, ... }:
 let
-  common = import ./common.nix { inherit config lib; pkgs = null; };
+  common = import ./common.nix {
+    inherit config lib;
+    pkgs = null;
+  };
   inherit (common) cfg primeEnabled gpuIDs;
 in
 {

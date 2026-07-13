@@ -1,4 +1,8 @@
-{ config, lib, pkgs }:
+{
+  config,
+  lib,
+  pkgs,
+}:
 let
   cfg = config.hardware.nvidia;
 
@@ -57,7 +61,10 @@ in
   ];
 
   igpuId =
-    if cfg.prime.intelBusId != null then "modesetting"
-    else if cfg.prime.amdgpuBusId != null then "amdgpu"
-    else null;
+    if cfg.prime.intelBusId != null then
+      "modesetting"
+    else if cfg.prime.amdgpuBusId != null then
+      "amdgpu"
+    else
+      null;
 }

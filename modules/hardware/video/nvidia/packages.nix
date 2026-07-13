@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   common = import ./common.nix { inherit config lib pkgs; };
   inherit (common) cfg combineIcdPkgs offloadScript;
@@ -25,9 +30,10 @@ in
 
     hardware.firmware = lib.optional cfg.gsp.enable cfg.package.firmware;
 
-    environment.systemPackages =
-      [ cfg.package.bin ]
-      ++ lib.optionals cfg.nvidiaSettings [ cfg.package.settings ]
-      ++ lib.optionals cfg.prime.offload.enableOffloadCmd [ offloadScript ];
+    environment.systemPackages = [
+      cfg.package.bin
+    ]
+    ++ lib.optionals cfg.nvidiaSettings [ cfg.package.settings ]
+    ++ lib.optionals cfg.prime.offload.enableOffloadCmd [ offloadScript ];
   };
 }
