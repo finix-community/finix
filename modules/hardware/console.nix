@@ -22,7 +22,10 @@ let
   fontEnv = pkgs.buildEnv {
     name = "console-fonts";
     paths = [ pkgs.kbd ] ++ cfg.packages;
-    pathsToLink = [ "/share/consolefonts" "/share/kbd/consolefonts" ];
+    pathsToLink = [
+      "/share/consolefonts"
+      "/share/kbd/consolefonts"
+    ];
   };
 
   setfontCmd =
@@ -31,12 +34,13 @@ let
     else
       let
         fontArg = lib.escapeShellArg cfg.font;
-        mapArg  = lib.optionalString (cfg.keyMap != null)
-          " -m ${fontEnv}/share/consolefonts/${lib.escapeShellArg cfg.keyMap}.acm 2>/dev/null || true";
+        mapArg = lib.optionalString (
+          cfg.keyMap != null
+        ) " -m ${fontEnv}/share/consolefonts/${lib.escapeShellArg cfg.keyMap}.acm 2>/dev/null || true";
       in
       "${pkgs.kbd}/bin/setfont ${fontArg} -C /dev/console || ${pkgs.kbd}/bin/setfont ${fontEnv}/share/consolefonts/${fontArg} -C /dev/console${mapArg}";
 
-  colorsScript = lib.optionalString (cfg.colors != []) (
+  colorsScript = lib.optionalString (cfg.colors != [ ]) (
     let
       inherit (lib) imap0 concatStringsSep;
       esc = "\033]P";
@@ -118,10 +122,22 @@ in
           a Nord-like palette. Leave empty to use defaults.
         '';
         example = [
-          "2E3440" "BF616A" "A3BE8C" "EBCB8B"
-          "81A1C1" "B48EAD" "88C0D0" "E5E9F0"
-          "4C566A" "BF616A" "A3BE8C" "EBCB8B"
-          "81A1C1" "B48EAD" "8FBCBB" "ECEFF4"
+          "2E3440"
+          "BF616A"
+          "A3BE8C"
+          "EBCB8B"
+          "81A1C1"
+          "B48EAD"
+          "88C0D0"
+          "E5E9F0"
+          "4C566A"
+          "BF616A"
+          "A3BE8C"
+          "EBCB8B"
+          "81A1C1"
+          "B48EAD"
+          "8FBCBB"
+          "ECEFF4"
         ];
       };
     };
@@ -131,12 +147,13 @@ in
     environment.systemPackages = [ pkgs.kbd ] ++ cfg.packages;
 
     # Include binary keymap in the initramfs, and optionally the console font.
-    boot.initrd.contents =
-      [ { source = cfg.binaryKeyMap; } ]
-      ++ lib.optional (cfg.earlySetup && cfg.font != null) {
-        source = "${fontEnv}/share/consolefonts/${cfg.font}";
-        target = "/console-font";
-      };
+    boot.initrd.contents = [
+      { source = cfg.binaryKeyMap; }
+    ]
+    ++ lib.optional (cfg.earlySetup && cfg.font != null) {
+      source = "${fontEnv}/share/consolefonts/${cfg.font}";
+      target = "/console-font";
+    };
 
     # Use the device-manager to load the keymap rather
     # than injecting somewhere into the early boot script.
@@ -158,7 +175,7 @@ in
         conditions = "service/syslogd/ready";
       };
 
-    finit.tasks.console-setup = lib.mkIf (cfg.font != null || cfg.colors != []) {
+    finit.tasks.console-setup = lib.mkIf (cfg.font != null || cfg.colors != [ ]) {
       description = "Set console font and colors";
       runlevels = "S";
       conditions = "service/syslogd/ready";
@@ -167,7 +184,6 @@ in
         ${colorsScript}
       '';
     };
-
 
     boot.initrd.fileSystemImportCommands = lib.mkIf (cfg.earlySetup && cfg.font != null) ''
       ${pkgs.kbd}/bin/setfont /console-font -C /dev/console 2>/dev/null || true
