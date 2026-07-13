@@ -132,5 +132,20 @@ in
     };
 
     system.switch.inhibitors.device-manager = "keventd";
+
+    # build out the default initramfs image
+    boot.initrd = {
+      finit.services.keventd = {
+        command = "${config.finit.package}/libexec/finit/keventd -n -c";
+        notify = "pid";
+      };
+
+      contents = [
+        {
+          target = "/etc/udev/rules.d";
+          source = "${config.finit.package}/lib/udev/rules.d";
+        }
+      ];
+    };
   };
 }

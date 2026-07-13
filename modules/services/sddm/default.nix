@@ -43,8 +43,16 @@ in
 
     services.sddm.settings = {
       General = {
-        HaltCommand = "/run/current-system/sw/bin/loginctl poweroff";
-        RebootCommand = "/run/current-system/sw/bin/loginctl reboot";
+        HaltCommand =
+          if config.services.elogind.enable then
+            "/run/current-system/sw/bin/loginctl poweroff"
+          else
+            "${config.providers.privileges.command} /run/current-system/sw/bin/poweroff";
+        RebootCommand =
+          if config.services.elogind.enable then
+            "/run/current-system/sw/bin/loginctl reboot"
+          else
+            "${config.providers.privileges.command} /run/current-system/sw/bin/reboot";
         Numlock = "none";
 
         # Implementation is done via pkgs/applications/display-managers/sddm/sddm-default-session.patch
@@ -57,7 +65,7 @@ in
         ServerPath = "${config.programs.xorg.package.out}/bin/X";
         XephyrPath = "${config.programs.xorg.package.out}/bin/Xephyr";
         SessionCommand = "${pkgs.kdePackages.sddm}/share/sddm/scripts/Xsession";
-        SessionDir = "${pkgs.openbox}/share/xsessions"; # "${dmcfg.sessionData.desktops}/share/xsessions";
+        SessionDir = "/run/current-system/sw/share/xsessions";
         XauthPath = "${pkgs.xauth}/bin/xauth";
         # DisplayCommand = toString Xsetup;
         # DisplayStopCommand = toString Xstop;
@@ -67,6 +75,15 @@ in
         SessionLogFile = ".local/share/sddm/xorg-session.log";
 
         ServerArguments = "-logverbose 6 -xkbdir ${config.programs.xorg.xkb.dir} -terminate -verbose 7";
+      };
+      Wayland = {
+        SessionCommand = "${pkgs.kdePackages.sddm}/share/sddm/scripts/wayland-session";
+        SessionDir = "/run/current-system/sw/share/wayland-sessions";
+
+        # Path to the user session log file
+        SessionLogFile = ".local/share/sddm/wayland-session.log";
+
+        # EnableHiDPI = cfg.enableHidpi;
       };
     };
 
@@ -96,6 +113,19 @@ in
     environment.etc."sddm.conf".source = configFile;
     environment.pathsToLink = [
       "/share/sddm"
+    ];
+
+    providers.privileges.rules = lib.mkIf config.services.seatd.enable [
+      {
+        command = "/run/current-system/sw/bin/reboot";
+        users = [ "sddm" ];
+        requirePassword = false;
+      }
+      {
+        command = "/run/current-system/sw/bin/poweroff";
+        users = [ "sddm" ];
+        requirePassword = false;
+      }
     ];
 
     finit.services.sddm = {
@@ -128,19 +158,25 @@ in
       '';
 
       sddm-greeter.text = ''
+        # Authentication management.
         auth     required       pam_succeed_if.so audit quiet_success user = sddm
         auth     optional       pam_permit.so
 
+        # Account management.
         account  required       pam_succeed_if.so audit quiet_success user = sddm
         account  sufficient     pam_unix.so
 
+        # Password management.
         password required       pam_deny.so
 
+        # Session management.
         session  required       pam_succeed_if.so audit quiet_success user = sddm
         session  required       pam_env.so conffile=/etc/security/pam_env.conf readenv=0
-        session  optional       ${pkgs.elogind}/lib/security/pam_elogind.so
+        ${lib.optionalString config.services.elogind.enable "session   optional       ${pkgs.elogind}/lib/security/pam_elogind.so"}
+        ${lib.optionalString config.services.seatd.enable "session   optional       ${pkgs.pam_rundir}/lib/security/pam_rundir.so"}
         session  optional       pam_keyinit.so force revoke
         session  optional       pam_permit.so
+        session  required       pam_limits.so
       '';
 
       sddm-autologin.text = ''

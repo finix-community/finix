@@ -5,15 +5,16 @@
   ...
 }:
 let
-  cfg = config.programs.labwc;
+  cfg = config.programs.mango;
 
-  sessionFile = pkgs.writeTextDir "share/wayland-sessions/labwc.desktop" ''
+  sessionFile = pkgs.writeTextDir "share/wayland-sessions/mango.desktop" ''
     [Desktop Entry]
-    Comment=A wayland stacking compositor
-    DesktopNames=labwc;wlroots
-    Exec=${pkgs.dbus}/bin/dbus-run-session -- ${lib.getExe cfg.package} ${lib.escapeShellArgs cfg.extraArgs}
-    Icon=labwc
-    Name=labwc
+    Encoding=UTF-8
+    Name=Mango
+    DesktopNames=mango;wlroots
+    Comment=mango WM
+    Exec=${pkgs.dbus}/bin/dbus-run-session -- ${lib.getExe cfg.package}
+    Icon=mango
     Type=Application
   '';
 
@@ -34,35 +35,29 @@ let
   );
 in
 {
-  options.programs.labwc = {
+  imports = [
+    (lib.mkRenamedOptionModule [ "programs" "mangowc" ] [ "programs" "mango" ])
+  ];
+
+  options.programs.mango = {
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
       description = ''
-        Whether to enable [labwc](${pkgs.labwc.meta.homepage}).
+        Whether to enable [mango](${pkgs.mango.meta.homepage}).
       '';
     };
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.labwc.override {
+      default = pkgs.mango.override {
         inherit libinput;
 
-        wlroots_0_20 = pkgs.wlroots_0_20.override { inherit libinput; };
-        enableSystemd = false;
+        wlroots_0_19 = pkgs.wlroots_0_19.override { inherit libinput; };
       };
-      defaultText = lib.literalExpression "pkgs.labwc";
+      defaultText = lib.literalExpression "pkgs.mango";
       description = ''
-        The package to use for `labwc`.
-      '';
-    };
-
-    extraArgs = lib.mkOption {
-      type = with lib.types; listOf str;
-      default = [ ];
-      description = ''
-        Additional arguments to pass to `labwc`. See {manpage}`labwc(1)`
-        for additional details.
+        The package to use for `mango`.
       '';
     };
   };

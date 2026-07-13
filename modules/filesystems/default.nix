@@ -1,14 +1,11 @@
 {
   config,
-  pkgs,
   lib,
   pkgs,
   utils,
   ...
 }:
 let
-  utils = import (pkgs.path + "/nixos/lib/utils.nix") { inherit config pkgs lib; };
-
   # https://wiki.archlinux.org/index.php/fstab#Filepath_spaces
   escape = string: lib.replaceStrings [ " " "\t" ] [ "\\040" "\\011" ] string;
 

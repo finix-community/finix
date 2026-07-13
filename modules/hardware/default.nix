@@ -25,6 +25,8 @@ in
     ./graphics.nix
     ./i2c.nix
     ./uinput.nix
+    ./cpu/amd-ucode.nix
+    ./cpu/intel-ucode.nix
     ./video/nvidia.nix
   ];
 

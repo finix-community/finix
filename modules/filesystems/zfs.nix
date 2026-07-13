@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  utils,
   ...
 }:
 {
@@ -90,16 +91,32 @@
       ];
     })
 
-    (lib.mkIf config.boot.initrd.supportedFilesystems.zfs.enable {
-      boot.initrd = {
-        kernelModules = [ "zfs" ];
-        fileSystemImportCommands = lib.concatStringsSep "\n" (
-          map (
-            name: "zpool list ${name} >/dev/null 2>&1 || zpool import -f ${name}"
-          ) config.boot.zfs.importPools
-          ++ map (name: "zfs load-key ${name}") config.boot.zfs.loadKeys
-        );
-      };
-    })
+    (lib.mkIf config.boot.initrd.supportedFilesystems.zfs.enable (
+      let
+        keysFor = pool: lib.filter (k: lib.head (lib.splitString "/" k) == pool) config.boot.zfs.loadKeys;
+      in
+      {
+        boot.initrd = {
+          kernelModules = [ "zfs" ];
+
+          finit.tasks = lib.genAttrs' config.boot.zfs.importPools (
+            pool:
+            lib.nameValuePair "zpool-import-${utils.escapePath pool}" {
+              conditions =
+                lib.optionals config.services.mdevd.enable [ "run/coldplug/success" ]
+                ++ lib.optionals config.services.gardendevd.enable [ "run/gardendevctl:2/success" ]
+                ++ lib.optionals config.services.udev.enable [ "run/udevadm:5/success" ]
+                ++ lib.optionals config.services.keventd.enable [ "service/keventd/ready" ];
+              tty = "@console";
+              script = ''
+                zpool list "${pool}" >/dev/null 2>&1 || zpool import -f "${pool}"
+
+                ${lib.concatMapStringsSep "\n" (k: ''zfs load-key "${k}"'') (keysFor pool)}
+              '';
+            }
+          );
+        };
+      }
+    ))
   ];
 }

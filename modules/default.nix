@@ -21,6 +21,7 @@ let
       # required modules - included by default
       "dbus"
       "elogind"
+      "gardendevd"
       "keventd"
       "mdevd"
       "seatd"
@@ -42,6 +43,7 @@ in
       ./fonts
       ./hardware
       ./i18n
+      ./lib
       ./misc
       ./networking
       ./nixos
@@ -53,6 +55,7 @@ in
       ./security
       ./services/dbus
       ./services/elogind
+      ./services/gardendevd
       ./services/keventd
       ./services/mdevd
       ./services/seatd
