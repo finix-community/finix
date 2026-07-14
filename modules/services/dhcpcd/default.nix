@@ -225,6 +225,10 @@ in
       pid = "/run/dhcpcd/pid";
       type = "forking";
       conditions = "service/syslogd/ready";
+
+      path = lib.optionals config.programs.resolvconf.enable [
+        config.programs.resolvconf.package
+      ];
     };
 
     finit.tmpfiles.rules = [
