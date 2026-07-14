@@ -212,7 +212,8 @@ in
 
           KbdInteractiveAuthentication = lib.mkOption {
             type = lib.types.bool;
-            default = true;
+            default = cfg.settings.PasswordAuthentication;
+            defaultText = lib.literalExpression "config.services.openssh.settings.PasswordAuthentication";
             description = ''
               Specifies whether keyboard-interactive authentication is allowed.
             '';
