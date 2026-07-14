@@ -52,7 +52,7 @@ find "$etc" -mindepth 1 >"$etc_dirs"
 # For every file in the etc tree, create a corresponding symlink in /etc.
 # Use process substitution to avoid subshell issues with pipes.
 while IFS= read -r entry; do
-  fn="${entry#"${etc}"}"
+  fn="${entry#"${etc}"/}"
   [ -n "$fn" ] || continue
 
   # Skip sidecar metadata files
