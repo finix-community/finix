@@ -48,7 +48,10 @@ in
   config = lib.mkIf cfg.enable {
     services.iwd.settings = {
       General = {
-        EnableNetworkConfiguration = true;
+        # upstream defaults this to false, expecting another service to own IP.
+        # default it on so iwd works standalone, but let users hand IP
+        # configuration to a dhcp client instead.
+        EnableNetworkConfiguration = lib.mkDefault true;
       };
 
       Network = {
