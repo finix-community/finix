@@ -170,6 +170,14 @@
   </li>
   
   <li>
+    <a href='#option-environment.variables' title="environment.variables">
+      environment.variables
+      
+      
+    </a>
+  </li>
+  
+  <li>
     <a href='#option-fileSystems' title="fileSystems">
       fileSystems
       
@@ -12115,6 +12123,32 @@ Changing this option takes precedence over <code>uid</code>.</p>
   <div class="option-default">Default: <code>{ }</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/environment/path" target="_blank">&lt;finix/modules/environment/path&gt;</a></code></div>
 </div>
+<div class="option" id="option-environment.variables">
+  <h3 class="option-name">
+    <a href="#option-environment.variables" class="option-anchor">environment.variables</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>attribute set of (null or ((list of (signed integer or string or absolute path)) or (signed integer or string or absolute path) convertible to it))</code></div>
+  <div class="option-description"><html><head></head><body><p>Environment variables to set for POSIX-compliant login shells (bash, zsh,
+dash, ...) via <code class="file-path">/etc/profile.d/</code>. Shells with non-POSIX syntax,
+such as <code>fish</code>, do not source these scripts and will not pick up these
+variables.</p>
+<p>The value of each variable can be a string, a path, an integer, or a
+list of those, in which case the list is joined with <code>:</code>.</p>
+<p>Setting a variable to <code>null</code> does not set anything on its own, but lets
+you override a value set by another module to effectively cancel it out.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-example">Example: <pre><code>{
+  EDITOR = "nvim";
+  XDG_DATA_DIRS = [
+    "/usr/share"
+    "/usr/local/share"
+  ];
+}</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/environment/shells" target="_blank">&lt;finix/modules/environment/shells&gt;</a></code></div>
+</div>
 <div class="option" id="option-fileSystems">
   <h3 class="option-name">
     <a href="#option-fileSystems" class="option-anchor">fileSystems</a>
@@ -21288,7 +21322,7 @@ and
   <div class="option-type">Type: <code>boolean</code></div>
   <div class="option-description"><html><head></head><body><p>Specifies whether keyboard-interactive authentication is allowed.</p>
 </body></html></div>
-  <div class="option-default">Default: <code>true</code></div>
+  <div class="option-default">Default: <code>config.services.openssh.settings.PasswordAuthentication</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/openssh" target="_blank">&lt;finix/modules/services/openssh&gt;</a></code></div>
 </div>
 <div class="option" id="option-services.openssh.settings.KexAlgorithms">
