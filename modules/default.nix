@@ -74,3 +74,4 @@ in
 }
 // programModules
 // serviceModules
+// { dinit = ./dinit; }

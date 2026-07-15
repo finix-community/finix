@@ -14,7 +14,7 @@
     '';
   };
 
-  config = {
+  config = lib.mkIf config.finit.enable {
     environment.etc."tmpfiles.d/finix.conf".text = ''
       # This file is created automatically and should not be modified.
       # Please change the option ‘finit.tmpfiles.rules’ instead.
