@@ -729,6 +729,11 @@ let
 in
 {
   options.finit = {
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Whether to enable finit and generate /etc/finit* configuration files.";
+    };
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.finit;
@@ -896,7 +901,7 @@ in
     };
   };
 
-  config = {
+  config = lib.mkIf cfg.enable {
     environment.etc =
       let
         # NOTE: entries under /etc/finit.d are marked as direct-symlink to avoid service reloads on every finix activation
