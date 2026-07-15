@@ -16,7 +16,7 @@ in
     ./tmpfiles.nix
   ];
 
-  config = {
+  config = lib.mkIf cfg.enable {
     assertions = [
       {
         assertion = lib.versionAtLeast cfg.package.version "4.16";

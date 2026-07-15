@@ -277,7 +277,15 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    environment.etc."nix/nix.conf".source = configFile;
+    environment.etc = {
+      "nix/nix.conf".source = configFile;
+    } // lib.optionalAttrs config.finit.enable {
+      "finit.d/nix-daemon.conf".text = lib.mkAfter ''
+
+        # standard nixos trick to force a restart when something has changed
+        # ${config.environment.etc."nix/nix.conf".source}
+      '';
+    };
 
     finit.services.nix-daemon = {
       description = "nix daemon";
@@ -338,11 +346,5 @@ in
       ];
     };
 
-    # TODO: add finit.services.restartTriggers option
-    environment.etc."finit.d/nix-daemon.conf".text = lib.mkAfter ''
-
-      # standard nixos trick to force a restart when something has changed
-      # ${config.environment.etc."nix/nix.conf".source}
-    '';
   };
 }
