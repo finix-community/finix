@@ -8,38 +8,20 @@ let
   cfg = config.dinit;
 
   format = pkgs.formats.keyValue { };
-  settingsFormat = import ./format.nix { inherit pkgs lib; };
-  extraAttrs = [
-    "enable"
-    "environment"
-    "path"
-  ];
+
+  envFormat = pkgs.formats.keyValue {
+    mkKeyValue = k: v: "${k}=${toString v}";
+  };
 in
 {
   options.dinit = {
-    enable = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = ''
-        Whether to enable `dinit` as pid 1.
-      '';
-    };
-
-    user.enable = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = ''
-        Whether to generate user level service configuration `/etc/dinit.d/user`.
-
-        ::: {.note}
-        Highly experimental, setting this option to `true` will not actually run any services, simply generate configuration.
-        :::
-      '';
-    };
-
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.dinit;
+      defaultText = lib.literalExpression "pkgs.dinit";
+      description = ''
+        The dinit package to use.
+      '';
     };
 
     user.services = lib.mkOption {
@@ -49,7 +31,7 @@ in
             imports = [ ./common-options.nix ];
 
             config.env-file = lib.mkIf (config.environment != { }) (
-              format.generate "${name}.env" config.environment
+              envFormat.generate "${name}.env" config.environment
             );
           }
         )
@@ -72,7 +54,7 @@ in
             ];
 
             config.env-file = lib.mkIf (config.environment != { }) (
-              format.generate "${name}.env" config.environment
+              envFormat.generate "${name}.env" config.environment
             );
           }
         )
@@ -86,27 +68,80 @@ in
     };
   };
 
-  config = lib.mkMerge [
-    (lib.mkIf cfg.enable {
-      boot.init = "${cfg.package}/bin/dinit";
+  config = {
+    environment.systemPackages = lib.mkIf (cfg.services != { } || cfg.user.services != { }) [
+      pkgs.dinit
+    ];
 
-      environment.etc = lib.mapAttrs' (name: service: {
-        name = "dinit.d/${name}";
-        value.source = settingsFormat.generate name (builtins.removeAttrs service extraAttrs);
-      }) (lib.filterAttrs (_: service: service.enable) cfg.services);
+    environment.etc =
+      let
+        settingsFormat = import ./format.nix { inherit pkgs lib; };
+        extraAttrs = [
+          "enable"
+          "environment"
+          "path"
+          "boot"
+        ];
 
-      environment.systemPackages = [ cfg.package ];
 
-      dinit.services.boot = {
-        type = "internal";
+        userTree = lib.mapAttrs' (name: service: {
+          name = "dinit.d/user/${name}";
+          value.source = settingsFormat.generate name (builtins.removeAttrs service extraAttrs);
+        }) (lib.filterAttrs (_: service: service.enable) cfg.user.services);
+
+        systemTree = lib.mapAttrs' (name: service: {
+          name = "dinit.d/${name}";
+          value.source = settingsFormat.generate name (builtins.removeAttrs service extraAttrs);
+        }) (lib.filterAttrs (_: service: service.enable) cfg.services);
+      in
+      userTree // systemTree // {
+        "dinit.d/boot".source = settingsFormat.generate "boot" {
+          type = "internal";
+          "depends-on.d" = "boot.d";
+        };
+        "dinit.d/boot.d/.keep".text = "";
       };
-    })
 
-    (lib.mkIf cfg.user.enable {
-      environment.etc = lib.mapAttrs' (name: service: {
-        name = "dinit.d/user/${name}";
-        value.source = settingsFormat.generate name (builtins.removeAttrs service extraAttrs);
-      }) (lib.filterAttrs (_: service: service.enable) cfg.user.services);
-    })
-  ];
+    system.activation.scripts.dinitBootD = {
+      deps = [ "etc" ];
+      text = ''
+        boot_d="/etc/dinit.d/boot.d"
+        find "$boot_d" -maxdepth 1 -type l -exec rm -f {} +
+      '' + lib.concatMapStrings (
+        name: "ln -sf ../${name} $boot_d/${name}\n"
+      ) (lib.attrNames (lib.filterAttrs (_: s: s.boot) cfg.services));
+    };
+    dinit.services.mount-fstab = {
+      type = "scripted";
+      command = "${pkgs.util-linux}/bin/mount -a";
+      boot = true;
+    };
+    system.activation.scripts.dinit-reload = {
+      deps = [ "etc" "dinitBootD" ];
+      text = let
+        enabledNames = lib.attrNames (lib.filterAttrs (_: s: s.enable) cfg.services);
+        enabledList = lib.concatStringsSep " " (map (n: "\"${n}\"") enabledNames);
+        enabledAssoc = lib.concatMapStringsSep " " (n: "[\"${n}\"]=1") enabledNames;
+        dinitctl = "${pkgs.dinit}/bin/dinitctl";
+      in ''
+        # Reload definitions for services in the new config
+        for svc in ${enabledList}; do
+          ${dinitctl} reload "$svc" 2>&1 | logger -t finix-dinit || true
+        done
+
+        # Stop services that were enabled in the previous generation but are no longer enabled
+        oldServiceDir="/run/current-system/etc/dinit.d"
+        if [ -d "$oldServiceDir" ]; then
+          declare -A enabled_services=( ${enabledAssoc} )
+          for f in "$oldServiceDir"/*; do
+            [ -e "$f" ] || continue
+            name="$(basename "$f")"
+            if [ -z "''${enabled_services[$name]-}" ]; then
+              ${dinitctl} stop --no-wait "$name" 2>&1 | logger -t finix-dinit || true
+            fi
+          done
+        fi
+      '';
+    };
+  };
 }
