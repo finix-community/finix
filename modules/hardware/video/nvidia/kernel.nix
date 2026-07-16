@@ -8,7 +8,7 @@ let
   common = import ./common.nix { inherit config lib pkgs; };
   inherit (common) cfg ibtSupport;
 
-  # mdevd only sees one uevent for the "nvidia" frontend device, but the actual character devices 
+  # mdevd only sees one uevent for the "nvidia" frontend device, but the actual character devices
   # it has to be mknod'd by hand (nvidiactl + one nvidia<N> per card), same as the udev rule below does
   nvidiaMdevScript = pkgs.writeScript "mdevd-nvidia.sh" ''
     #!/bin/sh
