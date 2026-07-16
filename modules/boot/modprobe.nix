@@ -34,7 +34,7 @@ in
       pkgs.kmod
     ];
 
-    finit.tasks.modprobe = {
+    finit.tasks.modprobe = lib.mkIf config.finit.enable {
       command = "${pkgs.kmod}/bin/modprobe --all ${lib.concatStringsSep " " config.boot.kernelModules}";
       conditions = "service/syslogd/ready";
       runlevels = "12345789";

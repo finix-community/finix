@@ -15,6 +15,15 @@ let
 in
 {
   options.dinit = {
+    package = lib.mkOption {
+      type = lib.types.package;
+      default = pkgs.dinit;
+      defaultText = lib.literalExpression "pkgs.dinit";
+      description = ''
+        The dinit package to use.
+      '';
+    };
+
     user.services = lib.mkOption {
       type = lib.types.attrsOf (
         lib.types.submodule (

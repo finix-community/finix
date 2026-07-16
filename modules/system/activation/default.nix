@@ -128,7 +128,7 @@ in
       ln -sfn /run /var/run
     '';
 
-    finit.tmpfiles.rules = [
+    finit.tmpfiles.rules = lib.mkIf config.finit.enable [
       "d /etc"
       "d /run"
       "d /tmp"
@@ -171,7 +171,7 @@ in
 
             substituteInPlace $out/activate --subst-var-by systemConfig $out
 
-            ${coreutils}/bin/ln -sr ${config.finit.package}/bin/finit $out/init
+            ${coreutils}/bin/ln -sr ${config.boot.init} $out/init
             ${coreutils}/bin/ln -s ${config.environment.path} $out/sw
             ${coreutils}/bin/ln -s ${config.system.build.inhibitSwitch} $out/switch-inhibitors
 
