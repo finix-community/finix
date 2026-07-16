@@ -102,7 +102,6 @@ in
     dinit.services.mount-fstab = {
       type = "scripted";
       command = "${pkgs.util-linux}/bin/mount -a";
-      waits-for = [ "boot" ];
       boot = true;
     };
     system.activation.scripts.dinit-reload = {
