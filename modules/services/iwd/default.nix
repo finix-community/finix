@@ -60,7 +60,16 @@ in
     };
 
     environment.systemPackages = [ cfg.package ];
-    environment.etc."iwd/main.conf".source = format.generate "main.conf" cfg.settings;
+
+    environment.etc = {
+      "iwd/main.conf".source = format.generate "main.conf" cfg.settings;
+    } // lib.optionalAttrs config.finit.enable {
+      "finit.d/iwd.conf".text = lib.mkAfter ''
+
+        # standard nixos trick to force a restart when something has changed
+        # ${config.environment.etc."iwd/main.conf".source}
+      '';
+    };
 
     services.dbus.packages = [ cfg.package ];
 
@@ -80,11 +89,5 @@ in
       ];
     };
 
-    # TODO: add finit.services.restartTriggers option
-    environment.etc."finit.d/iwd.conf".text = lib.mkIf config.finit.enable (lib.mkAfter ''
-
-      # standard nixos trick to force a restart when something has changed
-      # ${config.environment.etc."iwd/main.conf".source}
-    '');
   };
 }

@@ -142,6 +142,5 @@ in
       };
     };
 
-    # TODO: add finit.services.reloadTriggers option
   };
 }

@@ -320,14 +320,15 @@ in
       cgroup.name = "user";
     };
 
-    # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/sshd.conf".text = lib.mkIf config.finit.enable (lib.mkAfter ''
+    environment.etc = {
+      "ssh/sshd_config".source = configFile;
+    } // lib.optionalAttrs config.finit.enable {
+      "finit.d/sshd.conf".text = lib.mkAfter ''
 
-      # reload trigger
-      # ${config.environment.etc."ssh/sshd_config".source}
-    '');
-
-    environment.etc."ssh/sshd_config".source = configFile;
+        # reload trigger
+        # ${config.environment.etc."ssh/sshd_config".source}
+      '';
+    };
 
     security.pam.services.sshd = lib.mkIf cfg.settings.UsePAM {
       text = ''

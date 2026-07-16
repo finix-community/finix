@@ -71,37 +71,45 @@ in
     # contribute finit's bundled rules to the udev packages list.
     services.udev.packages = [ config.finit.package ];
 
-    environment.etc."udev/rules.d".source =
-      pkgs.runCommand "keventd-rules"
-        {
-          __structuredAttrs = true;
-          preferLocalBuild = true;
-          allowSubstitutes = false;
-          packages = lib.unique config.services.udev.packages;
-        }
-        ''
-          mkdir -p $out
-          shopt -s nullglob
+    environment.etc = {
+      "udev/rules.d".source =
+        pkgs.runCommand "keventd-rules"
+          {
+            __structuredAttrs = true;
+            preferLocalBuild = true;
+            allowSubstitutes = false;
+            packages = lib.unique config.services.udev.packages;
+          }
+          ''
+            mkdir -p $out
+            shopt -s nullglob
 
-          for i in "''${packages[@]}"; do
-            echo "Adding rules for package $i"
-            for j in $i/{etc,lib,var/lib}/udev/rules.d/*; do
-              echo "Copying $j to $out/$(basename $j)"
-              cat $j > $out/$(basename $j)
+            for i in "''${packages[@]}"; do
+              echo "Adding rules for package $i"
+              for j in $i/{etc,lib,var/lib}/udev/rules.d/*; do
+                echo "Copying $j to $out/$(basename $j)"
+                cat $j > $out/$(basename $j)
+              done
             done
-          done
 
-          for i in $out/*.rules; do
-            substituteInPlace $i \
-              --replace-quiet \"/sbin/modprobe \"${pkgs.kmod}/bin/modprobe \
-              --replace-quiet \"/sbin/mdadm \"${pkgs.mdadm}/sbin/mdadm \
-              --replace-quiet \"/sbin/blkid \"${pkgs.util-linux}/sbin/blkid \
-              --replace-quiet \"/bin/mount \"${pkgs.util-linux}/bin/mount \
-              --replace-quiet /usr/bin/readlink ${lib.getExe' config.programs.coreutils.package "readlink"} \
-              --replace-quiet /usr/bin/cat ${lib.getExe' config.programs.coreutils.package "cat"} \
-              --replace-quiet /usr/bin/basename ${lib.getExe' config.programs.coreutils.package "basename"} 2>/dev/null
-          done
-        '';
+            for i in $out/*.rules; do
+              substituteInPlace $i \
+                --replace-quiet \"/sbin/modprobe \"${pkgs.kmod}/bin/modprobe \
+                --replace-quiet \"/sbin/mdadm \"${pkgs.mdadm}/sbin/mdadm \
+                --replace-quiet \"/sbin/blkid \"${pkgs.util-linux}/sbin/blkid \
+                --replace-quiet \"/bin/mount \"${pkgs.util-linux}/bin/mount \
+                --replace-quiet /usr/bin/readlink ${lib.getExe' config.programs.coreutils.package "readlink"} \
+                --replace-quiet /usr/bin/cat ${lib.getExe' config.programs.coreutils.package "cat"} \
+                --replace-quiet /usr/bin/basename ${lib.getExe' config.programs.coreutils.package "basename"} 2>/dev/null
+            done
+          '';
+    } // lib.optionalAttrs config.finit.enable {
+      "finit.d/keventd.conf".text = lib.mkAfter ''
+
+        # reload trigger
+        # ${config.environment.etc."udev/rules.d".source}
+      '';
+    };
 
     finit.services.keventd = {
       inherit (cfg) path;
@@ -113,13 +121,6 @@ in
       notify = "pid";
       log = true;
     };
-
-    # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/keventd.conf".text = lib.mkIf config.finit.enable (lib.mkAfter ''
-
-      # reload trigger
-      # ${config.environment.etc."udev/rules.d".source}
-    '');
 
     # TODO: share between device managers
     system.activation.scripts.keventd = lib.mkIf config.boot.kernel.enable {
