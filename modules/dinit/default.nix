@@ -60,6 +60,10 @@ in
   };
 
   config = {
+    environment.systemPackages = lib.mkIf (cfg.services != { } || cfg.user.services != { }) [
+      pkgs.dinit
+    ];
+
     environment.etc =
       let
         settingsFormat = import ./format.nix { inherit pkgs lib; };
