@@ -71,7 +71,7 @@ in
     );
 
     # TODO: force reload of all kernel variables -> `command = "${pkgs.procps}/bin/sysctl --load --system";`
-    finit.tasks.sysctl = {
+    finit.tasks.sysctl = lib.mkIf config.finit.enable {
       description = "apply kernel variables";
       runlevels = "12345";
       command = "${pkgs.procps}/bin/sysctl -p ${config.environment.etc."sysctl.d/60-finix.conf".source}";
