@@ -8,6 +8,10 @@ let
   cfg = config.dinit;
 
   format = pkgs.formats.keyValue { };
+
+  envFormat = pkgs.formats.keyValue {
+    mkKeyValue = k: v: "${k}=${v}";
+  };
 in
 {
   options.dinit = {
@@ -18,7 +22,7 @@ in
             imports = [ ./common-options.nix ];
 
             config.env-file = lib.mkIf (config.environment != { }) (
-              format.generate "${name}.env" config.environment
+              envFormat.generate "${name}.env" config.environment
             );
           }
         )
