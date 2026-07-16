@@ -45,7 +45,7 @@ in
             ];
 
             config.env-file = lib.mkIf (config.environment != { }) (
-              format.generate "${name}.env" config.environment
+              envFormat.generate "${name}.env" config.environment
             );
           }
         )
