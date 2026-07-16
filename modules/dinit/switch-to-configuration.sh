@@ -6,7 +6,6 @@ localeArchive="@localeArchive@"
 distroId="@distroId@"
 installHook="@installHook@"
 inhibitCheck="@inhibitCheck@"
-dinitctl="@dinitctl@"
 logger="@logger@"
 coreutils="@coreutils@"
 
@@ -76,11 +75,6 @@ echo "activating the configuration..." >&2
 res=0
 if ! "$out/activate"; then
   res=2
-fi
-
-# Ask dinit to reload its service definitions
-if ! "$dinitctl/bin/dinitctl" reload; then
-  (( res == 0 )) && res=3
 fi
 
 if (( res == 0 )); then
