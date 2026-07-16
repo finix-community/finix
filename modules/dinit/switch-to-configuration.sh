@@ -37,7 +37,7 @@ if [[ ! -f /etc/NIXOS && ! "$(grep -E "^ID=\"?$distroId\"?" /etc/os-release 2>/d
 fi
 
 # mkdir -p -m 755 /run/finix
-# 
+#
 # # Acquire lock
 # exec {lockfd}>/run/finix/switch-to-configuration.lock
 # if ! flock -n "$lockfd"; then
@@ -52,6 +52,9 @@ if [[ "$action" != boot && "${NIXOS_NO_CHECK-}" != 1 ]]; then
     exit 1
   fi
 fi
+
+# Mount filesystems from fstab (needed for efivars during limine install)
+"$coreutils/bin/mount" -a 2>/dev/null || true
 
 # install bootloader
 if [[ "$action" == switch || "$action" == boot ]]; then
