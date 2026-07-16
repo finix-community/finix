@@ -201,7 +201,7 @@ in
 
     boot = {
       extraModulePackages =
-        if cfg.kernelModule == "open" then [ cfg.package.open ] else [ cfg.package.bin ];
+        if cfg.kernelModule == "open" then [ cfg.package.open ] else [ cfg.package.mod ];
 
       # nvidia-uvm is required by CUDA applications.
       # Exception is the open-source kernel module failing to load nvidia-uvm using softdep
