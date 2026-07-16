@@ -130,19 +130,20 @@ in
 
     environment.systemPackages = [ cfg.package ];
 
-    environment.etc."postgresql/${cfg.package.psqlSchema}/pg_ident.conf".text = cfg.identity;
-    environment.etc."postgresql/${cfg.package.psqlSchema}/pg_hba.conf".text = cfg.authentication;
-    environment.etc."postgresql/${cfg.package.psqlSchema}/postgresql.conf".source =
-      format.generate "postgresql.conf" cfg.settings;
+    environment.etc = {
+      "postgresql/${cfg.package.psqlSchema}/pg_ident.conf".text = cfg.identity;
+      "postgresql/${cfg.package.psqlSchema}/pg_hba.conf".text = cfg.authentication;
+      "postgresql/${cfg.package.psqlSchema}/postgresql.conf".source =
+        format.generate "postgresql.conf" cfg.settings;
+    } // lib.optionalAttrs config.finit.enable {
+      "finit.d/postgresql.conf".text = lib.mkAfter ''
 
-    # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/postgresql.conf".text = lib.mkAfter ''
-
-      # reload trigger
-      # ${config.environment.etc."postgresql/${cfg.package.psqlSchema}/postgresql.conf".source}
-      # ${config.environment.etc."postgresql/${cfg.package.psqlSchema}/pg_hba.conf".source}
-      # ${config.environment.etc."postgresql/${cfg.package.psqlSchema}/pg_ident.conf".source}
-    '';
+        # reload trigger
+        # ${config.environment.etc."postgresql/${cfg.package.psqlSchema}/postgresql.conf".source}
+        # ${config.environment.etc."postgresql/${cfg.package.psqlSchema}/pg_hba.conf".source}
+        # ${config.environment.etc."postgresql/${cfg.package.psqlSchema}/pg_ident.conf".source}
+      '';
+    };
 
     finit.services.postgresql = {
       inherit (cfg) user group;

@@ -81,7 +81,15 @@ in
       resolv_conf = "/etc/resolv.conf";
     };
 
-    environment.etc."resolvconf.conf".source = format.generate "resolvconf.conf" cfg.settings;
+    environment.etc = {
+      "resolvconf.conf".source = format.generate "resolvconf.conf" cfg.settings;
+    } // lib.optionalAttrs config.finit.enable {
+      "finit.d/resolvconf.conf".text = lib.mkAfter ''
+
+        # force a restart on configuration change
+        # ${config.environment.etc."resolvconf.conf".source}
+      '';
+    };
 
     environment.systemPackages = [ cfg.package ];
 
@@ -89,11 +97,5 @@ in
       command = "${lib.getExe cfg.package} -u";
       remain = true;
     };
-
-    environment.etc."finit.d/resolvconf.conf".text = lib.mkAfter ''
-
-      # force a restart on configuration change
-      # ${config.environment.etc."resolvconf.conf".source}
-    '';
   };
 }
