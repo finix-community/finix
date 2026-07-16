@@ -114,7 +114,7 @@ in
             # Stop services no longer in the config
             enabled_set="${enabledList}"
             ${dinitctl} list 2>/dev/null | while IFS= read -r line; do
-              if [[ "$line" =~ ^\[\+[[:space:]]*\]\ ([a-zA-Z0-9_-]+) ]]; then
+            if [[ "$line" =~ ^\[[[:space:]]*\{[+-]\}[[:space:]]*\][[:space:]]+([a-zA-Z0-9_-]+) ]]; then
                 name="''${BASH_REMATCH[1]}"
                 case " $enabled_set " in
                   *" ''${name} "*) ;;
