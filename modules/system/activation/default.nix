@@ -171,7 +171,11 @@ in
 
             substituteInPlace $out/activate --subst-var-by systemConfig $out
 
-            ${coreutils}/bin/ln -sr ${config.finit.package}/bin/finit $out/init
+            ${coreutils}/bin/ln -sr ${
+              if (config ? dinit && config.dinit.services != { })
+              then "${pkgs.dinit}/bin/dinit"
+              else "${config.finit.package}/bin/finit"
+            } $out/init
             ${coreutils}/bin/ln -s ${config.environment.path} $out/sw
             ${coreutils}/bin/ln -s ${config.system.build.inhibitSwitch} $out/switch-inhibitors
 
@@ -192,16 +196,22 @@ in
             ${coreutils}/bin/ln -s ${config.boot.initrd.package}/initrd $out/initrd
           ''
           + ''
-            cp ${../../finit/switch-to-configuration.sh} $out/bin/switch-to-configuration
+            cp ${
+              if (config ? dinit && config.dinit.services != { })
+              then ../../dinit/switch-to-configuration.sh
+              else ../../finit/switch-to-configuration.sh
+            } $out/bin/switch-to-configuration
             substituteInPlace $out/bin/switch-to-configuration \
               --subst-var out \
               --subst-var-by bash ${pkgs.bash} \
               --subst-var-by distroId finix \
-              --subst-var-by finit ${config.finit.package} \
               --subst-var-by logger ${pkgs.util-linuxMinimal} \
               --subst-var-by coreutils ${config.programs.coreutils.package} \
               --subst-var-by installHook ${config.providers.bootloader.installHook} \
-              --subst-var-by inhibitCheck ${config.system.build.checkSwitchInhibitors}
+              --subst-var-by inhibitCheck ${config.system.build.checkSwitchInhibitors} \
+              ${if (config ? dinit && config.dinit.services != { })
+                then "--subst-var-by dinitctl ${pkgs.dinit}"
+                else "--subst-var-by finit ${config.finit.package}"}
           ''
           + lib.optionalString config.boot.bootspec.enable ''
             ${config.boot.bootspec.writer}
