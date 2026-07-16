@@ -115,11 +115,11 @@ in
     };
 
     # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/keventd.conf".text = lib.mkAfter ''
+    environment.etc."finit.d/keventd.conf".text = lib.mkIf config.finit.enable (lib.mkAfter ''
 
       # reload trigger
       # ${config.environment.etc."udev/rules.d".source}
-    '';
+    '');
 
     # TODO: share between device managers
     system.activation.scripts.keventd = lib.mkIf config.boot.kernel.enable {

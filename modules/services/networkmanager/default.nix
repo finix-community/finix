@@ -79,11 +79,11 @@ in
       format.generate "00-nixos.conf" cfg.settings;
 
     # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/network-manager.conf".text = lib.mkAfter ''
+    environment.etc."finit.d/network-manager.conf".text = lib.mkIf config.finit.enable (lib.mkAfter ''
 
       # reload trigger
       # ${config.environment.etc."NetworkManager/conf.d/00-nixos.conf".source}
-    '';
+    '');
 
     services.dbus.enable = true;
     services.dbus.packages = packages;

@@ -339,10 +339,10 @@ in
     };
 
     # TODO: add finit.services.restartTriggers option
-    environment.etc."finit.d/nix-daemon.conf".text = lib.mkAfter ''
+    environment.etc."finit.d/nix-daemon.conf".text = lib.mkIf config.finit.enable (lib.mkAfter ''
 
       # standard nixos trick to force a restart when something has changed
       # ${config.environment.etc."nix/nix.conf".source}
-    '';
+    '');
   };
 }

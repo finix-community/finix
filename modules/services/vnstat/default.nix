@@ -148,11 +148,11 @@ in
     };
 
     # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/vnstat.conf".text = lib.mkAfter ''
+    environment.etc."finit.d/vnstat.conf".text = lib.mkIf config.finit.enable (lib.mkAfter ''
 
       # reload trigger
       # ${config.environment.etc."vnstat.conf".source}
-    '';
+    '');
 
     users.users = lib.optionalAttrs (cfg.user == "vnstatd") {
       vnstatd = {

@@ -142,11 +142,11 @@ in
 
         serviceFile = {
           # TODO: add finit.services.reloadTriggers option
-          "finit.d/keyd.conf".text = lib.mkAfter ''
+          "finit.d/keyd.conf".text = lib.mkIf config.finit.enable (lib.mkAfter ''
 
             # force a reload on configuration change
             ${lib.concatMapAttrsStringSep "\n" (k: v: "# " + v.source) configTree}
-          '';
+          '');
         };
       in
       lib.mkMerge [

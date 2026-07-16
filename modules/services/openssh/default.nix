@@ -321,11 +321,11 @@ in
     };
 
     # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/sshd.conf".text = lib.mkAfter ''
+    environment.etc."finit.d/sshd.conf".text = lib.mkIf config.finit.enable (lib.mkAfter ''
 
       # reload trigger
       # ${config.environment.etc."ssh/sshd_config".source}
-    '';
+    '');
 
     environment.etc."ssh/sshd_config".source = configFile;
 
