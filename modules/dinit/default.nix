@@ -99,6 +99,12 @@ in
         name: "ln -sf ../${name} /etc/dinit.d/boot.d/${name}\n"
       ) (lib.attrNames (lib.filterAttrs (_: s: s.boot) cfg.services));
     };
+    dinit.services.mount-fstab = lib.mkIf (cfg.services != { }) {
+      type = "scripted";
+      command = "${pkgs.util-linux}/bin/mount -a";
+      waits-for = [ "boot" ];
+      boot = true;
+    };
     system.activation.scripts.dinit-reload = {
           deps = [ "etc" "dinitBootD" ];
           text = let
