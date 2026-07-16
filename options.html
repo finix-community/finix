@@ -90,6 +90,14 @@
   </li>
   
   <li>
+    <a href='#option-boot.init' title="boot.init">
+      boot.init
+      
+      
+    </a>
+  </li>
+  
+  <li>
     <a href='#option-boot.kernelModules' title="boot.kernelModules">
       boot.kernelModules
       
@@ -10232,6 +10240,18 @@ unique namespace for your extensions.</p>
   <div class="option-default">Default: <code>[ ]</code></div>
   <div class="option-example">Example: <code>[ config.boot.kernelPackages.nvidia_x11 ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/boot/kernel.nix" target="_blank">&lt;finix/modules/boot/kernel.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-boot.init">
+  <h3 class="option-name">
+    <a href="#option-boot.init" class="option-anchor">boot.init</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>absolute path</code></div>
+  <div class="option-description"><html><head></head><body><p>Executable run as stage-2 PID 1, symlinked as <code>${config.system.build.toplevel}/init</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>"${config.finit.package}/bin/finit"</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/boot" target="_blank">&lt;finix/modules/boot&gt;</a></code></div>
 </div>
 <div class="option" id="option-boot.initrd.availableKernelModules">
   <h3 class="option-name">
