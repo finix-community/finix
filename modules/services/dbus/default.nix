@@ -70,7 +70,15 @@ in
   };
 
   config = mkIf cfg.enable {
-    environment.etc."dbus-1".source = configDir;
+    environment.etc = {
+      "dbus-1".source = configDir;
+    } // lib.optionalAttrs config.finit.enable {
+      "finit.d/dbus.conf".text = lib.mkAfter ''
+
+        # reload trigger
+        # ${config.environment.etc."dbus-1".source}
+      '';
+    };
 
     environment.pathsToLink = [
       "/etc/dbus-1"
@@ -135,10 +143,5 @@ in
     };
 
     # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/dbus.conf".text = lib.mkIf config.finit.enable (lib.mkAfter ''
-
-      # reload trigger
-      # ${config.environment.etc."dbus-1".source}
-    '');
   };
 }
