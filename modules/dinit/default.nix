@@ -99,7 +99,7 @@ in
         name: "ln -sf ../${name} /etc/dinit.d/boot.d/${name}\n"
       ) (lib.attrNames (lib.filterAttrs (_: s: s.boot) cfg.services));
     };
-    dinit.services.mount-fstab = lib.mkIf (cfg.services != { }) {
+    dinit.services.mount-fstab = {
       type = "scripted";
       command = "${pkgs.util-linux}/bin/mount -a";
       waits-for = [ "boot" ];
