@@ -232,6 +232,37 @@ in
         ];
     };
 
+    services.mdevd.hotplugRules =
+      let
+        # mdevd only sees one uevent for the "nvidia" frontend device, but the actual character devices
+        # it has to be mknod'd by hand (nvidiactl + one nvidia<N> per card), same as the udev rule below does
+        nvidiaMdevScript = pkgs.writeScript "mdevd-nvidia.sh" ''
+          #!/bin/sh
+          case "$MDEV" in
+            nvidia)
+              mknod -m 666 /dev/nvidiactl c 195 255
+              for i in $(cat /proc/driver/nvidia/gpus/*/information 2>/dev/null | grep Minor | cut -d ' ' -f 4); do
+                mknod -m 666 "/dev/nvidia$i" c 195 "$i"
+              done
+              ;;
+            nvidia_modeset)
+              mknod -m 666 /dev/nvidia-modeset c 195 254
+              ;;
+            nvidia_uvm)
+              uvm_major=$(grep nvidia-uvm /proc/devices | cut -d ' ' -f 1)
+              mknod -m 666 /dev/nvidia-uvm c "$uvm_major" 0
+              mknod -m 666 /dev/nvidia-uvm-tools c "$uvm_major" 1
+              ;;
+          esac
+        '';
+      in
+      # "!" stops mdevd from creating its own default node for these three
+      ''
+        nvidia          0:0 666 ! @${nvidiaMdevScript}
+        nvidia_modeset  0:0 666 ! @${nvidiaMdevScript}
+        nvidia_uvm      0:0 666 ! @${nvidiaMdevScript}
+      '';
+
     services.udev.packages = [
       (pkgs.writeTextDir "lib/udev/rules.d/60-nvidia.rules" ''
         KERNEL=="nvidia", RUN+="${pkgs.runtimeShell} -c 'mknod -m 666 /dev/nvidiactl c 195 255'"
