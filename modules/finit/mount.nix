@@ -63,6 +63,7 @@ let
 
   deviceConditions =
     lib.optionals config.services.mdevd.enable [ "run/coldplug/success" ]
+    ++ lib.optionals config.services.mdev.enable [ "run/coldplug/success" ]
     ++ lib.optionals config.services.gardendevd.enable [ "run/gardendevctl:2/success" ]
     ++ lib.optionals config.services.udev.enable [ "run/udevadm:5/success" ]
     ++ lib.optionals config.services.keventd.enable [ "service/keventd/ready" ];
