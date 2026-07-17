@@ -25,6 +25,7 @@ let
       "gardendevd"
       "keventd"
       "mdevd"
+      "mdev"
       "seatd"
       "udev"
     ]
@@ -59,6 +60,7 @@ in
       ./services/elogind
       ./services/gardendevd
       ./services/keventd
+      ./services/mdev
       ./services/mdevd
       ./services/seatd
       ./services/udev
