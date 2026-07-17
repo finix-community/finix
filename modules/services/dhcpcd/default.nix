@@ -66,13 +66,6 @@ in
         freeformType = format.type; # FIXME: types.record { }
         options = {
           # FIXME: why do booleans get turned into "1" if you don't declare them as booleans?
-          background = lib.mkOption {
-            type = with lib.types; nullOr bool;
-            default = null;
-            description = ''
-              Fork to the background immediately.
-            '';
-          };
 
           broadcast = lib.mkOption {
             type = with lib.types; nullOr bool;
@@ -171,6 +164,7 @@ in
 
   config = lib.mkIf cfg.enable {
     services.dhcpcd.extraArgs = [
+      "-B"
       "-f"
       (toString cfg.configFile)
     ];
@@ -213,17 +207,12 @@ in
         "sit*"
       ];
 
-      # Immediately fork to background if specified, otherwise wait for IP address to be assigned
-      waitip = true;
-
       debug = cfg.debug;
     };
 
     finit.services.dhcpcd = {
       description = "dhcp client";
       command = "${lib.getExe cfg.package} " + lib.escapeShellArgs cfg.extraArgs;
-      pid = "/run/dhcpcd/pid";
-      type = "forking";
       conditions = "service/syslogd/ready";
 
       path = lib.optionals config.programs.resolvconf.enable [
