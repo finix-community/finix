@@ -109,9 +109,20 @@
                 ++ lib.optionals config.services.keventd.enable [ "service/keventd/ready" ];
               tty = "@console";
               script = ''
-                zpool list "${pool}" >/dev/null 2>&1 || zpool import -f "${pool}"
+                # 90s total timeout, polled every 0.1s (busybox sleep supports fractional)
+                tries=900
+                i=0
+                while [ "$i" -lt "$tries" ]; do
+                  if zpool list "${pool}" >/dev/null 2>&1 || zpool import -f "${pool}"; then
+                    ${lib.concatMapStringsSep "\n" (k: ''zfs load-key "${k}"'') (keysFor pool)}
+                    exit 0
+                  fi
+                  i=$((i + 1))
+                  sleep 0.1
+                done
 
-                ${lib.concatMapStringsSep "\n" (k: ''zfs load-key "${k}"'') (keysFor pool)}
+                printf 'zpool-import-${pool}: failed to import "${pool}" after 90s\n' >&2
+                exit 1
               '';
             }
           );
