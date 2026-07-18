@@ -4,6 +4,10 @@
   lib,
   ...
 }:
+let
+  # the dinit module is optional; fall back to pkgs.dinit when it isn't imported
+  dinitPackage = if config ? dinit then config.dinit.package else pkgs.dinit;
+in
 {
   imports = [
     ./bootspec.nix
@@ -18,9 +22,9 @@
     default =
       if config.finit.enable
       then "${config.finit.package}/bin/finit"
-      else "${pkgs.dinit}/bin/dinit";
+      else "${dinitPackage}/bin/dinit";
     defaultText = lib.literalExpression ''
-      if config.finit.enable then "''${config.finit.package}/bin/finit" else "''${pkgs.dinit}/bin/dinit"
+      if config.finit.enable then "''${config.finit.package}/bin/finit" else "''${dinitPackage}/bin/dinit"
     '';
     description = ''
       Executable run as stage-2 PID 1, symlinked as `${config.system.build.toplevel}/init`.

@@ -171,7 +171,24 @@ in
 
             substituteInPlace $out/activate --subst-var-by systemConfig $out
 
-            ${coreutils}/bin/ln -sr ${config.boot.init} $out/init
+            ${
+              if config ? dinit && !config.finit.enable then
+                # dinit has no equivalent of the finix-setup finit plugin (which runs
+                # activation before finit parses its config). wrap stage 2 in a script
+                # that activates first, so /etc/dinit.d/boot exists when dinit loads it.
+                ''
+                  cat > $out/init <<EOF
+                  #!${pkgs.runtimeShell}
+                  $out/activate
+                  exec ${config.dinit.package}/bin/dinit
+                  EOF
+                  chmod +x $out/init
+                ''
+              else
+                ''
+                  ${coreutils}/bin/ln -sr ${config.boot.init} $out/init
+                ''
+            }
             ${coreutils}/bin/ln -s ${config.environment.path} $out/sw
             ${coreutils}/bin/ln -s ${config.system.build.inhibitSwitch} $out/switch-inhibitors
 
@@ -193,9 +210,12 @@ in
           ''
           + ''
             cp ${
-              if config ? dinit && config.dinit.services != { }
-              then ../../dinit/switch-to-configuration.sh
-              else ../../finit/switch-to-configuration.sh
+              # pick the script matching the stage-2 init, not just module presence:
+              # importing the dinit module (e.g. for user services) must not shadow
+              # finit's reload-on-switch behaviour when finit is still PID 1
+              if config.finit.enable
+              then ../../finit/switch-to-configuration.sh
+              else ../../dinit/switch-to-configuration.sh
             } $out/bin/switch-to-configuration
             substituteInPlace $out/bin/switch-to-configuration \
               --subst-var out \
@@ -205,9 +225,9 @@ in
               --subst-var-by coreutils ${config.programs.coreutils.package} \
               --subst-var-by installHook ${config.providers.bootloader.installHook} \
               --subst-var-by inhibitCheck ${config.system.build.checkSwitchInhibitors} \
-              ${if config ? dinit && config.dinit.services != { }
-                then ""
-                else "--subst-var-by finit ${config.finit.package}"}
+              ${if config.finit.enable
+                then "--subst-var-by finit ${config.finit.package}"
+                else "--subst-var-by utillinux ${pkgs.util-linuxMinimal}"}
           ''
           + lib.optionalString config.boot.bootspec.enable ''
             ${config.boot.bootspec.writer}

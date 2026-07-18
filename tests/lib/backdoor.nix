@@ -83,7 +83,7 @@ in
     ];
 
     # backdoor service for finit
-    finit.services.backdoor = {
+    finit.services.backdoor = lib.mkIf config.finit.enable {
       description = "test driver backdoor shell";
       command = backdoorScript;
       runlevels = "234";
@@ -91,6 +91,12 @@ in
 
       # the backdoor runs bash which executes commands from hvc0 until EOF, then exits
       restart = 0;
+    };
+
+    # backdoor service for dinit (no restart: bash exits on hvc0 EOF)
+    dinit.services.backdoor = lib.mkIf (!config.finit.enable) {
+      command = toString backdoorScript;
+      boot = true;
     };
   };
 }

@@ -70,7 +70,7 @@ in
 
   config = {
     environment.systemPackages = lib.mkIf (cfg.services != { } || cfg.user.services != { }) [
-      pkgs.dinit
+      cfg.package
     ];
 
     environment.etc =
@@ -122,20 +122,26 @@ in
         enabledNames = lib.attrNames (lib.filterAttrs (_: s: s.enable) cfg.services);
         enabledList = lib.concatStringsSep " " (map (n: "\"${n}\"") enabledNames);
         enabledAssoc = lib.concatMapStringsSep " " (n: "[\"${n}\"]=1") enabledNames;
-        dinitctl = "${pkgs.dinit}/bin/dinitctl";
+        dinitctl = "${cfg.package}/bin/dinitctl";
       in ''
+        # TODO: newly-enabled services are only reloaded below, never started; removed services
+        # are stopped but not unloaded, so stale definitions linger until reboot.
         # Reload definitions for services in the new config
         for svc in ${enabledList}; do
           ${dinitctl} reload "$svc" 2>&1 | logger -t finix-dinit || true
         done
 
-        # Stop services that were enabled in the previous generation but are no longer enabled
+        # Stop services that were enabled in the previous generation but are no longer enabled.
+        # Never touch "boot": stopping it drops its explicit activation, which releases
+        # every dependency in boot.d and takes down the whole service tree.
         oldServiceDir="/run/current-system/etc/dinit.d"
         if [ -d "$oldServiceDir" ]; then
           declare -A enabled_services=( ${enabledAssoc} )
           for f in "$oldServiceDir"/*; do
             [ -e "$f" ] || continue
             name="$(basename "$f")"
+            [ "$name" = "boot" ] && continue
+            [ "$name" = "boot.d" ] && continue
             if [ -z "''${enabled_services[$name]-}" ]; then
               ${dinitctl} stop --no-wait "$name" 2>&1 | logger -t finix-dinit || true
             fi

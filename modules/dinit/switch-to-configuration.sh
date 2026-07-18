@@ -2,18 +2,14 @@
 set -euo pipefail
 
 out="@out@"
-localeArchive="@localeArchive@"
 distroId="@distroId@"
 installHook="@installHook@"
 inhibitCheck="@inhibitCheck@"
 logger="@logger@"
 coreutils="@coreutils@"
+utillinux="@utillinux@"
 
 action="${1-}"
-
-# if [[ -n "$localeArchive" ]]; then
-#   export LOCALE_ARCHIVE="$localeArchive"
-# fi
 
 case "$action" in
   switch|boot|test)
@@ -54,7 +50,7 @@ if [[ "$action" != boot && "${NIXOS_NO_CHECK-}" != 1 ]]; then
 fi
 
 # Mount filesystems from fstab (needed for efivars during limine install)
-"$coreutils/bin/mount" -a 2>/dev/null || true
+"$utillinux/bin/mount" -a 2>/dev/null || true
 
 # Ensure the nix profile points to this generation.
 # nixos-rebuild should already have done this via set_profile before calling
