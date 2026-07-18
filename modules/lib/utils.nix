@@ -2,8 +2,15 @@
 { lib }:
 {
   # simple path escape into a name safe for use as a finit stanza name and conditions
+  #
+  # Mapping (systemd-escape --path convention): "/" becomes "-", and any
+  # other path has its leading slash stripped and remaining slashes
+  # replaced with "-". This is injective: "/" used to escape to "root",
+  # which collided with "/root" (e.g. a neededForBoot bind mount of /root
+  # tripped the mount.nix uniqueness assert); every non-root path keeps
+  # the name it had before.
   escapePath =
-    s: if s == "/" then "root" else lib.replaceStrings [ "/" ] [ "-" ] (lib.removePrefix "/" s);
+    s: if s == "/" then "-" else lib.replaceStrings [ "/" ] [ "-" ] (lib.removePrefix "/" s);
 
   # Convert a shell package or path into an absolute shell path.
   toShellPath =
