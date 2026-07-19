@@ -86,6 +86,24 @@
       '';
     };
 
+    boot = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether this service is a hard dependency of the boot target.
+        When true, the service is symlinked into boot.d/ — if it fails, boot fails.
+      '';
+    };
+    default = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether this service is started via the default target.
+        Unlike boot, this is a waits-for.d relationship — if the service
+        fails, boot still succeeds.
+      '';
+    };
+
     # extend the common `options` flag enum with the privileged/console flags
     options = lib.mkOption {
       type =
