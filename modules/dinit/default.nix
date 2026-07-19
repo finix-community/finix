@@ -12,6 +12,69 @@ let
   envFormat = pkgs.formats.keyValue {
     mkKeyValue = k: v: "${k}=${toString v}";
   };
+
+  dinitManifest = pkgs.writeText "dinit-manifest.json" (builtins.toJSON (
+    lib.attrNames (lib.filterAttrs (_: s: s.enable) cfg.services)
+  ));
+
+  dinitSwitchScript = pkgs.writeText "dinit-switch.py" ''
+import json, subprocess, sys, os, argparse
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dinitctl", required=True)
+    parser.add_argument("--manifest", required=True)
+    args = parser.parse_args()
+
+    with open(args.manifest) as f:
+        desired = set(json.load(f))
+
+    result = subprocess.run(
+        [args.dinitctl, "list"], capture_output=True, text=True
+    )
+    if result.returncode != 0:
+        sys.exit(0)
+
+    current = set()
+    for line in result.stdout.splitlines():
+        if not line.startswith("["):
+            continue
+        rest = line.split("]", 1)
+        if len(rest) == 2:
+            name = rest[1].strip().split(None, 1)[0]
+            if name not in ("boot", "default"):
+                current.add(name)
+
+    for svc in sorted(current - desired):
+        print(f"dinit-switch: removing '{svc}'")
+        subprocess.run([args.dinitctl, "rm-dep", "need", "boot", svc],
+                     capture_output=True)
+        subprocess.run([args.dinitctl, "rm-dep", "waits-for", "default", svc],
+                     capture_output=True)
+        r = subprocess.run([args.dinitctl, "stop", svc],
+                         capture_output=True, text=True)
+        if r.returncode != 0:
+            print(f"dinit-switch: stop '{svc}' failed: {r.stderr.strip()}", file=sys.stderr)
+            continue
+        r = subprocess.run([args.dinitctl, "unload", svc],
+                         capture_output=True, text=True)
+        if r.returncode != 0:
+            print(f"dinit-switch: unload '{svc}' failed: {r.stderr.strip()}", file=sys.stderr)
+            continue
+        for d in ("boot.d", "default.d"):
+            p = f"/etc/dinit.d/{d}/{svc}"
+            if os.path.exists(p):
+                os.unlink(p)
+
+    for svc in sorted(current & desired):
+        r = subprocess.run([args.dinitctl, "reload", svc],
+                         capture_output=True, text=True)
+        if r.returncode != 0:
+            print(f"dinit-switch: reload '{svc}' failed: {r.stderr.strip()}", file=sys.stderr)
+
+if __name__ == "__main__":
+    main()
+  '';
 in
 {
   options.dinit = {
@@ -81,6 +144,7 @@ in
           "environment"
           "path"
           "boot"
+          "default"
         ];
 
 
@@ -94,12 +158,22 @@ in
           value.source = settingsFormat.generate name (builtins.removeAttrs service extraAttrs);
         }) (lib.filterAttrs (_: service: service.enable) cfg.services);
       in
-      userTree // systemTree // {
+      userTree // systemTree // 
+      {
         "dinit.d/boot".source = settingsFormat.generate "boot" {
           type = "internal";
           "depends-on.d" = "boot.d";
+          "waits-for" = [ "default" ];
         };
         "dinit.d/boot.d/.keep".text = "";
+      } 
+      // 
+      {
+        "dinit.d/default".source = settingsFormat.generate "default" {
+          type = "internal";
+          "waits-for.d" = "default.d";
+        };
+        "dinit.d/default.d/.keep".text = "";
       };
 
     system.activation.scripts.dinitBootD = {
@@ -111,42 +185,27 @@ in
         name: "ln -sf ../${name} $boot_d/${name}\n"
       ) (lib.attrNames (lib.filterAttrs (_: s: s.boot) cfg.services));
     };
+    system.activation.scripts.dinitDefaultD = {
+      deps = [ "etc" ];
+      text = ''
+        default_d="/etc/dinit.d/default.d"
+        find "$default_d" -maxdepth 1 -type l -exec rm -f {} +
+      '' + lib.concatMapStrings (
+        name: "ln -sf ../${name} $default_d/${name}\n"
+      ) (lib.attrNames (lib.filterAttrs (_: s: s.default) cfg.services));
+    };
+
     dinit.services.mount-fstab = {
       type = "scripted";
       command = "${pkgs.util-linux}/bin/mount -a";
       boot = true;
     };
-    system.activation.scripts.dinit-reload = {
-      deps = [ "etc" "dinitBootD" ];
-      text = let
-        enabledNames = lib.attrNames (lib.filterAttrs (_: s: s.enable) cfg.services);
-        enabledList = lib.concatStringsSep " " (map (n: "\"${n}\"") enabledNames);
-        enabledAssoc = lib.concatMapStringsSep " " (n: "[\"${n}\"]=1") enabledNames;
-        dinitctl = "${cfg.package}/bin/dinitctl";
-      in ''
-        # TODO: newly-enabled services are only reloaded below, never started; removed services
-        # are stopped but not unloaded, so stale definitions linger until reboot.
-        # Reload definitions for services in the new config
-        for svc in ${enabledList}; do
-          ${dinitctl} reload "$svc" 2>&1 | logger -t finix-dinit || true
-        done
-
-        # Stop services that were enabled in the previous generation but are no longer enabled.
-        # Never touch "boot": stopping it drops its explicit activation, which releases
-        # every dependency in boot.d and takes down the whole service tree.
-        oldServiceDir="/run/current-system/etc/dinit.d"
-        if [ -d "$oldServiceDir" ]; then
-          declare -A enabled_services=( ${enabledAssoc} )
-          for f in "$oldServiceDir"/*; do
-            [ -e "$f" ] || continue
-            name="$(basename "$f")"
-            [ "$name" = "boot" ] && continue
-            [ "$name" = "boot.d" ] && continue
-            if [ -z "''${enabled_services[$name]-}" ]; then
-              ${dinitctl} stop --no-wait "$name" 2>&1 | logger -t finix-dinit || true
-            fi
-          done
-        fi
+    system.activation.scripts.dinit-switch = {
+      deps = [ "etc" "dinitBootD" "dinitDefaultD" ];
+      text = ''
+        ${pkgs.python3}/bin/python3 ${dinitSwitchScript} \
+          --dinitctl ${cfg.package}/bin/dinitctl \
+          --manifest ${dinitManifest}
       '';
     };
   };
