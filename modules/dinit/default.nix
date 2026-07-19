@@ -14,7 +14,10 @@ let
   };
 
   dinitManifest = pkgs.writeText "dinit-manifest.json" (builtins.toJSON (
-    lib.attrNames (lib.filterAttrs (_: s: s.enable) cfg.services)
+    lib.mapAttrs (name: svc: {
+      boot = svc.boot;
+      default = svc.default;
+    }) (lib.filterAttrs (_: s: s.enable) cfg.services)
   ));
 
   dinitSwitchScript = pkgs.writeText "dinit-switch.py" ''
@@ -26,27 +29,32 @@ def main():
     parser.add_argument("--manifest", required=True)
     args = parser.parse_args()
 
+    print("dinit-switch: starting", file=sys.stderr)
+
     with open(args.manifest) as f:
-        desired = set(json.load(f))
+        desired = json.load(f)
+    desired_names = set(desired.keys())
 
     result = subprocess.run(
         [args.dinitctl, "list"], capture_output=True, text=True
     )
     if result.returncode != 0:
+        print("dinit-switch: dinitctl list failed, exiting", file=sys.stderr)
         sys.exit(0)
 
     current = set()
     for line in result.stdout.splitlines():
         if not line.startswith("["):
             continue
-        rest = line.split("]", 1)
-        if len(rest) == 2:
-            name = rest[1].strip().split(None, 1)[0]
-            if name not in ("boot", "default"):
-                current.add(name)
+        last = line.rfind("]")
+        if last < 0:
+            continue
+        name = line[last+1:].strip().split(None, 1)[0]
+        if name not in ("boot", "default"):
+            current.add(name)
 
-    for svc in sorted(current - desired):
-        print(f"dinit-switch: removing '{svc}'")
+    for svc in sorted(current - desired_names):
+        print(f"dinit-switch: removing '{svc}'", file=sys.stderr)
         subprocess.run([args.dinitctl, "rm-dep", "need", "boot", svc],
                      capture_output=True)
         subprocess.run([args.dinitctl, "rm-dep", "waits-for", "default", svc],
@@ -66,11 +74,18 @@ def main():
             if os.path.exists(p):
                 os.unlink(p)
 
-    for svc in sorted(current & desired):
+    for svc in sorted(current & desired_names):
         r = subprocess.run([args.dinitctl, "reload", svc],
                          capture_output=True, text=True)
         if r.returncode != 0:
             print(f"dinit-switch: reload '{svc}' failed: {r.stderr.strip()}", file=sys.stderr)
+
+    to_start = desired_names - current
+    for svc in sorted(to_start):
+        props = desired[svc]
+        if props.get("boot") or props.get("default"):
+            print(f"dinit-switch: starting '{svc}'", file=sys.stderr)
+            subprocess.run([args.dinitctl, "start", svc])
 
 if __name__ == "__main__":
     main()
