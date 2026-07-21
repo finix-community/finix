@@ -45,7 +45,7 @@ let
 
   # Insert modules for devices with a modalias.
   # Use @ prefix to run via /bin/sh on add events.
-  modaliasRule = ''-$MODALIAS=.* 0:0 660 @modprobe --quiet "$MODALIAS"'';
+  modaliasRule = ''-$MODALIAS=.* 0:0 660 @${pkgs.kmod}/bin/modprobe --quiet "$MODALIAS"'';
 
   # We need symlinks in /dev/disk/{by-id,by-label,by-uuid,by-partlabel,by-partuuid}
   # so we run this script for block device events.
@@ -196,7 +196,6 @@ in
       path = [
         config.programs.coreutils.package
         pkgs.execline
-        pkgs.kmod
         pkgs.util-linux
       ];
     };
