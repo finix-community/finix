@@ -147,13 +147,6 @@ in
       log = lib.mkDefault cfg.debug;
     };
 
-    # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/vnstat.conf".text = lib.mkAfter ''
-
-      # reload trigger
-      # ${config.environment.etc."vnstat.conf".source}
-    '';
-
     users.users = lib.optionalAttrs (cfg.user == "vnstatd") {
       vnstatd = {
         inherit (cfg) group;
@@ -166,5 +159,16 @@ in
     users.groups = lib.optionalAttrs (cfg.group == "vnstatd") {
       vnstatd = { };
     };
+
+    # TODO: add finit.services.reloadTriggers option
+    environment.etc."finit.d/vnstat.conf" =
+      lib.mkIf (config.finit.enable && config.finit.services.vnstat.enable)
+        {
+          text = lib.mkAfter ''
+
+            # reload trigger
+            # ${config.environment.etc."vnstat.conf".source}
+          '';
+        };
   };
 }

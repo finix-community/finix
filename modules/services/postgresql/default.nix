@@ -135,15 +135,6 @@ in
     environment.etc."postgresql/${cfg.package.psqlSchema}/postgresql.conf".source =
       format.generate "postgresql.conf" cfg.settings;
 
-    # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/postgresql.conf".text = lib.mkAfter ''
-
-      # reload trigger
-      # ${config.environment.etc."postgresql/${cfg.package.psqlSchema}/postgresql.conf".source}
-      # ${config.environment.etc."postgresql/${cfg.package.psqlSchema}/pg_hba.conf".source}
-      # ${config.environment.etc."postgresql/${cfg.package.psqlSchema}/pg_ident.conf".source}
-    '';
-
     finit.services.postgresql = {
       inherit (cfg) user group;
 
@@ -181,5 +172,18 @@ in
     users.groups.${cfg.group} = {
       gid = config.ids.gids.postgres;
     };
+
+    # TODO: add finit.services.reloadTriggers option
+    environment.etc."finit.d/postgresql.conf" =
+      lib.mkIf (config.finit.enable && config.finit.services.postgresql.enable)
+        {
+          text = lib.mkAfter ''
+
+            # reload trigger
+            # ${config.environment.etc."postgresql/${cfg.package.psqlSchema}/postgresql.conf".source}
+            # ${config.environment.etc."postgresql/${cfg.package.psqlSchema}/pg_hba.conf".source}
+            # ${config.environment.etc."postgresql/${cfg.package.psqlSchema}/pg_ident.conf".source}
+          '';
+        };
   };
 }

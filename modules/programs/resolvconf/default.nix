@@ -90,10 +90,14 @@ in
       remain = true;
     };
 
-    environment.etc."finit.d/resolvconf.conf".text = lib.mkAfter ''
+    environment.etc."finit.d/resolvconf.conf" =
+      lib.mkIf (config.finit.enable && config.finit.tasks.resolvconf.enable)
+        {
+          text = lib.mkAfter ''
 
-      # force a restart on configuration change
-      # ${config.environment.etc."resolvconf.conf".source}
-    '';
+            # force a restart on configuration change
+            # ${config.environment.etc."resolvconf.conf".source}
+          '';
+        };
   };
 }

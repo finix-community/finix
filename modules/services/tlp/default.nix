@@ -102,10 +102,14 @@ in
     };
 
     # TODO: add finit.services.restartTriggers option
-    environment.etc."finit.d/tlp@reload.conf".text = lib.mkAfter ''
+    environment.etc."finit.d/tlp@reload.conf" =
+      lib.mkIf (config.finit.enable && config.finit.tasks."tlp@reload".enable)
+        {
+          text = lib.mkAfter ''
 
-      # standard nixos trick to force a restart when something has changed
-      # ${config.environment.etc."tlp.conf".source}
-    '';
+            # standard nixos trick to force a restart when something has changed
+            # ${config.environment.etc."tlp.conf".source}
+          '';
+        };
   };
 }

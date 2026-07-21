@@ -218,11 +218,15 @@ in
     };
 
     # TODO: add finit.services.restartTriggers option
-    environment.etc."finit.d/cron.conf".text = lib.mkAfter ''
+    environment.etc."finit.d/cron.conf" =
+      lib.mkIf (config.finit.enable && config.finit.services.cron.enable)
+        {
+          text = lib.mkAfter ''
 
-      # standard nixos trick to force a restart when something has changed
-      # ${config.environment.etc.crontab.source}
-    '';
+            # standard nixos trick to force a restart when something has changed
+            # ${config.environment.etc.crontab.source}
+          '';
+        };
 
     # this module supplies an implementation for `providers.scheduler`
     providers.scheduler.backend = lib.mkDefault "cron";

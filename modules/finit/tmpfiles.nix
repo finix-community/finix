@@ -22,12 +22,6 @@
       ${lib.concatStringsSep "\n" config.finit.tmpfiles.rules}
     '';
 
-    environment.etc."finit.d/tmpfiles-setup.conf".text = lib.mkAfter ''
-
-      # force a restart on configuration change
-      # ${config.environment.etc."tmpfiles.d/finix.conf".source}
-    '';
-
     finit.tasks.tmpfiles-setup.command = "${config.finit.package}/libexec/finit/tmpfiles --create";
 
     providers.scheduler.tasks = {
@@ -39,5 +33,15 @@
 
     # needed for finit tmpfiles Z implementation: pkgs.policycoreutils
     # TODO: make this an optional dependency, fixup Z behaviour in general
+
+    environment.etc."finit.d/tmpfiles-setup.conf" =
+      lib.mkIf (config.finit.enable && config.finit.tasks.tmpfiles-setup.enable)
+        {
+          text = lib.mkAfter ''
+
+            # force a restart on configuration change
+            # ${config.environment.etc."tmpfiles.d/finix.conf".source}
+          '';
+        };
   };
 }

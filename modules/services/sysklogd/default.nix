@@ -83,14 +83,18 @@ in
     environment.etc."syslog.conf".source =
       lib.mkDefault "${cfg.package}/share/doc/sysklogd/syslog.conf";
 
-    # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/syslogd.conf".text = lib.mkAfter ''
-
-      # reload trigger
-      # ${config.environment.etc."syslog.d/nixos.conf".source}
-      # ${config.environment.etc."syslog.conf".source}
-    '';
-
     system.switch.inhibitors.syslogd = config.finit.services.syslogd.command;
+
+    # TODO: add finit.services.reloadTriggers option
+    environment.etc."finit.d/syslogd.conf" =
+      lib.mkIf (config.finit.enable && config.finit.services.syslogd.enable)
+        {
+          text = lib.mkAfter ''
+
+            # reload trigger
+            # ${config.environment.etc."syslog.d/nixos.conf".source}
+            # ${config.environment.etc."syslog.conf".source}
+          '';
+        };
   };
 }

@@ -140,7 +140,7 @@ in
           }
         ) cfg.keyboards;
 
-        serviceFile = {
+        serviceFile = lib.mkIf (config.finit.enable && config.finit.services.keyd.enable) {
           # TODO: add finit.services.reloadTriggers option
           "finit.d/keyd.conf".text = lib.mkAfter ''
 

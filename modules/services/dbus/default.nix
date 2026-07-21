@@ -135,10 +135,14 @@ in
     };
 
     # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/dbus.conf".text = lib.mkAfter ''
+    environment.etc."finit.d/dbus.conf" =
+      lib.mkIf (config.finit.enable && config.finit.services.dbus.enable)
+        {
+          text = lib.mkAfter ''
 
-      # reload trigger
-      # ${config.environment.etc."dbus-1".source}
-    '';
+            # reload trigger
+            # ${config.environment.etc."dbus-1".source}
+          '';
+        };
   };
 }

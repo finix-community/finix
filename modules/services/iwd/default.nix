@@ -81,10 +81,14 @@ in
     };
 
     # TODO: add finit.services.restartTriggers option
-    environment.etc."finit.d/iwd.conf".text = lib.mkAfter ''
+    environment.etc."finit.d/iwd.conf" =
+      lib.mkIf (config.finit.enable && config.finit.services.iwd.enable)
+        {
+          text = lib.mkAfter ''
 
-      # standard nixos trick to force a restart when something has changed
-      # ${config.environment.etc."iwd/main.conf".source}
-    '';
+            # standard nixos trick to force a restart when something has changed
+            # ${config.environment.etc."iwd/main.conf".source}
+          '';
+        };
   };
 }

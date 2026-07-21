@@ -729,6 +729,14 @@ let
 in
 {
   options.finit = {
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Whether to enable `finit` as pid 1.
+      '';
+    };
+
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.finit;

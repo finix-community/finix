@@ -78,13 +78,6 @@ in
     environment.etc."NetworkManager/conf.d/00-nixos.conf".source =
       format.generate "00-nixos.conf" cfg.settings;
 
-    # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/network-manager.conf".text = lib.mkAfter ''
-
-      # reload trigger
-      # ${config.environment.etc."NetworkManager/conf.d/00-nixos.conf".source}
-    '';
-
     services.dbus.enable = true;
     services.dbus.packages = packages;
     services.udev.packages = packages;
@@ -98,5 +91,16 @@ in
     users.groups = {
       networkmanager.gid = config.ids.gids.networkmanager;
     };
+
+    # TODO: add finit.services.reloadTriggers option
+    environment.etc."finit.d/network-manager.conf" =
+      lib.mkIf (config.finit.enable && config.finit.services.network-manager.enable)
+        {
+          text = lib.mkAfter ''
+
+            # reload trigger
+            # ${config.environment.etc."NetworkManager/conf.d/00-nixos.conf".source}
+          '';
+        };
   };
 }
