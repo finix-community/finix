@@ -15,8 +15,6 @@
 
   options.boot.init = lib.mkOption {
     type = lib.types.path;
-    default = "${config.finit.package}/bin/finit";
-    defaultText = lib.literalExpression ''"''${config.finit.package}/bin/finit"'';
     description = ''
       Executable run as stage-2 PID 1, symlinked as `''${config.system.build.toplevel}/init`.
     '';
