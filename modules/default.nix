@@ -37,6 +37,7 @@ in
   default = {
     imports = [
       ./boot
+      ./dinit
       ./environment
       ./filesystems
       ./finit
