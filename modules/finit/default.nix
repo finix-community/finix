@@ -11,8 +11,8 @@ in
   imports = [
     ./initrd.nix
     ./mount.nix
-    ./stage1.nix
-    ./stage2.nix
+    ./stage1
+    ./stage2
     ./tmpfiles.nix
   ];
 
