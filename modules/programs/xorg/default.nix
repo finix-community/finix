@@ -123,6 +123,9 @@ in
       xf86-input-libinput'
     ];
 
+    # allows hotplugging in xserver with mdevd
+    services.mdevd.nlgroups = 4;
+
     environment.pathsToLink = [
       "/share/X11"
       "/share/xsessions"
