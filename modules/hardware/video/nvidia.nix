@@ -52,27 +52,48 @@ in
       description = "Whether to enable NVIDIA driver support.";
     };
 
-    powerManagement.enable = lib.mkOption {
+    power.suspend.enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
       description = ''
-        Whether to enable experimental power management through systemd. For
-        more information, see the NVIDIA docs, on Chapter 21. Configuring
-        Power Management Support.
+        Whether to preserve video memory allocations across system suspend and
+        hibernate. For more information, see the NVIDIA docs, on Chapter 21.
+        Configuring Power Management Support.
       '';
     };
 
-    powerManagement.kernelSuspendNotifier = lib.mkOption {
-      type = lib.types.bool;
-      default = cfg.kernelModule == "open" && lib.versionAtLeast cfg.package.version "595";
+    power.suspend.notifier = lib.mkOption {
+      type = lib.types.enum [
+        "kernel"
+        "userspace"
+      ];
+      default =
+        if cfg.kernelModule == "open" && lib.versionAtLeast cfg.package.version "595" then
+          "kernel"
+        else
+          "userspace";
       defaultText = lib.literalExpression ''
-        config.hardware.nvidia.kernelModule == "open" && lib.versionAtLeast config.hardware.nvidia.package.version "595"
+        if config.hardware.nvidia.kernelModule == "open" && lib.versionAtLeast config.hardware.nvidia.package.version "595" then "kernel" else "userspace"
       '';
       description = ''
-        Whether to enable NVIDIA driver support for kernel suspend notifiers,
-        which allows the driver to be notified of suspend and resume events by
-        the kernel, rather than relying on systemd services. Requires NVIDIA
-        driver version 595 or newer, and the open source kernel modules.
+        How the NVIDIA driver is notified of system suspend and resume events
+        when `power.suspend.enable` is set:
+
+        - `kernel`: the kernel notifies the driver directly. Requires NVIDIA
+          driver version 595 or newer, and the open source kernel modules.
+        - `userspace`: relies on nvidia-sleep.sh being run by the sleep backend
+          (requires a sleep backend, e.g. programs.zzz).
+      '';
+    };
+
+    power.runtime.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to enable fine-grained dynamic power management. When enabled,
+        the NVIDIA GPU is powered down when not in use. Only works in PRIME
+        offload mode (prime.offload.enable = true). Requires kernel >= 5.5 and
+        a Turing or newer GPU. Sets NVreg_DynamicPowerManagement=0x02.
       '';
     };
 
@@ -138,15 +159,15 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = cfg.powerManagement.enable -> lib.versionAtLeast cfg.package.version "430.09";
+        assertion = cfg.power.suspend.enable -> lib.versionAtLeast cfg.package.version "430.09";
         message = "Required files for driver based power management only exist on versions >= 430.09.";
       }
 
       {
         assertion =
-          (cfg.powerManagement.enable && !cfg.powerManagement.kernelSuspendNotifier)
+          (cfg.power.suspend.enable && cfg.power.suspend.notifier == "userspace")
           -> config.providers.resumeAndSuspend.backend != "none";
-        message = "Power management without `kernelSuspendNotifier` requires a sleep backend. Enable programs.zzz (programs.zzz.enable = true).";
+        message = "`power.suspend.notifier = \"userspace\"` requires a sleep backend. Enable programs.zzz (programs.zzz.enable = true).";
       }
 
       {
@@ -166,9 +187,14 @@ in
 
       {
         assertion =
-          cfg.powerManagement.kernelSuspendNotifier
+          cfg.power.suspend.notifier == "kernel"
           -> (cfg.kernelModule == "open" && lib.versionAtLeast cfg.package.version "595");
-        message = "NVIDIA driver support for kernel suspend notifiers requires NVIDIA driver version 595 or newer, and the open source kernel modules.";
+        message = "`power.suspend.notifier = \"kernel\"` requires NVIDIA driver version 595 or newer, and the open source kernel modules.";
+      }
+
+      {
+        assertion = cfg.power.runtime.enable -> cfg.prime.offload.enable;
+        message = "`power.runtime.enable` requires `prime.offload.enable`.";
       }
     ];
 
@@ -219,10 +245,11 @@ in
 
       kernelParams =
         lib.optionals (cfg.kernelModule == "open") [ "nvidia.NVreg_OpenRmEnableUnsupportedGpus=1" ]
-        ++ lib.optionals (cfg.powerManagement.enable && cfg.powerManagement.kernelSuspendNotifier) [
+        ++ lib.optionals (cfg.power.suspend.enable && cfg.power.suspend.notifier == "kernel") [
           "nvidia.NVreg_UseKernelSuspendNotifiers=1"
         ]
-        ++ lib.optionals cfg.powerManagement.enable [ "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ]
+        ++ lib.optionals cfg.power.suspend.enable [ "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ]
+        ++ lib.optionals cfg.power.runtime.enable [ "nvidia.NVreg_DynamicPowerManagement=0x02" ]
         ++ lib.optionals (config.boot.kernelPackages.kernel.kernelAtLeast "6.2" && !ibtSupport) [
           "ibt=off"
         ]
@@ -274,6 +301,16 @@ in
         KERNEL=="card*", SUBSYSTEM=="drm", GROUP="video", MODE="0660"
         KERNEL=="renderD*", SUBSYSTEM=="drm", GROUP="render", MODE="0660"
       '')
+    ]
+    ++ lib.optionals cfg.power.runtime.enable [
+      (pkgs.writeTextDir "lib/udev/rules.d/80-nvidia-pm.rules" ''
+        ACTION=="bind",   SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="auto"
+        ACTION=="bind",   SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="auto"
+        ACTION=="bind",   SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", TEST=="power/control", ATTR{power/control}="auto"
+        ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="on"
+        ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="on"
+        ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", TEST=="power/control", ATTR{power/control}="on"
+      '')
     ];
 
     hardware.graphics.extraPackages = [
@@ -290,7 +327,7 @@ in
     hardware.firmware = lib.optional cfg.gsp.enable cfg.package.firmware;
 
     providers.resumeAndSuspend.hooks =
-      lib.optionalAttrs (cfg.powerManagement.enable && !cfg.powerManagement.kernelSuspendNotifier)
+      lib.optionalAttrs (cfg.power.suspend.enable && cfg.power.suspend.notifier == "userspace")
         {
           nvidia-suspend = {
             event = "suspend";
