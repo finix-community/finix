@@ -8,6 +8,45 @@ let
   cfg = config.services.autofs;
 
   format = pkgs.formats.ini { };
+
+  mountRuleOptions = {
+    options = {
+      mountPoint = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = null;
+      };
+
+      source = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = null;
+      };
+
+      rules = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = "rw,soft,rsize=8192,wsize=8192";
+      };
+    };
+  };
+
+  mountCollection = {
+    options = {
+      rootMountPoint = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = null;
+      };
+
+      extraArgs = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = null;
+      };
+
+      mounts = lib.mkOption {
+        type = with lib.types; attrsOf (submodule mountRuleOptions);
+        default = { };
+      };
+    };
+  };
+
 in
 {
   options.services.autofs = {
@@ -37,7 +76,7 @@ in
     };
 
     settings = lib.mkOption {
-      type = format.type;
+      inherit (format) type;
       default = { };
       description = ''
         `autofs` configuration. See {manpage}`autofs.conf(5)`
@@ -54,23 +93,9 @@ in
       '';
     };
 
-    autoMaster = lib.mkOption {
-      type = lib.types.str;
-      example = lib.literalExpression ''
-        let
-          # Media Transfer Protocol (MTP) is used in some Android devices
-          # https://wiki.archlinux.org/title/Autofs#MTP
-          autoMisc = pkgs.writeText "auto.misc" '''
-            android -fstype=fuse,allow_other,umask=000     :mtpfs
-          ''';
-        in '''
-          /media/misc  file:''${autoMisc}  --timeout=60
-        '''
-      '';
-      description = ''
-        Master Map configuration. See {manpage}`auto.master(5)`
-        for additional details.
-      '';
+    mounts = lib.mkOption {
+      type = with lib.types; attrsOf (submodule mountCollection);
+      default = { };
     };
   };
 
@@ -79,8 +104,27 @@ in
 
     boot.kernelModules = [ "autofs" ];
 
-    environment.etc."auto.master".text = cfg.autoMaster;
-    environment.etc."autofs.conf".source = format.generate "autofs.conf" cfg.settings;
+    environment.etc = lib.mkMerge [
+      {
+        "autofs.conf".source = format.generate "autofs.conf" cfg.settings;
+        "auto.master".text = lib.concatStringsSep "\n" (
+          lib.attrsets.mapAttrsToList (
+            n: v: v.rootMountPoint + " /etc/autofs/auto." + n + " " + v.extraArgs
+          ) cfg.mounts
+        );
+      }
+
+      (lib.attrsets.mapAttrs' (
+        n: v1:
+        lib.nameValuePair ("autofs/auto." + n) {
+          text = lib.concatStringsSep "\n" (
+            lib.attrsets.mapAttrsToList (
+              n: v2: (if v2.mountPoint != null then v2.mountPoint else n) + " -" + v2.rules + " " + v2.source
+            ) v1.mounts
+          );
+        }
+      ) cfg.mounts)
+    ];
 
     finit.services.autofs = {
       description = "on-demand filesystem automounter";
