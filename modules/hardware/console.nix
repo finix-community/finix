@@ -19,10 +19,11 @@ let
         loadkeys --bkeymap "${km}" >$out
       '';
 
-  loadkmapScript = pkgs.writeScript "loadkmap-console" ''
-    #!${pkgs.busybox}/bin/sh
-    exec ${pkgs.busybox}/bin/loadkmap < ${cfg.binaryKeyMap}
-  '';
+  loadkmapTask = {
+    description = "load console keymap";
+    conditions = "dev/console";
+    command = "${pkgs.busybox}/bin/loadkmap < ${cfg.binaryKeyMap}";
+  };
 in
 {
   options = {
@@ -71,17 +72,9 @@ in
     # Console node ownership and mode; mdevd has no defaults for this.
     services.mdevd.coldplugRules = "-console 0:${toString config.ids.gids.tty} 600";
 
-    finit.tasks.loadkmap = {
-      description = "load console keymap";
-      conditions = "dev/console";
-      command = loadkmapScript;
-    };
+    finit.tasks.loadkmap = loadkmapTask;
 
-    boot.initrd.finit.tasks.loadkmap = {
-      description = "load console keymap";
-      conditions = "dev/console";
-      script = "loadkmap < ${cfg.binaryKeyMap}";
-    };
+    boot.initrd.finit.tasks.loadkmap = loadkmapTask;
 
     finit.tasks.setvesablank =
       let
