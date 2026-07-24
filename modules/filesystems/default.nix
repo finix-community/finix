@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   utils,
   ...
 }:
@@ -25,7 +26,12 @@ let
     sw:
     let
       device = if sw.label != null then "/dev/disk/by-label/${sw.label}" else sw.device;
-      options = sw.options ++ lib.optional (sw.priority != null) "pri=${toString sw.priority}";
+      options =
+        sw.options
+        ++ lib.optional (sw.priority != null) "pri=${toString sw.priority}"
+        ++ lib.optional (sw.discardPolicy != null) (
+          if sw.discardPolicy == "both" then "discard" else "discard=${sw.discardPolicy}"
+        );
     in
     "${escape device} none swap ${escape (lib.concatStringsSep "," options)} 0 0\n";
 
@@ -96,6 +102,50 @@ let
       )
       + "\n"
     ) fstabFileSystems;
+
+  # Swap entries with randomEncryption.enable can't be stable fstab lines: the backing device is a fresh /dev/mapper/<name> created with a brand new random key on every boot, so they're set up imperatively instead
+  isEncryptedSwap = sw: sw.randomEncryption.enable;
+  plainSwapDevices = lib.filter (sw: !isEncryptedSwap sw) config.swapDevices;
+  encryptedSwapDevices = lib.filter isEncryptedSwap config.swapDevices;
+
+  sanitizeName = s: lib.replaceStrings [ "/" " " ] [ "-" "-" ] (lib.removePrefix "/" s);
+
+  makeEncryptedSwapTask =
+    sw:
+    let
+      name = "cryptswap-${sanitizeName sw.device}";
+    in
+    {
+      inherit name;
+      value =
+        let
+          re = sw.randomEncryption;
+          options =
+            sw.options
+            ++ lib.optional (sw.priority != null) "pri=${toString sw.priority}"
+            ++ lib.optional (sw.discardPolicy != null) (
+              if sw.discardPolicy == "both" then "discard" else "discard=${sw.discardPolicy}"
+            );
+        in
+        {
+          description = "Encrypted swap device on ${sw.device}";
+          runlevels = "S";
+          command = toString (
+            pkgs.writeShellScript name ''
+              set -eu
+              ${pkgs.cryptsetup}/bin/cryptsetup plainOpen \
+                -c ${lib.escapeShellArg re.cipher} \
+                -s ${toString re.keySize} \
+                ${lib.optionalString (re.sectorSize != 0) "--sector-size ${toString re.sectorSize}"} \
+                ${lib.optionalString re.allowDiscards "--allow-discards"} \
+                -d ${lib.escapeShellArg re.source} \
+                ${lib.escapeShellArg sw.device} ${lib.escapeShellArg name}
+              ${pkgs.util-linuxMinimal}/bin/mkswap /dev/mapper/${name}
+              ${pkgs.util-linuxMinimal}/bin/swapon -o ${lib.escapeShellArg (lib.concatStringsSep "," options)} /dev/mapper/${name}
+            ''
+          );
+        };
+    };
 in
 {
   imports = [
@@ -124,13 +174,27 @@ in
     # system.fsPackages = [ pkgs.dosfstools ];
     # environment.systemPackages = with pkgs; [ fuse3 fuse ] ++ config.system.fsPackages;
 
-    environment.systemPackages = lib.unique (
-      lib.flatten (
-        lib.concatMap (v: lib.optional v.enable v.packages or [ ]) (
-          lib.attrValues config.boot.supportedFilesystems
+    assertions = lib.map (sw: {
+      assertion = sw.label == null && (builtins.match "/dev/disk/by-(uuid|label)/.*" sw.device == null);
+      message = ''
+        Random-encrypted swap device ${sw.device} must not use swapDevices.*.label,
+        and should not be referenced by UUID or label, since those are erased and regenerated on every
+        boot once the partition is encrypted. Use a stable path such as
+        /dev/disk/by-partuuid/... instead.
+      '';
+    }) encryptedSwapDevices;
+
+    environment.systemPackages =
+      lib.unique (
+        lib.flatten (
+          lib.concatMap (v: lib.optional v.enable v.packages or [ ]) (
+            lib.attrValues config.boot.supportedFilesystems
+          )
         )
       )
-    );
+      ++ lib.optional (encryptedSwapDevices != [ ]) pkgs.cryptsetup;
+
+    finit.tasks = lib.listToAttrs (lib.map makeEncryptedSwapTask encryptedSwapDevices);
 
     environment.etc.fstab.text = ''
       # This is a generated file.  Do not edit!
@@ -149,8 +213,8 @@ in
         ]
       ) fileSystems) { }}
 
-      # swap devices
-      ${lib.concatMapStrings makeSwapEntry config.swapDevices}
+      # swap devices (random-encrypted swap is handled by finit.tasks instead)
+      ${lib.concatMapStrings makeSwapEntry plainSwapDevices}
     '';
 
     boot.supportedFilesystems = lib.mapAttrs' (
