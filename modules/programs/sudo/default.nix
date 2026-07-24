@@ -29,6 +29,33 @@ in
         The package to use for `sudo`.
       '';
     };
+
+    wheelPersistTimer = lib.mkOption {
+      type = lib.types.integer;
+      default = 10;
+      defaultText = lib.literalExpression "10";
+      description = ''
+        The amount of time `sudo` will cache a user in the wheel groups privileges after successful use in minutes. Make negative for infinite timer.
+      '';
+    };
+
+    globalPersistTimer = lib.mkOption {
+      type = lib.types.integer;
+      default = 10;
+      defaultText = lib.literalExpression "10";
+      description = ''
+        The amount of time `sudo` will cache a users privileges after successful use in minutes. Make negative for infinite timer.
+      '';
+    };
+
+    requirePassword = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      defaultText = lib.literalExpression "true";
+      description = ''
+        Whether or not to a require a password for users in the wheel group
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -61,22 +88,27 @@ in
           # or ‘security.sudo.extraRules’ instead.
         '')
 
-        (lib.mkAfter ''
-          # extraConfig
-          Defaults:root,%wheel timestamp_timeout=60
+        (lib.mkAfter lib.concatStrings [
+          ''
+            # extraConfig
+            Defaults timestamp_timeout=${cfg.globalPersistTimer}
+            Defaults:root,%wheel timestamp_timeout=${cfg.wheelPersistTimer}
 
-          # Keep terminfo database for root and %wheel.
-          Defaults:root,%wheel env_keep+=TERMINFO_DIRS
-          Defaults:root,%wheel env_keep+=TERMINFO
+          ''
 
-          # keep NIXOS_NO_CHECK for `nixos-rebuild switch`
-          Defaults env_keep+=NIXOS_NO_CHECK
-        '')
+          (lib.optionalString cfg.requirePassword "Defaults:root,%wheel !authenticate")
 
-        ''
-          root    ALL=(ALL:ALL)    SETENV: ALL
-          %wheel  ALL=(ALL:ALL)    SETENV: ALL
-        ''
+          ''
+            # Keep terminfo database for root and %wheel.
+            Defaults:root,%wheel env_keep+=TERMINFO_DIRS
+            Defaults:root,%wheel env_keep+=TERMINFO
+          ''
+
+          ''
+            root    ALL=(ALL:ALL)    SETENV: ALL
+            %wheel  ALL=(ALL:ALL)    SETENV: ALL
+          ''
+        ])
       ];
 
       source =

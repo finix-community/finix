@@ -6,6 +6,10 @@
 }:
 let
   cfg = config.programs.doas;
+
+  optionalStringElse =
+    cond: string: elseString:
+    if cond then string else elseString;
 in
 {
   imports = [
@@ -34,7 +38,7 @@ in
       type = lib.types.bool;
       default = true;
       description = ''
-        Whether or not to prompt the users in the `wheel` group for their password.
+        Whether or not to prompt users in the `wheel` group for their password.
       '';
     };
 
@@ -98,7 +102,12 @@ in
                 permit nopass keepenv root
 
                 # access for members of the "wheel" group
-                permit ${lib.concatStringsSep " " wheelOpts} :wheel
+                permit ''
+              (lib.optionalString (!cfg.requirePassword) "nopass ")
+              (lib.optionalString (cfg.persist && cfg.requirePassword) "persist ")
+              (optionalStringElse cfg.keepEnv "keepenv " "setenv { SSH_AUTH_SOCK TERMINFO TERMINFO_DIRS } ")
+              ''
+                :wheel
               ''
             ]
           ))
