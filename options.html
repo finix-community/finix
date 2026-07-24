@@ -1202,7 +1202,7 @@
     <details class="toc-category">
       <summary title="boot.loader">
         <span>boot.loader</span>
-        <span class="toc-count">2</span>
+        <span class="toc-count">4</span>
       </summary>
       <ul>
         
@@ -1219,6 +1219,22 @@
         <li>
           <a href='#option-boot.loader.efi.efiSysMountPoint' title="boot.loader.efi.efiSysMountPoint">
             efi.efiSysMountPoint
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-boot.loader.script.enable' title="boot.loader.script.enable">
+            script.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-boot.loader.script.installHook' title="boot.loader.script.installHook">
+            script.installHook
             
             
           </a>
@@ -11544,7 +11560,7 @@ that follow this format and can be used directly.</p>
   <div class="option-description"><html><head></head><body><p>Whether the installation process is allowed to modify EFI boot variables.</p>
 </body></html></div>
   <div class="option-default">Default: <code>false</code></div>
-  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/limine" target="_blank">&lt;finix/modules/programs/limine&gt;</a></code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/boot/efi.nix" target="_blank">&lt;finix/modules/boot/efi.nix&gt;</a></code></div>
 </div>
 <div class="option" id="option-boot.loader.efi.efiSysMountPoint">
   <h3 class="option-name">
@@ -11556,7 +11572,33 @@ that follow this format and can be used directly.</p>
   <div class="option-description"><html><head></head><body><p>Where the EFI System Partition is mounted.</p>
 </body></html></div>
   <div class="option-default">Default: <code>"/boot"</code></div>
-  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/limine" target="_blank">&lt;finix/modules/programs/limine&gt;</a></code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/boot/efi.nix" target="_blank">&lt;finix/modules/boot/efi.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-boot.loader.script.enable">
+  <h3 class="option-name">
+    <a href="#option-boot.loader.script.enable" class="option-anchor">boot.loader.script.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable an externally-provided bootloader install hook.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-example">Example: <code>true</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/bootloader" target="_blank">&lt;finix/modules/providers/bootloader&gt;</a></code></div>
+</div>
+<div class="option" id="option-boot.loader.script.installHook">
+  <h3 class="option-name">
+    <a href="#option-boot.loader.script.installHook" class="option-anchor">boot.loader.script.installHook</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>absolute path</code></div>
+  <div class="option-description"><html><head></head><body><p>A program that installs the bootloader. Called with one argument: the path to the system toplevel.</p>
+<p>This is the same contract as <a class="option-reference" href="options.html#option-providers.bootloader.installHook"><code class="nixos-option">providers.bootloader.installHook</code></a>.
+Setting this option wires the hook into the <code>script</code> <code>providers.bootloader</code> backend automatically.</p>
+</body></html></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/bootloader" target="_blank">&lt;finix/modules/providers/bootloader&gt;</a></code></div>
 </div>
 <div class="option" id="option-boot.modprobeConfig.enable">
   <h3 class="option-name">
@@ -17453,7 +17495,7 @@ configuration. Card-specific drivers that need explicit configuration
     <span class="copy-link" title="Copy link to this option"></span>
     <span class="copy-feedback">Link copied!</span>
   </h3>
-  <div class="option-type">Type: <code>one of "limine", "none"</code></div>
+  <div class="option-type">Type: <code>one of "limine", "none", "script"</code></div>
   <div class="option-description"><html><head></head><body><p>The selected module which should implement functionality for the <code class="nixos-option">providers.bootloader</code> contract.</p>
 </body></html></div>
   <div class="option-default">Default: <code>"none"</code></div>
