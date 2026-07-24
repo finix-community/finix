@@ -134,7 +134,7 @@ in
       type = with lib.types; nullOr ints.unsigned;
       default = null;
       description = ''
-        After `mdevd` has handled the uevents, rebroadcast them to the netlink groups identified
+        After `mdevd` has handled the uevents for hotplugged devices, rebroadcast them to the netlink groups identified
         by the mask {option}`nlgroups`.
 
         ::: {.note}
@@ -202,10 +202,7 @@ in
 
     finit.run.coldplug = {
       description = "cold plugging system";
-      command =
-        "${cfg.package}/bin/mdevd-coldplug"
-        + lib.optionalString (cfg.nlgroups != null) " -O ${toString cfg.nlgroups}"
-        + lib.optionalString cfg.debug " -v 3";
+      command = "${cfg.package}/bin/mdevd-coldplug" + lib.optionalString cfg.debug " -v 3";
       runlevels = "S";
       conditions = "service/mdevd/ready";
       cgroup.name = "init";
