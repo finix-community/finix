@@ -113,7 +113,7 @@
                 tries=900
                 i=0
                 while [ "$i" -lt "$tries" ]; do
-                  if zpool list "${pool}" >/dev/null 2>&1 || zpool import -f "${pool}"; then
+                  if zpool list "${pool}" >/dev/null 2>&1 || zpool import -N -f "${pool}"; then
                     ${lib.concatMapStringsSep "\n" (k: ''zfs load-key "${k}"'') (keysFor pool)}
                     exit 0
                   fi
