@@ -219,9 +219,9 @@ in
     services.docker.extraPackages = [
       config.services.nftables.package or pkgs.nftables
     ]
-    ++ lib.optionals (cfg.settings.storage-driver == "zfs") [
-      config.boot.zfs.package
-    ];
+    ++ lib.optionals (
+      cfg.settings.storage-driver == "zfs"
+    ) config.boot.supportedFilesystems.zfs.packages;
 
     boot.kernelModules = [
       "bridge"
