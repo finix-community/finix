@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  utils,
   ...
 }:
 {
@@ -68,17 +69,21 @@
         "aes_generic"
       ];
 
-      boot.initrd.fileSystemImportCommands = lib.mkOrder 500 (
-        lib.concatStringsSep "\n" (
-          lib.mapAttrsToList (
+      boot.initrd.finit.tasks.luks =
+        let
+          devices = lib.filterAttrs (_: fs: fs.fsType == "luks") config.fileSystems;
+        in
+        lib.mkIf (devices != { }) {
+          conditions = map (dev: "task/wait-dev-${utils.escapePath dev.device}/success") (
+            lib.attrValues devices
+          );
+
+          tty = "@console";
+          script = lib.concatMapAttrsStringSep "\n" (
             name: dev:
-            let
-              fsOpts = lib.concatStringsSep " " dev.options;
-            in
-            "cryptsetup open ${fsOpts} ${dev.device} ${name}"
-          ) (lib.filterAttrs (_: fs: fs.fsType == "luks") config.fileSystems)
-        )
-      );
+            "DM_DISABLE_UDEV=1 cryptsetup open ${lib.concatStringsSep " " dev.options} ${dev.device} ${name}"
+          ) devices;
+        };
     })
   ];
 }

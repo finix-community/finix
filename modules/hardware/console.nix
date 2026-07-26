@@ -48,6 +48,12 @@ let
     in
     ''printf "${concatStringsSep "" entries}" > /dev/console''
   );
+
+  loadkmapTask = {
+    description = "load console keymap";
+    conditions = "dev/console";
+    command = "${pkgs.busybox}/bin/loadkmap < ${cfg.binaryKeyMap}";
+  };
 in
 {
   options = {
@@ -155,15 +161,12 @@ in
       target = "/console-font";
     };
 
-    # Use the device-manager to load the keymap rather
-    # than injecting somewhere into the early boot script.
-    services.mdevd.coldplugRules = "-console 0:${toString config.ids.gids.tty} 600 +redirfd -r 0 ${cfg.binaryKeyMap} loadkmap";
+    # Console node ownership and mode; mdevd has no defaults for this.
+    services.mdevd.coldplugRules = "-console 0:${toString config.ids.gids.tty} 600";
 
-    services.udev.packages = [
-      (pkgs.writeTextDir "etc/udev/rules.d/loadkmap" ''
-        KERNEL=="console", SUBSYSTEM=="tty", RUN+="${pkgs.busybox}/bin/loadkmap <${cfg.binaryKeyMap}"
-      '')
-    ];
+    finit.tasks.loadkmap = loadkmapTask;
+
+    boot.initrd.finit.tasks.loadkmap = loadkmapTask;
 
     finit.tasks.setvesablank =
       let

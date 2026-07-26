@@ -39,7 +39,7 @@ in
       }
     ];
 
-    services.dbus.packages = cfg.package.bin;
+    services.dbus.packages = [ cfg.package.bin ];
 
     finit.services.nvidia-powerd = {
       description = "NVIDIA Dynamic Boost";

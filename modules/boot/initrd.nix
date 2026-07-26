@@ -49,6 +49,14 @@ in
       description = "Arguments to pass to the compressor for the initrd image, or null to use the compressor's defaults.";
     };
 
+    prepend = lib.mkOption {
+      default = [ ];
+      type = lib.types.listOf lib.types.str;
+      description = ''
+        Other initrd files to prepend to the final initrd we are building.
+      '';
+    };
+
     contents = lib.mkOption {
       type =
         with lib.types;
@@ -97,7 +105,7 @@ in
 
     boot.initrd.package = pkgs.makeInitrdNG {
       name = "initrd-" + config.boot.kernelPackages.kernel.name or "kernel";
-      inherit (cfg) compressor compressorArgs;
+      inherit (cfg) compressor compressorArgs prepend;
       contents = map (
         { source, target }@pair: if target != null then pair else { inherit source; }
       ) cfg.contents;
