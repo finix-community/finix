@@ -143,6 +143,84 @@ let
           type = with lib.types; nonEmptyListOf nonEmptyStr;
           description = "Options used to set up the swap device.";
         };
+
+        discardPolicy = lib.mkOption {
+          default = null;
+          example = "both";
+          type =
+            with lib.types;
+            nullOr (enum [
+              "once"
+              "pages"
+              "both"
+            ]);
+          description = ''
+            Specify the discard policy for the swap device. If "once",
+            then the discard operation will be performed once, at swapon
+            invocation. If "pages", then the discard operation will be
+            performed on every freed page (this is "discard" semantics
+            in swap parlance, not TRIM). If "both", then both will be
+            enabled. If unset, then no discard policy is applied.
+          '';
+        };
+
+        randomEncryption = {
+          enable = lib.mkOption {
+            default = false;
+            type = lib.types.bool;
+            description = ''
+              Encrypt swap device with a random key. This way you won't have a
+              persistent swap device, the entire contents become unreadable
+              after every reboot. Mutually exclusive with {option}`label`,
+              since the underlying mapped device is regenerated on every boot
+              and is therefore not activated through `/etc/fstab` like a
+              regular swap device, but through a dedicated `finit` task.
+            '';
+          };
+
+          cipher = lib.mkOption {
+            default = "aes-xts-plain64";
+            type = lib.types.nonEmptyStr;
+            description = ''
+              Specify the cipher to use, see {command}`cryptsetup
+              benchmark` for a list of options.
+            '';
+          };
+
+          keySize = lib.mkOption {
+            default = 256;
+            type = lib.types.ints.positive;
+            description = "Specify the size of the randomly generated key, in bits.";
+          };
+
+          sectorSize = lib.mkOption {
+            default = 0;
+            type = lib.types.ints.unsigned;
+            description = ''
+              Specify the sector size in bytes, or `0` to let
+              {command}`cryptsetup` pick the default.
+            '';
+          };
+
+          source = lib.mkOption {
+            default = "/dev/urandom";
+            type = lib.types.nonEmptyStr;
+            description = ''
+              Source of randomness used to generate the swap
+              encryption key on every boot.
+            '';
+          };
+
+          allowDiscards = lib.mkOption {
+            default = false;
+            type = lib.types.bool;
+            description = ''
+              Whether to allow TRIM requests to the underlying device.
+              This option has security implications, see the
+              upstream NixOS manual section on swap encryption.
+            '';
+          };
+        };
       };
     };
 in
