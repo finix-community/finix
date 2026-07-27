@@ -16,7 +16,7 @@
       finit.runlevel = 3;
     };
 
-  # nftables backend: ping enabled, packets dropped (defaults)
+  # nftables backend: packets dropped, ping blocked (defaults)
   nodes.nftables =
     { pkgs, ... }:
     {
@@ -53,8 +53,8 @@
     # so wait until they are actually loaded before probing
     nftables.wait_until_succeeds("nft list table inet finix-fw", timeout=30)
 
-    with subtest("nftables: ping is allowed"):
-        client.succeed("ping -c 3 192.168.1.2")
+    with subtest("nftables: ping is blocked by default"):
+        client.fail("ping -c 1 -W 3 192.168.1.2")
 
     with subtest("nftables: allowed tcp port is reachable"):
         client.succeed("ncat -z -w 3 192.168.1.2 8080")

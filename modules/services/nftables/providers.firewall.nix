@@ -59,11 +59,6 @@ in
           chain input-allow {
             ${lib.optionalString (tcpSet != "") "tcp dport { ${tcpSet} } accept"}
             ${lib.optionalString (udpSet != "") "udp dport { ${udpSet} } accept"}
-
-            ${lib.optionalString svcCfg.allowPing ''
-              icmp type echo-request accept comment "allow ping"
-              icmpv6 type echo-request accept comment "allow ping6"
-            ''}
           }
         '';
       };

@@ -47,20 +47,12 @@ let
 
   enabledTables = lib.filterAttrs (_: table: table.enable) cfg.tables;
 
-  deletions = ''
-    ${
-      if cfg.flushRuleset then
-        "flush ruleset"
-      else
-        lib.concatStringsSep "\n" (
-          lib.mapAttrsToList (_: table: ''
-            table ${table.family} ${table.name}
-            delete table ${table.family} ${table.name}
-          '') enabledTables
-        )
-    }
-    ${cfg.extraDeletions}
-  '';
+  deletions = lib.concatStringsSep "\n" (
+    lib.mapAttrsToList (_: table: ''
+      table ${table.family} ${table.name}
+      delete table ${table.family} ${table.name}
+    '') enabledTables
+  );
 
   deletionsFile = pkgs.writeText "nftables-deletions.nft" deletions;
 in
@@ -149,78 +141,6 @@ in
       '';
     };
 
-    allowPing = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = ''
-        Whether the {option}`providers.firewall` implementation responds
-        to incoming ICMPv4 echo requests ("pings").
-      '';
-    };
-
-    flushRuleset = lib.mkEnableOption "flushing the entire ruleset on each start";
-
-    extraDeletions = lib.mkOption {
-      type = lib.types.lines;
-      default = "";
-      example = ''
-        # this makes deleting a non-existing table a no-op instead of an error
-        table inet some-table;
-
-        delete table inet some-table;
-      '';
-      description = ''
-        Extra deletion commands to be run on every firewall start and
-        after stopping the firewall.
-      '';
-    };
-
-    ruleset = lib.mkOption {
-      type = lib.types.lines;
-      default = "";
-      example = ''
-        table inet filter {
-          chain input {
-            type filter hook input priority filter; policy drop;
-            tcp dport 22 accept
-          }
-        }
-      '';
-      description = ''
-        The ruleset to be used with nftables. Should be in a format that
-        can be loaded using "/bin/nft -f". Definitions from multiple modules
-        are concatenated, allowing rules to be contributed without
-        overwriting each other. Note that if the tables should be cleaned
-        first, either:
-        - services.nftables.flushRuleset = true; needs to be set (flushes all tables)
-        - services.nftables.extraDeletions needs to be set
-        - or services.nftables.tables can be used, which will clean up the table automatically
-      '';
-    };
-
-    rulesetFile = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
-      default = null;
-      description = ''
-        The ruleset file to be used with nftables. Should be in a format that
-        can be loaded using "nft -f".
-      '';
-    };
-
-    flattenRulesetFile = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      description = ''
-        Use `builtins.readFile` rather than `include` to handle {option}`rulesetFile`.
-        It is useful when you want to apply {option}`preCheckRuleset` to
-        {option}`rulesetFile`.
-
-        ::: {.note}
-        It is expected that {option}`rulesetFile` can be accessed from the build sandbox.
-        :::
-      '';
-    };
-
     tables = lib.mkOption {
       type = lib.types.attrsOf (lib.types.submodule tableSubmodule);
       default = { };
@@ -257,18 +177,6 @@ in
               }
             '') enabledTables
           )}
-          ${cfg.ruleset}
-          ${
-            if cfg.rulesetFile != null then
-              if cfg.flattenRulesetFile then
-                builtins.readFile cfg.rulesetFile
-              else
-                ''
-                  include "${cfg.rulesetFile}"
-                ''
-            else
-              ""
-          }
         '';
         checkPhase = lib.optionalString cfg.checkRuleset ''
           cp $out ruleset.conf
@@ -282,10 +190,10 @@ in
             ${pkgs.buildPackages.nftables}/bin/nft --check --file ruleset.conf
         '';
       };
-      defaultText = lib.literalMD "a configuration file generated from `tables`, `ruleset` and `rulesetFile`";
+      defaultText = lib.literalMD "a configuration file generated from `tables`";
       description = ''
         The complete nftables configuration file. Setting this takes precedence
-        over {option}`tables`, {option}`ruleset` and {option}`rulesetFile`.
+        over {option}`tables`.
       '';
     };
   };
