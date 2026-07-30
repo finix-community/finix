@@ -115,6 +115,9 @@ in
       }
       // lib.optionalAttrs cfg.resolveLocalQueries {
         name_servers = "127.0.0.1";
+      }
+      // lib.optionalAttrs config.services.dbus.enable {
+        enable-dbus = true;
       };
 
     users.users.dnsmasq = {
