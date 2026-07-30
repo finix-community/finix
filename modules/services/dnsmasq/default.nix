@@ -137,7 +137,6 @@ in
       ++ lib.optionals (cfg.settings ? interface) (
         map (interface: "net/${interface}/up") cfg.settings.interface
       );
-      runlevels = "2345";
 
       # unsure if this is right.
       notify = if config.services.dbus.enable then "systemd" else "none";
