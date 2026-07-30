@@ -165,12 +165,5 @@ in
 
       respawn = true;
     };
-
-    #force a restart on config change
-    environment.etc."finit.d/dnsmasq.conf".text = lib.mkAfter ''
-
-      # standard nixos trick to force a restart when something has changed
-      # ${cfg.configFile}
-    '';
   };
 }
