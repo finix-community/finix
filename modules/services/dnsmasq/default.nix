@@ -140,8 +140,8 @@ in
         map (interface: "net/${interface}/up") cfg.settings.interface
       );
 
-      # unsure if this is right.
-      notify = if config.services.dbus.enable then "systemd" else "none";
+      # TODO: check if PID could be a valid notification for this service.
+      #notify = if config.services.dbus.enable then "systemd" else "none";
 
       pre = pkgs.writeShellScript "dnsmasq-pre.sh" ''
         mkdir -m 755 -p ${stateDir}
