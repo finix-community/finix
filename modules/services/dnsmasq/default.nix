@@ -131,7 +131,7 @@ in
 
     finit.tmpfiles.rules = [
       "d ${stateDir} 0755 ${config.users.users.dnsmasq.name} root - -"
-      "f ${stateDir}/dnsmasq.leases 0644 ${config.users.users.dnsmasq.name} root - -"
+      "f ${stateDir}/dnsmasq.leases 0644 ${config.users.users.dnsmasq.name} root -"
     ]
     ++ lib.optional (cfg.resolveLocalQueries && !cfg.settings.no-resolv) [
       "f /etc/dnsmasq-conf.conf 0644 root root - -"
