@@ -129,7 +129,6 @@ in
 
     finit.services.dnsmasq = {
       description = "Dnsmasq Daemon";
-      path = [ cfg.package ];
       conditions = [
         "service/syslogd/running"
         "net/lo/up"
@@ -150,7 +149,7 @@ in
         ${lib.optionalString (
           cfg.resolveLocalQueries && !cfg.settings.no-resolv
         ) "touch /etc/dnsmasq-{conf,resolv}.conf"}
-        dnsmasq --test -C ${cfg.configFile}
+        ${cfg.package}/bin/dnsmasq --test -C ${cfg.configFile}
       '';
 
       command = lib.escapeShellArgs (
