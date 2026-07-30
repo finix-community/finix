@@ -153,12 +153,12 @@ in
       #notify = if config.services.dbus.enable then "systemd" else "none";
 
       pre = pkgs.writeShellScript "dnsmasq-pre.sh" ''
-        ${cfg.package}/bin/dnsmasq --test -C ${cfg.configFile}
+        ${lib.getExe cfg.package} --test -C ${cfg.configFile}
       '';
 
       command = lib.escapeShellArgs (
         [
-          "${cfg.package}/bin/dnsmasq"
+          "${lib.getExe cfg.package}"
           "-k"
         ]
         ++ lib.optionals config.services.dbus.enable [ "--enable-dbus" ]
