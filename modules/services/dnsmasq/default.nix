@@ -163,8 +163,6 @@ in
         ]
       );
 
-      reload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
-
       respawn = true;
     };
 
