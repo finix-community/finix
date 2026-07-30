@@ -112,7 +112,6 @@ in
       lib.mkIf (!cfg.settings.no-resolv) {
         dnsmasq_conf = "/etc/dnsmasq-conf.conf";
         dnsmasq_resolv = "/etc/dnsmasq-resolv.conf";
-        no-resolv = !config.programs.resolvconf.enable;
       }
       // lib.optionalAttrs cfg.resolveLocalQueries {
         name_servers = "127.0.0.1";
