@@ -129,6 +129,15 @@ in
 
     services.dbus.packages = lib.optional (config.services.dbus.enable) cfg.package;
 
+    finit.tmpfiles.rules = [
+      "d ${stateDir} 0755 ${config.users.users.dnsmasq.name} root - -"
+      "f ${stateDir}/dnsmasq.leases 0644 ${config.users.users.dnsmasq.name} root - -"
+    ]
+    ++ lib.optional (cfg.resolveLocalQueries && !cfg.settings.no-resolv) [
+      "f /etc/dnsmasq-conf.conf 0644 root root - -"
+      "f /etc/dnsmasq-resolv.conf 0644 root root - -"
+    ];
+
     finit.services.dnsmasq = {
       description = "Dnsmasq Daemon";
       conditions = [
@@ -144,12 +153,6 @@ in
       #notify = if config.services.dbus.enable then "systemd" else "none";
 
       pre = pkgs.writeShellScript "dnsmasq-pre.sh" ''
-        mkdir -m 755 -p ${stateDir}
-        touch ${stateDir}/dnsmasq.leases
-        chown -R ${config.users.users.dnsmasq.name} ${stateDir}
-        ${lib.optionalString (
-          cfg.resolveLocalQueries && !cfg.settings.no-resolv
-        ) "touch /etc/dnsmasq-{conf,resolv}.conf"}
         ${cfg.package}/bin/dnsmasq --test -C ${cfg.configFile}
       '';
 
