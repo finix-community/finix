@@ -66,10 +66,7 @@ in
       description = "power profiles daemon";
       conditions = "service/dbus/ready";
       command = "${cfg.package}/libexec/power-profiles-daemon";
+      state-dir = "power-profiles-daemon";
     };
-
-    finit.tmpfiles.rules = [
-      "d /var/lib/power-profiles-daemon"
-    ];
   };
 }

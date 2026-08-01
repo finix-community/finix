@@ -76,13 +76,8 @@ in
 
     finit.tasks.resolvconf = {
       command = "${lib.getExe cfg.package} -u";
-      remain = true;
+      remain-after-exit = true;
+      reload-triggers = [ config.environment.etc."resolvconf.conf".source ];
     };
-
-    environment.etc."finit.d/resolvconf.conf".text = lib.mkAfter ''
-
-      # force a restart on configuration change
-      # ${config.environment.etc."resolvconf.conf".source}
-    '';
   };
 }

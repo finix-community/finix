@@ -25,7 +25,8 @@
   config = {
     finit.tasks.remount-nix-store = {
       description = "remount the nix store in read only mode";
-      runlevels = "S";
+      runlevel = "S";
+      # TODO: convert to POSIX, switch from `command` to `script`+`path`
       command = pkgs.writeShellApplication {
         name = "remount-nix-store.sh";
         runtimeInputs = [
@@ -53,7 +54,7 @@
     # task to run if ctrl-alt-del is pressed - this condition is asserted by finit upon receiving SIGINT (from the kernel).
     finit.tasks.ctrl-alt-del = {
       description = "rebooting system";
-      runlevels = "12345789";
+      runlevel = "12345789";
       conditions = "sys/key/ctrlaltdel";
       command = "${config.finit.package}/bin/initctl reboot";
     };

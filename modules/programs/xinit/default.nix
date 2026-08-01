@@ -26,10 +26,7 @@ in
           (
             o:
             lib.optionalAttrs config.security.wrappers.X.enable or false {
-              # TODO: replace once https://github.com/NixOS/nixpkgs/pull/534421 is merged
-              configureFlags = o.configureFlags or [ ] ++ [
-                "--with-xserver=${config.security.wrapperDir}/X"
-              ];
+              xserverPath = "${config.security.wrapperDir}/X";
             }
           );
       defaultText = lib.literalExpression "pkgs.xinit";

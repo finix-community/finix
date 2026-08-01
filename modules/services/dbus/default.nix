@@ -122,24 +122,18 @@ in
 
     finit.services.dbus = {
       description = "d-bus message bus daemon";
-      runlevels = "S123456789";
+      runlevel = "S123456789";
       conditions = "service/syslogd/ready";
       command = "${cfg.package}/bin/dbus-daemon --nofork --system --syslog-only";
       notify = "systemd";
-      cgroup.name = "system";
-      log = mkIf cfg.debug true;
+      cgroup.system = { };
+      log = mkIf cfg.debug { };
 
-      pre = pkgs.writeShellScript "dbus-pre.sh" "${cfg.package}/bin/dbus-uuidgen --ensure";
+      exec-start-pre = "${cfg.package}/bin/dbus-uuidgen --ensure";
       environment = {
         DBUS_VERBOSE = lib.mkIf cfg.debug 1;
       };
+      reload-triggers = [ config.environment.etc."dbus-1".source ];
     };
-
-    # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/dbus.conf".text = lib.mkAfter ''
-
-      # reload trigger
-      # ${config.environment.etc."dbus-1".source}
-    '';
   };
 }

@@ -86,9 +86,9 @@ in
       ]
       ++ lib.optionals config.services.elogind.enable [ "service/elogind/ready" ]
       ++ lib.optionals config.services.seatd.enable [ "service/seatd/ready" ];
-      log = true;
-      nohup = true;
-      cgroup.name = "user";
+      log = { };
+      reload-signal = "none";
+      cgroup.user = { };
       tty = lib.mkForce "/dev/tty1";
     };
   };

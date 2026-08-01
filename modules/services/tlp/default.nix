@@ -84,28 +84,23 @@ in
         description = "tlp system startup";
         command = "${tlpExe} init start";
         conditions = "service/syslogd/ready";
-        runlevels = "S";
+        runlevel = "S";
       };
 
       "tlp@reload" = {
         description = "tlp system reload";
         command = "${tlpExe} start";
         conditions = "service/syslogd/ready";
+        reload-triggers = [ config.environment.etc."tlp.conf".source ];
       };
 
       "tlp@stop" = {
         description = "tlp system shutdown";
         command = "${tlpExe} init stop";
         conditions = "service/syslogd/ready";
-        runlevels = "06";
+        runlevel = "06";
       };
     };
 
-    # TODO: add finit.services.restartTriggers option
-    environment.etc."finit.d/tlp@reload.conf".text = lib.mkAfter ''
-
-      # standard nixos trick to force a restart when something has changed
-      # ${config.environment.etc."tlp.conf".source}
-    '';
   };
 }
