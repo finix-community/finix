@@ -132,5 +132,16 @@ in
       # /etc/rpc: RPC program numbers.
       rpc.source = pkgs.stdenv.cc.libc.out + "/etc/rpc";
     };
+
+    finit.tasks.set-hostname = lib.mkIf (config.system.init == "finit") {
+      runlevels = "S";
+      command = "${pkgs.nettools}/bin/hostname -F /etc/hostname";
+    };
+
+    dinit.services.set-hostname = lib.mkIf (config.system.init == "dinit") {
+      type = "scripted";
+      command = "${pkgs.nettools}/bin/hostname -F /etc/hostname";
+      targets = [ "local" ];
+    };
   };
 }

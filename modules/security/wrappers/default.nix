@@ -276,5 +276,13 @@ in
       command = wrappersScript;
       path = [ config.programs.coreutils.package ];
     };
+
+    dinit.services.suid-sgid-wrappers = lib.mkIf (config.system.init == "dinit") {
+      type = "scripted";
+      command = "${wrappersScript}";
+      waits-for = [ "filesystem.target" ];
+      targets = [ "local" ];
+      path = [ config.programs.coreutils.package ];
+    };
   };
 }

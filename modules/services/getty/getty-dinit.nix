@@ -21,6 +21,7 @@ in
         waits-for = lib.optional config.services.mdevd.enable "mdevd-coldplug";
         restart = true;
         smooth-recovery = true;
+        options = lib.optional (cfg.ttys != [ ] && device == lib.head cfg.ttys) "runs-on-console";
         targets = [ "login" ];
       }
     );

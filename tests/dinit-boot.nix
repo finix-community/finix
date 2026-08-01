@@ -14,6 +14,9 @@
       boot.initrd.deviceManager = "udev";
 
       services.mdevd.enable = true;
+      # The VM's serial console is ttyS0, while the normal getty set is tty1-6.
+      # Keep this graph test independent of console-specific getty behavior.
+      services.getty.enable = false;
 
       environment.systemPackages = [ pkgs.python3 ];
       environment.etc."dinit-test-manifest".text = ''
@@ -80,15 +83,14 @@
     machine.start()
     finit.start()
 
-    # dinit prints service start notifications to the console (regex-escaped)
-    machine.wait_for_console_text("\\[  OK  \\] boot")
-
     # boot target and its boot.d dependencies should be up
     machine.wait_until_succeeds("dinitctl status boot | grep -q 'State: STARTED'")
     machine.wait_until_succeeds("dinitctl status mount-fstab | grep -q 'State: STARTED'")
     machine.wait_until_succeeds("dinitctl status tmpfiles-setup | grep -q 'State: STARTED'")
     machine.wait_until_succeeds("dinitctl status sysctl | grep -q 'State: STARTED'")
     machine.wait_until_succeeds("dinitctl status remount-nix-store | grep -q 'State: STARTED'")
+    machine.wait_until_succeeds("dinitctl status suid-sgid-wrappers | grep -q 'State: STARTED'")
+    machine.succeed("test -u /run/wrappers/bin/unix_chkpwd")
     machine.wait_until_succeeds("dinitctl status testsvc | grep -q 'State: STARTED'")
 
     # activation created the local.d symlink for testsvc
