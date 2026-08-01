@@ -79,13 +79,6 @@ in
 
     environment.etc."avahi/avahi-daemon.conf".source = format.generate "avahi-daemon.conf" cfg.settings;
 
-    # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/avahi-daemon.conf".text = lib.mkAfter ''
-
-      # reload trigger
-      # ${config.environment.etc."avahi/avahi-daemon.conf".source}
-    '';
-
     finit.services.avahi-daemon = {
       description = "avahi daemon service";
       conditions = [
@@ -98,6 +91,7 @@ in
         ]
         ++ cfg.extraArgs
       );
+      reload-triggers = [ config.environment.etc."avahi/avahi-daemon.conf".source ];
     };
 
     services.dbus = lib.optionalAttrs enableDbus {

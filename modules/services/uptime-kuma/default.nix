@@ -107,12 +107,12 @@ in
         "net/route/default"
       ];
       command = lib.getExe cfg.package;
-      kill = lib.mkDefault 10;
-      nohup = true;
-      log = true;
+      stop-timeout = lib.mkDefault 10;
+      reload-signal = "none";
+      log = { };
 
       # TODO: now we're hijacking `env` and no one else can use it...
-      env = cfg.settings;
+      environment = cfg.settings;
       path = [ pkgs.unixtools.ping ];
     };
 

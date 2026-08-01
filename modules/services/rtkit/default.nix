@@ -72,9 +72,9 @@ in
       description = "RealtimeKit scheduling policy service";
       command = "${cfg.package}/libexec/rtkit-daemon" + lib.optionalString cfg.debug " --debug";
       conditions = "service/polkit/ready";
-      nohup = true;
+      reload-signal = "none";
 
-      cgroup.name = "root";
+      cgroup.root = { };
     };
 
     users.users.rtkit = {
