@@ -116,7 +116,7 @@ in
 
     # TODO: add finit.services.reloadTriggers option
     environment.etc."finit.d/keventd.conf" =
-      lib.mkIf (config.finit.enable && config.finit.services.keventd.enable)
+      lib.mkIf (config.system.init == "finit" && config.finit.services.keventd.enable)
         {
           text = lib.mkAfter ''
 

@@ -26,10 +26,7 @@ let
   targetServices = lib.attrNames targetDefinitions;
 
   enabledServices = lib.filterAttrs (_: service: service.enable) cfg.services;
-  reservedNames =
-    targetServices
-    ++ targetDirectories
-    ++ [ "user" ];
+  reservedNames = targetServices ++ targetDirectories ++ [ "user" ];
   invalidServiceNames = lib.filter (
     name: name == "" || name == "." || name == ".." || lib.hasInfix "/" name
   ) (lib.attrNames cfg.services);
@@ -109,7 +106,7 @@ let
 in
 {
   config = lib.mkMerge [
-    (lib.mkIf cfg.enable {
+    (lib.mkIf (config.system.init == "dinit") {
       assertions = [
         {
           assertion = invalidServiceNames == [ ];

@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   lib,
   ...
@@ -28,14 +27,6 @@ in
   imports = [ ./targets.nix ];
 
   options.dinit = {
-    enable = lib.mkOption {
-      type = lib.types.bool;
-      default = config.system.init == "dinit";
-      defaultText = lib.literalExpression ''config.system.init == "dinit"'';
-      readOnly = true;
-      description = "Whether to enable dinit and generate its service tree.";
-    };
-
     user.enable = lib.mkOption {
       type = lib.types.bool;
       default = true;

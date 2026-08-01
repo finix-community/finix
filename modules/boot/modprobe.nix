@@ -34,14 +34,14 @@ in
       pkgs.kmod
     ];
 
-    finit.tasks.modprobe = lib.mkIf config.finit.enable {
+    finit.tasks.modprobe = lib.mkIf (config.system.init == "finit") {
       command = "${pkgs.kmod}/bin/modprobe --all ${lib.concatStringsSep " " config.boot.kernelModules}";
       conditions = "service/syslogd/ready";
       runlevels = "12345789";
     };
 
     dinit.services.modprobe =
-      lib.mkIf (config.dinit.enable && config.boot.kernelModules != [ ])
+      lib.mkIf (config.system.init == "dinit" && config.boot.kernelModules != [ ])
         {
           type = "scripted";
           command = "${pkgs.kmod}/bin/modprobe --all ${lib.escapeShellArgs config.boot.kernelModules}";

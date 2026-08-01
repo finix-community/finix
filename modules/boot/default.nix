@@ -53,7 +53,7 @@ in
   };
 
   config = {
-    finit.tasks = lib.mkIf config.finit.enable {
+    finit.tasks = lib.mkIf (config.system.init == "finit") {
       remount-nix-store = {
         description = "remount the nix store in read only mode";
         runlevels = "S";
@@ -71,7 +71,7 @@ in
       };
     };
 
-    dinit.services.remount-nix-store = lib.mkIf config.dinit.enable {
+    dinit.services.remount-nix-store = lib.mkIf (config.system.init == "dinit") {
       type = "scripted";
       command = "${remountNixStore}/bin/remount-nix-store";
       targets = [ "local" ];

@@ -175,7 +175,7 @@ in
 
     # TODO: add finit.services.reloadTriggers option
     environment.etc."finit.d/postgresql.conf" =
-      lib.mkIf (config.finit.enable && config.finit.services.postgresql.enable)
+      lib.mkIf (config.system.init == "finit" && config.finit.services.postgresql.enable)
         {
           text = lib.mkAfter ''
 

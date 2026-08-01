@@ -219,7 +219,7 @@ in
 
     # TODO: add finit.services.restartTriggers option
     environment.etc."finit.d/cron.conf" =
-      lib.mkIf (config.finit.enable && config.finit.services.cron.enable)
+      lib.mkIf (config.system.init == "finit" && config.finit.services.cron.enable)
         {
           text = lib.mkAfter ''
 

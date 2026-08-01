@@ -15,16 +15,18 @@
   };
 
   config = {
-    environment.etc."tmpfiles.d/finix.conf" = lib.mkIf (config.finit.enable || config.dinit.enable) {
-      text = ''
-        # This file is created automatically and should not be modified.
-        # Please change the option ‘finit.tmpfiles.rules’ instead.
+    environment.etc."tmpfiles.d/finix.conf" =
+      lib.mkIf (config.system.init == "finit" || config.system.init == "dinit")
+        {
+          text = ''
+            # This file is created automatically and should not be modified.
+            # Please change the option ‘finit.tmpfiles.rules’ instead.
 
-        ${lib.concatStringsSep "\n" config.finit.tmpfiles.rules}
-      '';
-    };
+            ${lib.concatStringsSep "\n" config.finit.tmpfiles.rules}
+          '';
+        };
 
-    finit = lib.mkIf config.finit.enable {
+    finit = lib.mkIf (config.system.init == "finit") {
       # needed for finit tmpfiles Z implementation: pkgs.policycoreutils
       # TODO: make this an optional dependency, fixup Z behaviour in general
       tasks.tmpfiles-setup = {
@@ -32,7 +34,7 @@
       };
     };
 
-    providers.scheduler.tasks = lib.mkIf config.finit.enable {
+    providers.scheduler.tasks = lib.mkIf (config.system.init == "finit") {
       tmpfiles-clean = {
         interval = "daily";
         command = "${config.finit.package}/libexec/finit/tmpfiles --clean";
@@ -40,7 +42,7 @@
     };
 
     environment.etc."finit.d/tmpfiles-setup.conf" =
-      lib.mkIf (config.finit.enable && config.finit.tasks.tmpfiles-setup.enable)
+      lib.mkIf (config.system.init == "finit" && config.finit.tasks.tmpfiles-setup.enable)
         {
           text = lib.mkAfter ''
 
@@ -49,7 +51,7 @@
           '';
         };
 
-    dinit.services.tmpfiles-setup = lib.mkIf config.dinit.enable {
+    dinit.services.tmpfiles-setup = lib.mkIf (config.system.init == "dinit") {
       type = "scripted";
       command = "${config.finit.package}/libexec/finit/tmpfiles --create";
       waits-for = [ "mount-fstab" ];

@@ -366,7 +366,7 @@ in
 
     # TODO: add finit.services.reloadTriggers option
     environment.etc."finit.d/sshd.conf" =
-      lib.mkIf (config.finit.enable && config.finit.services.sshd.enable)
+      lib.mkIf (config.system.init == "finit" && config.finit.services.sshd.enable)
         {
           text = lib.mkAfter ''
 

@@ -16,7 +16,7 @@ in
     ./tmpfiles.nix
   ];
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf (config.system.init == "finit") {
     assertions = [
       {
         assertion = lib.versionAtLeast cfg.package.version "4.16";

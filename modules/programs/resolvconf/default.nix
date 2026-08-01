@@ -91,7 +91,7 @@ in
     };
 
     environment.etc."finit.d/resolvconf.conf" =
-      lib.mkIf (config.finit.enable && config.finit.tasks.resolvconf.enable)
+      lib.mkIf (config.system.init == "finit" && config.finit.tasks.resolvconf.enable)
         {
           text = lib.mkAfter ''
 
