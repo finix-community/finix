@@ -271,8 +271,8 @@ in
 
     finit.tasks.suid-sgid-wrappers = {
       description = "create suid/sgid wrappers";
-      runlevels = "S12345";
-      log = true;
+      runlevel = "S12345";
+      log = { };
       command = wrappersScript;
       path = [ config.programs.coreutils.package ];
     };

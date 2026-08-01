@@ -8,46 +8,6 @@ let
   cfg = config.boot.initrd;
 
   grantAccess = cfg.emergencyAccess == true || lib.isString cfg.emergencyAccess;
-
-  fsPackages = lib.unique (
-    lib.flatten (
-      lib.concatMap (v: lib.optional v.enable v.packages or [ ]) (
-        lib.attrValues config.boot.initrd.supportedFilesystems
-      )
-    )
-  );
-
-  path = pkgs.buildEnv {
-    name = "initrd-path";
-    paths = [
-      pkgs.busybox
-      pkgs.kmod
-      (lib.hiPrio pkgs.util-linux.mount)
-      pkgs.bash
-      config.finit.package
-    ]
-    ++ lib.optionals config.services.mdevd.enable [
-      config.services.mdevd.package
-      pkgs.execline
-      pkgs.util-linux
-    ]
-    ++ lib.optionals config.services.gardendevd.enable [
-      config.services.gardendevd.package
-      pkgs.util-linux
-    ]
-    ++ lib.optionals config.services.udev.enable [ config.services.udev.package ]
-    ++ fsPackages;
-    pathsToLink = [
-      "/bin"
-    ];
-
-    ignoreCollisions = true;
-
-    postBuild = ''
-      # Remove wrapped binaries, they shouldn't be accessible via PATH.
-      find $out/bin -maxdepth 1 -name ".*-wrapped" -type l -delete
-    '';
-  };
 in
 {
   options.boot.initrd = {
@@ -68,6 +28,15 @@ in
   };
 
   config.boot.initrd = {
+    # finit's own binary in the initramfs PATH
+    path = [ config.finit.package ];
+
+    finit.settings = {
+      runlevel = 1;
+      environment.PATH = "/bin:/sbin:/usr/bin:/usr/local/bin";
+      modules = config.boot.initrd.kernelModules;
+    };
+
     finit.run.setup-stdio = {
       priority = 100;
       script = ''
@@ -79,7 +48,7 @@ in
     };
 
     finit.run.switch-root = {
-      runlevels = "1";
+      runlevel = "1";
       script = ''
         # process the kernel command line to find init=
         stage2Init=/init
@@ -133,7 +102,7 @@ in
     };
 
     finit.ttys.rescue = {
-      runlevels = "1";
+      runlevel = "1";
       device = "@console";
       conditions = "run/switch-root/failure";
       rescue = true;
@@ -145,24 +114,9 @@ in
         source = "${config.finit.package}/bin/finit";
       }
       {
-        target = "/bin";
-        source = "${path}/bin";
-      }
-      {
-        target = "/sbin";
-        source = "${path}/bin";
-      }
-      {
         target = "/etc/os-release";
         source = pkgs.writeText "os-release" ''
           PRETTY_NAME="finix - stage 1"
-        '';
-      }
-      {
-        target = "/etc/modules-load.d/finix.conf";
-        source = pkgs.writeText "finix.conf" ''
-
-          ${lib.concatStringsSep "\n" config.boot.initrd.kernelModules}
         '';
       }
       {

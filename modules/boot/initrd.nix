@@ -13,6 +13,25 @@ let
     firmware = config.hardware.firmware;
     allowMissing = false;
   };
+
+  fsPackages = lib.unique (
+    lib.flatten (
+      lib.concatMap (v: lib.optional v.enable v.packages or [ ]) (
+        lib.attrValues config.boot.initrd.supportedFilesystems
+      )
+    )
+  );
+
+  initrdPath = pkgs.buildEnv {
+    name = "initrd-path";
+    paths = cfg.path;
+    pathsToLink = [ "/bin" ];
+    ignoreCollisions = true;
+    postBuild = ''
+      # Remove wrapped binaries, they shouldn't be accessible via PATH.
+      find $out/bin -maxdepth 1 -name ".*-wrapped" -type l -delete
+    '';
+  };
 in
 {
   options.boot.initrd = {
@@ -76,6 +95,14 @@ in
       '';
     };
 
+    path = lib.mkOption {
+      type = with lib.types; listOf package;
+      default = [ ];
+      description = ''
+        Packages whose `/bin` is linked into the initramfs `PATH`.
+      '';
+    };
+
     fileSystemImportCommands = lib.mkOption {
       description = ''
         Lines of shell commands that are run after coldbooting
@@ -111,10 +138,27 @@ in
       ) cfg.contents;
     };
 
+    # TODO: split this up, allow modules to contribute what they need
+    boot.initrd.path = [
+      pkgs.busybox
+      pkgs.kmod
+      (lib.hiPrio pkgs.util-linux.mount)
+      pkgs.bash
+    ]
+    ++ fsPackages;
+
     boot.initrd.contents = [
       {
         target = "/lib";
         source = "${modulesClosure}/lib";
+      }
+      {
+        target = "/bin";
+        source = "${initrdPath}/bin";
+      }
+      {
+        target = "/sbin";
+        source = "${initrdPath}/bin";
       }
     ];
   };
