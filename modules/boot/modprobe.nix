@@ -19,6 +19,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    boot.initrd.path = [ pkgs.kmod ];
+
     environment.etc."modules-load.d/finix.conf" = {
       text = ''
         set modprobe = ${pkgs.kmod}/bin/modprobe

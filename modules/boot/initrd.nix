@@ -138,14 +138,9 @@ in
       ) cfg.contents;
     };
 
-    # TODO: split this up, allow modules to contribute what they need
-    boot.initrd.path = [
-      pkgs.busybox
-      pkgs.kmod
-      (lib.hiPrio pkgs.util-linux.mount)
-      pkgs.bash
-    ]
-    ++ fsPackages;
+    # busybox is the only package initrd should need: it provides /bin/sh and the baseline coreutils
+    # Anything beyond that belongs to whichever module actually uses it, contributed via boot.initrd.path
+    boot.initrd.path = [ pkgs.busybox ] ++ fsPackages;
 
     boot.initrd.contents = [
       {
