@@ -5,6 +5,16 @@
   ...
 }:
 let
+  switchToConfigurationScripts = {
+    finit = ../../finit/switch-to-configuration.sh;
+    dinit = ../../dinit/switch-to-configuration.sh;
+  };
+
+  switchToConfigurationSubstitutions = {
+    finit = "--subst-var-by finit ${config.finit.package}";
+    dinit = "--subst-var-by utillinux ${pkgs.util-linuxMinimal}";
+  };
+
   scriptOpts = {
     options = {
       deps = lib.mkOption {
@@ -128,7 +138,7 @@ in
       ln -sfn /run /var/run
     '';
 
-    finit.tmpfiles.rules = lib.mkIf config.finit.enable [
+    finit.tmpfiles.rules = [
       "d /etc"
       "d /run"
       "d /tmp"
@@ -172,15 +182,17 @@ in
             substituteInPlace $out/activate --subst-var-by systemConfig $out
 
             ${
-              if config ? dinit && !config.finit.enable then
+              if config.system.init == "dinit" then
                 # dinit has no equivalent of the finix-setup finit plugin (which runs
                 # activation before finit parses its config). wrap stage 2 in a script
                 # that activates first, so /etc/dinit.d/boot exists when dinit loads it.
                 ''
+                  set -e
                   cat > $out/init <<EOF
                   #!${pkgs.runtimeShell}
-                  $out/activate
-                  exec ${config.dinit.package}/bin/dinit
+                  set -e
+                  FINIX_DINIT_BOOTSTRAP=1 $out/activate
+                  exec ${config.boot.init}
                   EOF
                   chmod +x $out/init
                 ''
@@ -213,9 +225,7 @@ in
               # pick the script matching the stage-2 init, not just module presence:
               # importing the dinit module (e.g. for user services) must not shadow
               # finit's reload-on-switch behaviour when finit is still PID 1
-              if config.finit.enable
-              then ../../finit/switch-to-configuration.sh
-              else ../../dinit/switch-to-configuration.sh
+              switchToConfigurationScripts.${config.system.init}
             } $out/bin/switch-to-configuration
             substituteInPlace $out/bin/switch-to-configuration \
               --subst-var out \
@@ -225,9 +235,7 @@ in
               --subst-var-by coreutils ${config.programs.coreutils.package} \
               --subst-var-by installHook ${config.providers.bootloader.installHook} \
               --subst-var-by inhibitCheck ${config.system.build.checkSwitchInhibitors} \
-              ${if config.finit.enable
-                then "--subst-var-by finit ${config.finit.package}"
-                else "--subst-var-by utillinux ${pkgs.util-linuxMinimal}"}
+              ${switchToConfigurationSubstitutions.${config.system.init}}
           ''
           + lib.optionalString config.boot.bootspec.enable ''
             ${config.boot.bootspec.writer}

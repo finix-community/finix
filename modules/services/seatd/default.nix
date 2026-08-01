@@ -8,6 +8,11 @@ let
   cfg = config.services.seatd;
 in
 {
+  imports = [
+    ./seatd-dinit.nix
+    ./seatd-finit.nix
+  ];
+
   options.services.seatd = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -44,14 +49,5 @@ in
       seat = { };
     };
 
-    finit.services.seatd = {
-      description = "seat management daemon";
-      runlevels = "34";
-      conditions = "service/syslogd/ready";
-      notify = "s6";
-      command =
-        "${pkgs.seatd.bin}/bin/seatd -n %n -u root -g ${cfg.group}"
-        + lib.optionalString cfg.debug " -l debug";
-    };
   };
 }

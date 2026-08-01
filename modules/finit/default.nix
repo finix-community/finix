@@ -24,8 +24,6 @@ in
       }
     ];
 
-    boot.init = "${cfg.package}/bin/finit";
-
     # TODO: decide a reasonable default here... user can override if needed
     finit.path = [
       config.programs.coreutils.package

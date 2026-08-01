@@ -1,4 +1,7 @@
 { lib, ... }:
+let
+  targetNames = (import ./target-names.nix { inherit lib; }).names;
+in
 {
   # standard dinit options, applicable to only system level (privileged) services
   options = {
@@ -86,21 +89,14 @@
       '';
     };
 
-    boot = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
+    targets = lib.mkOption {
+      type = with lib.types; listOf (enum targetNames);
+      default = [ ];
       description = ''
-        Whether this service is a hard dependency of the boot target.
-        When true, the service is symlinked into boot.d/ — if it fails, boot fails.
-      '';
-    };
-    default = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      description = ''
-        Whether this service is started via the default target.
-        Unlike boot, this is a waits-for.d relationship — if the service
-        fails, boot still succeeds.
+        Target directories in which this service should be started.
+
+        The target graph is rooted at `boot` and contains the
+        `filesystem`, `local`, `network`, and `login` targets.
       '';
     };
 

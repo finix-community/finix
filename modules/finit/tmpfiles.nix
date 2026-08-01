@@ -14,25 +14,30 @@
     '';
   };
 
-  config = lib.mkIf config.finit.enable {
-    environment.etc."tmpfiles.d/finix.conf".text = ''
-      # This file is created automatically and should not be modified.
-      # Please change the option ‘finit.tmpfiles.rules’ instead.
+  config = {
+    environment.etc."tmpfiles.d/finix.conf" = lib.mkIf (config.finit.enable || config.dinit.enable) {
+      text = ''
+        # This file is created automatically and should not be modified.
+        # Please change the option ‘finit.tmpfiles.rules’ instead.
 
-      ${lib.concatStringsSep "\n" config.finit.tmpfiles.rules}
-    '';
+        ${lib.concatStringsSep "\n" config.finit.tmpfiles.rules}
+      '';
+    };
 
-    finit.tasks.tmpfiles-setup.command = "${config.finit.package}/libexec/finit/tmpfiles --create";
+    finit = lib.mkIf config.finit.enable {
+      # needed for finit tmpfiles Z implementation: pkgs.policycoreutils
+      # TODO: make this an optional dependency, fixup Z behaviour in general
+      tasks.tmpfiles-setup = {
+        command = "${config.finit.package}/libexec/finit/tmpfiles --create";
+      };
+    };
 
-    providers.scheduler.tasks = {
+    providers.scheduler.tasks = lib.mkIf config.finit.enable {
       tmpfiles-clean = {
         interval = "daily";
         command = "${config.finit.package}/libexec/finit/tmpfiles --clean";
       };
     };
-
-    # needed for finit tmpfiles Z implementation: pkgs.policycoreutils
-    # TODO: make this an optional dependency, fixup Z behaviour in general
 
     environment.etc."finit.d/tmpfiles-setup.conf" =
       lib.mkIf (config.finit.enable && config.finit.tasks.tmpfiles-setup.enable)
@@ -43,5 +48,12 @@
             # ${config.environment.etc."tmpfiles.d/finix.conf".source}
           '';
         };
+
+    dinit.services.tmpfiles-setup = lib.mkIf config.dinit.enable {
+      type = "scripted";
+      command = "${config.finit.package}/libexec/finit/tmpfiles --create";
+      waits-for = [ "mount-fstab" ];
+      targets = [ "filesystem" ];
+    };
   };
 }

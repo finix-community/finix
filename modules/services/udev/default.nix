@@ -7,6 +7,8 @@
 let
   cfg = config.services.udev;
 
+  stage1Enabled = config.boot.initrd.deviceManager == "udev";
+
   # Udev has a 512-character limit for ENV{PATH}, so create a symlink
   # tree to work around this.
   udevPath = pkgs.buildEnv {
@@ -159,6 +161,8 @@ let
       '';
 in
 {
+  imports = [ ./udev-finit.nix ];
+
   options.services.udev = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -220,134 +224,90 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    # services.udev.packages = [ extraUdevRules extraHwdbFile ];
-    services.udev.path = [
-      config.programs.coreutils.package
-      pkgs.gnused
-      pkgs.gnugrep
-      pkgs.util-linux
-      cfg.package
-    ];
-
-    # adapted from https://github.com/troglobit/finit/blob/master/system/10-hotplug.conf.in
-    finit.services.udevd = {
-      description = "device event daemon (${cfg.package.pname})";
-      runlevels = "S12345789";
-      command = "${cfg.package}/bin/udevd --ready-notify=%n" + lib.optionalString cfg.debug " -D";
-      notify = "s6";
-      pid = "udevd";
-      log = true;
-      nohup = true;
-      cgroup.name = "system";
-    };
-
-    # Wait for udevd to start, then trigger coldplug events and module loading.
-    # The last 'settle' call waits for it to finalize processing all uevents.
-    finit.run =
-      let
-        defaults = {
-          runlevels = "S";
-          conditions = "service/udevd/ready";
-          log = true;
-          cgroup.name = "init";
-          extraConfig = "nowarn";
-
-          priority = 1;
-        };
-      in
-      {
-        "udevadm@1" = defaults // {
-          description = "";
-          command = "${cfg.package}/bin/udevadm settle -t 0";
-        };
-        "udevadm@2" = defaults // {
-          description = "";
-          command = "${cfg.package}/bin/udevadm control --reload";
-        };
-        "udevadm@3" = defaults // {
-          description = "requesting device events";
-          command = "${cfg.package}/bin/udevadm trigger -c add -t devices";
-        };
-        "udevadm@4" = defaults // {
-          description = "requesting subsystem events";
-          command = "${cfg.package}/bin/udevadm trigger -c add -t subsystems";
-        };
-        "udevadm@5" = defaults // {
-          description = "waiting for udev to finish";
-          command = "${cfg.package}/bin/udevadm settle -t 30";
-        };
-      };
-
-    environment.etc."udev/hwdb.bin" = lib.mkIf (cfg.packages != [ ]) { source = hwdbBin; };
-    environment.etc."udev/rules.d".source = udevRulesFor {
-      name = "udev-rules";
-      udevPackages = [ cfg.package ] ++ cfg.packages;
-      binPackages = [ cfg.package ] ++ cfg.packages;
-      udev = cfg.package;
-
-      inherit udevPath;
-    };
-
-    # where does this belong?
-    system.activation.scripts.udevd = lib.mkIf config.boot.kernel.enable {
-      text = ''
-        # The deprecated hotplug uevent helper is not used anymore
-        if [ -e /proc/sys/kernel/hotplug ]; then
-          echo "" > /proc/sys/kernel/hotplug
-        fi
-
-        # Allow the kernel to find our firmware.
-        if [ -e /sys/module/firmware_class/parameters/path ]; then
-          echo -n "${config.hardware.firmware}/lib/firmware" > /sys/module/firmware_class/parameters/path
-        fi
-      '';
-    };
-
-    system.switch.inhibitors.device-manager = "udev";
-
-    # build out the default initramfs image
-    boot.initrd = {
-      finit.services.udevd = {
-        command = "/bin/udevd --ready-notify=%n";
-        notify = "s6";
-      };
-
-      finit.run = {
-        "udevadm@1" = {
-          command = "udevadm settle -t 0";
-          conditions = "service/udevd/ready";
-          priority = 200;
-        };
-        "udevadm@2" = {
-          command = "udevadm control --reload";
-          conditions = "service/udevd/ready";
-          priority = 210;
-        };
-        "udevadm@3" = {
-          command = "udevadm trigger -c add -t devices";
-          conditions = "service/udevd/ready";
-          priority = 220;
-        };
-        "udevadm@4" = {
-          command = "udevadm trigger -c add -t subsystems";
-          conditions = "service/udevd/ready";
-          priority = 230;
-        };
-        "udevadm@5" = {
-          command = "udevadm settle -t 30";
-          conditions = "service/udevd/ready";
-          priority = 240;
-        };
-      };
-
-      contents = [
-        {
-          target = "/etc/udev/rules.d";
-          source = udevRulesEarly;
-        }
-        { source = "${pkgs.eudev}/lib/udev"; }
+  config = lib.mkMerge [
+    (lib.mkIf (cfg.enable || stage1Enabled) {
+      # services.udev.packages = [ extraUdevRules extraHwdbFile ];
+      services.udev.path = [
+        config.programs.coreutils.package
+        pkgs.gnused
+        pkgs.gnugrep
+        pkgs.util-linux
+        cfg.package
       ];
-    };
-  };
+    })
+
+    (lib.mkIf cfg.enable {
+      environment.etc."udev/hwdb.bin" = lib.mkIf (cfg.packages != [ ]) { source = hwdbBin; };
+      environment.etc."udev/rules.d".source = udevRulesFor {
+        name = "udev-rules";
+        udevPackages = [ cfg.package ] ++ cfg.packages;
+        binPackages = [ cfg.package ] ++ cfg.packages;
+        udev = cfg.package;
+
+        inherit udevPath;
+      };
+
+      # where does this belong?
+      system.activation.scripts.udevd = lib.mkIf config.boot.kernel.enable {
+        text = ''
+          # The deprecated hotplug uevent helper is not used anymore
+          if [ -e /proc/sys/kernel/hotplug ]; then
+            echo "" > /proc/sys/kernel/hotplug
+          fi
+
+          # Allow the kernel to find our firmware.
+          if [ -e /sys/module/firmware_class/parameters/path ]; then
+            echo -n "${config.hardware.firmware}/lib/firmware" > /sys/module/firmware_class/parameters/path
+          fi
+        '';
+      };
+
+      system.switch.inhibitors.device-manager = "udev";
+    })
+
+    (lib.mkIf stage1Enabled {
+      boot.initrd = {
+        finit.services.udevd = {
+          command = "/bin/udevd --ready-notify=%n";
+          notify = "s6";
+        };
+
+        finit.run = {
+          "udevadm@1" = {
+            command = "udevadm settle -t 0";
+            conditions = "service/udevd/ready";
+            priority = 200;
+          };
+          "udevadm@2" = {
+            command = "udevadm control --reload";
+            conditions = "service/udevd/ready";
+            priority = 210;
+          };
+          "udevadm@3" = {
+            command = "udevadm trigger -c add -t devices";
+            conditions = "service/udevd/ready";
+            priority = 220;
+          };
+          "udevadm@4" = {
+            command = "udevadm trigger -c add -t subsystems";
+            conditions = "service/udevd/ready";
+            priority = 230;
+          };
+          "udevadm@5" = {
+            command = "udevadm settle -t 30";
+            conditions = "service/udevd/ready";
+            priority = 240;
+          };
+        };
+
+        contents = [
+          {
+            target = "/etc/udev/rules.d";
+            source = udevRulesEarly;
+          }
+          { source = "${pkgs.eudev}/lib/udev"; }
+        ];
+      };
+    })
+  ];
 }

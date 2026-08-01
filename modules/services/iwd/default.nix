@@ -9,6 +9,11 @@ let
   format = pkgs.formats.ini { };
 in
 {
+  imports = [
+    ./iwd-dinit.nix
+    ./iwd-finit.nix
+  ];
+
   options.services.iwd = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -67,28 +72,5 @@ in
     finit.tmpfiles.rules = [
       "d /var/lib/iwd 0700"
     ];
-
-    finit.services.iwd = {
-      description = "wireless service";
-      conditions = "service/syslogd/ready";
-      command = "${cfg.package}/libexec/iwd" + lib.optionalString cfg.debug " -d";
-      nohup = true;
-      log = true;
-
-      path = lib.optionals config.programs.resolvconf.enable [
-        config.programs.resolvconf.package
-      ];
-    };
-
-    # TODO: add finit.services.restartTriggers option
-    environment.etc."finit.d/iwd.conf" =
-      lib.mkIf (config.finit.enable && config.finit.services.iwd.enable)
-        {
-          text = lib.mkAfter ''
-
-            # standard nixos trick to force a restart when something has changed
-            # ${config.environment.etc."iwd/main.conf".source}
-          '';
-        };
   };
 }

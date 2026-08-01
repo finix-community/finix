@@ -65,6 +65,11 @@ let
     '';
 in
 {
+  imports = [
+    ./nix-daemon-dinit.nix
+    ./nix-daemon-finit.nix
+  ];
+
   options.services.nix-daemon = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -279,36 +284,22 @@ in
   config = lib.mkIf cfg.enable {
     environment.etc."nix/nix.conf".source = configFile;
 
-    finit.services.nix-daemon = {
-      description = "nix daemon";
-      conditions = "service/syslogd/ready";
-      command = "${cfg.package}/bin/nix-daemon --daemon";
-      nohup = true;
-
-      environment.CURL_CA_BUNDLE = config.security.pki.caBundle;
-
-      # https://github.com/NixOS/nix/blob/81884c36a381737a438ddc5decb658446074d064/misc/systemd/nix-daemon.service.in#L12-L13
-      cgroup.settings."pids.max" = 1048576;
-      rlimits.nofile = 1048576;
-    };
-
     environment.systemPackages = [
       cfg.package
     ];
 
-    finit.tmpfiles.rules = [
-      "d /nix/var/nix/daemon-socket 0755 root root - -"
-
-      "R! /nix/var/nix/gcroots/tmp           -    -    -    - -"
-      "R! /nix/var/nix/temproots             -    -    -    - -"
-
-      "d  /nix/var                           0755 root root - -"
-      "L+ /nix/var/nix/gcroots/booted-system 0755 root root - /run/booted-system"
-
-      # Prevent the current configuration from being garbage-collected.
-      "d /nix/var/nix/gcroots -"
-      "L+ /nix/var/nix/gcroots/current-system - - - - /run/current-system"
-    ];
+    # Keep the daemon socket and GC roots available before either init system
+    # starts the daemon. Create the parent directory before its symlinks; the
+    # activation script runs before Dinit's tmpfiles service.
+    system.activation.scripts.nix-daemon-dirs = {
+      deps = [ "specialfs" ];
+      text = ''
+        mkdir -p /nix/var/nix/daemon-socket /nix/var/nix/gcroots
+        rm -rf /nix/var/nix/gcroots/tmp /nix/var/nix/temproots
+        ln -sfn /run/booted-system /nix/var/nix/gcroots/booted-system
+        ln -sfn /run/current-system /nix/var/nix/gcroots/current-system
+      '';
+    };
 
     users.users = lib.listToAttrs (
       map (nr: {
@@ -338,15 +329,5 @@ in
       ];
     };
 
-    # TODO: add finit.services.restartTriggers option
-    environment.etc."finit.d/nix-daemon.conf" =
-      lib.mkIf (config.finit.enable && config.finit.services.nix-daemon.enable)
-        {
-          text = lib.mkAfter ''
-
-            # standard nixos trick to force a restart when something has changed
-            # ${config.environment.etc."nix/nix.conf".source}
-          '';
-        };
   };
 }

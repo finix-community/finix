@@ -12,6 +12,8 @@ let
   };
 in
 {
+  imports = [ ./vnstat-finit.nix ];
+
   options.services.vnstat = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -130,30 +132,11 @@ in
     ++ lib.optionals cfg.debug [ "--debug" ];
 
     environment.systemPackages = [ cfg.package ];
-    environment.etc = {
-      "vnstat.conf".source = format.generate "vnstat.conf" cfg.settings;
-    } // lib.optionalAttrs config.finit.enable {
-      "finit.d/vnstat.conf".text = lib.mkAfter ''
-
-        # reload trigger
-        # ${config.environment.etc."vnstat.conf".source}
-      '';
-    };
+    environment.etc."vnstat.conf".source = format.generate "vnstat.conf" cfg.settings;
 
     finit.tmpfiles.rules = lib.optionals (cfg.settings.DatabaseDir == "/var/lib/vnstat") [
       "d ${cfg.settings.DatabaseDir} 0750 ${cfg.user} ${cfg.group}"
     ];
-
-    finit.services.vnstat = {
-      inherit (cfg) user group;
-
-      description = "vnStat network traffic monitor";
-      conditions = "service/syslogd/ready";
-      command = "${pkgs.vnstat}/bin/vnstatd " + lib.escapeShellArgs cfg.extraArgs;
-
-      # when running in the foreground debug logs go to stdout
-      log = lib.mkDefault cfg.debug;
-    };
 
     users.users = lib.optionalAttrs (cfg.user == "vnstatd") {
       vnstatd = {
@@ -168,15 +151,5 @@ in
       vnstatd = { };
     };
 
-    # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/vnstat.conf" =
-      lib.mkIf (config.finit.enable && config.finit.services.vnstat.enable)
-        {
-          text = lib.mkAfter ''
-
-            # reload trigger
-            # ${config.environment.etc."vnstat.conf".source}
-          '';
-        };
   };
 }
