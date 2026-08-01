@@ -6040,6 +6040,60 @@
   
   <li>
     <details class="toc-category">
+      <summary title="services.avahi">
+        <span>services.avahi</span>
+        <span class="toc-count">5</span>
+      </summary>
+      <ul>
+        
+
+        
+        <li>
+          <a href='#option-services.avahi.debug' title="services.avahi.debug">
+            debug
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.avahi.enable' title="services.avahi.enable">
+            enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.avahi.extraArgs' title="services.avahi.extraArgs">
+            extraArgs
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.avahi.package' title="services.avahi.package">
+            package
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.avahi.settings' title="services.avahi.settings">
+            settings
+            
+            
+          </a>
+        </li>
+        
+      </ul>
+    </details>
+  </li>
+  
+  <li>
+    <details class="toc-category">
       <summary title="services.blocky">
         <span>services.blocky</span>
         <span class="toc-count">6</span>
@@ -18531,6 +18585,68 @@ for additional details.</p>
 </div>
 </body></html></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/autologin" target="_blank">&lt;finix/modules/services/autologin&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.avahi.debug">
+  <h3 class="option-name">
+    <a href="#option-services.avahi.debug" class="option-anchor">services.avahi.debug</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/avahi" target="_blank">&lt;finix/modules/services/avahi&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.avahi.enable">
+  <h3 class="option-name">
+    <a href="#option-services.avahi.enable" class="option-anchor">services.avahi.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="http://avahi.org">avahi</a> as a system service.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/avahi" target="_blank">&lt;finix/modules/services/avahi&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.avahi.extraArgs">
+  <h3 class="option-name">
+    <a href="#option-services.avahi.extraArgs" class="option-anchor">services.avahi.extraArgs</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <code>avahi</code>. See <a href="https://man.archlinux.org/man/avahi-daemon.8" class="manpage-reference">avahi-daemon(8)</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/avahi" target="_blank">&lt;finix/modules/services/avahi&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.avahi.package">
+  <h3 class="option-name">
+    <a href="#option-services.avahi.package" class="option-anchor">services.avahi.package</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>avahi</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.avahi</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/avahi" target="_blank">&lt;finix/modules/services/avahi&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.avahi.settings">
+  <h3 class="option-name">
+    <a href="#option-services.avahi.settings" class="option-anchor">services.avahi.settings</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string) or a non-empty list of them)</code></div>
+  <div class="option-description"><html><head></head><body><p><code>avahi</code> configuration. See <a href="https://man.archlinux.org/man/avahi-daemon.conf.5" class="manpage-reference">avahi-daemon.conf(5)</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/avahi" target="_blank">&lt;finix/modules/services/avahi&gt;</a></code></div>
 </div>
 <div class="option" id="option-services.blocky.debug">
   <h3 class="option-name">
