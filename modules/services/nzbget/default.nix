@@ -140,22 +140,20 @@ in
         description = "nzbget daemon";
         conditions = "service/syslogd/ready";
         command = "${script} --server";
-        stop = "${script} --quit";
-        reload = "${script} --reload";
+        exec-stop = "${script} --quit";
+        exec-reload = "${script} --reload";
+        logs-dir = "nzbget";
 
-        pre = pkgs.writeShellScript "nzbget-pre.sh" ''
+        exec-start-pre = pkgs.writeShellScript "nzbget-pre.sh" ''
           if [ ! -f ${configFile} ]; then
-            ${lib.getExe' config.programs.coreutils "install"} -o ${cfg.user} -g ${cfg.group} -m 0700 ${cfg.package}/share/nzbget/nzbget.conf ${configFile}
+            ${lib.getExe' config.programs.coreutils.package "install"} -o ${cfg.user} -g ${cfg.group} -m 0700 ${cfg.package}/share/nzbget/nzbget.conf ${configFile}
           fi
         '';
+      }
+      // lib.optionalAttrs (cfg.stateDir == "/var/lib/nzbget") {
+        state-dir = "nzbget";
+        state-dir-mode = "0750";
       };
-
-    finit.tmpfiles.rules = [
-      "d ${logDir} 0750 ${cfg.user} ${cfg.group}"
-    ]
-    ++ lib.optionals (cfg.stateDir == "/var/lib/nzbget") [
-      "d ${cfg.stateDir} 0750 ${cfg.user} ${cfg.group}"
-    ];
 
     users.users = lib.mkIf (cfg.user == "nzbget") {
       nzbget = {

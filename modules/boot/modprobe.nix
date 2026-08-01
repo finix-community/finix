@@ -37,7 +37,7 @@ in
     finit.tasks.modprobe = {
       command = "${pkgs.kmod}/bin/modprobe --all ${lib.concatStringsSep " " config.boot.kernelModules}";
       conditions = "service/syslogd/ready";
-      runlevels = "12345789";
+      runlevel = "12345789";
     };
 
     system.activation.scripts.modprobe = ''

@@ -144,15 +144,10 @@ in
       command = "${pkgs.vnstat}/bin/vnstatd " + lib.escapeShellArgs cfg.extraArgs;
 
       # when running in the foreground debug logs go to stdout
-      log = lib.mkDefault cfg.debug;
+      log = lib.mkIf cfg.debug (lib.mkDefault { });
+
+      reload-triggers = [ config.environment.etc."vnstat.conf".source ];
     };
-
-    # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/vnstat.conf".text = lib.mkAfter ''
-
-      # reload trigger
-      # ${config.environment.etc."vnstat.conf".source}
-    '';
 
     users.users = lib.optionalAttrs (cfg.user == "vnstatd") {
       vnstatd = {

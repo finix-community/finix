@@ -94,11 +94,10 @@ in
       description = "chrony ntp daemon";
       conditions = "service/syslogd/ready";
       command = "${cfg.package}/bin/chronyd " + lib.escapeShellArgs cfg.extraArgs;
-      nohup = true;
+      reload-signal = "none";
       notify = lib.mkIf notifySupport "s6";
 
-      # TODO: add "if" to finit.services
-      extraConfig = "if:<!int/container>";
+      "if" = "!int/container";
     };
 
     finit.tmpfiles.rules = [

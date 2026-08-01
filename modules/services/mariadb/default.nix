@@ -118,7 +118,7 @@ in
       inherit (cfg) user group;
 
       description = "mariadb database init";
-      log = true;
+      log = { };
 
       command = pkgs.writeShellApplication {
         name = "mariadb-init.sh";
@@ -146,7 +146,12 @@ in
       ];
       command = "${cfg.package}/bin/mysqld --defaults-file=/etc/my.cnf ${mysqldOptions}";
       notify = "systemd";
-      log = true;
+      log = { };
+      runtime-dir = "mysqld";
+    }
+    // (cfg.dataDir == "/var/lib/mariadb") {
+      state-dir = "mariadb";
+      state-dir-mode = "0700";
     };
 
     environment.systemPackages = [
@@ -154,13 +159,5 @@ in
     ];
 
     environment.etc."my.cnf".source = configFile;
-
-    # FIXME: finit doesn't implement Z recursively...
-    finit.tmpfiles.rules = [
-      "d ${cfg.dataDir} 0700 ${cfg.user} ${cfg.group}"
-      "Z ${cfg.dataDir} 0700 ${cfg.user} ${cfg.group}"
-      "d /run/mysqld 0755 ${cfg.user} ${cfg.group}"
-      "Z /run/mysqld 0755 ${cfg.user} ${cfg.group}"
-    ];
   };
 }

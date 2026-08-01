@@ -233,13 +233,13 @@ in
     # adapted from https://github.com/troglobit/finit/blob/master/system/10-hotplug.conf.in
     finit.services.udevd = {
       description = "device event daemon (${cfg.package.pname})";
-      runlevels = "S12345789";
+      runlevel = "S12345789";
       command = "${cfg.package}/bin/udevd --ready-notify=%n" + lib.optionalString cfg.debug " -D";
       notify = "s6";
-      pid = "udevd";
-      log = true;
-      nohup = true;
-      cgroup.name = "system";
+      pidfile = "udevd";
+      log = { };
+      reload-signal = "none";
+      cgroup.system = { };
     };
 
     # Wait for udevd to start, then trigger coldplug events and module loading.
@@ -247,11 +247,10 @@ in
     finit.run =
       let
         defaults = {
-          runlevels = "S";
+          runlevel = "S";
           conditions = "service/udevd/ready";
-          log = true;
-          cgroup.name = "init";
-          extraConfig = "nowarn";
+          log = { };
+          cgroup.init = { };
 
           priority = 1;
         };
@@ -308,6 +307,8 @@ in
 
     # build out the default initramfs image
     boot.initrd = {
+      path = [ config.services.udev.package ];
+
       finit.services.udevd = {
         command = "/bin/udevd --ready-notify=%n";
         notify = "s6";
