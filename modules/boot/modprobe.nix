@@ -30,7 +30,7 @@ in
         text = ''
           set modprobe = ${pkgs.kmod}/bin/modprobe
 
-          ${lib.concatStringsSep "\n" config.boot.kernelModule3s}
+          ${lib.concatStringsSep "\n" config.boot.kernelModules}
         '';
       };
 
