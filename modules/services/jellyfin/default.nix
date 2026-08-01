@@ -76,14 +76,13 @@ in
       description = "jellyfin media server";
       conditions = "service/syslogd/ready";
       command = "${lib.getExe cfg.package} --datadir ${cfg.dataDir} --configdir ${cfg.dataDir}/config --cachedir /var/cache/jellyfin --logdir /var/log/jellyfin";
-      nohup = true;
+      reload-signal = "none";
+      cache-dir = "jellyfin";
+      cache-dir-mode = "0700";
+      logs-dir = "jellyfin";
     };
 
-    finit.tmpfiles.rules = [
-      "d /var/cache/jellyfin 0700 ${cfg.user} ${cfg.group}"
-      "d /var/log/jellyfin 0750 ${cfg.user} ${cfg.group}"
-    ]
-    ++ lib.optionals (cfg.dataDir == "/var/lib/jellyfin") [
+    finit.tmpfiles.rules = lib.optionals (cfg.dataDir == "/var/lib/jellyfin") [
       "d ${cfg.dataDir} 0700 ${cfg.user} ${cfg.group}"
       "d ${cfg.dataDir}/config 0700 ${cfg.user} ${cfg.group}"
     ];

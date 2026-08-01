@@ -45,8 +45,9 @@ in
       description = "accounts service";
       conditions = "service/dbus/ready";
       command = "${cfg.package}/libexec/accounts-daemon" + lib.optionalString cfg.debug " --debug";
-      nohup = true;
-      log = true;
+      reload-signal = "none";
+      log = { };
+      state-dir = "AccountsService";
       environment = {
         GVFS_DISABLE_FUSE = 1;
         GIO_USE_VFS = "local";
@@ -61,9 +62,5 @@ in
             NIXOS_USERS_PURE = "true";
           };
     };
-
-    finit.tmpfiles.rules = [
-      "d /var/lib/AccountsService 0775"
-    ];
   };
 }

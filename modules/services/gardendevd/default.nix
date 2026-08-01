@@ -153,19 +153,19 @@ in
 
       description = "device event daemon (gardendevd)";
       command = "${cfg.package}/bin/gardendevd -D %n " + lib.escapeShellArgs cfg.extraArgs;
-      runlevels = "S12345789";
-      cgroup.name = "init";
+      runlevel = "S12345789";
+      cgroup.init = { };
       notify = "s6";
-      log = true;
+      log = { };
     };
 
     finit.run =
       let
         defaults = {
-          runlevels = "S";
+          runlevel = "S";
           conditions = "service/gardendevd/ready";
-          log = true;
-          cgroup.name = "init";
+          log = { };
+          cgroup.init = { };
 
           priority = 1;
         };
@@ -198,6 +198,11 @@ in
 
     # build out the default initramfs image
     boot.initrd = {
+      path = [
+        config.services.gardendevd.package
+        pkgs.util-linux
+      ];
+
       finit.services.gardendevd = {
         command = "gardendevd -K -D %n";
         notify = "s6";

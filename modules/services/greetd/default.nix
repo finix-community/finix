@@ -42,14 +42,14 @@ in
 
     finit.services.greetd = {
       description = "greeter daemon";
-      runlevels = "34";
+      runlevel = "34";
       conditions = [
         "service/syslogd/ready"
       ]
       ++ lib.optionals config.services.elogind.enable [ "service/elogind/ready" ]
       ++ lib.optionals config.services.seatd.enable [ "service/seatd/ready" ];
       command = "${pkgs.greetd}/bin/greetd --config ${configFile}";
-      cgroup.name = "user";
+      cgroup.user = { };
     };
 
     users.users = {
