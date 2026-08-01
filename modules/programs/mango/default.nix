@@ -53,7 +53,7 @@ in
       default = pkgs.mango.override {
         inherit libinput;
 
-        wlroots_0_19 = pkgs.wlroots_0_19.override { inherit libinput; };
+        wlroots_0_20 = pkgs.wlroots_0_20.override { inherit libinput; };
       };
       defaultText = lib.literalExpression "pkgs.mango";
       description = ''
