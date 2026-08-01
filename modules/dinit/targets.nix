@@ -55,23 +55,32 @@ let
 
   serviceTree = lib.mapAttrs' (name: service: {
     name = "dinit.d/${name}";
-    value.source = settingsFormat.generate name (builtins.removeAttrs service serviceFileAttrs);
+    value = {
+      mode = "direct-symlink";
+      source = settingsFormat.generate name (builtins.removeAttrs service serviceFileAttrs);
+    };
   }) enabledServices;
 
   userTree = lib.mapAttrs' (name: service: {
     name = "dinit.d/user/${name}";
-    value.source = settingsFormat.generate name (
-      builtins.removeAttrs service [
-        "enable"
-        "environment"
-        "path"
-      ]
-    );
+    value = {
+      mode = "direct-symlink";
+      source = settingsFormat.generate name (
+        builtins.removeAttrs service [
+          "enable"
+          "environment"
+          "path"
+        ]
+      );
+    };
   }) (lib.filterAttrs (_: service: service.enable) cfg.user.services);
 
   targetTree = lib.mapAttrs' (name: definition: {
     name = "dinit.d/${name}";
-    value.source = settingsFormat.generate name definition;
+    value = {
+      mode = "direct-symlink";
+      source = settingsFormat.generate name definition;
+    };
   }) targetDefinitions;
 
   keepTree = lib.listToAttrs (

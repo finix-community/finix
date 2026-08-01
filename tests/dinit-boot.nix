@@ -100,6 +100,8 @@
     machine.succeed("test -L /etc/dinit.d/boot.d/filesystem.target")
     machine.succeed("test -L /etc/dinit.d/boot.d/local.target")
     machine.succeed("test -L /etc/dinit.d/filesystem.d/mount-fstab")
+    machine.succeed("readlink /etc/dinit.d/testsvc | grep -q '^/nix/store/'")
+    machine.succeed("test \"$(readlink /etc/dinit.d/local.d/testsvc)\" = ../testsvc")
 
     # reload failures must be reported by the switch helper
     machine.fail(
