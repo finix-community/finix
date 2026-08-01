@@ -48,7 +48,7 @@ in
       type = with lib.types; listOf str;
       default = [ ];
       description = ''
-        Additional arguments to pass to `dropbear`. See {manpage}`chronyd(8)`
+        Additional arguments to pass to `chrony`. See {manpage}`chronyd(8)`
         for additional details.
       '';
     };

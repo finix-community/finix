@@ -45,7 +45,7 @@ let
 
   # Insert modules for devices with a modalias.
   # Use @ prefix to run via /bin/sh on add events.
-  modaliasRule = ''-$MODALIAS=.* 0:0 660 @modprobe --quiet "$MODALIAS"'';
+  modaliasRule = ''-$MODALIAS=.* 0:0 660 @${pkgs.kmod}/bin/modprobe --quiet "$MODALIAS"'';
 
   # We need symlinks in /dev/disk/{by-id,by-label,by-uuid,by-partlabel,by-partuuid}
   # so we run this script for block device events.
@@ -134,7 +134,7 @@ in
       type = with lib.types; nullOr ints.unsigned;
       default = null;
       description = ''
-        After `mdevd` has handled the uevents, rebroadcast them to the netlink groups identified
+        After `mdevd` has handled the uevents for hotplugged devices, rebroadcast them to the netlink groups identified
         by the mask {option}`nlgroups`.
 
         ::: {.note}
@@ -196,17 +196,13 @@ in
       path = [
         config.programs.coreutils.package
         pkgs.execline
-        pkgs.kmod
         pkgs.util-linux
       ];
     };
 
     finit.run.coldplug = {
       description = "cold plugging system";
-      command =
-        "${cfg.package}/bin/mdevd-coldplug"
-        + lib.optionalString (cfg.nlgroups != null) " -O ${toString cfg.nlgroups}"
-        + lib.optionalString cfg.debug " -v 3";
+      command = "${cfg.package}/bin/mdevd-coldplug" + lib.optionalString cfg.debug " -v 3";
       runlevels = "S";
       conditions = "service/mdevd/ready";
       cgroup.name = "init";
