@@ -221,12 +221,18 @@ in
         };
       };
 
-      contents = [
-        {
-          target = "/etc/udev/rules.d";
-          source = "${config.services.gardendevd.package}/lib/udev/rules.d";
-        }
-      ];
+      # minimal set of rules needed for initramfs
+      contents =
+        map
+          (v: {
+            target = "/etc/udev/rules.d/${v}.rules";
+            source = "${cfg.package}/lib/udev/rules.d/${v}.rules";
+          })
+          [
+            "60-block"
+            "60-persistent-storage"
+            "80-drivers"
+          ];
     };
   };
 }
