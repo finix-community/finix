@@ -27,8 +27,7 @@ in
     ./uinput.nix
     ./cpu/amd-ucode.nix
     ./cpu/intel-ucode.nix
-    ./video/nvidia.nix
-    ./video/nvidia-prime.nix
+    ./video/nvidia
   ];
 
   options = {
