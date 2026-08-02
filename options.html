@@ -3422,7 +3422,7 @@
     <details class="toc-category">
       <summary title="hardware.nvidia">
         <span>hardware.nvidia</span>
-        <span class="toc-count">9</span>
+        <span class="toc-count">17</span>
       </summary>
       <ul>
         
@@ -3469,16 +3469,80 @@
         </li>
         
         <li>
-          <a href='#option-hardware.nvidia.powerManagement.enable' title="hardware.nvidia.powerManagement.enable">
-            powerManagement.enable
+          <a href='#option-hardware.nvidia.power.runtime.enable' title="hardware.nvidia.power.runtime.enable">
+            power.runtime.enable
             
             
           </a>
         </li>
         
         <li>
-          <a href='#option-hardware.nvidia.powerManagement.kernelSuspendNotifier' title="hardware.nvidia.powerManagement.kernelSuspendNotifier">
-            powerManagement.kernelSuspendNotifier
+          <a href='#option-hardware.nvidia.power.suspend.enable' title="hardware.nvidia.power.suspend.enable">
+            power.suspend.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-hardware.nvidia.power.suspend.notifier' title="hardware.nvidia.power.suspend.notifier">
+            power.suspend.notifier
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-hardware.nvidia.prime.amdgpuBusId' title="hardware.nvidia.prime.amdgpuBusId">
+            prime.amdgpuBusId
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-hardware.nvidia.prime.enable' title="hardware.nvidia.prime.enable">
+            prime.enable
+            
+            <span class="toc-readonly">read-only</span>
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-hardware.nvidia.prime.intelBusId' title="hardware.nvidia.prime.intelBusId">
+            prime.intelBusId
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-hardware.nvidia.prime.nvidiaBusId' title="hardware.nvidia.prime.nvidiaBusId">
+            prime.nvidiaBusId
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-hardware.nvidia.prime.offload.enable' title="hardware.nvidia.prime.offload.enable">
+            prime.offload.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-hardware.nvidia.prime.offload.enableOffloadCmd' title="hardware.nvidia.prime.offload.enableOffloadCmd">
+            prime.offload.enableOffloadCmd
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-hardware.nvidia.prime.sync.enable' title="hardware.nvidia.prime.sync.enable">
+            prime.sync.enable
             
             
           </a>
@@ -15246,35 +15310,155 @@ Wayland compositors to work when they otherwise wouldn't.</p>
   <div class="option-example">Example: <code>"config.boot.kernelPackages.nvidiaPackages.legacy_470"</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia.nix" target="_blank">&lt;finix/modules/hardware/video/nvidia.nix&gt;</a></code></div>
 </div>
-<div class="option" id="option-hardware.nvidia.powerManagement.enable">
+<div class="option" id="option-hardware.nvidia.power.runtime.enable">
   <h3 class="option-name">
-    <a href="#option-hardware.nvidia.powerManagement.enable" class="option-anchor">hardware.nvidia.powerManagement.enable</a>
+    <a href="#option-hardware.nvidia.power.runtime.enable" class="option-anchor">hardware.nvidia.power.runtime.enable</a>
     <span class="copy-link" title="Copy link to this option"></span>
     <span class="copy-feedback">Link copied!</span>
   </h3>
   <div class="option-type">Type: <code>boolean</code></div>
-  <div class="option-description"><html><head></head><body><p>Whether to enable experimental power management through systemd. For
-more information, see the NVIDIA docs, on Chapter 21. Configuring
-Power Management Support.</p>
+  <div class="option-description"><html><head></head><body><p>Whether to enable fine-grained dynamic power management. When enabled,
+the NVIDIA GPU is powered down when not in use. Only works in PRIME
+offload mode (prime.offload.enable = true). Requires kernel &gt;= 5.5 and
+a Turing or newer GPU. Sets NVreg_DynamicPowerManagement=0x02.</p>
 </body></html></div>
   <div class="option-default">Default: <code>false</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia.nix" target="_blank">&lt;finix/modules/hardware/video/nvidia.nix&gt;</a></code></div>
 </div>
-<div class="option" id="option-hardware.nvidia.powerManagement.kernelSuspendNotifier">
+<div class="option" id="option-hardware.nvidia.power.suspend.enable">
   <h3 class="option-name">
-    <a href="#option-hardware.nvidia.powerManagement.kernelSuspendNotifier" class="option-anchor">hardware.nvidia.powerManagement.kernelSuspendNotifier</a>
+    <a href="#option-hardware.nvidia.power.suspend.enable" class="option-anchor">hardware.nvidia.power.suspend.enable</a>
     <span class="copy-link" title="Copy link to this option"></span>
     <span class="copy-feedback">Link copied!</span>
   </h3>
   <div class="option-type">Type: <code>boolean</code></div>
-  <div class="option-description"><html><head></head><body><p>Whether to enable NVIDIA driver support for kernel suspend notifiers,
-which allows the driver to be notified of suspend and resume events by
-the kernel, rather than relying on systemd services. Requires NVIDIA
-driver version 595 or newer, and the open source kernel modules.</p>
+  <div class="option-description"><html><head></head><body><p>Whether to preserve video memory allocations across system suspend and
+hibernate. For more information, see the NVIDIA docs, on Chapter 21.
+Configuring Power Management Support.</p>
 </body></html></div>
-  <div class="option-default">Default: <code>config.hardware.nvidia.kernelModule == "open" &amp;&amp; lib.versionAtLeast config.hardware.nvidia.package.version "595"
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia.nix" target="_blank">&lt;finix/modules/hardware/video/nvidia.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-hardware.nvidia.power.suspend.notifier">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.power.suspend.notifier" class="option-anchor">hardware.nvidia.power.suspend.notifier</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>one of "kernel", "userspace"</code></div>
+  <div class="option-description"><html><head></head><body><p>How the NVIDIA driver is notified of system suspend and resume events
+when <code>power.suspend.enable</code> is set:</p>
+<ul>
+<li><code>kernel</code>: the kernel notifies the driver directly. Requires NVIDIA
+driver version 595 or newer, and the open source kernel modules.</li>
+<li><code>userspace</code>: relies on nvidia-sleep.sh being run by the sleep backend
+(requires a sleep backend, e.g. programs.zzz).</li>
+</ul>
+</body></html></div>
+  <div class="option-default">Default: <code>if config.hardware.nvidia.kernelModule == "open" &amp;&amp; lib.versionAtLeast config.hardware.nvidia.package.version "595" then "kernel" else "userspace"
 </code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia.nix" target="_blank">&lt;finix/modules/hardware/video/nvidia.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-hardware.nvidia.prime.amdgpuBusId">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.prime.amdgpuBusId" class="option-anchor">hardware.nvidia.prime.amdgpuBusId</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>null or string matching the pattern ([[:print:]]+[:@][0-9]{1,3}:[0-9]{1,2}:[0-9])?</code></div>
+  <div class="option-description"><html><head></head><body><p>The PCI bus ID of the AMD iGPU (for AMD+NVIDIA Optimus laptops).
+Find it with: lspci | grep -i amd | grep -i vga</p>
+</body></html></div>
+  <div class="option-default">Default: <code>null</code></div>
+  <div class="option-example">Example: <code>"PCI:4:0:0"</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia-prime.nix" target="_blank">&lt;finix/modules/hardware/video/nvidia-prime.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-hardware.nvidia.prime.enable">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.prime.enable" class="option-anchor">hardware.nvidia.prime.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-metadata">read-only</div>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable nvidia PRIME support.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>config.hardware.nvidia.prime.offload.enable || config.hardware.nvidia.prime.sync.enable</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia-prime.nix" target="_blank">&lt;finix/modules/hardware/video/nvidia-prime.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-hardware.nvidia.prime.intelBusId">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.prime.intelBusId" class="option-anchor">hardware.nvidia.prime.intelBusId</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>null or string matching the pattern ([[:print:]]+[:@][0-9]{1,3}:[0-9]{1,2}:[0-9])?</code></div>
+  <div class="option-description"><html><head></head><body><p>The PCI bus ID of the Intel iGPU. Find it with:
+lspci | grep -i intel | grep -i vga
+then convert the hex address (e.g. 00:02.0) to PCI:0:2:0.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>null</code></div>
+  <div class="option-example">Example: <code>"PCI:0:2:0"</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia-prime.nix" target="_blank">&lt;finix/modules/hardware/video/nvidia-prime.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-hardware.nvidia.prime.nvidiaBusId">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.prime.nvidiaBusId" class="option-anchor">hardware.nvidia.prime.nvidiaBusId</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>null or string matching the pattern ([[:print:]]+[:@][0-9]{1,3}:[0-9]{1,2}:[0-9])?</code></div>
+  <div class="option-description"><html><head></head><body><p>The PCI bus ID of the NVIDIA GPU. Find it with:
+lspci | grep -i nvidia
+then convert the hex address (e.g. 01:00.0) to PCI:1:0:0.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>null</code></div>
+  <div class="option-example">Example: <code>"PCI:1:0:0"</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia-prime.nix" target="_blank">&lt;finix/modules/hardware/video/nvidia-prime.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-hardware.nvidia.prime.offload.enable">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.prime.offload.enable" class="option-anchor">hardware.nvidia.prime.offload.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable PRIME offload mode. The iGPU handles display output
+and general rendering; the NVIDIA GPU is used only when explicitly
+requested (via the nvidia-offload wrapper or DRI_PRIME env var).
+Cannot be used together with prime.sync.enable.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia-prime.nix" target="_blank">&lt;finix/modules/hardware/video/nvidia-prime.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-hardware.nvidia.prime.offload.enableOffloadCmd">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.prime.offload.enableOffloadCmd" class="option-anchor">hardware.nvidia.prime.offload.enableOffloadCmd</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to add an <code>nvidia-offload</code> wrapper script to systemPackages.
+Run <code>nvidia-offload &lt;program&gt;</code> to launch a program on the NVIDIA GPU.
+Requires prime.offload.enable = true.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia-prime.nix" target="_blank">&lt;finix/modules/hardware/video/nvidia-prime.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-hardware.nvidia.prime.sync.enable">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.prime.sync.enable" class="option-anchor">hardware.nvidia.prime.sync.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable PRIME sync mode. Both GPUs are active simultaneously;
+the NVIDIA GPU renders and the iGPU handles display. Eliminates tearing
+but uses more power than offload mode. Cannot be used with
+prime.offload.enable.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia-prime.nix" target="_blank">&lt;finix/modules/hardware/video/nvidia-prime.nix&gt;</a></code></div>
 </div>
 <div class="option" id="option-hardware.nvidia.reduceTearing">
   <h3 class="option-name">
