@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   lib,
   ...
@@ -24,6 +25,10 @@ let
     );
 in
 {
+  config = lib.mkIf (config.system.init == "dinit") {
+    boot.init = lib.mkDefault "${config.dinit.package}/bin/dinit";
+  };
+
   imports = [ ./targets.nix ];
 
   options.dinit = {

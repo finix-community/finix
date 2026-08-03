@@ -9,8 +9,8 @@
     description = ''
       The init system used as stage-2 PID 1.
 
-      Service modules should put init-system-specific definitions in a
-      backend module selected by this option.
+      The selected init backend supplies the default stage-2 init executable
+      and renders its service configuration.
     '';
   };
 }

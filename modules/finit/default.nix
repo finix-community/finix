@@ -17,6 +17,8 @@ in
   ];
 
   config = lib.mkIf (config.system.init == "finit") {
+    boot.init = lib.mkDefault "${cfg.package}/bin/finit";
+
     assertions = [
       {
         assertion = lib.versionAtLeast cfg.package.version "4.16";

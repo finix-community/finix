@@ -5,11 +5,6 @@
   ...
 }:
 let
-  initExecutables = {
-    finit = "${config.finit.package}/bin/finit";
-    dinit = "${config.dinit.package}/bin/dinit";
-  };
-
   remountNixStore = pkgs.writeShellApplication {
     name = "remount-nix-store";
     runtimeInputs = [
@@ -40,15 +35,9 @@ in
 
   options.boot.init = lib.mkOption {
     type = lib.types.path;
-    default = initExecutables.${config.system.init};
-    defaultText = lib.literalExpression ''
-      {
-        finit = "''${config.finit.package}/bin/finit";
-        dinit = "''${config.dinit.package}/bin/dinit";
-      }.''${config.system.init}
-    '';
     description = ''
       Executable run as stage-2 PID 1, symlinked as `${config.system.build.toplevel}/init`.
+      The selected init backend supplies the default.
     '';
   };
 
