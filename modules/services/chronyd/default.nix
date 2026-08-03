@@ -10,6 +10,11 @@ let
   notifySupport = lib.versionAtLeast cfg.package.version "4.9";
 in
 {
+  imports = [
+    ./chronyd-dinit.nix
+    ./chronyd-finit.nix
+  ];
+
   options.services.chrony = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -89,17 +94,6 @@ in
     ];
 
     environment.systemPackages = [ cfg.package ];
-
-    finit.services.chronyd = {
-      description = "chrony ntp daemon";
-      conditions = "service/syslogd/ready";
-      command = "${cfg.package}/bin/chronyd " + lib.escapeShellArgs cfg.extraArgs;
-      nohup = true;
-      notify = lib.mkIf notifySupport "s6";
-
-      # TODO: add "if" to finit.services
-      extraConfig = "if:<!int/container>";
-    };
 
     finit.tmpfiles.rules = [
       "d /var/lib/chrony 0750 chrony chrony - -"

@@ -10,6 +10,11 @@ let
   format = pkgs.formats.ini { };
 in
 {
+  imports = [
+    ./bluetooth-dinit.nix
+    ./bluetooth-finit.nix
+  ];
+
   options.services.bluetooth = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -64,12 +69,5 @@ in
     services.dbus.packages = [ cfg.package ];
     services.udev.packages = [ cfg.package ];
 
-    finit.services.bluetooth = {
-      description = "bluetooth service";
-      conditions = "service/dbus/ready";
-      command =
-        "${cfg.package}/libexec/bluetooth/bluetoothd -f /etc/bluetooth/main.conf"
-        + lib.optionalString cfg.debug " -d";
-    };
   };
 }

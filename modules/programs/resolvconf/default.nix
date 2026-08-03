@@ -28,6 +28,8 @@ let
 in
 {
   imports = [
+    ./resolvconf-dinit.nix
+    ./resolvconf-finit.nix
     (lib.mkRenamedOptionModule [ "programs" "openresolv" ] [ "programs" "resolvconf" ])
   ];
 
@@ -85,19 +87,5 @@ in
 
     environment.systemPackages = [ cfg.package ];
 
-    finit.tasks.resolvconf = {
-      command = "${lib.getExe cfg.package} -u";
-      remain = true;
-    };
-
-    environment.etc."finit.d/resolvconf.conf" =
-      lib.mkIf (config.system.init == "finit" && config.finit.tasks.resolvconf.enable)
-        {
-          text = lib.mkAfter ''
-
-            # force a restart on configuration change
-            # ${config.environment.etc."resolvconf.conf".source}
-          '';
-        };
   };
 }

@@ -12,7 +12,10 @@ let
   };
 in
 {
-  imports = [ ./vnstat-finit.nix ];
+  imports = [
+    ./vnstat-dinit.nix
+    ./vnstat-finit.nix
+  ];
 
   options.services.vnstat = {
     enable = lib.mkOption {

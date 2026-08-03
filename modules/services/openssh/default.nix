@@ -72,6 +72,11 @@ let
     };
 in
 {
+  imports = [
+    ./openssh-dinit.nix
+    ./openssh-finit.nix
+  ];
+
   options.services.openssh = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -298,28 +303,6 @@ in
         lib.mkIf cfg.sftp.enable "${cfg.sftp.executable} ${lib.concatStringsSep " " cfg.sftp.flags}";
     };
 
-    finit.tasks.ssh-keygen = {
-      description = "generate ssh host keys";
-      log = true;
-      command = pkgs.writeShellScript "ssh-keygen.sh" ''
-        if ! [ -s "/var/lib/sshd/ssh_host_ed25519_key" ]; then
-          ${cfg.package}/bin/ssh-keygen -t ed25519 -f "/var/lib/sshd/ssh_host_ed25519_key" -N ""
-        fi
-      '';
-    };
-
-    finit.services.sshd = {
-      description = "openssh daemon";
-      conditions = [
-        "net/lo/up"
-        "service/syslogd/ready"
-        "task/ssh-keygen/success"
-      ];
-      notify = "pid";
-      command = "${cfg.package}/bin/sshd -D -f /etc/ssh/sshd_config";
-      cgroup.name = "user";
-    };
-
     environment.etc."ssh/sshd_config".source = configFile;
 
     security.pam.services.sshd = lib.mkIf cfg.settings.UsePAM {
@@ -363,16 +346,5 @@ in
     users.groups = {
       sshd = { };
     };
-
-    # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/sshd.conf" =
-      lib.mkIf (config.system.init == "finit" && config.finit.services.sshd.enable)
-        {
-          text = lib.mkAfter ''
-
-            # reload trigger
-            # ${config.environment.etc."ssh/sshd_config".source}
-          '';
-        };
   };
 }

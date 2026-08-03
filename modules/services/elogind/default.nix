@@ -8,6 +8,11 @@ let
   cfg = config.services.elogind;
 in
 {
+  imports = [
+    ./elogind-dinit.nix
+    ./elogind-finit.nix
+  ];
+
   options.services.elogind = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -27,24 +32,7 @@ in
     };
   };
 
-  # extend finit.ttys to add elogind readiness conditions
-  options.finit.ttys = lib.mkOption {
-    type =
-      with lib.types;
-      attrsOf (submodule {
-        config = lib.mkIf cfg.enable {
-          conditions = "service/elogind/ready";
-        };
-      });
-  };
-
   config = lib.mkIf cfg.enable {
-    finit.services.elogind = {
-      description = "login manager";
-      conditions = "service/dbus/ready";
-      command = "${cfg.package}/libexec/elogind";
-    };
-
     services.dbus.enable = true;
     services.dbus.packages = [ cfg.package ];
     services.udev.packages = [ cfg.package ];
