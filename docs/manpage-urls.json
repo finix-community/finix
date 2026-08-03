@@ -11,8 +11,8 @@
   "chronyd(8)": "https://man.archlinux.org/man/chronyd.8",
   "cron(8)": "https://man.archlinux.org/man/cron.8",
   "crontab(5)": "https://man.archlinux.org/man/crontab.5",
-  "dhcpcd(8)":"https://man.archlinux.org/man/dhcpcd.8",
-  "dhcpcd.conf(5)":"https://man.archlinux.org/man/dhcpcd.conf.5",
+  "dhcpcd(8)": "https://man.archlinux.org/man/dhcpcd.8",
+  "dhcpcd.conf(5)": "https://man.archlinux.org/man/dhcpcd.conf.5",
   "dropbear(8)": "https://man.archlinux.org/man/dropbear.8",
   "dropbearkey(1)": "https://man.archlinux.org/man/dropbearkey.1",
   "earlyoom(1)": "https://man.archlinux.org/man/earlyoom.1",
@@ -47,6 +47,7 @@
   "thermald(8)": "https://man.archlinux.org/man/thermald.8",
   "tmpfiles.d(5)": "https://man.archlinux.org/man/tmpfiles.d.5",
   "tuigreet(1)": "https://man.archlinux.org/man/tuigreet.1",
+  "turnstile.conf(5)": "https://man.voidlinux.org/turnstiled.conf.5",
   "udisks2.conf(5)": "https://man.archlinux.org/man/extra/udisks2/udisks2.conf.5",
   "vnstat.conf(5)": "https://man.archlinux.org/man/vnstat.conf.5",
   "vnstatd(8)": "https://man.archlinux.org/man/vnstatd.8"
