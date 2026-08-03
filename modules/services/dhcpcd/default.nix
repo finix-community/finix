@@ -20,6 +20,11 @@ let
     };
 in
 {
+  imports = [
+    ./dhcpcd-dinit.nix
+    ./dhcpcd-finit.nix
+  ];
+
   options.services.dhcpcd = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -163,12 +168,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    services.dhcpcd.extraArgs = [
-      "-B"
-      "-f"
-      (toString cfg.configFile)
-    ];
-
     services.dhcpcd.settings = {
       # Inform the DHCP server of our hostname for DDNS.
       hostname = "";
@@ -208,16 +207,6 @@ in
       ];
 
       debug = cfg.debug;
-    };
-
-    finit.services.dhcpcd = {
-      description = "dhcp client";
-      command = "${lib.getExe cfg.package} " + lib.escapeShellArgs cfg.extraArgs;
-      conditions = "service/syslogd/ready";
-
-      path = lib.optionals config.programs.resolvconf.enable [
-        config.programs.resolvconf.package
-      ];
     };
 
     finit.tmpfiles.rules = [

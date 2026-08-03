@@ -729,14 +729,6 @@ let
 in
 {
   options.finit = {
-    enable = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = ''
-        Whether to enable `finit` as pid 1.
-      '';
-    };
-
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.finit;
@@ -904,7 +896,7 @@ in
     };
   };
 
-  config = {
+  config = lib.mkIf (config.system.init == "finit") {
     environment.etc =
       let
         # NOTE: entries under /etc/finit.d are marked as direct-symlink to avoid service reloads on every finix activation

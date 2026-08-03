@@ -16,6 +16,8 @@ let
 
   cfg = config.services.mdevd;
 
+  stage1Enabled = config.boot.initrd.deviceManager == "mdevd";
+
   # Rules for the special standalone devices to be created at boot.
   specialRules =
     let
@@ -104,6 +106,11 @@ let
   devDiskRule = "-SUBSYSTEM=block;.* 0:${gidOf "disk"} 660 *${devDiskScript}";
 in
 {
+  imports = [
+    ./mdevd-dinit.nix
+    ./mdevd-finit.nix
+  ];
+
   options.services.mdevd = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -160,99 +167,69 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkMerge [
+    (mkIf (cfg.enable || stage1Enabled) {
+      # Populate with boot rules whenever mdevd is used by either stage.
+      services.mdevd = {
+        hotplugRules = lib.mkMerge [
+          # fallthrough rules at the top
+          (lib.mkOrder 250 modaliasRule)
+          (lib.mkBefore devDiskRule)
+          specialRules
+        ];
+        coldplugRules = lib.concatLines [
+          modaliasRule
+          specialRules
+          devDiskRule
+        ];
+      };
+    })
 
-    # Populate with boot rules.
-    services.mdevd = {
-      hotplugRules = lib.mkMerge [
-        # fallthrough rules at the top
-        (lib.mkOrder 250 modaliasRule)
-        (lib.mkBefore devDiskRule)
-        specialRules
-      ];
-      coldplugRules = lib.concatLines [
-        modaliasRule
-        specialRules
-        devDiskRule
-      ];
-    };
+    (mkIf cfg.enable {
+      environment.etc."mdev.conf".text = config.services.mdevd.hotplugRules;
 
-    environment.etc."mdev.conf".text = config.services.mdevd.hotplugRules;
+      # TODO: share between udev and mdevd
+      system.activation.scripts.mdevd = lib.mkIf config.boot.kernel.enable {
+        text = ''
+          # The deprecated hotplug uevent helper is not used anymore
+          if [ -e /proc/sys/kernel/hotplug ]; then
+            echo "" > /proc/sys/kernel/hotplug
+          fi
 
-    finit.services.mdevd = {
-      description = "device event daemon (mdevd)";
-      command =
-        "${cfg.package}/bin/mdevd -D %n -F /run/current-system/firmware -f ${
-          config.environment.etc."mdev.conf".source
-        }"
-        + lib.optionalString (cfg.nlgroups != null) " -O ${toString cfg.nlgroups}"
-        + lib.optionalString cfg.debug " -v 3";
-      runlevels = "S12345789";
-      cgroup.name = "init";
-      notify = "s6";
-      log = true;
-
-      # TODO: now we're hijacking `env` and no one else can use it...
-      path = [
-        config.programs.coreutils.package
-        pkgs.execline
-        pkgs.kmod
-        pkgs.util-linux
-      ];
-    };
-
-    finit.run.coldplug = {
-      description = "cold plugging system";
-      command =
-        "${cfg.package}/bin/mdevd-coldplug"
-        + lib.optionalString (cfg.nlgroups != null) " -O ${toString cfg.nlgroups}"
-        + lib.optionalString cfg.debug " -v 3";
-      runlevels = "S";
-      conditions = "service/mdevd/ready";
-      cgroup.name = "init";
-      log = true;
-    };
-
-    # TODO: share between udev and mdevd
-    system.activation.scripts.mdevd = lib.mkIf config.boot.kernel.enable {
-      text = ''
-        # The deprecated hotplug uevent helper is not used anymore
-        if [ -e /proc/sys/kernel/hotplug ]; then
-          echo "" > /proc/sys/kernel/hotplug
-        fi
-
-        # Allow the kernel to find our firmware.
-        if [ -e /sys/module/firmware_class/parameters/path ]; then
-          echo -n "${config.hardware.firmware}/lib/firmware" > /sys/module/firmware_class/parameters/path
-        fi
-      '';
-    };
-
-    system.switch.inhibitors.device-manager = "mdevd";
-
-    # build out the default initramfs image
-    boot.initrd = {
-      finit.services.mdevd = {
-        command = "mdevd -D %n -O 2";
-        notify = "s6";
+          # Allow the kernel to find our firmware.
+          if [ -e /sys/module/firmware_class/parameters/path ]; then
+            echo -n "${config.hardware.firmware}/lib/firmware" > /sys/module/firmware_class/parameters/path
+          fi
+        '';
       };
 
-      finit.run.coldplug = {
-        command = "mdevd-coldplug -O 2";
-        conditions = "service/mdevd/ready";
-        priority = 300;
-      };
+      system.switch.inhibitors.device-manager = "mdevd";
+    })
 
-      contents = [
-        {
-          target = "/etc/mdev.conf";
-          source = pkgs.writeText "mdev.conf" config.services.mdevd.coldplugRules;
-        }
-        {
-          source = devDiskScript;
-          target = "/etc/mdevd-disk.sh";
-        }
-      ];
-    };
-  };
+    (mkIf stage1Enabled {
+      boot.initrd = {
+        finit.services.mdevd = {
+          command = "mdevd -D %n -O 2";
+          notify = "s6";
+        };
+
+        finit.run.coldplug = {
+          command = "mdevd-coldplug -O 2";
+          conditions = "service/mdevd/ready";
+          priority = 300;
+        };
+
+        contents = [
+          {
+            target = "/etc/mdev.conf";
+            source = pkgs.writeText "mdev.conf" config.services.mdevd.coldplugRules;
+          }
+          {
+            source = devDiskScript;
+            target = "/etc/mdevd-disk.sh";
+          }
+        ];
+      };
+    })
+  ];
 }

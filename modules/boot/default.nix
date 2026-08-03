@@ -4,6 +4,26 @@
   lib,
   ...
 }:
+let
+  remountNixStore = pkgs.writeShellApplication {
+    name = "remount-nix-store";
+    runtimeInputs = [
+      config.programs.coreutils.package
+      pkgs.util-linux
+    ];
+    text = ''
+      # Make the Nix store read-only after activation.
+      # Silence chown/chmod to fail gracefully on a readonly filesystem
+      # like squashfs.
+      chown -f 0:30000 /nix/store || true
+      chmod -f 1775 /nix/store || true
+      if ! [[ "$(findmnt --noheadings --output OPTIONS /nix/store)" =~ ro(,|$) ]]; then
+        mount --bind /nix/store /nix/store
+        mount -o remount,ro,bind /nix/store
+      fi
+    '';
+  };
+in
 {
   imports = [
     ./bootspec.nix
@@ -16,44 +36,34 @@
   options.boot.init = lib.mkOption {
     type = lib.types.path;
     description = ''
-      Executable run as stage-2 PID 1, symlinked as `''${config.system.build.toplevel}/init`.
+      Executable run as stage-2 PID 1, symlinked as `${config.system.build.toplevel}/init`.
+      The selected init backend supplies the default.
     '';
   };
 
   config = {
-    finit.tasks.remount-nix-store = {
-      description = "remount the nix store in read only mode";
-      runlevels = "S";
-      command = pkgs.writeShellApplication {
-        name = "remount-nix-store.sh";
-        runtimeInputs = [
-          config.programs.coreutils.package
-          pkgs.util-linux
-        ];
-        text = ''
-          #!${pkgs.runtimeShell}
+    finit.tasks = {
+      remount-nix-store = {
+        description = "remount the nix store in read only mode";
+        runlevels = "S";
+        command = remountNixStore;
+      };
 
-          # Make /nix/store a read-only bind mount to enforce immutability of
-          # the Nix store.  Note that we can't use "chown root:nixbld" here
-          # because users/groups might not exist yet.
-          # Silence chown/chmod to fail gracefully on a readonly filesystem
-          # like squashfs.
-          chown -f 0:30000 /nix/store
-          chmod -f 1775 /nix/store
-          if ! [[ "$(findmnt --noheadings --output OPTIONS /nix/store)" =~ ro(,|$) ]]; then
-            mount --bind /nix/store /nix/store
-            mount -o remount,ro,bind /nix/store
-          fi
-        '';
+      # Dinit handles SIGINT from the kernel itself when it is PID 1, so its
+      # Ctrl-Alt-Delete reboot path needs no generated service.
+      # Finit exposes the same event as a condition, so keep its task here.
+      ctrl-alt-del = {
+        description = "rebooting system";
+        runlevels = "12345789";
+        conditions = "sys/key/ctrlaltdel";
+        command = "${config.finit.package}/bin/initctl reboot";
       };
     };
 
-    # task to run if ctrl-alt-del is pressed - this condition is asserted by finit upon receiving SIGINT (from the kernel).
-    finit.tasks.ctrl-alt-del = {
-      description = "rebooting system";
-      runlevels = "12345789";
-      conditions = "sys/key/ctrlaltdel";
-      command = "${config.finit.package}/bin/initctl reboot";
+    dinit.services.remount-nix-store = {
+      type = "scripted";
+      command = "${remountNixStore}/bin/remount-nix-store";
+      targets = [ "local" ];
     };
   };
 }

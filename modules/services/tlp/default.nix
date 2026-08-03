@@ -103,7 +103,7 @@ in
 
     # TODO: add finit.services.restartTriggers option
     environment.etc."finit.d/tlp@reload.conf" =
-      lib.mkIf (config.finit.enable && config.finit.tasks."tlp@reload".enable)
+      lib.mkIf (config.system.init == "finit" && config.finit.tasks."tlp@reload".enable)
         {
           text = lib.mkAfter ''
 

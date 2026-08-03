@@ -15,27 +15,34 @@
   };
 
   config = {
-    environment.etc."tmpfiles.d/finix.conf".text = ''
-      # This file is created automatically and should not be modified.
-      # Please change the option ‘finit.tmpfiles.rules’ instead.
+    environment.etc."tmpfiles.d/finix.conf" =
+      lib.mkIf (config.system.init == "finit" || config.system.init == "dinit")
+        {
+          text = ''
+            # This file is created automatically and should not be modified.
+            # Please change the option ‘finit.tmpfiles.rules’ instead.
 
-      ${lib.concatStringsSep "\n" config.finit.tmpfiles.rules}
-    '';
+            ${lib.concatStringsSep "\n" config.finit.tmpfiles.rules}
+          '';
+        };
 
-    finit.tasks.tmpfiles-setup.command = "${config.finit.package}/libexec/finit/tmpfiles --create";
+    finit = {
+      # needed for finit tmpfiles Z implementation: pkgs.policycoreutils
+      # TODO: make this an optional dependency, fixup Z behaviour in general
+      tasks.tmpfiles-setup = {
+        command = "${config.finit.package}/libexec/finit/tmpfiles --create";
+      };
+    };
 
-    providers.scheduler.tasks = {
+    providers.scheduler.tasks = lib.mkIf (config.system.init == "finit") {
       tmpfiles-clean = {
         interval = "daily";
         command = "${config.finit.package}/libexec/finit/tmpfiles --clean";
       };
     };
 
-    # needed for finit tmpfiles Z implementation: pkgs.policycoreutils
-    # TODO: make this an optional dependency, fixup Z behaviour in general
-
     environment.etc."finit.d/tmpfiles-setup.conf" =
-      lib.mkIf (config.finit.enable && config.finit.tasks.tmpfiles-setup.enable)
+      lib.mkIf (config.system.init == "finit" && config.finit.tasks.tmpfiles-setup.enable)
         {
           text = lib.mkAfter ''
 
@@ -43,5 +50,12 @@
             # ${config.environment.etc."tmpfiles.d/finix.conf".source}
           '';
         };
+
+    dinit.services.tmpfiles-setup = {
+      type = "scripted";
+      command = "${config.finit.package}/libexec/finit/tmpfiles --create";
+      waits-for = [ "mount-fstab" ];
+      targets = [ "filesystem" ];
+    };
   };
 }

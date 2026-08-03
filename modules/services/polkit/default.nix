@@ -8,6 +8,11 @@ let
   cfg = config.services.polkit;
 in
 {
+  imports = [
+    ./polkit-dinit.nix
+    ./polkit-finit.nix
+  ];
+
   options.services.polkit = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -82,15 +87,6 @@ in
       cfg.package.bin
       cfg.package.out
     ];
-
-    finit.services.polkit = {
-      description = "policykit authorization manager";
-      conditions = "service/dbus/ready";
-      command =
-        "${cfg.package.out}/lib/polkit-1/polkitd --no-debug "
-        + lib.optionalString cfg.debug "--log-level=debug";
-      notify = "systemd";
-    };
 
     # The polkit daemon reads action/rule files
     environment.pathsToLink = [ "/share/polkit-1" ];

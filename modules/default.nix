@@ -64,6 +64,7 @@ in
       ./system/activation
       ./system/activation/specialisation.nix
       ./system/activation/switchable-system.nix
+      ./system/init.nix
       ./system/nixos-compat.nix
       ./time
       ./users
@@ -74,3 +75,6 @@ in
 }
 // programModules
 // serviceModules
+// {
+  dinit = ./dinit;
+}

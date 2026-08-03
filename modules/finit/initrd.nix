@@ -26,16 +26,16 @@ let
       pkgs.bash
       config.finit.package
     ]
-    ++ lib.optionals config.services.mdevd.enable [
+    ++ lib.optionals (cfg.deviceManager == "mdevd") [
       config.services.mdevd.package
       pkgs.execline
       pkgs.util-linux
     ]
-    ++ lib.optionals config.services.gardendevd.enable [
+    ++ lib.optionals (cfg.deviceManager == "gardendevd") [
       config.services.gardendevd.package
       pkgs.util-linux
     ]
-    ++ lib.optionals config.services.udev.enable [ config.services.udev.package ]
+    ++ lib.optionals (cfg.deviceManager == "udev") [ config.services.udev.package ]
     ++ fsPackages;
     pathsToLink = [
       "/bin"
@@ -51,6 +51,37 @@ let
 in
 {
   options.boot.initrd = {
+    deviceManager = lib.mkOption {
+      type = lib.types.nullOr (
+        lib.types.enum [
+          "mdevd"
+          "udev"
+          "gardendevd"
+        ]
+      );
+      default =
+        if config.services.mdevd.enable then
+          "mdevd"
+        else if config.services.gardendevd.enable then
+          "gardendevd"
+        else if config.services.udev.enable then
+          "udev"
+        else
+          null;
+      defaultText = lib.literalExpression ''
+        if config.services.mdevd.enable then "mdevd"
+        else if config.services.gardendevd.enable then "gardendevd"
+        else if config.services.udev.enable then "udev"
+        else null
+      '';
+      description = ''
+        Device manager used by the Finit-based stage-1 initrd.
+
+        This is independent of the stage-2 device manager and
+        {option}`system.init`.
+      '';
+    };
+
     emergencyAccess = lib.mkOption {
       type = with lib.types; nullOr (either bool (passwdEntry str));
       default = false;

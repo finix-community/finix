@@ -103,9 +103,9 @@
             pool:
             lib.nameValuePair "zpool-import-${utils.escapePath pool}" {
               conditions =
-                lib.optionals config.services.mdevd.enable [ "run/coldplug/success" ]
-                ++ lib.optionals config.services.gardendevd.enable [ "run/gardendevctl:2/success" ]
-                ++ lib.optionals config.services.udev.enable [ "run/udevadm:5/success" ]
+                lib.optional (config.boot.initrd.deviceManager == "mdevd") "run/coldplug/success"
+                ++ lib.optional (config.boot.initrd.deviceManager == "gardendevd") "run/gardendevctl:2/success"
+                ++ lib.optional (config.boot.initrd.deviceManager == "udev") "run/udevadm:5/success"
                 ++ lib.optionals config.services.keventd.enable [ "service/keventd/ready" ];
               tty = "@console";
               script = ''

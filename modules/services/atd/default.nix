@@ -8,6 +8,11 @@ let
   cfg = config.services.atd;
 in
 {
+  imports = [
+    ./atd-dinit.nix
+    ./atd-finit.nix
+  ];
+
   options.services.atd = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -52,13 +57,6 @@ in
 
     environment.etc."at/at.deny" = lib.mkIf (cfg.deny != null) {
       text = lib.concatStringsSep "\n" cfg.deny;
-    };
-
-    finit.services.atd = {
-      description = "deferred execution scheduler";
-      conditions = "service/syslogd/ready";
-      command = "${pkgs.at}/bin/atd -f " + lib.escapeShellArgs cfg.extraArgs;
-      notify = "pid";
     };
 
     users.users = {

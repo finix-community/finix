@@ -5,55 +5,51 @@
   ...
 }:
 let
-  cfg = config.dinit;
+  envFormat = pkgs.formats.keyValue {
+    mkKeyValue = k: v: "${k}=${toString v}";
+  };
 
-  format = pkgs.formats.keyValue { };
-  settingsFormat = import ./format.nix { inherit pkgs lib; };
-  extraAttrs = [
-    "enable"
-    "environment"
-    "path"
-  ];
+  serviceType =
+    system:
+    lib.types.attrsOf (
+      lib.types.submodule (
+        { config, name, ... }:
+        {
+          imports = [ ./common-options.nix ] ++ lib.optional system ./system-options.nix;
+
+          config.env-file = lib.mkIf (config.environment != { }) (
+            envFormat.generate "${name}.env" config.environment
+          );
+        }
+      )
+    );
 in
 {
-  options.dinit = {
-    enable = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = ''
-        Whether to enable `dinit` as pid 1.
-      '';
-    };
+  config = lib.mkIf (config.system.init == "dinit") {
+    boot.init = lib.mkDefault "${config.dinit.package}/bin/dinit";
+  };
 
+  imports = [ ./targets.nix ];
+
+  options.dinit = {
     user.enable = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = ''
-        Whether to generate user level service configuration `/etc/dinit.d/user`.
-
-        ::: {.note}
-        Highly experimental, setting this option to `true` will not actually run any services, simply generate configuration.
-        :::
-      '';
+      defaultText = lib.literalExpression "true";
+      description = "Whether to generate user-level dinit service files.";
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.dinit;
+      defaultText = lib.literalExpression "pkgs.dinit";
+      description = ''
+        The dinit package to use.
+      '';
     };
 
     user.services = lib.mkOption {
-      type = lib.types.attrsOf (
-        lib.types.submodule (
-          { config, name, ... }: {
-            imports = [ ./common-options.nix ];
-
-            config.env-file = lib.mkIf (config.environment != { }) (
-              format.generate "${name}.env" config.environment
-            );
-          }
-        )
-      );
+      type = serviceType false;
       default = { };
       description = ''
         An attribute set of `dinit` user level services.
@@ -63,20 +59,7 @@ in
     };
 
     services = lib.mkOption {
-      type = lib.types.attrsOf (
-        lib.types.submodule (
-          { config, name, ... }: {
-            imports = [
-              ./common-options.nix
-              ./system-options.nix
-            ];
-
-            config.env-file = lib.mkIf (config.environment != { }) (
-              format.generate "${name}.env" config.environment
-            );
-          }
-        )
-      );
+      type = serviceType true;
       default = { };
       description = ''
         An attribute set of `dinit` system level services.
@@ -85,28 +68,4 @@ in
       '';
     };
   };
-
-  config = lib.mkMerge [
-    (lib.mkIf cfg.enable {
-      boot.init = "${cfg.package}/bin/dinit";
-
-      environment.etc = lib.mapAttrs' (name: service: {
-        name = "dinit.d/${name}";
-        value.source = settingsFormat.generate name (builtins.removeAttrs service extraAttrs);
-      }) (lib.filterAttrs (_: service: service.enable) cfg.services);
-
-      environment.systemPackages = [ cfg.package ];
-
-      dinit.services.boot = {
-        type = "internal";
-      };
-    })
-
-    (lib.mkIf cfg.user.enable {
-      environment.etc = lib.mapAttrs' (name: service: {
-        name = "dinit.d/user/${name}";
-        value.source = settingsFormat.generate name (builtins.removeAttrs service extraAttrs);
-      }) (lib.filterAttrs (_: service: service.enable) cfg.user.services);
-    })
-  ];
 }

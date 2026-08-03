@@ -5,6 +5,16 @@
   ...
 }:
 let
+  switchToConfigurationScripts = {
+    finit = ../../finit/switch-to-configuration.sh;
+    dinit = ../../dinit/switch-to-configuration.sh;
+  };
+
+  switchToConfigurationSubstitutions = {
+    finit = "--subst-var-by finit ${config.finit.package}";
+    dinit = "--subst-var-by utillinux ${pkgs.util-linuxMinimal}";
+  };
+
   scriptOpts = {
     options = {
       deps = lib.mkOption {
@@ -171,6 +181,26 @@ in
 
             substituteInPlace $out/activate --subst-var-by systemConfig $out
 
+            ${
+              if config.system.init == "dinit" then
+                # dinit has no equivalent of the finix-setup finit plugin (which runs
+                # activation before finit parses its config). wrap stage 2 in a script
+                # that activates first, so /etc/dinit.d/boot exists when dinit loads it.
+                ''
+                  set -e
+                  cat > $out/init <<EOF
+                  #!${pkgs.runtimeShell}
+                  set -e
+                  FINIX_DINIT_BOOTSTRAP=1 $out/activate
+                  exec ${config.boot.init}
+                  EOF
+                  chmod +x $out/init
+                ''
+              else
+                ''
+                  ${coreutils}/bin/ln -sr ${config.boot.init} $out/init
+                ''
+            }
             ${coreutils}/bin/ln -s ${config.environment.path} $out/sw
             ${coreutils}/bin/ln -s ${config.system.build.inhibitSwitch} $out/switch-inhibitors
 
@@ -190,26 +220,22 @@ in
           + lib.optionalString config.boot.initrd.enable ''
             ${coreutils}/bin/ln -s ${config.boot.initrd.package}/initrd $out/initrd
           ''
-          + lib.optionalString config.finit.enable ''
-            # finit can boot directly
-            ${coreutils}/bin/ln -sr ${config.boot.init} $out/init
-
-            cp ${../../finit/switch-to-configuration.sh} $out/bin/switch-to-configuration
+          + ''
+            cp ${
+              # pick the script matching the stage-2 init, not just module presence:
+              # importing the dinit module (e.g. for user services) must not shadow
+              # finit's reload-on-switch behaviour when finit is still PID 1
+              switchToConfigurationScripts.${config.system.init}
+            } $out/bin/switch-to-configuration
             substituteInPlace $out/bin/switch-to-configuration \
               --subst-var out \
               --subst-var-by bash ${pkgs.bash} \
               --subst-var-by distroId finix \
-              --subst-var-by finit ${config.finit.package} \
               --subst-var-by logger ${pkgs.util-linuxMinimal} \
               --subst-var-by coreutils ${config.programs.coreutils.package} \
               --subst-var-by installHook ${config.providers.bootloader.installHook} \
-              --subst-var-by inhibitCheck ${config.system.build.checkSwitchInhibitors}
-          ''
-          + lib.optionalString config.dinit.enable ''
-            # dinit requires a shim to boot
-            cp -f ${config.boot.init} $out/init
-
-            substituteInPlace $out/init --subst-var-by systemConfig $out
+              --subst-var-by inhibitCheck ${config.system.build.checkSwitchInhibitors} \
+              ${switchToConfigurationSubstitutions.${config.system.init}}
           ''
           + lib.optionalString config.boot.bootspec.enable ''
             ${config.boot.bootspec.writer}

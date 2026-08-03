@@ -92,5 +92,11 @@ in
       # the backdoor runs bash which executes commands from hvc0 until EOF, then exits
       restart = 0;
     };
+
+    # backdoor service for dinit (no restart: bash exits on hvc0 EOF)
+    dinit.services.backdoor = {
+      command = toString backdoorScript;
+      targets = [ "local" ];
+    };
   };
 }

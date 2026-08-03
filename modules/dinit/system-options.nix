@@ -1,4 +1,7 @@
 { lib, ... }:
+let
+  targetNames = (import ./target-names.nix { inherit lib; }).names;
+in
 {
   # standard dinit options, applicable to only system level (privileged) services
   options = {
@@ -83,6 +86,17 @@
       default = null;
       description = ''
         This specifies the tty line that will be written to the `utmp` database when this service is started.
+      '';
+    };
+
+    targets = lib.mkOption {
+      type = with lib.types; listOf (enum targetNames);
+      default = [ ];
+      description = ''
+        Target directories in which this service should be started.
+
+        The target graph is rooted at `boot` and contains the
+        `filesystem`, `local`, `network`, and `login` targets.
       '';
     };
 

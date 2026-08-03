@@ -16,15 +16,15 @@ in
     ./tmpfiles.nix
   ];
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf (config.system.init == "finit") {
+    boot.init = lib.mkDefault "${cfg.package}/bin/finit";
+
     assertions = [
       {
         assertion = lib.versionAtLeast cfg.package.version "4.16";
         message = "finit version must be at least 4.16";
       }
     ];
-
-    boot.init = "${cfg.package}/bin/finit";
 
     # TODO: decide a reasonable default here... user can override if needed
     finit.path = [

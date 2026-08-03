@@ -9,6 +9,8 @@ let
 in
 {
   imports = [
+    ./cron-dinit.nix
+    ./cron-finit.nix
     ./providers.scheduler.nix
   ];
 
@@ -209,24 +211,6 @@ in
       group = "root";
       source = "${cfg.package}/bin/crontab";
     };
-
-    finit.services.cron = {
-      description = "cron daemon";
-      conditions = "service/syslogd/ready";
-      command = "${lib.getExe cfg.package} -n " + lib.escapeShellArgs cfg.extraArgs;
-      notify = "pid";
-    };
-
-    # TODO: add finit.services.restartTriggers option
-    environment.etc."finit.d/cron.conf" =
-      lib.mkIf (config.finit.enable && config.finit.services.cron.enable)
-        {
-          text = lib.mkAfter ''
-
-            # standard nixos trick to force a restart when something has changed
-            # ${config.environment.etc.crontab.source}
-          '';
-        };
 
     # this module supplies an implementation for `providers.scheduler`
     providers.scheduler.backend = lib.mkDefault "cron";

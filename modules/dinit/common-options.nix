@@ -47,8 +47,11 @@
         "internal"
         "triggered"
       ];
+      default = "process";
       description = ''
         Specifies the service type.
+        dinit has no useful default for services with a `command` (unset means `internal`),
+        so we default to `process` here.
 
         See [upstream documentation](https://davmac.org/projects/dinit/man-pages-html/dinit-service.5.html#SERVICE_TYPES) for additional details.
       '';

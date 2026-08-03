@@ -28,6 +28,11 @@ let
   };
 in
 {
+  imports = [
+    ./acpid-dinit.nix
+    ./acpid-finit.nix
+  ];
+
   options.services.acpid = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -58,14 +63,5 @@ in
       in
       lib.mkMerge [ etcTree ];
 
-    finit.services.acpid = {
-      description = "acpi daemon";
-      conditions = "service/syslogd/ready";
-      command = "${pkgs.acpid}/bin/acpid --foreground --netlink";
-      log = true;
-
-      # TODO: add "if" to finit.services
-      extraConfig = "if:<!int/container>";
-    };
   };
 }
