@@ -7,7 +7,7 @@ let
   cfg = config.services.iwd;
 in
 {
-  config = lib.mkIf (config.system.init == "dinit" && cfg.enable) {
+  config = lib.mkIf cfg.enable {
     dinit.services.iwd = {
       type = "process";
       command = "${cfg.package}/libexec/iwd" + lib.optionalString cfg.debug " -d";

@@ -8,7 +8,7 @@ let
   cfg = config.services.seatd;
 in
 {
-  config = lib.mkIf (config.system.init == "dinit" && cfg.enable) {
+  config = lib.mkIf cfg.enable {
     dinit.services.seatd = {
       type = "process";
       command =

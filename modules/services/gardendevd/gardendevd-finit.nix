@@ -7,7 +7,7 @@ let
   cfg = config.services.gardendevd;
 in
 {
-  config = lib.mkIf (config.system.init == "finit" && cfg.enable) {
+  config = lib.mkIf cfg.enable {
     finit.services.gardendevd = {
       inherit (cfg) path;
 

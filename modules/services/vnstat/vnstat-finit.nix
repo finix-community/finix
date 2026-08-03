@@ -7,7 +7,7 @@ let
   cfg = config.services.vnstat;
 in
 {
-  config = lib.mkIf (config.system.init == "finit" && cfg.enable) {
+  config = lib.mkIf cfg.enable {
     finit.services.vnstat = {
       inherit (cfg) user group;
 
@@ -20,12 +20,14 @@ in
     };
 
     # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/vnstat.conf" = lib.mkIf config.finit.services.vnstat.enable {
-      text = lib.mkAfter ''
+    environment.etc."finit.d/vnstat.conf" =
+      lib.mkIf (config.system.init == "finit" && config.finit.services.vnstat.enable)
+        {
+          text = lib.mkAfter ''
 
-        # reload trigger
-        # ${config.environment.etc."vnstat.conf".source}
-      '';
-    };
+            # reload trigger
+            # ${config.environment.etc."vnstat.conf".source}
+          '';
+        };
   };
 }

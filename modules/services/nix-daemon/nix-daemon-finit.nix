@@ -7,7 +7,7 @@ let
   cfg = config.services.nix-daemon;
 in
 {
-  config = lib.mkIf (config.system.init == "finit" && cfg.enable) {
+  config = lib.mkIf cfg.enable {
     finit.services.nix-daemon = {
       description = "nix daemon";
       conditions = "service/syslogd/ready";
@@ -22,12 +22,14 @@ in
     };
 
     # TODO: add finit.services.restartTriggers option
-    environment.etc."finit.d/nix-daemon.conf" = lib.mkIf config.finit.services.nix-daemon.enable {
-      text = lib.mkAfter ''
+    environment.etc."finit.d/nix-daemon.conf" =
+      lib.mkIf (config.system.init == "finit" && config.finit.services.nix-daemon.enable)
+        {
+          text = lib.mkAfter ''
 
-        # standard nixos trick to force a restart when something has changed
-        # ${config.environment.etc."nix/nix.conf".source}
-      '';
-    };
+            # standard nixos trick to force a restart when something has changed
+            # ${config.environment.etc."nix/nix.conf".source}
+          '';
+        };
   };
 }

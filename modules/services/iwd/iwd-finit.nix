@@ -7,7 +7,7 @@ let
   cfg = config.services.iwd;
 in
 {
-  config = lib.mkIf (config.system.init == "finit" && cfg.enable) {
+  config = lib.mkIf cfg.enable {
     finit.services.iwd = {
       description = "wireless service";
       conditions = "service/syslogd/ready";
@@ -21,12 +21,14 @@ in
     };
 
     # TODO: add finit.services.restartTriggers option
-    environment.etc."finit.d/iwd.conf" = lib.mkIf config.finit.services.iwd.enable {
-      text = lib.mkAfter ''
+    environment.etc."finit.d/iwd.conf" =
+      lib.mkIf (config.system.init == "finit" && config.finit.services.iwd.enable)
+        {
+          text = lib.mkAfter ''
 
-        # standard nixos trick to force a restart when something has changed
-        # ${config.environment.etc."iwd/main.conf".source}
-      '';
-    };
+            # standard nixos trick to force a restart when something has changed
+            # ${config.environment.etc."iwd/main.conf".source}
+          '';
+        };
   };
 }

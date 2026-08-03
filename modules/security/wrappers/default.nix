@@ -277,7 +277,7 @@ in
       path = [ config.programs.coreutils.package ];
     };
 
-    dinit.services.suid-sgid-wrappers = lib.mkIf (config.system.init == "dinit") {
+    dinit.services.suid-sgid-wrappers = {
       type = "scripted";
       command = "${wrappersScript}";
       waits-for = [ "filesystem.target" ];

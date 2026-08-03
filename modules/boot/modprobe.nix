@@ -34,19 +34,17 @@ in
       pkgs.kmod
     ];
 
-    finit.tasks.modprobe = lib.mkIf (config.system.init == "finit") {
+    finit.tasks.modprobe = {
       command = "${pkgs.kmod}/bin/modprobe --all ${lib.concatStringsSep " " config.boot.kernelModules}";
       conditions = "service/syslogd/ready";
       runlevels = "12345789";
     };
 
-    dinit.services.modprobe =
-      lib.mkIf (config.system.init == "dinit" && config.boot.kernelModules != [ ])
-        {
-          type = "scripted";
-          command = "${pkgs.kmod}/bin/modprobe --all ${lib.escapeShellArgs config.boot.kernelModules}";
-          targets = [ "local" ];
-        };
+    dinit.services.modprobe = lib.mkIf (config.boot.kernelModules != [ ]) {
+      type = "scripted";
+      command = "${pkgs.kmod}/bin/modprobe --all ${lib.escapeShellArgs config.boot.kernelModules}";
+      targets = [ "local" ];
+    };
 
     system.activation.scripts.modprobe = ''
       # Allow the kernel to find our wrapped modprobe (which searches

@@ -32,7 +32,7 @@ in
     };
   };
 
-  config = lib.mkIf (config.system.init == "finit" && cfg.enable) {
+  config = lib.mkIf cfg.enable {
     # finit has explicit sysklogd support, requires `logger` to be available in `PATH`
     finit.path = [ cfg.package ];
 
@@ -48,16 +48,20 @@ in
       notify = "pid";
     };
 
-    system.switch.inhibitors.syslogd = config.finit.services.syslogd.command;
+    system.switch.inhibitors.syslogd = lib.mkIf (
+      config.system.init == "finit"
+    ) config.finit.services.syslogd.command;
 
     # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/syslogd.conf" = lib.mkIf config.finit.services.syslogd.enable {
-      text = lib.mkAfter ''
+    environment.etc."finit.d/syslogd.conf" =
+      lib.mkIf (config.system.init == "finit" && config.finit.services.syslogd.enable)
+        {
+          text = lib.mkAfter ''
 
-        # reload trigger
-        # ${config.environment.etc."syslog.d/nixos.conf".source}
-        # ${config.environment.etc."syslog.conf".source}
-      '';
-    };
+            # reload trigger
+            # ${config.environment.etc."syslog.d/nixos.conf".source}
+            # ${config.environment.etc."syslog.conf".source}
+          '';
+        };
   };
 }

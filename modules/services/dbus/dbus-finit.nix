@@ -8,7 +8,7 @@ let
   cfg = config.services.dbus;
 in
 {
-  config = lib.mkIf (config.system.init == "finit" && cfg.enable) {
+  config = lib.mkIf cfg.enable {
     finit.services.dbus = {
       description = "d-bus message bus daemon";
       runlevels = "S123456789";
@@ -24,12 +24,14 @@ in
     };
 
     # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/dbus.conf" = lib.mkIf config.finit.services.dbus.enable {
-      text = lib.mkAfter ''
+    environment.etc."finit.d/dbus.conf" =
+      lib.mkIf (config.system.init == "finit" && config.finit.services.dbus.enable)
+        {
+          text = lib.mkAfter ''
 
-        # reload trigger
-        # ${config.environment.etc."dbus-1".source}
-      '';
-    };
+            # reload trigger
+            # ${config.environment.etc."dbus-1".source}
+          '';
+        };
   };
 }

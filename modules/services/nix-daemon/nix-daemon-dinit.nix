@@ -7,7 +7,7 @@ let
   cfg = config.services.nix-daemon;
 in
 {
-  config = lib.mkIf (config.system.init == "dinit" && cfg.enable) {
+  config = lib.mkIf cfg.enable {
     dinit.services.nix-daemon = {
       type = "process";
       command = "${cfg.package}/bin/nix-daemon --daemon";

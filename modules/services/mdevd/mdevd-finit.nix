@@ -8,7 +8,7 @@ let
   cfg = config.services.mdevd;
 in
 {
-  config = lib.mkIf (config.system.init == "finit" && cfg.enable) {
+  config = lib.mkIf cfg.enable {
     finit.services.mdevd = {
       description = "device event daemon (mdevd)";
       command =

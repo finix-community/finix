@@ -26,7 +26,7 @@
           '';
         };
 
-    finit = lib.mkIf (config.system.init == "finit") {
+    finit = {
       # needed for finit tmpfiles Z implementation: pkgs.policycoreutils
       # TODO: make this an optional dependency, fixup Z behaviour in general
       tasks.tmpfiles-setup = {
@@ -51,7 +51,7 @@
           '';
         };
 
-    dinit.services.tmpfiles-setup = lib.mkIf (config.system.init == "dinit") {
+    dinit.services.tmpfiles-setup = {
       type = "scripted";
       command = "${config.finit.package}/libexec/finit/tmpfiles --create";
       waits-for = [ "mount-fstab" ];

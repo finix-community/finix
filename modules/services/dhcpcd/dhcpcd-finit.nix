@@ -7,16 +7,19 @@ let
   cfg = config.services.dhcpcd;
 in
 {
-  config = lib.mkIf (config.system.init == "finit" && cfg.enable) {
-    services.dhcpcd.extraArgs = [
-      "-B"
-      "-f"
-      (toString cfg.configFile)
-    ];
-
+  config = lib.mkIf cfg.enable {
     finit.services.dhcpcd = {
       description = "dhcp client";
-      command = "${lib.getExe cfg.package} " + lib.escapeShellArgs cfg.extraArgs;
+      command =
+        "${lib.getExe cfg.package} "
+        + lib.escapeShellArgs (
+          [
+            "-B"
+            "-f"
+            (toString cfg.configFile)
+          ]
+          ++ cfg.extraArgs
+        );
       conditions = "service/syslogd/ready";
 
       path = lib.optionals config.programs.resolvconf.enable [

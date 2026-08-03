@@ -8,7 +8,7 @@ let
   cfg = config.services.getty;
 in
 {
-  config = lib.mkIf (config.system.init == "dinit" && cfg.enable) {
+  config = lib.mkIf cfg.enable {
     dinit.services = lib.genAttrs (map (dev: "getty-${dev}") cfg.ttys) (
       name:
       let

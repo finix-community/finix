@@ -7,7 +7,7 @@ let
   cfg = config.services.getty;
 in
 {
-  config = lib.mkIf (config.system.init == "finit" && cfg.enable) {
+  config = lib.mkIf cfg.enable {
     finit.ttys = lib.genAttrs cfg.ttys (
       device:
       {

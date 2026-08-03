@@ -8,7 +8,7 @@ let
   cfg = config.services.seatd;
 in
 {
-  config = lib.mkIf (config.system.init == "finit" && cfg.enable) {
+  config = lib.mkIf cfg.enable {
     finit.services.seatd = {
       description = "seat management daemon";
       runlevels = "34";

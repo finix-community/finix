@@ -7,7 +7,7 @@ let
   cfg = config.services.udev;
 in
 {
-  config = lib.mkIf (config.system.init == "finit" && cfg.enable) {
+  config = lib.mkIf cfg.enable {
     # adapted from https://github.com/troglobit/finit/blob/master/system/10-hotplug.conf.in
     finit.services.udevd = {
       description = "device event daemon (${cfg.package.pname})";
