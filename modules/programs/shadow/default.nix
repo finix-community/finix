@@ -16,6 +16,8 @@ let
       "session optional ${config.services.sessiond.package}/lib/security/pam_sessiond.so"
     else if config.services.elogind.enable then
       "session optional ${pkgs.elogind}/lib/security/pam_elogind.so"
+    else if config.services.turnstile.enable && config.services.turnstile.settings.manage_rundir then
+      "session optional ${config.services.turnstile.package}/lib/security/pam_turnstile.so"
     else if config.services.seatd.enable then
       "session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so"
     else

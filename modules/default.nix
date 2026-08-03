@@ -27,6 +27,7 @@ let
       "mdevd"
       "seatd"
       "sessiond"
+      "turnstile"
       "udev"
     ]
   );
@@ -63,6 +64,7 @@ in
       ./services/mdevd
       ./services/seatd
       ./services/sessiond
+      ./services/turnstile
       ./services/udev
       ./system/activation
       ./system/activation/specialisation.nix
