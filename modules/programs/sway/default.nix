@@ -32,19 +32,19 @@ let
     }
   );
 
-  wlroots_0_20 = pkgs.wlroots_0_20.override {
-    inherit libinput;
+  sway-unwrapped = pkgs.sway-unwrapped.override (
+    o:
+    let
+      wlrootsAttr = lib.head (lib.filter (lib.hasPrefix "wlroots") (lib.attrNames o));
+    in
+    {
+      inherit libinput;
+      ${wlrootsAttr} = o.${wlrootsAttr}.override { inherit libinput; };
 
-    # xwayland appears to cause issues with mdevd - and not required in this context, so no harm in removing
-    enableXWayland = !config.services.mdevd.enable;
-  };
-
-  sway-unwrapped = pkgs.sway-unwrapped.override {
-    inherit libinput wlroots_0_20;
-
-    # since we're recompiling go ahead and disable systemd
-    systemdSupport = udevApi == null;
-  };
+      # since we're recompiling go ahead and disable systemd
+      systemdSupport = udevApi == null;
+    }
+  );
 in
 {
   options.programs.sway = {

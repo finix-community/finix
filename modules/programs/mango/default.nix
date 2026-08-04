@@ -18,6 +18,8 @@ let
     Type=Application
   '';
 
+  mango' = pkgs.mango or pkgs.mangowc;
+
   # gardendevd needs libudev-garden; mdevd/keventd need libudev-zero
   udevApi =
     if config.services.gardendevd.enable then
@@ -50,11 +52,16 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.mango.override {
-        inherit libinput;
-
-        wlroots_0_19 = pkgs.wlroots_0_19.override { inherit libinput; };
-      };
+      default = mango'.override (
+        o:
+        let
+          wlrootsAttr = lib.head (lib.filter (lib.hasPrefix "wlroots") (lib.attrNames o));
+        in
+        {
+          inherit libinput;
+          ${wlrootsAttr} = o.${wlrootsAttr}.override { inherit libinput; };
+        }
+      );
       defaultText = lib.literalExpression "pkgs.mango";
       description = ''
         The package to use for `mango`.
