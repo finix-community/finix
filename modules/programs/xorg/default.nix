@@ -44,9 +44,11 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.xorg-server.override {
-        udev = udevApi;
-      };
+      default = pkgs.xorg-server.override (
+        lib.optionalAttrs (udevApi != null) {
+          udev = udevApi;
+        }
+      );
       defaultText = lib.literalExpression "pkgs.xorg-server";
       description = ''
         The package to use for `xorg`.
