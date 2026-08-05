@@ -13,6 +13,25 @@ let
     firmware = config.hardware.firmware;
     allowMissing = false;
   };
+
+  fsPackages = lib.unique (
+    lib.flatten (
+      lib.concatMap (v: lib.optional v.enable v.packages or [ ]) (
+        lib.attrValues config.boot.initrd.supportedFilesystems
+      )
+    )
+  );
+
+  initrdPath = pkgs.buildEnv {
+    name = "initrd-path";
+    paths = cfg.path;
+    pathsToLink = [ "/bin" ];
+    ignoreCollisions = true;
+    postBuild = ''
+      # Remove wrapped binaries, they shouldn't be accessible via PATH.
+      find $out/bin -maxdepth 1 -name ".*-wrapped" -type l -delete
+    '';
+  };
 in
 {
   options.boot.initrd = {
@@ -76,6 +95,14 @@ in
       '';
     };
 
+    path = lib.mkOption {
+      type = with lib.types; listOf package;
+      default = [ ];
+      description = ''
+        Packages whose `/bin` is linked into the initramfs `PATH`.
+      '';
+    };
+
     fileSystemImportCommands = lib.mkOption {
       description = ''
         Lines of shell commands that are run after coldbooting
@@ -111,10 +138,22 @@ in
       ) cfg.contents;
     };
 
+    # busybox is the only package initrd should need: it provides /bin/sh and the baseline coreutils
+    # Anything beyond that belongs to whichever module actually uses it, contributed via boot.initrd.path
+    boot.initrd.path = [ pkgs.busybox ] ++ fsPackages;
+
     boot.initrd.contents = [
       {
         target = "/lib";
         source = "${modulesClosure}/lib";
+      }
+      {
+        target = "/bin";
+        source = "${initrdPath}/bin";
+      }
+      {
+        target = "/sbin";
+        source = "${initrdPath}/bin";
       }
     ];
   };

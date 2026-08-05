@@ -94,9 +94,9 @@ in
         "net/route/default"
       ];
       command = "${lib.getExe cfg.package} --config ${configFile}";
-      caps = [ "^cap_net_bind_service" ];
-      log = true;
-      nohup = true;
+      capabilities = [ "^cap_net_bind_service" ];
+      log = { };
+      reload-signal = "none";
     };
 
     users.users = lib.mkIf (cfg.user == "blocky") {

@@ -64,27 +64,20 @@ in
 
     services.dbus.packages = [ cfg.package ];
 
-    finit.tmpfiles.rules = [
-      "d /var/lib/iwd 0700"
-    ];
-
     finit.services.iwd = {
       description = "wireless service";
       conditions = "service/syslogd/ready";
       command = "${cfg.package}/libexec/iwd" + lib.optionalString cfg.debug " -d";
-      nohup = true;
-      log = true;
+      reload-signal = "none";
+      log = { };
+      state-dir = "iwd";
+      state-dir-mode = "0700";
 
       path = lib.optionals config.programs.resolvconf.enable [
         config.programs.resolvconf.package
       ];
+
+      reload-triggers = [ config.environment.etc."iwd/main.conf".source ];
     };
-
-    # TODO: add finit.services.restartTriggers option
-    environment.etc."finit.d/iwd.conf".text = lib.mkAfter ''
-
-      # standard nixos trick to force a restart when something has changed
-      # ${config.environment.etc."iwd/main.conf".source}
-    '';
   };
 }

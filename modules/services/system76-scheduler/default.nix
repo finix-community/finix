@@ -52,9 +52,9 @@ in
     finit.services.system76-scheduler = {
       description = "system76 scheduler";
       command = "${lib.getExe cfg.package} daemon";
-      reload = "${lib.getExe cfg.package} daemon reload";
+      exec-reload = "${lib.getExe cfg.package} daemon reload";
       conditions = "service/dbus/ready";
-      log = true;
+      log = { };
 
       # TODO: now we're hijacking `env` and no one else can use it...
       path = with pkgs; [

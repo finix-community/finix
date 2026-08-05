@@ -1,5 +1,6 @@
 {
   config,
+  pkgs,
   lib,
   utils,
   ...
@@ -76,6 +77,9 @@ let
 in
 {
   config = {
+    # busybox's own `mount` applet doesn't understand `X-mount.mkdir` and other util-linux specific options used below
+    boot.initrd.path = [ (lib.hiPrio pkgs.util-linux.mount) ];
+
     boot.initrd.finit.tasks = lib.mkMerge [
       (lib.genAttrs' waitDevs (
         fs:

@@ -108,18 +108,12 @@ in
 
       description = "device event daemon (keventd)";
       command = "${config.finit.package}/libexec/finit/keventd " + lib.escapeShellArgs cfg.extraArgs;
-      runlevels = "S12345789";
-      cgroup.name = "init";
+      runlevel = "S12345789";
+      cgroup.init = { };
       notify = "pid";
-      log = true;
+      log = { };
+      reload-triggers = [ config.environment.etc."udev/rules.d".source ];
     };
-
-    # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/keventd.conf".text = lib.mkAfter ''
-
-      # reload trigger
-      # ${config.environment.etc."udev/rules.d".source}
-    '';
 
     # TODO: share between device managers
     system.activation.scripts.keventd = lib.mkIf config.boot.kernel.enable {
@@ -140,12 +134,20 @@ in
         notify = "pid";
       };
 
-      contents = [
-        {
-          target = "/etc/udev/rules.d";
-          source = "${config.finit.package}/lib/udev/rules.d";
-        }
-      ];
+      # minimal set of rules needed for initramfs
+      contents =
+        map
+          (v: {
+            target = "/etc/udev/rules.d/${v}.rules";
+            source = "${config.finit.package}/lib/udev/rules.d/${v}.rules";
+          })
+          [
+            "60-block"
+            "60-persistent-storage"
+            "60-persistent-storage-tape"
+            "64-btrfs"
+            "80-drivers"
+          ];
     };
   };
 }

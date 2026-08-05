@@ -42,20 +42,7 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.openresolv.overrideAttrs (_: {
-        # TODO: could potentially make 'RESTARTCMD' an overridable option for the package
-        configurePhase = ''
-          cat > config.mk <<EOF
-          PREFIX=$out
-          SYSCONFDIR=/etc
-          SBINDIR=$out/sbin
-          LIBEXECDIR=$out/libexec/resolvconf
-          VARDIR=/run/resolvconf
-          MANDIR=$out/share/man
-          RESTARTCMD="initctl restart \\\\\$\$1"
-          EOF
-        '';
-      });
+      default = pkgs.openresolv;
       defaultText = lib.literalExpression "pkgs.openresolv";
       description = ''
         The package to use for `resolvconf`.
@@ -79,6 +66,7 @@ in
         "lo[0-9]"
       ];
       resolv_conf = "/etc/resolv.conf";
+      RESTARTCMD = "${config.finit.package}/bin/initctl restart $1";
     };
 
     environment.etc."resolvconf.conf".source = format.generate "resolvconf.conf" cfg.settings;
@@ -87,13 +75,8 @@ in
 
     finit.tasks.resolvconf = {
       command = "${lib.getExe cfg.package} -u";
-      remain = true;
+      remain-after-exit = true;
+      reload-triggers = [ config.environment.etc."resolvconf.conf".source ];
     };
-
-    environment.etc."finit.d/resolvconf.conf".text = lib.mkAfter ''
-
-      # force a restart on configuration change
-      # ${config.environment.etc."resolvconf.conf".source}
-    '';
   };
 }
