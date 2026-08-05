@@ -49,6 +49,14 @@ in
 
           freeformType = settingsFormat.type;
 
+          options.no-resolv = lib.mkOption {
+            type = lib.types.bool;
+            default = false;
+            description = ''
+              Whether [dnsmasq](${pkgs.dnsmasq.meta.homepage}) should read `/etc/resolv.conf`.
+            '';
+          };
+
           options.server = lib.mkOption {
             type = lib.types.listOf lib.types.str;
             default = [ ];
@@ -95,17 +103,32 @@ in
       package = lib.mkPackageOption pkgs "dnsmasq" { };
     };
   };
+
   config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = cfg.resolveLocalQueries -> !(cfg.settings.no-resolv or false);
+        message = ''
+          `services.dnsmasq.resolveLocalQueries` requires that `no-resolv` is false.
+          Either set `services.dnsmasq.settings.no-resolv` to `false` or disable `resolveLocalQueries`.
+        '';
+      }
+      {
+        assertion = cfg.resolveLocalQueries -> config.programs.resolvconf.enable;
+        message = ''
+          `services.dnsmasq.resolveLocalQueries` needs `programs.resolvconf` to be enabled.
+          Set `programs.resolvconf.enable` to true.
+        '';
+      }
+    ];
     services.dnsmasq = {
       settings = {
-        conf-file = lib.mkDefault (
-          lib.optional (cfg.resolveLocalQueries && !cfg.settings.no-resolv) "/etc/dnsmasq-conf.conf"
-        );
         dhcp-leasefile = lib.mkDefault "${stateDir}/dnsmasq.leases";
-        resolv-file = lib.mkDefault (
-          lib.optional (cfg.resolveLocalQueries && !cfg.settings.no-resolv) "/etc/dnsmasq-resolv.conf"
-        );
-      };
+      }
+      // (lib.optionalAttrs (cfg.resolveLocalQueries) {
+        conf-file = lib.mkDefault "/etc/dnsmasq-conf.conf";
+        resolv-file = lib.mkDefault "/etc/dnsmasq-resolv.conf";
+      });
     };
 
     programs.resolvconf.settings =
