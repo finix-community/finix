@@ -31,13 +31,7 @@ in
 {
   options = {
     services.dnsmasq = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = ''
-          Whether to run [dnsmasq](${pkgs.dnsmasq.meta.homepage}) as a system service.
-        '';
-      };
+      enable = lib.mkEnableOption "Whether to run [dnsmasq](${pkgs.dnsmasq.meta.homepage}) as a system service.";
 
       resolveLocalQueries = lib.mkOption {
         type = lib.types.bool;
