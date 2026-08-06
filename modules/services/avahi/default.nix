@@ -92,7 +92,12 @@ in
         "service/syslogd/ready"
       ]
       ++ lib.optionals enableDbus [ "service/dbus/ready" ];
-      command = lib.getExe' cfg.package "avahi-daemon";
+      command = lib.escapeShellArgs (
+        [
+          (lib.getExe' cfg.package "avahi-daemon")
+        ]
+        ++ cfg.extraArgs
+      );
     };
 
     services.dbus = lib.optionalAttrs enableDbus {
