@@ -164,6 +164,7 @@ in
     ./lvm.nix
     ./ntfs3.nix
     ./special.nix
+    ./squashfs.nix
     ./tmpfs.nix
     ./vfat.nix
     ./xfs.nix
