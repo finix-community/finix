@@ -67,6 +67,7 @@ in
       ];
       resolv_conf = "/etc/resolv.conf";
       RESTARTCMD = "${config.finit.package}/bin/initctl restart $1";
+      libc_restart = true; # NOTE: needed until we have nscd service
     };
 
     environment.etc."resolvconf.conf".source = format.generate "resolvconf.conf" cfg.settings;
