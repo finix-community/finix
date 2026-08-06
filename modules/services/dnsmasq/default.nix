@@ -177,7 +177,7 @@ in
       "d ${stateDir} 0755 ${config.users.users.dnsmasq.name} root - -"
       "f ${stateDir}/dnsmasq.leases 0644 ${config.users.users.dnsmasq.name} root -"
     ]
-    ++ lib.optional (cfg.resolveLocalQueries) [
+    ++ lib.optionals (cfg.resolveLocalQueries) [
       "f /etc/dnsmasq-conf.conf 0644 root root - -"
       "f /etc/dnsmasq-resolv.conf 0644 root root - -"
     ];
