@@ -9,6 +9,16 @@ let
   format = pkgs.formats.toml { };
 
   configFile = format.generate "greetd.toml" cfg.settings;
+
+  session_rundir =
+    if config.services.sessiond.enable then
+      "session optional ${config.services.sessiond.package}/lib/security/pam_sessiond.so"
+    else if config.services.elogind.enable then
+      "session optional ${pkgs.elogind}/lib/security/pam_elogind.so"
+    else if config.services.seatd.enable then
+      "session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so"
+    else
+      false;
 in
 {
   options.services.greetd = {
@@ -94,9 +104,9 @@ in
         session required pam_unix.so # unix (order 10200)
         session required pam_loginuid.so # loginuid (order 10300)
         session required pam_limits.so
-      ''
-      + lib.optionalString config.services.elogind.enable "session optional ${pkgs.elogind}/lib/security/pam_elogind.so"
-      + lib.optionalString config.services.seatd.enable "session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so";
+
+        ${lib.optionalString (session_rundir != false) session_rundir}
+      '';
     };
 
   };
