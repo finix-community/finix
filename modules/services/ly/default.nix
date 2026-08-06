@@ -11,6 +11,16 @@ let
   format = pkgs.formats.keyValue { };
 
   brightnessctl = config.programs.brightnessctl.package or pkgs.brightnessctl;
+
+  session_rundir =
+    if config.services.sessiond.enable then
+      "session optional ${config.services.sessiond.package}/lib/security/pam_sessiond.so"
+    else if config.services.elogind.enable then
+      "session optional ${pkgs.elogind}/lib/security/pam_elogind.so"
+    else if config.services.seatd.enable then
+      "session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so"
+    else
+      false;
 in
 {
   options.services.ly = {
@@ -109,8 +119,7 @@ in
           session required pam_env.so debug conffile=/etc/security/pam_env.conf readenv=1
           session required pam_unix.so
           session optional pam_loginuid.so
-          ${lib.optionalString config.services.elogind.enable "session optional ${pkgs.elogind}/lib/security/pam_elogind.so"}
-          ${lib.optionalString config.services.seatd.enable "session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so"}
+          ${lib.optionalString (session_rundir != false) session_rundir}
           session required ${config.security.pam.package}/lib/security/pam_lastlog.so silent
           session required pam_limits.so
         '';
