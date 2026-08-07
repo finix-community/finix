@@ -29,22 +29,6 @@ let
     DesktopNames=LXQt
   '';
 
-  # gardendevd needs libudev-garden; mdevd/keventd need libudev-zero
-  udevApi =
-    if config.services.gardendevd.enable then
-      pkgs.libudev-garden
-    else if config.services.mdevd.enable || config.services.keventd.enable then
-      pkgs.libudev-zero
-    else
-      null;
-
-  libinput = pkgs.libinput.override (
-    lib.optionalAttrs (udevApi != null) {
-      udev = udevApi;
-      wacomSupport = false;
-    }
-  );
-
   # TODO: present in nixpkgs utils module, maybe port to finix?
   removePackagesByName =
     packages: packagesToRemove:
