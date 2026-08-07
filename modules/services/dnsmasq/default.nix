@@ -48,6 +48,7 @@ in
 
           options.enable-dbus = lib.mkOption {
             type = lib.types.bool;
+            default = false;
             description = ''
               Whether [dnsmasq](${pkgs.dnsmasq.meta.homepage}) should interface with `dbus`.
             '';
