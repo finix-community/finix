@@ -22,11 +22,7 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.lemurs.overrideAttrs (o: {
-        postInstall = ''
-          install -Dm0755 extra/xsetup.sh "$out/etc/xsetup.sh"
-        '';
-      });
+      default = pkgs.lemurs;
       defaultText = lib.literalExpression "pkgs.lemurs";
       description = ''
         The package to use for `lemurs`.

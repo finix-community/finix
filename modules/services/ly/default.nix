@@ -24,13 +24,7 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      # TODO: drop override on next nixpkgs bump
-      default = pkgs.ly.overrideAttrs (o: {
-        postInstall = o.postInstall or "" + ''
-          install -Dm0644 res/config.ini "$out/etc/config.ini"
-          install -Dm0755 res/setup.sh "$out/etc/setup.sh"
-        '';
-      });
+      default = pkgs.ly;
       defaultText = lib.literalExpression "pkgs.ly";
       description = ''
         The package to use for `ly`.
