@@ -58,6 +58,17 @@ None of the above methods have been attempted in some time.
 
 For an installation guide, please see the [examples](https://github.com/finix-community/examples/tree/main/installations) repository and choose your preferred method. Credits to [@xZecora](https://github.com/xZecora) for writing these.
 
+# `cachix` binary cache
+
+A binary cache is generously provided by the [cachix](https://www.cachix.org/) free tier offering.
+
+```nix
+  services.nix-daemon.settings = {
+    substituters = [ "https://finix.cachix.org" ];
+    trusted-public-keys = [ "finix.cachix.org-1:0ejikHDeCp0UErsduUUHcg9IJczY2/h2e5132Z/As/c=" ];
+  };
+```
+
 # See also
 
 - [finix options search](https://finix-community.github.io/finix/options.html)
