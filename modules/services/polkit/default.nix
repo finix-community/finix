@@ -77,6 +77,12 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    services.polkit.package = lib.mkIf config.services.sessiond.enable (
+      pkgs.callPackage ./polkit.nix {
+        useConsoleKit = true;
+        useSystemd = false;
+      }
+    );
 
     environment.systemPackages = [
       cfg.package.bin
@@ -85,7 +91,10 @@ in
 
     finit.services.polkit = {
       description = "policykit authorization manager";
-      conditions = "service/dbus/ready";
+      conditions = [
+        "service/dbus/ready"
+      ]
+      ++ lib.optionals config.services.sessiond.enable [ "service/sessiond/ready" ];
       command =
         "${cfg.package.out}/lib/polkit-1/polkitd --no-debug "
         + lib.optionalString cfg.debug "--log-level=debug";
