@@ -48,7 +48,7 @@ let
       mouse[0-9]+  0:${input}         660 =input/ @${libudev-zero-helper}/bin/helper
       js[0-9]+     0:${input}         660 =input/ @${libudev-zero-helper}/bin/helper
       mice         0:${input}         660 =input/ @${libudev-zero-helper}/bin/helper
-   '';
+    '';
 
   # Insert modules for devices with a modalias.
   modaliasRule = ''-$MODALIAS=.* 0:0 660 @${pkgs.kmod}/bin/modprobe --quiet "$MODALIAS"'';
@@ -286,9 +286,7 @@ in
 
     finit.tasks.coldplug = {
       description = "Cold plugging system";
-      command =
-        "${cfg.package}/bin/busybox mdev -s"
-        + lib.optionalString cfg.debug " -v";
+      command = "${cfg.package}/bin/busybox mdev -s" + lib.optionalString cfg.debug " -v";
       runlevels = "S";
       conditions = "run/modalias-load/success";
       cgroup.name = "init";
