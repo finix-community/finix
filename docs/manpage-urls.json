@@ -30,6 +30,8 @@
   "keyd(1)": "https://man.archlinux.org/man/extra/keyd/keyd.1",
   "labwc(1)": "https://man.archlinux.org/man/labwc.1",
   "login.defs(5)": "https://man.archlinux.org/man/login.defs.5",
+  "modprobe(8)": "https://man.archlinux.org/man/modprobe.8",
+  "modprobe.d(5)": "https://man.archlinux.org/man/modprobe.d",
   "mount(8)": "https://man.archlinux.org/man/mount.8",
   "NetworkManager.conf(5)": "https://man.archlinux.org/man/NetworkManager.conf.5",
   "nix.conf(5)": "https://man.archlinux.org/man/nix.conf.5",

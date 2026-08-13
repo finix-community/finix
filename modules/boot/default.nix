@@ -10,7 +10,6 @@
     ./efi.nix
     ./initrd.nix
     ./kernel.nix
-    ./modprobe.nix
     ./sysctl.nix
   ];
 
