@@ -60,14 +60,14 @@ in
           btrfs-progs
           cdrkit
           config.programs.coreutils.package
+          config.programs.grep.package
+          config.programs.sed.package
+          config.programs.tar.package
+          config.programs.findUtils.package
           criu
           dnsmasq
           e2fsprogs
-          findutils
           getent
-          gnugrep
-          gnused
-          gnutar
           gptfdisk
           gzip
           iproute2
@@ -89,7 +89,7 @@ in
           sshfs
           swtpm
           thin-provisioning-tools
-          util-linux
+          config.programs.utilLinux.package
           virtiofsd
           xdelta
           xz

@@ -38,7 +38,7 @@
       cpio
       curl
       diffutils
-      findutils
+      # findutils
       getent
       getconf
       gzip
@@ -51,16 +51,23 @@
       procps
       su
       time
-      util-linux
-      which
+      # util-linux
+      # which
       zstd
 
-      bashInteractive
-      gawk
-      gnugrep
-      gnupatch
-      gnused
-      gnutar
+      # bashInteractive
+      # gawk
+      # gnugrep
+      # gnupatch
+      # gnused
+      # gnutar
+
+      config.programs.utilLinux.package
+      config.programs.findUtils.package
+      config.programs.which.package
+      config.programs.grep.package
+      config.programs.sed.package
+      config.programs.tar.package
     ];
 
     environment.pathsToLink = [

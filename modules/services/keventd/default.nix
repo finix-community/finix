@@ -62,10 +62,10 @@ in
 
     services.keventd.path = [
       config.programs.coreutils.package
-      pkgs.gnugrep
-      pkgs.gnused
+      config.programs.grep.package
+      config.programs.sed.package
+      config.programs.utilLinux.package
       pkgs.kmod
-      pkgs.util-linux
     ];
 
     # contribute finit's bundled rules to the udev packages list.
@@ -95,8 +95,8 @@ in
             substituteInPlace $i \
               --replace-quiet \"/sbin/modprobe \"${pkgs.kmod}/bin/modprobe \
               --replace-quiet \"/sbin/mdadm \"${pkgs.mdadm}/sbin/mdadm \
-              --replace-quiet \"/sbin/blkid \"${pkgs.util-linux}/sbin/blkid \
-              --replace-quiet \"/bin/mount \"${pkgs.util-linux}/bin/mount \
+              --replace-quiet \"/sbin/blkid \"${config.programs.utilLinux.package}/sbin/blkid \
+              --replace-quiet \"/bin/mount \"${config.programs.utilLinux.package}/bin/mount \
               --replace-quiet /usr/bin/readlink ${lib.getExe' config.programs.coreutils.package "readlink"} \
               --replace-quiet /usr/bin/cat ${lib.getExe' config.programs.coreutils.package "cat"} \
               --replace-quiet /usr/bin/basename ${lib.getExe' config.programs.coreutils.package "basename"} 2>/dev/null

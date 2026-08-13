@@ -5,6 +5,7 @@
   ...
 }:
 {
+  imports = [ ./internal-utils.nix ];
   options.programs.coreutils.package = lib.mkOption {
     type = lib.types.package;
     default = pkgs.coreutils;

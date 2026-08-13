@@ -40,7 +40,7 @@ in
         fstrim = {
           inherit (cfg) interval;
 
-          command = "${pkgs.util-linux}/bin/fstrim --listed-in /etc/fstab:/proc/self/mountinfo --verbose --quiet-unsupported";
+          command = "${config.programs.utilLinux.package}/bin/fstrim --listed-in /etc/fstab:/proc/self/mountinfo --verbose --quiet-unsupported";
         };
       };
   };

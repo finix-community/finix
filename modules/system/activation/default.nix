@@ -144,13 +144,13 @@ in
 
     system.activation.path = map lib.getBin [
       config.programs.coreutils.package
-      pkgs.gnugrep
-      pkgs.findutils
+      config.programs.grep.package
+      config.programs.utilLinux.package
+      config.programs.findUtils.package
       pkgs.getent
       pkgs.stdenv.cc.libc # nscd in update-users-groups.pl
       pkgs.shadow
       pkgs.nettools # needed for hostname
-      pkgs.util-linux # needed for mount and mountpoint
     ];
 
     system.topLevel = checkAssertWarn (
@@ -198,7 +198,7 @@ in
               --subst-var-by bash ${pkgs.bash} \
               --subst-var-by distroId finix \
               --subst-var-by finit ${config.finit.package} \
-              --subst-var-by logger ${pkgs.util-linuxMinimal} \
+              --subst-var-by logger ${config.programs.utilLinux.package} \
               --subst-var-by coreutils ${config.programs.coreutils.package} \
               --subst-var-by installHook ${config.providers.bootloader.installHook} \
               --subst-var-by inhibitCheck ${config.system.build.checkSwitchInhibitors}

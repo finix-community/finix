@@ -140,8 +140,8 @@ let
                 ${lib.optionalString re.allowDiscards "--allow-discards"} \
                 -d ${lib.escapeShellArg re.source} \
                 ${lib.escapeShellArg sw.device} ${lib.escapeShellArg name}
-              ${pkgs.util-linuxMinimal}/bin/mkswap /dev/mapper/${name}
-              ${pkgs.util-linuxMinimal}/bin/swapon -o ${lib.escapeShellArg (lib.concatStringsSep "," options)} /dev/mapper/${name}
+              ${config.programs.utilLinux.package}/bin/mkswap /dev/mapper/${name}
+              ${config.programs.utilLinux.package}/bin/swapon -o ${lib.escapeShellArg (lib.concatStringsSep "," options)} /dev/mapper/${name}
             ''
           );
         };

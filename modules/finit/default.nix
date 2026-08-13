@@ -27,13 +27,13 @@ in
     # TODO: decide a reasonable default here... user can override if needed
     finit.path = [
       config.programs.coreutils.package
-      pkgs.findutils
-      pkgs.gnugrep
-      pkgs.gnused
+      config.programs.findUtils.package
+      config.programs.grep.package
+      config.programs.sed.package
       cfg.package
 
       # required by finit on shutdown
-      pkgs.util-linux.mount
+      config.programs.utilLinux.package.mount
 
       # for finit log rotation
       pkgs.gzip
