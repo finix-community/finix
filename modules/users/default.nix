@@ -73,7 +73,7 @@ in
     users.users.root = {
       uid = 0;
       group = "root";
-      shell = pkgs.bashInteractive;
+      shell = lib.mkDefault pkgs.bashInteractive;
       home = "/root";
       createHome = true;
     };
