@@ -438,7 +438,7 @@
     <details class="toc-category">
       <summary title="boot.initrd">
         <span>boot.initrd</span>
-        <span class="toc-count">87</span>
+        <span class="toc-count">91</span>
       </summary>
       <ul>
         
@@ -1029,6 +1029,22 @@
         </li>
         
         <li>
+          <a href='#option-boot.initrd.supportedFilesystems.iso9660.enable' title="boot.initrd.supportedFilesystems.iso9660.enable">
+            supportedFilesystems.iso9660.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-boot.initrd.supportedFilesystems.iso9660.packages' title="boot.initrd.supportedFilesystems.iso9660.packages">
+            supportedFilesystems.iso9660.packages
+            
+            
+          </a>
+        </li>
+        
+        <li>
           <a href='#option-boot.initrd.supportedFilesystems.luks.enable' title="boot.initrd.supportedFilesystems.luks.enable">
             supportedFilesystems.luks.enable
             
@@ -1079,6 +1095,22 @@
         <li>
           <a href='#option-boot.initrd.supportedFilesystems.ntfs3.packages' title="boot.initrd.supportedFilesystems.ntfs3.packages">
             supportedFilesystems.ntfs3.packages
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-boot.initrd.supportedFilesystems.squashfs.enable' title="boot.initrd.supportedFilesystems.squashfs.enable">
+            supportedFilesystems.squashfs.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-boot.initrd.supportedFilesystems.squashfs.packages' title="boot.initrd.supportedFilesystems.squashfs.packages">
+            supportedFilesystems.squashfs.packages
             
             
           </a>
@@ -1278,7 +1310,7 @@
     <details class="toc-category">
       <summary title="boot.supportedFilesystems">
         <span>boot.supportedFilesystems</span>
-        <span class="toc-count">26</span>
+        <span class="toc-count">30</span>
       </summary>
       <ul>
         
@@ -1381,6 +1413,22 @@
         </li>
         
         <li>
+          <a href='#option-boot.supportedFilesystems.iso9660.enable' title="boot.supportedFilesystems.iso9660.enable">
+            iso9660.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-boot.supportedFilesystems.iso9660.packages' title="boot.supportedFilesystems.iso9660.packages">
+            iso9660.packages
+            
+            
+          </a>
+        </li>
+        
+        <li>
           <a href='#option-boot.supportedFilesystems.luks.enable' title="boot.supportedFilesystems.luks.enable">
             luks.enable
             
@@ -1431,6 +1479,22 @@
         <li>
           <a href='#option-boot.supportedFilesystems.ntfs3.packages' title="boot.supportedFilesystems.ntfs3.packages">
             ntfs3.packages
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-boot.supportedFilesystems.squashfs.enable' title="boot.supportedFilesystems.squashfs.enable">
+            squashfs.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-boot.supportedFilesystems.squashfs.packages' title="boot.supportedFilesystems.squashfs.packages">
+            squashfs.packages
             
             
           </a>
@@ -11384,6 +11448,30 @@ builds, during board bringup, or similar.</p>
   <div class="option-default">Default: <code>false</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/fuse.nix" target="_blank">&lt;finix/modules/filesystems/fuse.nix&gt;</a></code></div>
 </div>
+<div class="option" id="option-boot.initrd.supportedFilesystems.iso9660.enable">
+  <h3 class="option-name">
+    <a href="#option-boot.initrd.supportedFilesystems.iso9660.enable" class="option-anchor">boot.initrd.supportedFilesystems.iso9660.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable support for the <code>iso9660</code> filesystem in the initial ramdisk.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/iso9660.nix" target="_blank">&lt;finix/modules/filesystems/iso9660.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-boot.initrd.supportedFilesystems.iso9660.packages">
+  <h3 class="option-name">
+    <a href="#option-boot.initrd.supportedFilesystems.iso9660.packages" class="option-anchor">boot.initrd.supportedFilesystems.iso9660.packages</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of package</code></div>
+  <div class="option-description"><html><head></head><body><p>Packages providing filesystem utilities for <code>iso9660</code> in the initial ramdisk.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/iso9660.nix" target="_blank">&lt;finix/modules/filesystems/iso9660.nix&gt;</a></code></div>
+</div>
 <div class="option" id="option-boot.initrd.supportedFilesystems.luks.enable">
   <h3 class="option-name">
     <a href="#option-boot.initrd.supportedFilesystems.luks.enable" class="option-anchor">boot.initrd.supportedFilesystems.luks.enable</a>
@@ -11471,6 +11559,30 @@ builds, during board bringup, or similar.</p>
 </body></html></div>
   <div class="option-default">Default: <code>[ ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/ntfs3.nix" target="_blank">&lt;finix/modules/filesystems/ntfs3.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-boot.initrd.supportedFilesystems.squashfs.enable">
+  <h3 class="option-name">
+    <a href="#option-boot.initrd.supportedFilesystems.squashfs.enable" class="option-anchor">boot.initrd.supportedFilesystems.squashfs.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable support for the <code>squashfs</code> filesystem in the initial ramdisk.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/squashfs.nix" target="_blank">&lt;finix/modules/filesystems/squashfs.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-boot.initrd.supportedFilesystems.squashfs.packages">
+  <h3 class="option-name">
+    <a href="#option-boot.initrd.supportedFilesystems.squashfs.packages" class="option-anchor">boot.initrd.supportedFilesystems.squashfs.packages</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of package</code></div>
+  <div class="option-description"><html><head></head><body><p>Packages providing filesystem utilities for <code>squashfs</code> in the initial ramdisk.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/squashfs.nix" target="_blank">&lt;finix/modules/filesystems/squashfs.nix&gt;</a></code></div>
 </div>
 <div class="option" id="option-boot.initrd.supportedFilesystems.tmpfs.enable">
   <h3 class="option-name">
@@ -11952,6 +12064,30 @@ Setting this option wires the hook into the <code>script</code> <code>providers.
   <div class="option-default">Default: <code>true</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/fuse.nix" target="_blank">&lt;finix/modules/filesystems/fuse.nix&gt;</a></code></div>
 </div>
+<div class="option" id="option-boot.supportedFilesystems.iso9660.enable">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.iso9660.enable" class="option-anchor">boot.supportedFilesystems.iso9660.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable support for the <code>iso9660</code> filesystem.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/iso9660.nix" target="_blank">&lt;finix/modules/filesystems/iso9660.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.iso9660.packages">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.iso9660.packages" class="option-anchor">boot.supportedFilesystems.iso9660.packages</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of package</code></div>
+  <div class="option-description"><html><head></head><body><p>Packages providing filesystem utilities for <code>iso9660</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/iso9660.nix" target="_blank">&lt;finix/modules/filesystems/iso9660.nix&gt;</a></code></div>
+</div>
 <div class="option" id="option-boot.supportedFilesystems.luks.enable">
   <h3 class="option-name">
     <a href="#option-boot.supportedFilesystems.luks.enable" class="option-anchor">boot.supportedFilesystems.luks.enable</a>
@@ -12039,6 +12175,30 @@ Setting this option wires the hook into the <code>script</code> <code>providers.
 </body></html></div>
   <div class="option-default">Default: <code>[ ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/ntfs3.nix" target="_blank">&lt;finix/modules/filesystems/ntfs3.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.squashfs.enable">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.squashfs.enable" class="option-anchor">boot.supportedFilesystems.squashfs.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable support for the <code>squashfs</code> filesystem.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/squashfs.nix" target="_blank">&lt;finix/modules/filesystems/squashfs.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.squashfs.packages">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.squashfs.packages" class="option-anchor">boot.supportedFilesystems.squashfs.packages</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of package</code></div>
+  <div class="option-description"><html><head></head><body><p>Packages providing filesystem utilities for <code>squashfs</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/squashfs.nix" target="_blank">&lt;finix/modules/filesystems/squashfs.nix&gt;</a></code></div>
 </div>
 <div class="option" id="option-boot.supportedFilesystems.tmpfs.enable">
   <h3 class="option-name">
