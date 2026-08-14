@@ -115,6 +115,19 @@ let
         leaves its valid runlevels.
       '';
     };
+
+    options.required = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Whether `finit` must wait for this `run`/`task` before switching out of runlevel `S` (bootstrap).
+
+        Set to `false` for jobs nothing needs before boot proceeds (e.g. a full coldplug).
+        Dependents should wait via {option}`conditions` (e.g. `run/NAME/success`).
+
+        Maps to upstream `<!...>` / `required = false`; see [upstream docs](https://finit-project.github.io/conditions/).
+      '';
+    };
   };
 
   # baseOpts: options shared by ALL stanza types (service, task, run, tty, sysv)
@@ -690,8 +703,13 @@ let
           svc.supplementary_groups or [ ] != [ ]
         ) ",${lib.concatStringsSep "," svc.supplementary_groups}"
       ))
-      ++ (lib.optional (svc.conditions or [ ] != [ ] || svc.nohup or false == true)
-        "<${lib.optionalString (svc.nohup or false) "!"}${lib.concatStringsSep "," svc.conditions}>"
+      ++ (
+        let
+          # `!` means: nohup for services (no SIGHUP), or a run/task that must not block the runlevel-S switch (required:false).
+          noBlock = (svc.nohup or false) || (svc.required or true) == false;
+        in
+        lib.optional (svc.conditions or [ ] != [ ] || noBlock)
+          "<${lib.optionalString noBlock "!"}${lib.concatStringsSep "," svc.conditions}>"
       )
       ++ (lib.optional (svc.manual or false) "manual:yes")
       ++ (lib.optional (svc.remain or false) "remain:yes")

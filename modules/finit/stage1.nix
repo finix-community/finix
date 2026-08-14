@@ -177,6 +177,22 @@ let
     };
   };
 
+  # oneshotOpts: options for oneshot stanzas (task, run) only
+  oneshotOpts = {
+    options.required = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Whether `finit` must wait for this `run`/`task` before leaving runlevel `S` bootstrap), e.g. towards `switch_root`.
+
+        Set to `false` for jobs nothing else needs to finish before boot proceeds (e.g. a full coldplug).
+        Dependents should wait on {option}`conditions` (e.g. `run/NAME/success`) explicitly.
+
+        Maps to upstream `<!...>` / `required = false`; see [upstream docs](https://finit-project.github.io/conditions/).
+      '';
+    };
+  };
+
   # runOpts: options specific to run stanzas
   runOpts = {
     options.priority = lib.mkOption {
@@ -286,7 +302,13 @@ let
       ++ lib.optional (svc.respawn or false) "respawn"
       ++ lib.optional (svc.restart or null != null) "restart:${toString svc.restart}"
       ++ lib.optional (svc.notify or null != null) "notify:${svc.notify}"
-      ++ lib.optional (svc.conditions or [ ] != [ ]) "<${lib.concatStringsSep "," svc.conditions}>"
+      ++ (
+        let
+          noBlock = (svc.required or true) == false;
+        in
+        lib.optional (svc.conditions or [ ] != [ ] || noBlock)
+          "<${lib.optionalString noBlock "!"}${lib.concatStringsSep "," svc.conditions}>"
+      )
       ++ lib.optional (svc.tty or null != null) "tty:${svc.tty}"
       ++ lib.optional (svc.extraConfig or "" != "") svc.extraConfig
       ++ lib.optional (svc.command or null != null) svc.command
@@ -330,6 +352,7 @@ in
         attrsOf (submodule [
           baseOpts
           execOpts
+          oneshotOpts
           scriptOpts
         ]);
       default = { };
@@ -346,6 +369,7 @@ in
         attrsOf (submodule [
           baseOpts
           execOpts
+          oneshotOpts
           runOpts
           scriptOpts
         ]);
