@@ -168,10 +168,6 @@ in
           cgroup.name = "init";
 
           priority = 1;
-
-          # Trigger+settle takes a while; switching out of runlevel S doesn't need all of /dev.
-          # Dependents (syslog, mounts) wait on `run/gardendevctl:2/success` via their own `conditions`.
-          required = false;
         };
       in
       {

@@ -708,8 +708,9 @@ let
           # `!` means: nohup for services (no SIGHUP), or a run/task that must not block the runlevel-S switch (required:false).
           noBlock = (svc.nohup or false) || (svc.required or true) == false;
         in
-        lib.optional (svc.conditions or [ ] != [ ] || noBlock)
-          "<${lib.optionalString noBlock "!"}${lib.concatStringsSep "," svc.conditions}>"
+        lib.optional (
+          svc.conditions or [ ] != [ ] || noBlock
+        ) "<${lib.optionalString noBlock "!"}${lib.concatStringsSep "," svc.conditions}>"
       )
       ++ (lib.optional (svc.manual or false) "manual:yes")
       ++ (lib.optional (svc.remain or false) "remain:yes")

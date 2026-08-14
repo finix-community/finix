@@ -306,8 +306,9 @@ let
         let
           noBlock = (svc.required or true) == false;
         in
-        lib.optional (svc.conditions or [ ] != [ ] || noBlock)
-          "<${lib.optionalString noBlock "!"}${lib.concatStringsSep "," svc.conditions}>"
+        lib.optional (
+          svc.conditions or [ ] != [ ] || noBlock
+        ) "<${lib.optionalString noBlock "!"}${lib.concatStringsSep "," svc.conditions}>"
       )
       ++ lib.optional (svc.tty or null != null) "tty:${svc.tty}"
       ++ lib.optional (svc.extraConfig or "" != "") svc.extraConfig

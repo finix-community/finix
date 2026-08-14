@@ -207,10 +207,6 @@ in
       conditions = "service/mdevd/ready";
       cgroup.name = "init";
       log = true;
-
-      # Coldplug takes seconds; switching out of runlevel S doesn't need all of /dev.
-      # Dependents (syslog, mounts) wait on `run/coldplug/success` via their own `conditions`.
-      required = false;
     };
 
     # TODO: share between udev and mdevd
