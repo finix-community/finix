@@ -22,18 +22,21 @@ let
       # their assertions too
       (lib.attrValues config.fileSystems);
 
+  makeSwapOption =
+    sw:
+    lib.concatStringsSep "," (
+      sw.options
+      ++ lib.optional (sw.priority != null) "pri=${toString sw.priority}"
+      ++ lib.optional (sw.discardPolicy != null) (
+        if sw.discardPolicy == "both" then "discard" else "discard=${sw.discardPolicy}"
+      )
+    );
   makeSwapEntry =
     sw:
     let
       device = if sw.label != null then "/dev/disk/by-label/${sw.label}" else sw.device;
-      options =
-        sw.options
-        ++ lib.optional (sw.priority != null) "pri=${toString sw.priority}"
-        ++ lib.optional (sw.discardPolicy != null) (
-          if sw.discardPolicy == "both" then "discard" else "discard=${sw.discardPolicy}"
-        );
     in
-    "${escape device} none swap ${escape (lib.concatStringsSep "," options)} 0 0\n";
+    "${escape device} none swap ${escape (makeSwapOption sw)} 0 0\n";
 
   makeFstabEntries =
     let
@@ -105,10 +108,54 @@ let
 
   # Swap entries with randomEncryption.enable can't be stable fstab lines: the backing device is a fresh /dev/mapper/<name> created with a brand new random key on every boot, so they're set up imperatively instead
   isEncryptedSwap = sw: sw.randomEncryption.enable;
-  plainSwapDevices = lib.filter (sw: !isEncryptedSwap sw) config.swapDevices;
+  isSwapFile = sw: sw.size != null;
+  plainSwapDevices = lib.filter (sw: (!isEncryptedSwap sw) && (!isSwapFile sw)) config.swapDevices;
+  swapFileDevices = lib.filter isSwapFile config.swapDevices;
   encryptedSwapDevices = lib.filter isEncryptedSwap config.swapDevices;
 
   sanitizeName = s: lib.replaceStrings [ "/" " " ] [ "-" "-" ] (lib.removePrefix "/" s);
+
+  makeSwapFileTask =
+    sw:
+    let
+      name = "makeswapfile-${sanitizeName sw.device}";
+      btrfsInSystem = config.boot.supportedFilesystems.btrfs.enable or false;
+      device = sw.device;
+    in
+    {
+      inherit name;
+      value = {
+        description = "Create and enable swap file on ${device}";
+        runlevels = "S";
+        path = [
+          pkgs.e2fsprogs
+          pkgs.btrfs-progs
+          pkgs.util-linux
+          config.programs.coreutils.package
+        ];
+        command = toString (
+          pkgs.writeShellScript name ''
+            currentSize=$(( $(stat -c "%s" "${device}" 2>/dev/null || echo 0) / 1024 / 1024 ))
+            if [[ ! -b "${device}" && "${toString sw.size}" != "$currentSize" ]]; then
+              mkdir -p "$(dirname "${device}")"
+              if [[ "$(stat -f -c %T "$(dirname "${device}")")" == "btrfs" ]]; then
+                # Use btrfs mkswapfile to speed up the creation of swapfile.
+                rm -f "${device}"
+                btrfs filesystem mkswapfile --size "${toString sw.size}M" --uuid clear "${device}"
+              else
+                # Disable CoW for CoW based filesystems.
+                truncate --size 0 "${device}"
+                chattr +C "${device}" 2>/dev/null || true
+
+                dd if=/dev/zero of="${device}" bs=1M count=${toString sw.size} status=progress
+                mkswap "${device}"
+              fi
+            fi
+            swapon -o ${lib.escapeShellArg (makeSwapOption sw)} "${device}"
+          ''
+        );
+      };
+    };
 
   makeEncryptedSwapTask =
     sw:
@@ -120,12 +167,6 @@ let
       value =
         let
           re = sw.randomEncryption;
-          options =
-            sw.options
-            ++ lib.optional (sw.priority != null) "pri=${toString sw.priority}"
-            ++ lib.optional (sw.discardPolicy != null) (
-              if sw.discardPolicy == "both" then "discard" else "discard=${sw.discardPolicy}"
-            );
         in
         {
           description = "Encrypted swap device on ${sw.device}";
@@ -141,7 +182,7 @@ let
                 -d ${lib.escapeShellArg re.source} \
                 ${lib.escapeShellArg sw.device} ${lib.escapeShellArg name}
               ${pkgs.util-linuxMinimal}/bin/mkswap /dev/mapper/${name}
-              ${pkgs.util-linuxMinimal}/bin/swapon -o ${lib.escapeShellArg (lib.concatStringsSep "," options)} /dev/mapper/${name}
+              ${pkgs.util-linuxMinimal}/bin/swapon -o ${lib.escapeShellArg (makeSwapOption sw)} /dev/mapper/${name}
             ''
           );
         };
@@ -176,15 +217,29 @@ in
     # system.fsPackages = [ pkgs.dosfstools ];
     # environment.systemPackages = with pkgs; [ fuse3 fuse ] ++ config.system.fsPackages;
 
-    assertions = lib.map (sw: {
-      assertion = sw.label == null && (builtins.match "/dev/disk/by-(uuid|label)/.*" sw.device == null);
-      message = ''
-        Random-encrypted swap device ${sw.device} must not use swapDevices.*.label,
-        and should not be referenced by UUID or label, since those are erased and regenerated on every
-        boot once the partition is encrypted. Use a stable path such as
-        /dev/disk/by-partuuid/... instead.
-      '';
-    }) encryptedSwapDevices;
+    assertions =
+      (lib.map (sw: {
+        assertion = sw.label == null && (builtins.match "/dev/disk/by-(uuid|label)/.*" sw.device == null);
+        message = ''
+          Random-encrypted swap device ${sw.device} must not use swapDevices.*.label,
+          and should not be referenced by UUID or label, since those are erased and regenerated on every
+          boot once the partition is encrypted. Use a stable path such as
+          /dev/disk/by-partuuid/... instead.
+        '';
+      }) encryptedSwapDevices)
+      ++ (lib.concatMap (sw: [
+        {
+          assertion = sw.randomEncryption.enable == false;
+          message = ''
+            Random encryption on swap file ${sw.device} is not supported.
+            Use encrypted root filesystem instead.
+          '';
+        }
+        {
+          assertion = !(lib.hasPrefix "/dev/" sw.device);
+          message = "Setting the swap size of block device ${sw.device} has no effect";
+        }
+      ]) swapFileDevices);
 
     environment.systemPackages =
       lib.unique (
@@ -196,7 +251,9 @@ in
       )
       ++ lib.optional (encryptedSwapDevices != [ ]) pkgs.cryptsetup;
 
-    finit.tasks = lib.listToAttrs (lib.map makeEncryptedSwapTask encryptedSwapDevices);
+    finit.tasks = lib.listToAttrs (
+      (lib.map makeEncryptedSwapTask encryptedSwapDevices) ++ (lib.map makeSwapFileTask swapFileDevices)
+    );
 
     environment.etc.fstab.text = ''
       # This is a generated file.  Do not edit!
