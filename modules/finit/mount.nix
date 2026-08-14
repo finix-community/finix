@@ -73,13 +73,22 @@ let
     lib.attrValues config.fileSystems
   );
   waitDevName = fs: utils.escapePath (if isPseudo fs then fs.device else fs.mountPoint);
+  waitDevPairs =
+    (map (fs: {
+      name = waitDevName fs;
+      device = fs.device;
+    }) waitDevs)
+    ++ (lib.optional (config.boot.resumeDevice != "") {
+      name = "resume";
+      device = config.boot.resumeDevice;
+    });
 in
 {
   config = {
     boot.initrd.finit.tasks = lib.mkMerge [
-      (lib.genAttrs' waitDevs (
+      (lib.genAttrs' waitDevPairs (
         fs:
-        lib.nameValuePair "wait-dev-${waitDevName fs}" {
+        lib.nameValuePair "wait-dev-${fs.name}" {
           conditions = deviceConditions;
           script = ''
             # 90s total timeout, polled every 0.1s (busybox sleep supports fractional)
