@@ -131,7 +131,13 @@
     boot.resumeDevice = lib.mkOption {
       type = lib.types.str;
       default = "";
-      description = "Device from which to resume after hibernation. Empty = disabled. When set, adds resume=<device> to boot.kernelParams.";
+      example = "/dev/sda3";
+      description = ''
+        Device from which to resume after hibernation. Empty = disabled.
+        Specify here the device where the swap file resides.
+        You should also use boot.kernelParams to specify `resume_offset=`,
+        see more details [here](https://wiki.archlinux.org/title/Power_management/Suspend_and_hibernate#Acquire_swap_file_offset).
+      '';
     };
 
     boot.kernelParams = lib.mkOption {

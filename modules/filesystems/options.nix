@@ -119,6 +119,17 @@ let
           description = "Path of the swap device or file.";
         };
 
+        size = lib.mkOption {
+          default = null;
+          example = 2048;
+          type = lib.types.nullOr lib.types.int;
+          description = ''
+            If this option is set, ‘device’ is interpreted as the
+            path of a swapfile that will be created automatically
+            with the indicated size in MiB (1024×1024 bytes).
+          '';
+        };
+
         label = lib.mkOption {
           default = null;
           example = "swap";

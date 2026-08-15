@@ -68,69 +68,95 @@ in
   };
 
   config.boot.initrd = {
-    finit.run.setup-stdio = {
-      priority = 100;
-      script = ''
-        ln -sfn /proc/self/fd    /dev/fd
-        ln -sfn /proc/self/fd/0  /dev/stdin
-        ln -sfn /proc/self/fd/1  /dev/stdout
-        ln -sfn /proc/self/fd/2  /dev/stderr
-      '';
-    };
+    finit.run = lib.mkMerge [
+      {
+        setup-stdio = {
+          priority = 100;
+          script = ''
+            ln -sfn /proc/self/fd    /dev/fd
+            ln -sfn /proc/self/fd/0  /dev/stdin
+            ln -sfn /proc/self/fd/1  /dev/stdout
+            ln -sfn /proc/self/fd/2  /dev/stderr
+          '';
+        };
+      }
 
-    finit.run.switch-root = {
-      runlevels = "1";
-      script = ''
-        # process the kernel command line to find init=
-        stage2Init=/init
-        for o in $(cat /proc/cmdline); do
-          case $o in
-            init=*)
-              set -- $(IFS==; echo $o)
-              stage2Init=$2
-              ;;
-          esac
-        done
+      (lib.optionalAttrs (config.boot.resumeDevice != "") {
+        resume-hibernation = {
+          priority = 400;
+          conditions = [ "task/wait-dev-resume/success" ];
+          script = ''
+            if [ ! -e /sys/power/resume ]; then
+              printf 'resume-hibernation: no hibernation support found' >&2
+              exit 1
+            fi
 
-        # TODO: modify `initctl switch-root` call in finit to have a proper return code
-        if [ ! -d /sysroot ] || ! mountpoint -q /sysroot || [ ! -x "/sysroot$stage2Init" ]; then
-          cat > /dev/console <<EOF
+            set -- $(stat -L -c '%t %T' "${config.boot.resumeDevice}")
+            if [ -z "''${1:-}" ] || [ -z "''${2:-}" ]; then
+              echo "resume-hibernation: cannot determine device numbers of ${config.boot.resumeDevice}" >&2
+              exit 1
+            fi
+            printf '%d:%d' "$((0x$1))" "$((0x$2))" >/sys/power/resume
+          '';
+        };
+      })
 
-        ==========================================
-        ${
-          if !grantAccess then
-            ''
-              rescue shell is disabled
+      {
+        switch-root = {
+          runlevels = "1";
+          script = ''
+            # process the kernel command line to find init=
+            stage2Init=/init
+            for o in $(cat /proc/cmdline); do
+              case $o in
+                init=*)
+                  set -- $(IFS==; echo $o)
+                  stage2Init=$2
+                  ;;
+              esac
+            done
 
-              rebooting in 10s
-            ''
-          else
-            ''
-              to diagnose:   initctl status; initctl cond dump
-              to continue:   initctl switch-root /sysroot $stage2Init
-              to reboot:     reboot -f
-            ''
-        }
+            # TODO: modify `initctl switch-root` call in finit to have a proper return code
+            if [ ! -d /sysroot ] || ! mountpoint -q /sysroot || [ ! -x "/sysroot$stage2Init" ]; then
+              cat > /dev/console <<EOF
 
-        EOF
-          ${
-            if !grantAccess then
-              ''
-                sleep 10
-                exec reboot -f
-              ''
-            else
-              # exit non-zero so finit emits <run/switch-root/failure>,
-              # which triggers the rescue tty in finit.conf
-              ''
-                exit 1
-              ''
-          }
-        fi
+            ==========================================
+            ${
+              if !grantAccess then
+                ''
+                  rescue shell is disabled
 
-        exec initctl switch-root /sysroot "$stage2Init"
-      '';
-    };
+                  rebooting in 10s
+                ''
+              else
+                ''
+                  to diagnose:   initctl status; initctl cond dump
+                  to continue:   initctl switch-root /sysroot $stage2Init
+                  to reboot:     reboot -f
+                ''
+            }
+
+            EOF
+              ${
+                if !grantAccess then
+                  ''
+                    sleep 10
+                    exec reboot -f
+                  ''
+                else
+                  # exit non-zero so finit emits <run/switch-root/failure>,
+                  # which triggers the rescue tty in finit.conf
+                  ''
+                    exit 1
+                  ''
+              }
+            fi
+
+            exec initctl switch-root /sysroot "$stage2Init"
+          '';
+        };
+      }
+    ];
 
     finit.ttys.rescue = {
       runlevels = "1";
