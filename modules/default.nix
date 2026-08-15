@@ -73,3 +73,8 @@ in
 }
 // programModules
 // serviceModules
+// {
+  # virtualisation
+
+  android = ./virtualisation/android.nix;
+}
