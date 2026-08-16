@@ -256,132 +256,137 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf cfg.enable (lib.mkMerge [
+    {
+      # Populate with boot rules.
+      services.mdev = {
+        hotplugRules = lib.mkMerge [
+          # fallthrough rules at the top
+          (lib.mkOrder 250 modaliasRule)
+          (lib.mkBefore devDiskRule)
+          specialRules
 
-    # Populate with boot rules.
-    services.mdev = {
-      hotplugRules = lib.mkMerge [
-        # fallthrough rules at the top
-        (lib.mkOrder 250 modaliasRule)
-        (lib.mkBefore devDiskRule)
-        specialRules
+        ];
+        coldplugRules = lib.concatLines [
+          modaliasRule
+          specialRules
+          devDiskRule
+        ];
+      };
 
+      environment.etc."mdev.conf".text = config.services.mdev.hotplugRules;
+
+      # We need(?) this to be blocking so that everything is loaded before coldplug.
+      # Crucially, colplugging mdev does *not* trigger our modalias rule
+      #
+      # https://lists.busybox.net/pipermail/busybox/2014-September/081780.html
+      finit.run.modalias-load = {
+        description = "Load modules for coldplugged devices";
+        command = "${pkgs.writeShellScript "modalias-load" ''
+          aliases=$(find /sys/devices -name modalias -type f | xargs -r cat | sort -u)
+          echo "$aliases" | xargs -r -P"$(nproc)" -n1 ${pkgs.kmod}/bin/modprobe -q
+          exit 0
+        ''}";
+        runlevels = "S";
+        conditions = lib.mkIf (!cfg.useDaemon) "task/register-hotplug/success";
+        cgroup.name = "init";
+        log = true;
+      };
+
+
+      system.activation.scripts.mdev = lib.mkIf config.boot.kernel.enable {
+        text = ''
+          # Allow the kernel to find our firmware.
+          if [ -e /sys/module/firmware_class/parameters/path ]; then
+            echo -n "${config.hardware.firmware}/lib/firmware" > /sys/module/firmware_class/parameters/path
+          fi
+        '';
+      };
+
+      system.switch.inhibitors.device-manager = "mdev";
+
+      # build out the default initramfs image
+      # TODO: always reports as fail, maybe wrap it as seen in the comment?
+      boot.initrd.finit.run.modalias-load = {
+        # command = "/bin/sh -c 'find /sys/devices -name modalias -type f | xargs -r cat | sort -u | xargs -r -n1 modprobe -q'";
+        command = "find /sys/devices -name modalias -type f | xargs -r cat | sort -u | xargs -r -n1 modprobe -q";
+        priority = 210;
+      };
+
+      boot.initrd.contents = [
+        {
+          target = "/etc/mdev.conf";
+          source = pkgs.writeText "mdev.conf" config.services.mdev.coldplugRules;
+        }
+        {
+          source = devDiskScript;
+          target = "/etc/mdev-disk.sh";
+        }
       ];
-      coldplugRules = lib.concatLines [
-        modaliasRule
-        specialRules
-        devDiskRule
+    }
+
+    (mkIf cfg.useDaemon {
+      finit.services.mdev = {
+        description = "device event daemon (mdev)";
+        command = "${cfg.package}/bin/busybox mdev -df -S"
+          + lib.optionalString cfg.debug " -v";
+        runlevels = "S12345789";
+        conditions = "run/modalias-load/success";
+        cgroup.name = "init";
+        notify = "pid";
+        log = true;
+
+        # TODO: now we're hijacking `env` and no one else can use it...
+        path = [
+          config.programs.coreutils.package
+          pkgs.util-linux
+        ];
+      };
+
+      boot.initrd.finit.services.mdevd = {
+        description = "device event daemon (mdevd)";
+        command = "mdev -df";
+        notify = "pid";
+      };
+    })
+
+    (mkIf (!cfg.useDaemon) {
+      finit.tasks.register-hotplug = {
+        description = "Registering kernel hotplug";
+        command = "echo ${cfg.package}/bin/mdev > /proc/sys/kernel/hotplug";
+        runlevels = "S";
+        cgroup.name = "init";
+        log = true;
+      };
+
+      finit.tasks.coldplug = {
+        description = "Cold plugging system";
+        command = "${cfg.package}/bin/busybox mdev -s" + lib.optionalString cfg.debug " -v";
+        runlevels = "S";
+        conditions = "run/modalias-load/success";
+        cgroup.name = "init";
+        log = true;
+      };
+
+      boot.initrd.finit.run.register-hotplug = {
+        command = "echo ${cfg.package}/bin/mdev > /proc/sys/kernel/hotplug";
+        priority = 200;
+      };
+
+      boot.initrd.finit.run.coldplug = {
+        command = "mdev -s";
+        priority = 220;
+      };
+
+      boot.kernelPatches = [
+        {
+          name = "uevent-helper";
+          patch = null;
+          structuredExtraConfig = {
+            UEVENT_HELPER = lib.mkForce lib.kernel.yes;
+          };
+        }
       ];
-    };
-
-    environment.etc."mdev.conf".text = config.services.mdev.hotplugRules;
-
-    # We need(?) this to be blocking so that everything is loaded before coldplug.
-    # Crucially, colplugging mdev does *not* trigger our modalias rule
-    #
-    # https://lists.busybox.net/pipermail/busybox/2014-September/081780.html
-    finit.run.modalias-load = {
-      description = "Load modules for coldplugged devices";
-      command = "${pkgs.writeShellScript "modalias-load" ''
-        aliases=$(find /sys/devices -name modalias -type f | xargs -r cat | sort -u)
-        echo "$aliases" | xargs -r -P"$(nproc)" -n1 ${pkgs.kmod}/bin/modprobe -q
-        exit 0
-      ''}";
-      runlevels = "S";
-      conditions = lib.mkIf (!cfg.useDaemon) "task/register-hotplug/success";
-      cgroup.name = "init";
-      log = true;
-    };
-
-
-    system.activation.scripts.mdev = lib.mkIf config.boot.kernel.enable {
-      text = ''
-        # Allow the kernel to find our firmware.
-        if [ -e /sys/module/firmware_class/parameters/path ]; then
-          echo -n "${config.hardware.firmware}/lib/firmware" > /sys/module/firmware_class/parameters/path
-        fi
-      '';
-    };
-
-    system.switch.inhibitors.device-manager = "mdev";
-
-    # build out the default initramfs image
-    # TODO: always reports as fail, maybe wrap it as seen in the comment?
-    boot.initrd.finit.run.modalias-load = {
-      # command = "/bin/sh -c 'find /sys/devices -name modalias -type f | xargs -r cat | sort -u | xargs -r -n1 modprobe -q'";
-      command = "find /sys/devices -name modalias -type f | xargs -r cat | sort -u | xargs -r -n1 modprobe -q";
-      priority = 210;
-    };
-
-    boot.initrd.contents = [
-      {
-        target = "/etc/mdev.conf";
-        source = pkgs.writeText "mdev.conf" config.services.mdev.coldplugRules;
-      }
-      {
-        source = devDiskScript;
-        target = "/etc/mdev-disk.sh";
-      }
-    ];
-  } // mkIf cfg.useDaemon {
-    finit.services.mdev = {
-      description = "device event daemon (mdev)";
-      command = "${cfg.package}/bin/busybox mdev -df -S"
-        + lib.optionalString cfg.debug " -v";
-      runlevels = "S12345789";
-      conditions = "run/modalias-load/success";
-      cgroup.name = "init";
-      notify = "pid";
-      log = true;
-
-      # TODO: now we're hijacking `env` and no one else can use it...
-      path = [
-        config.programs.coreutils.package
-        pkgs.util-linux
-      ];
-    };
-
-    boot.initrd.finit.services.mdevd = {
-      description = "device event daemon (mdevd)";
-      command = "mdev -df";
-      notify = "pid";
-    };
-  } // mkIf (!cfg.useDaemon) {
-    finit.tasks.register-hotplug = {
-      description = "Registering kernel hotplug";
-      command = "echo ${cfg.package}/bin/mdev > /proc/sys/kernel/hotplug";
-      runlevels = "S";
-      cgroup.name = "init";
-      log = true;
-    };
-
-    finit.tasks.coldplug = {
-      description = "Cold plugging system";
-      command = "${cfg.package}/bin/busybox mdev -s" + lib.optionalString cfg.debug " -v";
-      runlevels = "S";
-      conditions = "run/modalias-load/success";
-      cgroup.name = "init";
-      log = true;
-    };
-
-    boot.initrd.finit.run.register-hotplug = {
-      command = "echo ${cfg.package}/bin/mdev > /proc/sys/kernel/hotplug";
-      priority = 200;
-    };
-
-    boot.initrd.finit.run.coldplug = {
-      command = "mdev -s";
-      priority = 220;
-    };
-
-    boot.kernelPatches = [
-      {
-        name = "uevent-helper";
-        patch = null;
-        structuredExtraConfig = {
-          UEVENT_HELPER = lib.mkForce lib.kernel.yes;
-        };
-      }
-    ];
-  };
+    })
+  ]);
 }
