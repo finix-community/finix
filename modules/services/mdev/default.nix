@@ -242,16 +242,16 @@ in
       type = types.bool;
       default = true;
       description = ''
-        `mdev` can be invoked in 2 ways. The first is to not 
+        `mdev` can be invoked in 2 ways. The first (`false`) is to not 
         daemonise, and instead use the legacy /proc/sys/kernel/hotplug
         file to handle hotplugging by the mechanism of the kernel
         forking `mdev` every time a uevent comes thorugh. This will 
         likely require recompiling the kernel.
 
-        The second way is to use the `mdev -d` command, introduced
-        in busybox 1.31.0, allows the `mdev` process to run as a
-        system service. This does not require recompiling the kernel
-        and is recommended for most users.
+        The second way (`true`) is to use the `mdev -d` command, 
+        introduced in busybox 1.31.0, allows the `mdev` process to run 
+        as a system service. This does not require recompiling the
+        kernel and is recommended for most users.
       '';
     };
   };
@@ -293,7 +293,6 @@ in
         log = true;
       };
 
-
       system.activation.scripts.mdev = lib.mkIf config.boot.kernel.enable {
         text = ''
           # Allow the kernel to find our firmware.
@@ -305,7 +304,6 @@ in
 
       system.switch.inhibitors.device-manager = "mdev";
 
-      # build out the default initramfs image
       # TODO: always reports as fail, maybe wrap it as seen in the comment?
       boot.initrd.finit.run.modalias-load = {
         # command = "/bin/sh -c 'find /sys/devices -name modalias -type f | xargs -r cat | sort -u | xargs -r -n1 modprobe -q'";
@@ -342,11 +340,16 @@ in
           pkgs.util-linux
         ];
       };
+      
+      boot.initrd.finit.run.coldplug = {
+        command = "mdev -s";
+        priority = 220;
+      };
 
-      boot.initrd.finit.services.mdevd = {
-        description = "device event daemon (mdevd)";
+      boot.initrd.finit.services.mdev = {
+        description = "device event daemon (mdev)";
         command = "mdev -df";
-        notify = "pid";
+        priority = 230;
       };
     })
 
