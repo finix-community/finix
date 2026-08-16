@@ -60,6 +60,10 @@ in
       /bin/sh
     '';
 
+    environment.shells = [
+      users.defaultUserShell
+    ];
+
     environment.etc.profile.text = ''
       # /etc/profile: system-wide initialisation for POSIX login shells
 
