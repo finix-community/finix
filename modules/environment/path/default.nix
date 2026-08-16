@@ -8,7 +8,16 @@
   options = {
     environment.systemPackages = lib.mkOption {
       type = with lib.types; listOf package;
-      default = { };
+      default = [ ];
+    };
+
+    environment.corePackages = lib.mkOption {
+      type = with lib.types; listOf package;
+      apply = packages:
+        map (
+          pkg:
+            lib.setPrio ((pkg.meta.priority or lib.meta.defaultPriority) + 3) pkg
+          ) packages;
     };
 
     environment.pathsToLink = lib.mkOption {
@@ -34,6 +43,7 @@
     environment.corePackages = with pkgs; [
       acl
       attr
+      config.users.defaultUserShell
       cpio
       curl
       diffutils
@@ -55,6 +65,7 @@
       gnused
       gnutar
     ];
+    environment.systemPackages = config.environment.corePackages;
 
     environment.pathsToLink = [
       "/bin"

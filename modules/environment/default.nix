@@ -13,7 +13,7 @@ in
 
   options.environment.binsh = lib.mkOption {
     type = lib.types.path;
-    default = "lib.getExe pkgs.dash";
+    default = lib.getExe pkgs.dash;
     defaultText = lib.literalExpression ''"''lib.getExe pkgs.dash"'';
     example = lib.literalExpression ''"''lib.getExe' pkgs.dash "sh""'';
     description = ''

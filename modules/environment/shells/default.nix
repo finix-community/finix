@@ -61,7 +61,7 @@ in
     '';
 
     environment.shells = [
-      users.defaultUserShell
+      config.users.defaultUserShell
     ];
 
     environment.etc.profile.text = ''
