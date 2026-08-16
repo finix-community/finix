@@ -349,7 +349,7 @@ in
       boot.initrd.finit.services.mdev = {
         description = "device event daemon (mdev)";
         command = "mdev -df";
-        priority = 230;
+        conditions = "run/coldplug/success";
       };
     })
 
