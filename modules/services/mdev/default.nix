@@ -344,12 +344,10 @@ in
       ];
     };
 
-    boot.initrd = {
-      finit.services.mdevd = {
-        description = "device event daemon (mdevd)";
-        command = "mdev -df";
-        notify = "pid";
-      };
+    boot.initrd.finit.services.mdevd = {
+      description = "device event daemon (mdevd)";
+      command = "mdev -df";
+      notify = "pid";
     };
   } // mkIf (!cfg.useDaemon) {
     finit.tasks.register-hotplug = {
@@ -369,16 +367,14 @@ in
       log = true;
     };
 
-    boot.initrd = {
-      finit.run.register-hotplug = {
-        command = "echo ${cfg.package}/bin/mdev > /proc/sys/kernel/hotplug";
-        priority = 200;
-      };
+    boot.initrd.finit.run.register-hotplug = {
+      command = "echo ${cfg.package}/bin/mdev > /proc/sys/kernel/hotplug";
+      priority = 200;
+    };
 
-      finit.run.coldplug = {
-        command = "mdev -s";
-        priority = 220;
-      };
+    boot.initrd.finit.run.coldplug = {
+      command = "mdev -s";
+      priority = 220;
     };
 
     boot.kernelPatches = [
