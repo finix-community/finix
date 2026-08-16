@@ -240,6 +240,7 @@ in
 
     useDaemon = mkOption {
       type = types.bool;
+      default = true;
       description = ''
         `mdev` can be invoked in 2 ways. The first is to not 
         daemonise, and instead use the legacy /proc/sys/kernel/hotplug
