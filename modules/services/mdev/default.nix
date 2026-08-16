@@ -237,6 +237,22 @@ in
         Mdeved rules for coldplug events during the initramfs stage of booting.
       '';
     };
+
+    useDaemon = mkOption {
+      type = types.bool;
+      description = ''
+        `mdev` can be invoked in 2 ways. The first is to not 
+        daemonise, and instead use the legacy /proc/sys/kernel/hotplug
+        file to handle hotplugging by the mechanism of the kernel
+        forking `mdev` every time a uevent comes thorugh. This will 
+        likely require recompiling the kernel.
+
+        The second way is to use the `mdev -d` command, introduced
+        in busybox 1.31.0, allows the `mdev` process to run as a
+        system service. This does not require recompiling the kernel
+        and is recommended for most users.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -259,14 +275,6 @@ in
 
     environment.etc."mdev.conf".text = config.services.mdev.hotplugRules;
 
-    finit.tasks.register-hotplug = {
-      description = "Registering kernel hotplug";
-      command = "echo ${cfg.package}/bin/mdev > /proc/sys/kernel/hotplug";
-      runlevels = "S";
-      cgroup.name = "init";
-      log = true;
-    };
-
     # We need(?) this to be blocking so that everything is loaded before coldplug.
     # Crucially, colplugging mdev does *not* trigger our modalias rule
     #
@@ -284,14 +292,6 @@ in
       log = true;
     };
 
-    finit.tasks.coldplug = {
-      description = "Cold plugging system";
-      command = "${cfg.package}/bin/busybox mdev -s" + lib.optionalString cfg.debug " -v";
-      runlevels = "S";
-      conditions = "run/modalias-load/success";
-      cgroup.name = "init";
-      log = true;
-    };
 
     system.activation.scripts.mdev = lib.mkIf config.boot.kernel.enable {
       text = ''
@@ -304,33 +304,14 @@ in
 
     system.switch.inhibitors.device-manager = "mdev";
 
-    boot.kernelPatches = [
-      {
-        name = "uevent-helper";
-        patch = null;
-        structuredExtraConfig = {
-          UEVENT_HELPER = lib.mkForce lib.kernel.yes;
-        };
-      }
-    ];
-
     # build out the default initramfs image
     boot.initrd = {
-      finit.run.register-hotplug = {
-        command = "echo ${cfg.package}/bin/mdev > /proc/sys/kernel/hotplug";
-        priority = 200;
-      };
 
       # TODO: always reports as fail, maybe wrap it as seen in the comment?
       finit.run.modalias-load = {
         # command = "/bin/sh -c 'find /sys/devices -name modalias -type f | xargs -r cat | sort -u | xargs -r -n1 modprobe -q'";
         command = "find /sys/devices -name modalias -type f | xargs -r cat | sort -u | xargs -r -n1 modprobe -q";
         priority = 210;
-      };
-
-      finit.run.coldplug = {
-        command = "mdev -s";
-        priority = 220;
       };
 
       contents = [
@@ -344,5 +325,68 @@ in
         }
       ];
     };
+  } // mkIf cfg.useDaemon {
+    finit.services.mdev = {
+      description = "device event daemon (mdev)";
+      command = "${cfg.package}/bin/busybox mdev -df -S"
+        + lib.optionalString cfg.debug " -v";
+      runlevels = "S12345789";
+      cgroup.name = "init";
+      notify = "pid";
+      log = true;
+
+      # TODO: now we're hijacking `env` and no one else can use it...
+      path = [
+        config.programs.coreutils.package
+        pkgs.util-linux
+      ];
+    };
+
+    boot.initrd = {
+      finit.services.mdevd = {
+      description = "device event daemon (mdevd)";
+      command = "mdev -df";
+      notify = "pid";
+      };
+    };
+  } // mkIf (!cfg.useDaemon) {
+    finit.tasks.register-hotplug = {
+      description = "Registering kernel hotplug";
+      command = "echo ${cfg.package}/bin/mdev > /proc/sys/kernel/hotplug";
+      runlevels = "S";
+      cgroup.name = "init";
+      log = true;
+    };
+
+    finit.tasks.coldplug = {
+      description = "Cold plugging system";
+      command = "${cfg.package}/bin/busybox mdev -s" + lib.optionalString cfg.debug " -v";
+      runlevels = "S";
+      conditions = "run/modalias-load/success";
+      cgroup.name = "init";
+      log = true;
+    };
+
+    boot.initrd = {
+      finit.run.register-hotplug = {
+        command = "echo ${cfg.package}/bin/mdev > /proc/sys/kernel/hotplug";
+        priority = 200;
+      };
+
+      finit.run.coldplug = {
+        command = "mdev -s";
+        priority = 220;
+      };
+    };
+
+    boot.kernelPatches = [
+      {
+        name = "uevent-helper";
+        patch = null;
+        structuredExtraConfig = {
+          UEVENT_HELPER = lib.mkForce lib.kernel.yes;
+        };
+      }
+    ];
   };
 }
