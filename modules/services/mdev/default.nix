@@ -324,12 +324,21 @@ in
     }
 
     (mkIf cfg.useDaemon {
+      finit.tasks.coldplug = {
+        description = "Cold plugging system";
+        command = "${cfg.package}/bin/busybox mdev -s" + lib.optionalString cfg.debug " -v";
+        runlevels = "S";
+        conditions = "run/modalias-load/success";
+        cgroup.name = "init";
+        log = true;
+      };
+
       finit.services.mdev = {
         description = "device event daemon (mdev)";
         command = "${cfg.package}/bin/busybox mdev -df -S"
           + lib.optionalString cfg.debug " -v";
         runlevels = "S12345789";
-        conditions = "run/modalias-load/success";
+        conditions = "task/coldplug/success";
         cgroup.name = "init";
         notify = "pid";
         log = true;
