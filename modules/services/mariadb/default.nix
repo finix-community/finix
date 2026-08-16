@@ -125,7 +125,7 @@ in
         runtimeInputs = [
           config.programs.coreutils.package
           pkgs.nettools
-          pkgs.gnused
+          config.programs.sed.package
         ];
         text = ''
           if ! test -e '${cfg.dataDir}/mysql'; then

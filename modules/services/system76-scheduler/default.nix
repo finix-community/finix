@@ -58,8 +58,8 @@ in
 
       # TODO: now we're hijacking `env` and no one else can use it...
       path = with pkgs; [
-        kmod
-        gnutar
+        pkgs.kmod
+        config.programs.tar.package
         xz
       ];
       environment = {

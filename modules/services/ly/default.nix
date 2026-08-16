@@ -122,7 +122,7 @@ in
       ]
       ++ lib.optionals config.services.elogind.enable [ "service/elogind/ready" ]
       ++ lib.optionals config.services.seatd.enable [ "service/seatd/ready" ];
-      command = "${pkgs.util-linux}/bin/agetty -nil ${cfg.package}/bin/ly tty${toString cfg.tty}";
+      command = "${config.programs.utilLinux.package}/bin/agetty -nil ${cfg.package}/bin/ly tty${toString cfg.tty}";
       nohup = true;
       cgroup.name = "user";
     };

@@ -255,8 +255,8 @@ in
       in
       {
         # These are mount related wrappers that require the +s permission.
-        mount = mkSetuidRoot "${lib.getBin pkgs.util-linux}/bin/mount";
-        umount = mkSetuidRoot "${lib.getBin pkgs.util-linux}/bin/umount";
+        mount = mkSetuidRoot "${config.programs.utilLinux.package}/bin/mount";
+        umount = mkSetuidRoot "${config.programs.utilLinux.package}/bin/umount";
       };
 
     fileSystems."/run/wrappers" = {
