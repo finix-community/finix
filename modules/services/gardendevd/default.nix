@@ -64,7 +64,7 @@ in
         Packages added to the {env}`PATH` environment variable when
         executing programs from udev rules.
 
-        coreutils, gnu{sed,grep}, util-linux and kmod are
+        coreutils, gnu{sed,grep}, util-linux and modprobe are
         automatically included.
       '';
     };
@@ -83,7 +83,7 @@ in
       config.programs.coreutils.package
       pkgs.gnugrep
       pkgs.gnused
-      pkgs.kmod
+      config.programs.modprobe.package
       pkgs.util-linux
     ];
 
@@ -138,7 +138,7 @@ in
 
           for i in "$out"/*.rules; do
             substituteInPlace "$i" \
-              --replace-quiet \"/sbin/modprobe \"${pkgs.kmod}/bin/modprobe \
+              --replace-quiet \"/sbin/modprobe \"${lib.getExe' config.programs.modprobe.package "modprobe"} \
               --replace-quiet \"/sbin/mdadm \"${pkgs.mdadm}/sbin/mdadm \
               --replace-quiet \"/sbin/blkid \"${pkgs.util-linux}/sbin/blkid \
               --replace-quiet \"/bin/mount \"${pkgs.util-linux}/bin/mount \
