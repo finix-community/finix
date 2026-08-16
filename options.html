@@ -1286,28 +1286,6 @@
   
   <li>
     <details class="toc-category">
-      <summary title="boot.modprobeConfig">
-        <span>boot.modprobeConfig</span>
-        <span class="toc-count">1</span>
-      </summary>
-      <ul>
-        
-
-        
-        <li>
-          <a href='#option-boot.modprobeConfig.enable' title="boot.modprobeConfig.enable">
-            enable
-            
-            
-          </a>
-        </li>
-        
-      </ul>
-    </details>
-  </li>
-  
-  <li>
-    <details class="toc-category">
       <summary title="boot.supportedFilesystems">
         <span>boot.supportedFilesystems</span>
         <span class="toc-count">30</span>
@@ -4476,6 +4454,52 @@
         
         <li>
           <a href='#option-programs.micro.package' title="programs.micro.package">
+            package
+            
+            
+          </a>
+        </li>
+        
+      </ul>
+    </details>
+  </li>
+  
+  <li>
+    <details class="toc-category">
+      <summary title="programs.modprobe">
+        <span>programs.modprobe</span>
+        <span class="toc-count">4</span>
+      </summary>
+      <ul>
+        
+
+        
+        <li>
+          <a href='#option-programs.modprobe.blacklist' title="programs.modprobe.blacklist">
+            blacklist
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs.modprobe.enable' title="programs.modprobe.enable">
+            enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs.modprobe.extraConfig' title="programs.modprobe.extraConfig">
+            extraConfig
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs.modprobe.package' title="programs.modprobe.package">
             package
             
             
@@ -11916,18 +11940,6 @@ Setting this option wires the hook into the <code>script</code> <code>providers.
 </body></html></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/bootloader" target="_blank">&lt;finix/modules/providers/bootloader&gt;</a></code></div>
 </div>
-<div class="option" id="option-boot.modprobeConfig.enable">
-  <h3 class="option-name">
-    <a href="#option-boot.modprobeConfig.enable" class="option-anchor">boot.modprobeConfig.enable</a>
-    <span class="copy-link" title="Copy link to this option"></span>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-type">Type: <code>boolean</code></div>
-  <div class="option-description"><html><head></head><body><p>Whether to enable <code>modprobe</code> config. This is useful for systems like containers which do not require a kernel.</p>
-</body></html></div>
-  <div class="option-default">Default: <code>true</code></div>
-  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/boot/modprobe.nix" target="_blank">&lt;finix/modules/boot/modprobe.nix&gt;</a></code></div>
-</div>
 <div class="option" id="option-boot.resumeDevice">
   <h3 class="option-name">
     <a href="#option-boot.resumeDevice" class="option-anchor">boot.resumeDevice</a>
@@ -16880,6 +16892,72 @@ default editor using the <code>EDITOR</code> environment variable.</p>
   <div class="option-default">Default: <code>pkgs.micro</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/micro" target="_blank">&lt;finix/modules/programs/micro&gt;</a></code></div>
 </div>
+<div class="option" id="option-programs.modprobe.blacklist">
+  <h3 class="option-name">
+    <a href="#option-programs.modprobe.blacklist" class="option-anchor">programs.modprobe.blacklist</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>(attribute set of boolean) or (list of string) convertible to it</code></div>
+  <div class="option-description"><html><head></head><body><p>Set of names of kernel modules that should not be loaded
+automatically by the hardware probing code. This can either be
+a list of modules or an attrset. In an attrset, names that are
+set to <code>true</code> represent modules that will be blacklisted.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-example">Example: <pre><code>[
+  "cirrusfb"
+  "i2c_piix4"
+]</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/modprobe" target="_blank">&lt;finix/modules/programs/modprobe&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs.modprobe.enable">
+  <h3 class="option-name">
+    <a href="#option-programs.modprobe.enable" class="option-anchor">programs.modprobe.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git/">modprobe</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is useful for systems like containers which do not require a kernel.</p>
+</div>
+</body></html></div>
+  <div class="option-default">Default: <code>true</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/modprobe" target="_blank">&lt;finix/modules/programs/modprobe&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs.modprobe.extraConfig">
+  <h3 class="option-name">
+    <a href="#option-programs.modprobe.extraConfig" class="option-anchor">programs.modprobe.extraConfig</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>strings concatenated with "\n"</code></div>
+  <div class="option-description"><html><head></head><body><p>Any additional configuration to be appended to the generated
+<code class="file-path">modprobe.conf</code>.  This is typically used to
+specify module options.  See
+<a href="https://man.archlinux.org/man/modprobe.d" class="manpage-reference">modprobe.d(5)</a> for details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>""</code></div>
+  <div class="option-example">Example: <pre><code>''
+  options parport_pc io=0x378 irq=7 dma=1
+''</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/modprobe" target="_blank">&lt;finix/modules/programs/modprobe&gt;</a></code></div>
+</div>
+<div class="option" id="option-programs.modprobe.package">
+  <h3 class="option-name">
+    <a href="#option-programs.modprobe.package" class="option-anchor">programs.modprobe.package</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>modprobe</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.kmod</code></div>
+  <div class="option-example">Example: <code>pkgs.busybox</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/modprobe" target="_blank">&lt;finix/modules/programs/modprobe&gt;</a></code></div>
+</div>
 <div class="option" id="option-programs.nano.defaultEditor">
   <h3 class="option-name">
     <a href="#option-programs.nano.defaultEditor" class="option-anchor">programs.nano.defaultEditor</a>
@@ -20439,7 +20517,7 @@ Set to <code>0</code> to disable.</p>
   <div class="option-type">Type: <code>list of absolute path</code></div>
   <div class="option-description"><html><head></head><body><p>Packages added to the <code class="env-var">PATH</code> environment variable when
 executing programs from udev rules.</p>
-<p>coreutils, gnu{sed,grep}, util-linux and kmod are
+<p>coreutils, gnu{sed,grep}, util-linux and modprobe are
 automatically included.</p>
 </body></html></div>
   <div class="option-default">Default: <code>[ ]</code></div>
