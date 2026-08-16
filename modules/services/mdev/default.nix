@@ -288,7 +288,7 @@ in
         exit 0
       ''}";
       runlevels = "S";
-      conditions = "task/register-hotplug/success";
+      conditions = lib.mkIf (!cfg.useDaemon) "task/register-hotplug/success";
       cgroup.name = "init";
       log = true;
     };
@@ -332,6 +332,7 @@ in
       command = "${cfg.package}/bin/busybox mdev -df -S"
         + lib.optionalString cfg.debug " -v";
       runlevels = "S12345789";
+      conditions = "run/modalias-load/success";
       cgroup.name = "init";
       notify = "pid";
       log = true;
@@ -345,9 +346,9 @@ in
 
     boot.initrd = {
       finit.services.mdevd = {
-      description = "device event daemon (mdevd)";
-      command = "mdev -df";
-      notify = "pid";
+        description = "device event daemon (mdevd)";
+        command = "mdev -df";
+        notify = "pid";
       };
     };
   } // mkIf (!cfg.useDaemon) {
