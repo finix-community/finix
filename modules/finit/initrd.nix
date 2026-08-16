@@ -36,6 +36,7 @@ let
       pkgs.util-linux
     ]
     ++ lib.optionals config.services.udev.enable [ config.services.udev.package ]
+    ++ lib.optionals config.services.mdev.enable [ pkgs.util-linux ]
     ++ fsPackages;
     pathsToLink = [
       "/bin"
