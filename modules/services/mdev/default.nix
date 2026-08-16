@@ -335,10 +335,12 @@ in
         log = true;
 
         # TODO: now we're hijacking `env` and no one else can use it...
+        /*
         path = [
           config.programs.coreutils.package
           pkgs.util-linux
         ];
+        */
       };
       
       boot.initrd.finit.run.coldplug = {
