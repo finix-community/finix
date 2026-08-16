@@ -306,26 +306,23 @@ in
     system.switch.inhibitors.device-manager = "mdev";
 
     # build out the default initramfs image
-    boot.initrd = {
-
-      # TODO: always reports as fail, maybe wrap it as seen in the comment?
-      finit.run.modalias-load = {
-        # command = "/bin/sh -c 'find /sys/devices -name modalias -type f | xargs -r cat | sort -u | xargs -r -n1 modprobe -q'";
-        command = "find /sys/devices -name modalias -type f | xargs -r cat | sort -u | xargs -r -n1 modprobe -q";
-        priority = 210;
-      };
-
-      contents = [
-        {
-          target = "/etc/mdev.conf";
-          source = pkgs.writeText "mdev.conf" config.services.mdev.coldplugRules;
-        }
-        {
-          source = devDiskScript;
-          target = "/etc/mdev-disk.sh";
-        }
-      ];
+    # TODO: always reports as fail, maybe wrap it as seen in the comment?
+    boot.initrd.finit.run.modalias-load = {
+      # command = "/bin/sh -c 'find /sys/devices -name modalias -type f | xargs -r cat | sort -u | xargs -r -n1 modprobe -q'";
+      command = "find /sys/devices -name modalias -type f | xargs -r cat | sort -u | xargs -r -n1 modprobe -q";
+      priority = 210;
     };
+
+    boot.initrd.contents = [
+      {
+        target = "/etc/mdev.conf";
+        source = pkgs.writeText "mdev.conf" config.services.mdev.coldplugRules;
+      }
+      {
+        source = devDiskScript;
+        target = "/etc/mdev-disk.sh";
+      }
+    ];
   } // mkIf cfg.useDaemon {
     finit.services.mdev = {
       description = "device event daemon (mdev)";
