@@ -21,7 +21,7 @@ let
     name = "initrd-path";
     paths = [
       pkgs.busybox
-      config.programs.modprobe.package
+      (lib.hiPrio pkgs.kmod)
       (lib.hiPrio pkgs.util-linux.mount)
       pkgs.bash
       config.finit.package

@@ -10,7 +10,6 @@ let
 
   # finix-setup plugin for early boot initialization
   finix-setup = pkgs.callPackage ../../pkgs/finix-setup {
-    kmod = config.programs.modprobe.package;
     extraPackages = lib.unique (
       lib.flatten (
         lib.concatMap (v: lib.optional v.enable (v.packages or [ ])) (
