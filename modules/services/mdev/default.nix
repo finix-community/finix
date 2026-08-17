@@ -311,6 +311,12 @@ in
         priority = 210;
       };
 
+      boot.initrd.path = [
+        config.services.mdev.package
+        config.programs.coreutils.package
+        pkgs.util-linux
+      ];
+
       boot.initrd.contents = [
         {
           target = "/etc/mdev.conf";
