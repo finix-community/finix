@@ -228,6 +228,12 @@ in
 
     # build out the default initramfs image
     boot.initrd = {
+      path = [
+        config.services.mdevd.package
+        pkgs.execline
+        pkgs.util-linux
+      ];
+
       finit.services.mdevd = {
         command = "mdevd -D %n -O 2";
         notify = "s6";

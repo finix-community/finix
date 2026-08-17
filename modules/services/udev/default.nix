@@ -308,6 +308,8 @@ in
 
     # build out the default initramfs image
     boot.initrd = {
+      path = [ config.services.udev.package ];
+
       finit.services.udevd = {
         command = "/bin/udevd --ready-notify=%n";
         notify = "s6";

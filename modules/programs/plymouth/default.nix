@@ -99,46 +99,40 @@ in
       };
     };
 
-    boot.initrd.contents = [
-      {
-        # notify plymouth and the finit plymouth plugin that this is an initramfs - enables plymouth process survival across switch-root
-        target = "/etc/initrd-release";
-        source = pkgs.writeText "initrd-release" "FINIX_INITRD=1\n"; # TODO: generate a proper initrd-release, depends on generating a proper /etc/os-release
-      }
-      {
-        target = "/etc/plymouth/plymouthd.conf";
-        source = configFile;
-      }
-      {
-        target = "/etc/plymouth/plymouthd.defaults";
-        source = "${cfg.package}/share/plymouth/plymouthd.defaults";
-      }
-      {
-        target = "/etc/plymouth/fonts/${builtins.baseNameOf cfg.font}";
-        source = cfg.font;
-      }
-      {
-        target = "/etc/fonts/fonts.conf";
-        source = pkgs.writeText "fonts.conf" ''
-          <?xml version="1.0"?>
-          <!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
-          <fontconfig>
-              <dir>/etc/plymouth/fonts</dir>
-          </fontconfig>
-        '';
-      }
-      { source = cfg.theme; }
-      { source = "${cfg.package}/lib/plymouth"; }
+    boot.initrd = {
+      path = [ cfg.package ];
 
-      # TODO: create boot.initrd.extraPackages (bin) option
-      {
-        target = "/usr/local/bin/plymouth";
-        source = "${cfg.package}/bin/plymouth";
-      }
-      {
-        target = "/usr/local/bin/plymouthd";
-        source = "${cfg.package}/bin/plymouthd";
-      }
-    ];
+      contents = [
+        {
+          # notify plymouth and the finit plymouth plugin that this is an initramfs - enables plymouth process survival across switch-root
+          target = "/etc/initrd-release";
+          source = pkgs.writeText "initrd-release" "FINIX_INITRD=1\n"; # TODO: generate a proper initrd-release, depends on generating a proper /etc/os-release
+        }
+        {
+          target = "/etc/plymouth/plymouthd.conf";
+          source = configFile;
+        }
+        {
+          target = "/etc/plymouth/plymouthd.defaults";
+          source = "${cfg.package}/share/plymouth/plymouthd.defaults";
+        }
+        {
+          target = "/etc/plymouth/fonts/${builtins.baseNameOf cfg.font}";
+          source = cfg.font;
+        }
+        {
+          target = "/etc/fonts/fonts.conf";
+          source = pkgs.writeText "fonts.conf" ''
+            <?xml version="1.0"?>
+            <!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
+            <fontconfig>
+                <dir>/etc/plymouth/fonts</dir>
+            </fontconfig>
+          '';
+        }
+        { source = cfg.theme; }
+        { source = "${cfg.package}/lib/plymouth"; }
+      ];
+    };
   };
 }

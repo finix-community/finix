@@ -198,6 +198,10 @@ in
 
     # build out the default initramfs image
     boot.initrd = {
+      path = [
+        config.service.gardendevd.package
+      ];
+
       finit.services.gardendevd = {
         command = "gardendevd -K -D %n";
         notify = "s6";
