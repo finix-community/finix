@@ -199,7 +199,7 @@ in
     # build out the default initramfs image
     boot.initrd = {
       path = [
-        config.service.gardendevd.package
+        config.services.gardendevd.package
       ];
 
       finit.services.gardendevd = {
