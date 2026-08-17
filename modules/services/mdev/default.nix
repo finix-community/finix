@@ -358,12 +358,10 @@ in
         ];
       };
       
-      /*
       boot.initrd.finit.run.coldplug = {
         command = "mdev -s";
         priority = 220;
       };
-      */
 
       boot.initrd.finit.services.mdev = {
         description = "device event daemon (mdev)";
