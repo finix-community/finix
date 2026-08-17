@@ -140,12 +140,20 @@ in
         notify = "pid";
       };
 
-      contents = [
-        {
-          target = "/etc/udev/rules.d";
-          source = "${config.finit.package}/lib/udev/rules.d";
-        }
-      ];
+      # minimal set of rules needed for initramfs
+      contents =
+        map
+          (v: {
+            target = "/etc/udev/rules.d/${v}.rules";
+            source = "${config.finit.package}/lib/udev/rules.d/${v}.rules";
+          })
+          [
+            "60-block"
+            "60-persistent-storage"
+            "60-persistent-storage-tape"
+            "64-btrfs"
+            "80-drivers"
+          ];
     };
   };
 }

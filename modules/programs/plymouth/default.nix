@@ -132,6 +132,7 @@ in
         }
         { source = cfg.theme; }
         { source = "${cfg.package}/lib/plymouth"; }
+        { source = "${config.finit.package}/lib/finit/plugins/plymouth.so"; }
       ];
     };
   };

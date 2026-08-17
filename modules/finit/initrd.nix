@@ -169,18 +169,11 @@ in
           '';
       }
       { source = "${config.finit.package}/libexec"; }
-      { source = "${config.finit.package}/lib/finit/"; }
       { source = "${config.finit.package}/lib/finit/plugins/bootmisc.so"; }
       { source = "${config.finit.package}/lib/finit/plugins/modules-load.so"; }
-      { source = "${config.finit.package}/lib/finit/plugins/netlink.so"; }
       { source = "${config.finit.package}/lib/finit/plugins/pidfile.so"; }
-      { source = "${config.finit.package}/lib/finit/plugins/procps.so"; }
-      { source = "${config.finit.package}/lib/finit/plugins/sys.so"; }
-      { source = "${config.finit.package}/lib/finit/plugins/tty.so"; }
-      { source = "${config.finit.package}/lib/finit/plugins/usr.so"; }
       { source = "${config.finit.package}/lib/finit/rescue.conf"; }
       { source = "${config.finit.package}/lib/finit/tmpfiles.d"; }
-      { source = "${config.finit.package}/lib/tmpfiles.d"; }
     ];
   };
 }
