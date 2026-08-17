@@ -438,7 +438,7 @@
     <details class="toc-category">
       <summary title="boot.initrd">
         <span>boot.initrd</span>
-        <span class="toc-count">91</span>
+        <span class="toc-count">92</span>
       </summary>
       <ul>
         
@@ -935,6 +935,14 @@
         <li>
           <a href='#option-boot.initrd.package' title="boot.initrd.package">
             package
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-boot.initrd.path' title="boot.initrd.path">
+            path
             
             
           </a>
@@ -4468,7 +4476,7 @@
     <details class="toc-category">
       <summary title="programs.modprobe">
         <span>programs.modprobe</span>
-        <span class="toc-count">4</span>
+        <span class="toc-count">3</span>
       </summary>
       <ul>
         
@@ -4493,14 +4501,6 @@
         <li>
           <a href='#option-programs.modprobe.extraConfig' title="programs.modprobe.extraConfig">
             extraConfig
-            
-            
-          </a>
-        </li>
-        
-        <li>
-          <a href='#option-programs.modprobe.package' title="programs.modprobe.package">
-            package
             
             
           </a>
@@ -11360,6 +11360,18 @@ builds, during board bringup, or similar.</p>
 </body></html></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/boot/initrd.nix" target="_blank">&lt;finix/modules/boot/initrd.nix&gt;</a></code></div>
 </div>
+<div class="option" id="option-boot.initrd.path">
+  <h3 class="option-name">
+    <a href="#option-boot.initrd.path" class="option-anchor">boot.initrd.path</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of package</code></div>
+  <div class="option-description"><html><head></head><body><p>Packages whose <code>/bin</code> is linked into the initramfs <code>PATH</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/boot/initrd.nix" target="_blank">&lt;finix/modules/boot/initrd.nix&gt;</a></code></div>
+</div>
 <div class="option" id="option-boot.initrd.prepend">
   <h3 class="option-name">
     <a href="#option-boot.initrd.prepend" class="option-anchor">boot.initrd.prepend</a>
@@ -16945,19 +16957,6 @@ specify module options.  See
 ''</code></pre></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/modprobe" target="_blank">&lt;finix/modules/programs/modprobe&gt;</a></code></div>
 </div>
-<div class="option" id="option-programs.modprobe.package">
-  <h3 class="option-name">
-    <a href="#option-programs.modprobe.package" class="option-anchor">programs.modprobe.package</a>
-    <span class="copy-link" title="Copy link to this option"></span>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-type">Type: <code>package</code></div>
-  <div class="option-description"><html><head></head><body><p>The package to use for <code>modprobe</code>.</p>
-</body></html></div>
-  <div class="option-default">Default: <code>pkgs.kmod</code></div>
-  <div class="option-example">Example: <code>pkgs.busybox</code></div>
-  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/modprobe" target="_blank">&lt;finix/modules/programs/modprobe&gt;</a></code></div>
-</div>
 <div class="option" id="option-programs.nano.defaultEditor">
   <h3 class="option-name">
     <a href="#option-programs.nano.defaultEditor" class="option-anchor">programs.nano.defaultEditor</a>
@@ -20517,7 +20516,7 @@ Set to <code>0</code> to disable.</p>
   <div class="option-type">Type: <code>list of absolute path</code></div>
   <div class="option-description"><html><head></head><body><p>Packages added to the <code class="env-var">PATH</code> environment variable when
 executing programs from udev rules.</p>
-<p>coreutils, gnu{sed,grep}, util-linux and modprobe are
+<p>coreutils, gnu{sed,grep}, util-linux and kmod are
 automatically included.</p>
 </body></html></div>
   <div class="option-default">Default: <code>[ ]</code></div>
