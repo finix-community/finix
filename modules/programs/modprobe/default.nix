@@ -30,16 +30,6 @@ in
       '';
     };
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.kmod;
-      defaultText = lib.literalExpression "pkgs.kmod";
-      example = lib.literalExpression "pkgs.busybox";
-      description = ''
-        The package to use for `modprobe`.
-      '';
-    };
-
     blacklist = lib.mkOption {
       type =
         with lib.types;
@@ -86,12 +76,12 @@ in
     '';
 
     environment.systemPackages = [
-      cfg.package
+      pkgs.kmod
     ];
 
     finit.tasks.modprobe = {
       command = pkgs.writeShellScript "load-kernel-modules" ''
-        ${lib.getExe' cfg.package "modprobe"} -a ${lib.escapeShellArgs config.boot.kernelModules}
+        ${lib.getExe' pkgs.kmod "modprobe"} -a ${lib.escapeShellArgs config.boot.kernelModules}
       '';
       runlevels = "S12345789";
       remain = true;
@@ -103,7 +93,7 @@ in
       # in the right location in the Nix store for kernel modules).
       # We need this when the kernel (or some module) auto-loads a
       # module.
-      echo ${lib.getExe' cfg.package "modprobe"} > /proc/sys/kernel/modprobe
+      echo ${lib.getExe' pkgs.kmod "modprobe"} > /proc/sys/kernel/modprobe
     '';
   };
 }

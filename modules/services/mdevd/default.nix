@@ -45,7 +45,7 @@ let
 
   # Insert modules for devices with a modalias.
   # Use @ prefix to run via /bin/sh on add events.
-  modaliasRule = ''-$MODALIAS=.* 0:0 660 @${lib.getExe' config.programs.modprobe.package "modprobe"} --quiet "$MODALIAS"'';
+  modaliasRule = ''-$MODALIAS=.* 0:0 660 @${lib.getExe' pkgs.kmod "modprobe"} -q "$MODALIAS"'';
 
   # We need symlinks in /dev/disk/{by-id,by-label,by-uuid,by-partlabel,by-partuuid}
   # so we run this script for block device events.
@@ -228,6 +228,12 @@ in
 
     # build out the default initramfs image
     boot.initrd = {
+      path = [
+        config.services.mdevd.package
+        pkgs.execline
+        pkgs.util-linux
+      ];
+
       finit.services.mdevd = {
         command = "mdevd -D %n -O 2";
         notify = "s6";
