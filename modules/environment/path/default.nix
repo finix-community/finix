@@ -56,6 +56,7 @@
       netcat
       mkpasswd
       procps
+      su
       time
       util-linux
       which
