@@ -141,6 +141,9 @@ in
     boot.initrd.path = [
       pkgs.busybox
 
+      # needed for at least luks on gardendevd, if not more...
+      pkgs.util-linux
+
       # defer to kmod for modprobe binary
       (lib.hiPrio pkgs.kmod)
 
