@@ -23,7 +23,9 @@ in
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.gvfs.override {
-        udevSupport = config.services.udev.enable;
+        # requires a device manager that can read udev rules
+        udevSupport =
+          config.services.udev.enable || config.services.gardendevd.enable || config.services.keventd.enable;
       };
       defaultText = lib.literalExpression "pkgs.gvfs";
       description = ''

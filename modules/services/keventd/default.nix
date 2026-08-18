@@ -93,7 +93,7 @@ in
 
           for i in $out/*.rules; do
             substituteInPlace $i \
-              --replace-quiet \"/sbin/modprobe \"${pkgs.kmod}/bin/modprobe \
+              --replace-quiet \"/sbin/modprobe \"${lib.getExe' pkgs.kmod "modprobe"} \
               --replace-quiet \"/sbin/mdadm \"${pkgs.mdadm}/sbin/mdadm \
               --replace-quiet \"/sbin/blkid \"${pkgs.util-linux}/sbin/blkid \
               --replace-quiet \"/bin/mount \"${pkgs.util-linux}/bin/mount \
@@ -140,12 +140,20 @@ in
         notify = "pid";
       };
 
-      contents = [
-        {
-          target = "/etc/udev/rules.d";
-          source = "${config.finit.package}/lib/udev/rules.d";
-        }
-      ];
+      # minimal set of rules needed for initramfs
+      contents =
+        map
+          (v: {
+            target = "/etc/udev/rules.d/${v}.rules";
+            source = "${config.finit.package}/lib/udev/rules.d/${v}.rules";
+          })
+          [
+            "60-block"
+            "60-persistent-storage"
+            "60-persistent-storage-tape"
+            "64-btrfs"
+            "80-drivers"
+          ];
     };
   };
 }

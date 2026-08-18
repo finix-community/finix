@@ -138,7 +138,7 @@ in
 
           for i in "$out"/*.rules; do
             substituteInPlace "$i" \
-              --replace-quiet \"/sbin/modprobe \"${pkgs.kmod}/bin/modprobe \
+              --replace-quiet \"/sbin/modprobe \"${lib.getExe' pkgs.kmod "modprobe"} \
               --replace-quiet \"/sbin/mdadm \"${pkgs.mdadm}/sbin/mdadm \
               --replace-quiet \"/sbin/blkid \"${pkgs.util-linux}/sbin/blkid \
               --replace-quiet \"/bin/mount \"${pkgs.util-linux}/bin/mount \
@@ -198,6 +198,10 @@ in
 
     # build out the default initramfs image
     boot.initrd = {
+      path = [
+        config.services.gardendevd.package
+      ];
+
       finit.services.gardendevd = {
         command = "gardendevd -K -D %n";
         notify = "s6";
@@ -216,12 +220,18 @@ in
         };
       };
 
-      contents = [
-        {
-          target = "/etc/udev/rules.d";
-          source = "${config.services.gardendevd.package}/lib/udev/rules.d";
-        }
-      ];
+      # minimal set of rules needed for initramfs
+      contents =
+        map
+          (v: {
+            target = "/etc/udev/rules.d/${v}.rules";
+            source = "${cfg.package}/lib/udev/rules.d/${v}.rules";
+          })
+          [
+            "60-block"
+            "60-persistent-storage"
+            "80-drivers"
+          ];
     };
   };
 }

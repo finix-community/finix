@@ -5,6 +5,7 @@ let
 
       # required modules - included by default
       "coreutils"
+      "modprobe"
       "plymouth"
       "resolvconf"
       "shadow"
@@ -49,6 +50,7 @@ in
       ./nixos
       ./nixpkgs
       ./programs/coreutils
+      ./programs/modprobe
       ./programs/plymouth
       ./programs/resolvconf
       ./programs/shadow
@@ -73,3 +75,8 @@ in
 }
 // programModules
 // serviceModules
+// {
+  # virtualisation
+
+  android = ./virtualisation/android.nix;
+}
