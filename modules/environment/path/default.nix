@@ -12,7 +12,7 @@
     };
 
     environment.corePackages = lib.mkOption {
-      type = with lib.types; attrsOf (nullOr package);
+      type = with lib.types; attrsOf (attrsOf (nullOr package));
       default = { };
     };
 
@@ -69,7 +69,11 @@
         gnused
         gnutar
       ]
-      ++ (lib.unique (lib.attrsets.attrValues config.environment.corePackages));
+      ++ (lib.unique (
+        lib.lists.concatMap (x: lib.attrsets.attrValues x) (
+          lib.attrsets.attrValues config.environment.corePackages
+        )
+      ));
 
     environment.pathsToLink = [
       "/bin"
