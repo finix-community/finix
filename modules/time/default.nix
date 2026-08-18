@@ -24,7 +24,7 @@ in
   };
 
   config = {
-    # TODO: environment variable TZDIR = "/etc/zoneinfo"
+    environment.variables.TZDIR = "/etc/zoneinfo";
 
     finit.environment.TZDIR = tzdir;
 
