@@ -212,11 +212,15 @@ in
           command = "gardendevctl trigger -c add -t all";
           conditions = "service/gardendevd/ready";
           priority = 250;
+
+          # Don't block switch_root on trigger+settle; wait-dev-* tasks poll for their own device.
+          required = false;
         };
         "gardendevctl@2" = {
           command = "gardendevctl settle -t 30";
           conditions = "service/gardendevd/ready";
           priority = 260;
+          required = false;
         };
       };
 
