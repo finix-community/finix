@@ -8926,7 +8926,7 @@
     <details class="toc-category">
       <summary title="services.sddm">
         <span>services.sddm</span>
-        <span class="toc-count">2</span>
+        <span class="toc-count">4</span>
       </summary>
       <ul>
         
@@ -8935,6 +8935,22 @@
         <li>
           <a href='#option-services.sddm.enable' title="services.sddm.enable">
             enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.sddm.extraPackages' title="services.sddm.extraPackages">
+            extraPackages
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.sddm.package' title="services.sddm.package">
+            package
             
             
           </a>
@@ -22682,6 +22698,41 @@ for additional details.</p>
   <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://github.com/sddm/sddm">sddm</a> as a system service.</p>
 </body></html></div>
   <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sddm" target="_blank">&lt;finix/modules/services/sddm&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.sddm.extraPackages">
+  <h3 class="option-name">
+    <a href="#option-services.sddm.extraPackages" class="option-anchor">services.sddm.extraPackages</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of package</code></div>
+  <div class="option-description"><html><head></head><body><p>Extra Qt plugins / QML libraries to add to the environment.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-example">Example: <pre><code>''
+  with pkgs.kdePackages; [
+    breeze-icons
+    kirigami
+    libplasma
+    plasma5support
+    qtmultimedia
+    qtsvg
+    qtvirtualkeyboard
+  ]
+''</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sddm" target="_blank">&lt;finix/modules/services/sddm&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.sddm.package">
+  <h3 class="option-name">
+    <a href="#option-services.sddm.package" class="option-anchor">services.sddm.package</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>sddm</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.kdePackages.sddm</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sddm" target="_blank">&lt;finix/modules/services/sddm&gt;</a></code></div>
 </div>
 <div class="option" id="option-services.sddm.settings">
