@@ -144,7 +144,10 @@ in
         "/etc/xdg"
         "/run/current-system/sw/etc/xdg"
       ];
-      XDG_DATA_DIRS = [ "/run/current-system/sw/share" ];
+      XDG_DATA_DIRS = [
+        "/run/current-system/sw/share"
+        "/etc/profiles/per-user/@{PAM_USER}/share"
+      ];
     };
 
     security.pam.services.other = {
