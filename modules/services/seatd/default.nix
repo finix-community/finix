@@ -40,6 +40,10 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    environment.systemPackages = [
+      pkgs.seatd
+    ];
+
     users.groups = lib.optionalAttrs (cfg.group == "seat") {
       seat = { };
     };
@@ -50,7 +54,7 @@ in
       conditions = "service/syslogd/ready";
       notify = "s6";
       command =
-        "${pkgs.seatd.bin}/bin/seatd -n %n -u root -g ${cfg.group}"
+        "/run/current-system/sw/bin/seatd -n %n -u root -g ${cfg.group}"
         + lib.optionalString cfg.debug " -l debug";
     };
   };

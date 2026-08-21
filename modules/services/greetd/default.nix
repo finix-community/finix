@@ -7,8 +7,6 @@
 let
   cfg = config.services.greetd;
   format = pkgs.formats.toml { };
-
-  configFile = format.generate "greetd.toml" cfg.settings;
 in
 {
   options.services.greetd = {
@@ -40,6 +38,11 @@ in
       };
     };
 
+    environment.etc."greetd/config.toml".source = format.generate "greetd.toml" cfg.settings;
+    environment.systemPackages = [
+      pkgs.greetd
+    ];
+
     finit.services.greetd = {
       description = "greeter daemon";
       runlevels = "34";
@@ -48,7 +51,7 @@ in
       ]
       ++ lib.optionals config.services.elogind.enable [ "service/elogind/ready" ]
       ++ lib.optionals config.services.seatd.enable [ "service/seatd/ready" ];
-      command = "${pkgs.greetd}/bin/greetd --config ${configFile}";
+      command = "/run/current-system/sw/bin/greetd";
       cgroup.name = "user";
     };
 
