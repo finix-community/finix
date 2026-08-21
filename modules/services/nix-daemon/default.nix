@@ -63,8 +63,13 @@ let
       ${mkKeyValuePairs (lib.filterAttrs (key: value: !(isExtra key)) cfg.settings)}
       ${mkKeyValuePairs (lib.filterAttrs (key: value: isExtra key) cfg.settings)}
     '';
+
+    flakeRefFormat = ''
+      The format of flake references is described in {manpage}`nix3-flake(1)`.
+    '';
 in
 {
+  imports = [ ./nix-flake.nix ];
   options.services.nix-daemon = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -95,6 +100,92 @@ in
         perform secure concurrent builds.  If you receive an error
         message saying that "all build users are currently in use",
         you should increase this value.
+      '';
+    };
+
+    registry = lib.mkOption {
+      type = lib.types.attrsOf (
+        lib.types.submodule (
+          let
+            referenceAttrs =
+              with lib.types;
+              attrsOf (oneOf [
+                str
+                int
+                bool
+                path
+                package
+              ]);
+          in
+          { config, name, ... }:
+          {
+            options = {
+              from = lib.mkOption {
+                type = referenceAttrs;
+                example = {
+                  type = "indirect";
+                  id = "nixpkgs";
+                };
+                description = ''
+                  The flake reference to be rewritten.
+
+                  ${flakeRefFormat}
+                '';
+              };
+              to = lib.mkOption {
+                type = referenceAttrs;
+                example = {
+                  type = "github";
+                  owner = "my-org";
+                  repo = "my-nixpkgs";
+                };
+                description = ''
+                  The flake reference {option}`from` is rewritten to.
+
+                  ${flakeRefFormat}
+                '';
+              };
+              flake = lib.mkOption {
+                type = lib.types.nullOr lib.types.attrs;
+                default = null;
+                example = lib.literalExpression "nixpkgs";
+                description = ''
+                  The flake input {option}`from` is rewritten to.
+                '';
+              };
+              exact = lib.mkOption {
+                type = lib.types.bool;
+                default = true;
+                description = ''
+                  Whether the {option}`from` reference needs to match exactly. If set,
+                  a {option}`from` reference like `nixpkgs` does not
+                  match with a reference like `nixpkgs/nixos-20.03`.
+                '';
+              };
+            };
+            config = {
+              from = lib.mkDefault {
+                type = "indirect";
+                id = name;
+              };
+              to = lib.mkIf (config.flake != null) (
+                lib.mkDefault (
+                  {
+                    type = "path";
+                    path = config.flake.outPath;
+                  }
+                  // lib.filterAttrs (n: _: n == "lastModified" || n == "rev" || n == "narHash") config.flake
+                )
+              );
+            };
+          }
+        )
+      );
+      default = { };
+      description = ''
+        A system-wide flake registry.
+
+        See {manpage}`nix3-registry(1)` for more information.
       '';
     };
 
@@ -344,5 +435,10 @@ in
       # standard nixos trick to force a restart when something has changed
       # ${config.environment.etc."nix/nix.conf".source}
     '';
+
+    environment.etc."nix/registry.json".text = builtins.toJSON {
+      version = 2;
+      flakes = lib.mapAttrsToList (n: v: { inherit (v) from to exact; }) cfg.registry;
+    };
   };
 }
