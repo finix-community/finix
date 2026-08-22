@@ -123,44 +123,32 @@ in
   config = lib.mkIf cfg.enable {
     hardware.uinput.enable = true;
 
-    environment.etc =
-      let
-        configTree = lib.mapAttrs' (
-          name: keyboardOpts:
-          lib.nameValuePair "keyd/${name}.conf" {
-            source = pkgs.writeText "${name}.conf" ''
-              [ids]
-              ${lib.concatStringsSep "\n" keyboardOpts.ids}
+    environment.etc = lib.mapAttrs' (
+      name: keyboardOpts:
+      lib.nameValuePair "keyd/${name}.conf" {
+        source = pkgs.writeText "${name}.conf" ''
+          [ids]
+          ${lib.concatStringsSep "\n" keyboardOpts.ids}
 
-              ${lib.generators.toINI {
-                inherit mkKeyValue;
-              } keyboardOpts.settings}
-              ${keyboardOpts.extraConfig}
-            '';
-          }
-        ) cfg.keyboards;
-
-        serviceFile = {
-          # TODO: add finit.services.reloadTriggers option
-          "finit.d/keyd.conf".text = lib.mkAfter ''
-
-            # force a reload on configuration change
-            ${lib.concatMapAttrsStringSep "\n" (k: v: "# " + v.source) configTree}
-          '';
-        };
-      in
-      lib.mkMerge [
-        configTree
-        serviceFile
-      ];
+          ${lib.generators.toINI {
+            inherit mkKeyValue;
+          } keyboardOpts.settings}
+          ${keyboardOpts.extraConfig}
+        '';
+      }
+    ) cfg.keyboards;
 
     finit.services.keyd = {
       description = "keyd, a key remapping daemon";
       command = "${cfg.package}/bin/keyd";
       conditions = "service/syslogd/ready";
-      reload = "${cfg.package}/bin/keyd reload";
-      log = true;
+      exec-reload = "${cfg.package}/bin/keyd reload";
+      log = { };
       environment = lib.optionalAttrs cfg.debug { KEYD_DEBUG = 2; };
+
+      reload-triggers = lib.mapAttrsToList (
+        name: _: config.environment.etc."keyd/${name}.conf".source
+      ) cfg.keyboards;
     };
 
     # used for group ownership of keyd socket

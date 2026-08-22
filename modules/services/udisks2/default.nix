@@ -69,7 +69,7 @@ in
       description = "disk manager";
       command = "${cfg.package}/libexec/udisks2/udisksd" + lib.optionalString cfg.debug " --debug";
       conditions = "service/dbus/ready";
-      log = true;
+      log = { };
     };
   };
 }

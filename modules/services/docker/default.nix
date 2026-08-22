@@ -252,12 +252,12 @@ in
       ];
       command = "${cfg.package}/bin/dockerd " + lib.escapeShellArgs cfg.extraArgs;
       notify = "systemd";
-      reload = "${pkgs.procps}/bin/kill -s HUP $MAINPID";
+      exec-reload = "${pkgs.procps}/bin/kill -s HUP $MAINPID";
       path = [
         pkgs.kmod
       ]
       ++ cfg.extraPackages;
-      log = true;
+      log = { };
     };
 
     providers.scheduler.tasks = lib.optionalAttrs cfg.prune.enable {

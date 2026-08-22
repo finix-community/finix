@@ -54,11 +54,9 @@ in
     finit.tasks.nftables = {
       conditions = "service/syslogd/ready";
       command = "${lib.getExe cfg.package} -f ${cfg.configFile}";
-      post = pkgs.writeShellScript "nftables.sh" ''
-        ${lib.getExe cfg.package} flush ruleset
-      '';
-      log = true;
-      remain = true;
+      exec-stop-post = "${lib.getExe cfg.package} flush ruleset";
+      log = { };
+      remain-after-exit = true;
     };
   };
 }

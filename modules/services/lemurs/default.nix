@@ -128,7 +128,7 @@ in
       description = "lemurs terminal user interface display/login manager";
       conditions = "service/syslogd/ready";
       command = "${pkgs.util-linux}/bin/agetty -nil ${cfg.package}/bin/lemurs tty${toString cfg.settings.tty}";
-      cgroup.name = "user";
+      cgroup.user = { };
     };
   };
 }

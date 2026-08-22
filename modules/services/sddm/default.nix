@@ -162,7 +162,7 @@ in
 
     finit.services.sddm = {
       description = "sddm display manager";
-      runlevels = "34";
+      runlevel = "34";
       conditions = [
         "service/syslogd/ready"
       ]

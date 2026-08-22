@@ -92,9 +92,9 @@ in
       description = "NVIDIA persistence daemon";
       command = "${lib.getExe cfg.package} " + lib.escapeShellArgs cfg.extraArgs;
       type = "forking";
-      pid = "${runtimeDir}/nvidia-persistenced.pid";
-      post = pkgs.writeShellScript "nvidia-persistenced-post.sh" "${lib.getExe pkgs.findutils} ${runtimeDir} -mindepth 1 -delete";
-      restart = -1;
+      pidfile = "${runtimeDir}/nvidia-persistenced.pid";
+      exec-stop-post = "${lib.getExe pkgs.findutils} ${runtimeDir} -mindepth 1 -delete";
+      restart-max = -1;
     };
 
     finit.tmpfiles.rules = [

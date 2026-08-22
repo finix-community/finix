@@ -11,17 +11,26 @@ in
   imports = [
     ./initrd.nix
     ./mount.nix
-    ./stage1.nix
-    ./stage2.nix
+    ./options.nix
     ./tmpfiles.nix
   ];
 
   config = {
     assertions = [
       {
-        assertion = lib.versionAtLeast cfg.package.version "4.16";
-        message = "finit version must be at least 4.16";
+        assertion = lib.versionAtLeast cfg.package.version "5";
+        message = "finit version must be at least 5";
       }
+    ];
+
+    finit.settings = lib.mkMerge [
+      {
+        runlevel = cfg.runlevel;
+        readiness = "none";
+      }
+      (lib.mkIf (cfg.environment != { }) { environment = cfg.environment; })
+      (lib.mkIf (cfg.cgroups != { }) { cgroup = cfg.cgroups; })
+      (lib.mkIf (cfg.rlimits != { }) { rlimit = cfg.rlimits; })
     ];
 
     # TODO: decide a reasonable default here... user can override if needed
