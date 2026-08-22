@@ -10,14 +10,17 @@
     {
       services.mdevd.enable = true;
 
-      # TODO: write a dnsmasq service
-      finit.services.dnsmasq = {
-        description = "dhcp server";
-        command = "${pkgs.dnsmasq}/bin/dnsmasq --no-daemon --dhcp-range=192.168.1.100,192.168.1.200,255.255.255.0,1h --interface=eth0 --bind-interfaces --no-resolv --no-hosts";
-        conditions = [
-          "service/syslogd/running"
-          "net/eth0/up"
-        ];
+      services.dnsmasq = {
+        enable = true;
+        settings = {
+          no-daemon = true;
+          dhcp-range = [ "192.168.1.100,192.168.1.200,255.255.255.0,1h" ];
+          interface = "eth0";
+          bind-interfaces = true;
+          no-resolv = true;
+          no-hosts = true;
+          dhcp-leasefile = null;
+        };
       };
     };
 
