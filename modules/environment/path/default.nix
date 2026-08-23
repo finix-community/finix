@@ -4,11 +4,58 @@
   lib,
   ...
 }:
+let
+  corePackages = lib.mapAttrs (_: lib.mkDefault) (
+    with pkgs;
+    {
+      inherit
+        acl
+        attr
+        cpio
+        curl
+        diffutils
+        findutils
+        getent
+        getconf
+        less
+        libcap
+        ncurses
+        mkpasswd
+        netcat
+        procps
+        su
+        time
+        util-linux
+        which
+        zstd
+        bashInteractive
+        gnugrep
+        gnused
+        gnutar
+        ;
+
+      # If package name won't match key, we can do:
+      # grep = busybox;
+    }
+  );
+in
 {
   options = {
     environment.systemPackages = lib.mkOption {
       type = with lib.types; listOf package;
       default = { };
+    };
+
+    environment.packageSet = lib.mkOption {
+      type = with lib.types; attrsOf (nullOr package);
+      default = { };
+      description = ''
+        Experimental option, where packages are defined as an attribute set.
+        Follows format "environment.packageSet.foo = lib.mkDefault pkgs.foo | null;".
+
+        Expands into "environment.systemPackages", but this
+        format allows to remove packages from system closure in a targeted manner.
+      '';
     };
 
     environment.pathsToLink = lib.mkOption {
@@ -31,36 +78,13 @@
   };
 
   config = {
-    environment.systemPackages = with pkgs; [
-      acl
-      attr
-      bzip2
-      cpio
-      curl
-      diffutils
-      findutils
-      getent
-      getconf
-      gzip
-      xz
-      less
-      libcap
-      ncurses
-      netcat
-      mkpasswd
-      procps
-      su
-      time
-      util-linux
-      which
-      zstd
+    environment.packageSet = corePackages;
+    environment.systemPackages = lib.mkMerge [
+      (with pkgs; [ ])
 
-      bashInteractive
-      gawk
-      gnugrep
-      gnupatch
-      gnused
-      gnutar
+      (lib.mkAfter (
+        lib.unique (lib.filter (pkg: pkg != null) (lib.attrValues config.environment.packageSet))
+      ))
     ];
 
     environment.pathsToLink = [
