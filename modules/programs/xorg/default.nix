@@ -114,7 +114,7 @@ in
     environment.commonPackages = {
       xorg = {
         # We expect this value to be set properly by the device manager we have chosen.
-        libudev = globalPackages.libudev;
+        libudev = lib.mkDefault globalPackages.libudev;
       };
     };
 

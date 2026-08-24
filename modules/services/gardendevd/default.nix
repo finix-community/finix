@@ -77,7 +77,7 @@ in
   config = lib.mkIf cfg.enable {
     environment.commonPackages = {
       global = {
-        udev = pkgs.libudev-garden;
+        libudev = pkgs.libudev-garden;
       };
       gardendev = {
         inherit (globalPackages)
@@ -85,6 +85,7 @@ in
           sed
           modprobe
           util-linux
+          libudev
           ;
       };
     };

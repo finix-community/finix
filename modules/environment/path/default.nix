@@ -37,12 +37,12 @@
 
   config = {
     environment.commonPackages.global = {
-      awk = pkgs.gawk;
-      grep = pkgs.gnugrep;
-      sed = pkgs.gnused;
-      gzip = pkgs.gzip;
-      find = pkgs.findutils;
-      libudev = pkgs.udev;
+      awk = lib.mkDefault pkgs.gawk;
+      grep = lib.mkDefault pkgs.gnugrep;
+      sed = lib.mkDefault pkgs.gnused;
+      gzip = lib.mkDefault pkgs.gzip;
+      find = lib.mkDefault pkgs.findutils;
+      libudev = lib.mkDefault pkgs.udev;
     };
 
     environment.systemPackages = with pkgs; [
