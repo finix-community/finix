@@ -11,7 +11,7 @@
       default = { };
     };
 
-    environment.corePackages = lib.mkOption {
+    environment.commonPackages = lib.mkOption {
       type = with lib.types; attrsOf (attrsOf (nullOr package));
       default = { };
     };
@@ -36,44 +36,47 @@
   };
 
   config = {
-    environment.systemPackages =
-      with pkgs;
-      [
-        acl
-        attr
-        bzip2
-        cpio
-        curl
-        diffutils
-        findutils
-        getent
-        getconf
-        gzip
-        xz
-        less
-        libcap
-        ncurses
-        netcat
-        mkpasswd
-        procps
-        su
-        time
-        util-linux
-        which
-        zstd
+    environment.commonPackages.global = {
+      awk = pkgs.gawk;
+      grep = pkgs.gnugrep;
+      sed = pkgs.gnused;
+      gzip = pkgs.gzip;
+      find = pkgs.findutils;
+    };
 
-        bashInteractive
-        gawk
-        gnugrep
-        gnupatch
-        gnused
-        gnutar
-      ]
-      ++ (lib.unique (
-        lib.lists.concatMap (x: lib.attrsets.attrValues x) (
-          lib.attrsets.attrValues config.environment.corePackages
-        )
-      ));
+    environment.systemPackages = with pkgs; [
+      acl
+      attr
+      bzip2
+      cpio
+      curl
+      diffutils
+      findutils
+      getent
+      getconf
+      gzip
+      xz
+      less
+      libcap
+      ncurses
+      netcat
+      mkpasswd
+      procps
+      su
+      time
+      util-linux
+      which
+      zstd
+
+      bashInteractive
+      gnupatch
+      gnutar
+
+      config.environment.commonPackages.global.awk
+      config.environment.commonPackages.global.grep
+      config.environment.commonPackages.global.gzip
+      config.environment.commonPackages.global.sed
+    ];
 
     environment.pathsToLink = [
       "/bin"
