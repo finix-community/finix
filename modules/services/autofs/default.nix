@@ -14,21 +14,25 @@ let
       mountPoint = lib.mkOption {
         type = with lib.types; nullOr str;
         default = null;
+        description = ''
+          Target to mount the specified source at. Should be relative to the
+          root mount point. If left null, then the attribute name is used.
+          See {manpage}`autofs(5)` for additional details.
+        '';
       };
 
       source = lib.mkOption {
         type = with lib.types; nullOr str;
         default = null;
+        description = ''
+          Source to mount at the specified location. See {manpage}`autofs(5)`
+          for additional details.
+        '';
       };
 
       rules = lib.mkOption {
         type = with lib.types; nullOr (listOf str);
-        default = [
-          "rw"
-          "soft"
-          "rsize=8192"
-          "wsize=8192"
-        ];
+        default = [ ];
         description = ''
           List of options to apply to mount. Strings are stripped of spaces.
         '';
@@ -41,22 +45,6 @@ let
           File system type. String is stripped of spaces.
         '';
       };
-
-      group = lib.mkOption {
-        type = with lib.types; nullOr str;
-        default = null;
-        description = ''
-          Group to mount this file system as. String is stripped of spaces.
-        '';
-      };
-
-      user = lib.mkOption {
-        type = with lib.types; nullOr str;
-        default = null;
-        description = ''
-          User to mount this file system as. String is stripped of spaces.
-        '';
-      };
     };
   };
 
@@ -65,16 +53,34 @@ let
       rootMountPoint = lib.mkOption {
         type = with lib.types; nullOr str;
         default = null;
+        description = ''
+          Root mount point for the associated collection of mounts.
+        '';
       };
 
       extraArgs = lib.mkOption {
         type = with lib.types; nullOr (listOf str);
         default = null;
+        description = ''
+          Extra args to be used on the mount collection.
+        '';
       };
 
       mounts = lib.mkOption {
         type = with lib.types; attrsOf (submodule mountRuleOptions);
         default = { };
+        description = ''
+          The set of mounts to be used under the root mount point. Directory name defaults to the attribute name but can be changed with <attr>.mountPoint.
+        '';
+      };
+
+      extraConfig = lib.mkOption {
+        type = with lib.types; listOf str;
+        default = [ ];
+        description = ''
+          Additional mount lines to add to `auto.master`. See {manpage}`auto.master(5)`
+          for additional details.
+        '';
       };
     };
   };
@@ -137,6 +143,9 @@ in
     mountCollections = lib.mkOption {
       type = with lib.types; attrsOf (submodule mountCollection);
       default = { };
+      description = ''
+        Set of collections of mounts to be supervised by `autofs`.
+      '';
     };
   };
 
@@ -163,7 +172,7 @@ in
         n: v1:
         lib.nameValuePair ("autofs/auto." + n) {
           text = lib.concatStringsSep "\n" (
-            lib.attrsets.mapAttrsToList (
+            (lib.attrsets.mapAttrsToList (
               n: v2:
               (if v2.mountPoint != null then v2.mountPoint else n)
               + " -"
@@ -171,13 +180,12 @@ in
                 lib.concatStringsSep "," (
                   v2.rules
                   ++ (lib.lists.optional (v2.fsType != null) "fstype=${lib.strings.replaceString " " "" v2.fsType}")
-                  ++ (lib.lists.optional (v2.group != null) "group=${lib.strings.replaceString " " "" v2.group}")
-                  ++ (lib.lists.optional (v2.user != null) "user=${lib.strings.replaceString " " "" v2.user}")
                 )
               ))
               + " "
               + v2.source
-            ) v1.mounts
+            ) v1.mounts)
+            ++ v1.extraConfig
           );
         }
       ) cfg.mountCollections)
