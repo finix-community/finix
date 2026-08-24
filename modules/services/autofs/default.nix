@@ -160,7 +160,11 @@ in
         "auto.master".text = lib.mkMerge [
           (lib.strings.concatStringsSep "\n" (
             lib.attrsets.mapAttrsToList (
-              n: v: v.rootMountPoint + " /etc/autofs/auto." + n + " " + (lib.concatStringsSep " " v.extraArgs)
+              n: v:
+              if (v.rootMountPoint != null) then
+                (v.rootMountPoint + " /etc/autofs/auto." + n + " " + (lib.concatStringsSep " " v.extraArgs))
+              else
+                (builtins.abort ("Please set mount point for mountCollection " + n + "."))
             ) cfg.mountCollections
           ))
 
@@ -169,12 +173,12 @@ in
       }
 
       (lib.attrsets.mapAttrs' (
-        n: v1:
-        lib.nameValuePair ("autofs/auto." + n) {
+        n1: v1:
+        lib.nameValuePair ("autofs/auto." + n1) {
           text = lib.concatStringsSep "\n" (
             (lib.attrsets.mapAttrsToList (
-              n: v2:
-              (if v2.mountPoint != null then v2.mountPoint else n)
+              n2: v2:
+              (if v2.mountPoint != null then v2.mountPoint else n2)
               + " -"
               + (lib.strings.replaceString " " "" (
                 lib.concatStringsSep "," (
@@ -183,7 +187,12 @@ in
                 )
               ))
               + " "
-              + v2.source
+              + (
+                if (v2.source != null) then
+                  v2.source
+                else
+                  builtins.abort ("Please set source for mount " + n2 + " in mountCollection " + n1 + ".")
+              )
             ) v1.mounts)
             ++ v1.extraConfig
           );
