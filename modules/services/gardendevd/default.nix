@@ -7,6 +7,10 @@
 let
   cfg = config.services.gardendevd;
 
+  gardendevPackages = config.environment.commonPackages.gardendev;
+
+  globalPackages = config.environment.commonPackages.global;
+
   package = pkgs.gardendevd.overrideAttrs (old: {
     version = "0.2-unstable-2026-07-03";
 
@@ -71,6 +75,20 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    environment.commonPackages = {
+      global = {
+        udev = pkgs.libudev-garden;
+      };
+      gardendev = {
+        inherit (globalPackages)
+          grep
+          sed
+          modprobe
+          util-linux
+          ;
+      };
+    };
+
     environment.systemPackages = [ cfg.package ];
 
     services.gardendevd.extraArgs = [
@@ -81,10 +99,10 @@ in
 
     services.gardendevd.path = [
       config.programs.coreutils.package
-      pkgs.gnugrep
-      pkgs.gnused
-      pkgs.kmod
-      pkgs.util-linux
+      gardendevPackages.grep
+      gardendevPackages.sed
+      gardendevPackages.modprobe
+      gardendevPackages.util-linux
     ];
 
     # contribute gardendevd's bundled rules to the udev packages list
@@ -138,10 +156,10 @@ in
 
           for i in "$out"/*.rules; do
             substituteInPlace "$i" \
-              --replace-quiet \"/sbin/modprobe \"${lib.getExe' pkgs.kmod "modprobe"} \
-              --replace-quiet \"/sbin/mdadm \"${pkgs.mdadm}/sbin/mdadm \
-              --replace-quiet \"/sbin/blkid \"${pkgs.util-linux}/sbin/blkid \
-              --replace-quiet \"/bin/mount \"${pkgs.util-linux}/bin/mount \
+              --replace-quiet \"/sbin/modprobe \"${lib.getExe' gardendevPackages.modprobe "modprobe"} \
+              --replace-quiet \"/sbin/mdadm \"${lib.getExe' pkgs.mdadm "mdadm"} \
+              --replace-quiet \"/sbin/blkid \"${lib.getExe' gardendevPackages.util-linux "blkid"} \
+              --replace-quiet \"/bin/mount \"${lib.getExe' gardendevPackages.util-linux "mount"} \
               --replace-quiet /usr/bin/readlink ${lib.getExe' config.programs.coreutils.package "readlink"} \
               --replace-quiet /usr/bin/cat ${lib.getExe' config.programs.coreutils.package "cat"} \
               --replace-quiet /usr/bin/basename ${lib.getExe' config.programs.coreutils.package "basename"} 2>/dev/null

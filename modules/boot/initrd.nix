@@ -7,7 +7,7 @@
 let
   cfg = config.boot.initrd;
 
-  initrdPackages = config.environment.commonPackages.intird;
+  initrdPackages = config.environment.commonPackages.initrd;
 
   globalPackages = config.environment.commonPackages.global;
 

@@ -42,6 +42,7 @@
       sed = pkgs.gnused;
       gzip = pkgs.gzip;
       find = pkgs.findutils;
+      libudev = pkgs.udev;
     };
 
     environment.systemPackages = with pkgs; [
