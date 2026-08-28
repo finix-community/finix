@@ -46,7 +46,6 @@
       util-linux
       which
 
-      bashInteractive
       gawk
       gnugrep
     ];
