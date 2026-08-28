@@ -25,10 +25,10 @@
           in
           ''
             ${lib.concatMapStringsSep "\n" (
-              user: "permit ${opts} ${user} ${runAs} cmd ${rule.command} ${toString rule.args}"
+              user: "permit ${opts} ${user} ${runAs} cmd ${rule.command} args ${toString rule.args}"
             ) rule.users}
             ${lib.concatMapStringsSep "\n" (
-              group: "permit ${opts} :${group} ${runAs} cmd ${rule.command} ${toString rule.args}"
+              group: "permit ${opts} :${group} ${runAs} cmd ${rule.command} args ${toString rule.args}"
             ) rule.groups}
           ''
         ) config.providers.privileges.rules
