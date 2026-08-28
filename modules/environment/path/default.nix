@@ -55,7 +55,7 @@
       which
       zstd
 
-      bashInteractive
+      config.users.defaultUserShell
       gawk
       gnugrep
       gnupatch
