@@ -32,13 +32,8 @@
 
   config = {
     environment.systemPackages = with pkgs; [
-      acl
-      attr
       findutils
-      getent
-      libcap
       ncurses
-      procps
       util-linux
 
       bashInteractive
