@@ -198,13 +198,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = cfg.prune.enable -> config.providers.scheduler.backend != "none";
-        message = "services.docker.prune.enable requires a scheduler backend to be enabled in your system configuration.";
-      }
-    ];
-
     services.docker.settings = {
       inherit (cfg) group;
     };
