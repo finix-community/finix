@@ -12389,8 +12389,8 @@ Defaults to the pools necessary for booting.</p>
   <div class="option-description"><html><head></head><body><p>Default shell linked system-wide to <code>/bin/sh</code>. Do your best to make sure any
 modifications to this shell are POSIX-compliant.</p>
 </body></html></div>
-  <div class="option-default">Default: <code>"${pkgs.bashInteractive}/bin/sh"</code></div>
-  <div class="option-example">Example: <code>"${pkgs.dash}/bin/dash"</code></div>
+  <div class="option-default">Default: <code>lib.getExe pkgs.dash</code></div>
+  <div class="option-example">Example: <code>lib.getExe pkgs.bashInteractive</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/environment" target="_blank">&lt;finix/modules/environment&gt;</a></code></div>
 </div>
 <div class="option" id="option-environment.etc">
