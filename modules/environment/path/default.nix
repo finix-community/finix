@@ -34,33 +34,21 @@
     environment.systemPackages = with pkgs; [
       acl
       attr
-      bzip2
-      cpio
-      curl
-      diffutils
       findutils
       getent
       getconf
-      gzip
-      xz
       less
       libcap
       ncurses
-      netcat
-      mkpasswd
       procps
       su
       time
       util-linux
       which
-      zstd
 
       bashInteractive
       gawk
       gnugrep
-      gnupatch
-      gnused
-      gnutar
     ];
 
     environment.pathsToLink = [
@@ -72,15 +60,9 @@
       "/lib" # FIXME: remove and update debug-info.nix
       "/sbin"
 
-      # TODO: trim this list down
-      "/share/emacs"
-      "/share/hunspell"
-      "/share/org"
+      # TODO: trim this list down?
       "/share/themes"
       "/share/vulkan"
-      "/share/kservices5"
-      "/share/kservicetypes5"
-      "/share/kxmlgui5"
       "/share/thumbnailers"
       "/share/wayland-sessions"
     ];
