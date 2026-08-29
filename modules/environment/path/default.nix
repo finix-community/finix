@@ -36,18 +36,12 @@
       attr
       findutils
       getent
-      getconf
-      less
       libcap
       ncurses
       procps
-      su
-      time
       util-linux
-      which
 
       bashInteractive
-      gawk
       gnugrep
     ];
 
