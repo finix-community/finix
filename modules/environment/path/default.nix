@@ -11,6 +11,11 @@
       default = { };
     };
 
+    environment.commonPackages = lib.mkOption {
+      type = with lib.types; attrsOf (attrsOf (nullOr package));
+      default = { };
+    };
+
     environment.pathsToLink = lib.mkOption {
       type = with lib.types; listOf str;
       default = [ ];
@@ -31,6 +36,15 @@
   };
 
   config = {
+    environment.commonPackages.global = {
+      awk = lib.mkDefault pkgs.gawk;
+      grep = lib.mkDefault pkgs.gnugrep;
+      sed = lib.mkDefault pkgs.gnused;
+      gzip = lib.mkDefault pkgs.gzip;
+      find = lib.mkDefault pkgs.findutils;
+      libudev = lib.mkDefault pkgs.udev;
+    };
+
     environment.systemPackages = with pkgs; [
       acl
       attr
@@ -56,11 +70,13 @@
       zstd
 
       bashInteractive
-      gawk
-      gnugrep
       gnupatch
-      gnused
       gnutar
+
+      config.environment.commonPackages.global.awk
+      config.environment.commonPackages.global.grep
+      config.environment.commonPackages.global.gzip
+      config.environment.commonPackages.global.sed
     ];
 
     environment.pathsToLink = [

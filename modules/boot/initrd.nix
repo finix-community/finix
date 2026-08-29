@@ -7,6 +7,10 @@
 let
   cfg = config.boot.initrd;
 
+  initrdPackages = config.environment.commonPackages.initrd;
+
+  globalPackages = config.environment.commonPackages.global;
+
   modulesClosure = pkgs.makeModulesClosure {
     rootModules = config.boot.initrd.availableKernelModules ++ config.boot.initrd.kernelModules;
     kernel = config.system.modulesTree;
@@ -126,6 +130,19 @@ in
       "boot.initrd.fileSystemImportCommands has been deprecated; please use boot.initrd.finit.tasks instead"
     ];
 
+    environment.commonPackages = {
+      global = {
+        modprobe = pkgs.kmod;
+        util-linux = pkgs.util-linux;
+      };
+      initrd = {
+        # initrd does not want the global busybox because overrides may not play nicely
+        busybox = pkgs.busybox;
+        modprobe = globalPackages.modprobe;
+        util-linux = globalPackages.util-linux;
+      };
+    };
+
     boot.initrd.supportedFilesystems = lib.mapAttrs' (
       _: v: lib.nameValuePair v.fsType { enable = true; }
     ) (lib.filterAttrs (_: fs: fs.neededForBoot) config.fileSystems);
@@ -139,13 +156,13 @@ in
     };
 
     boot.initrd.path = [
-      pkgs.busybox
+      initrdPackages.busybox
 
       # needed for at least luks on gardendevd, if not more...
-      pkgs.util-linux
+      initrdPackages.util-linux
 
       # defer to kmod for modprobe binary
-      (lib.hiPrio pkgs.kmod)
+      (lib.hiPrio initrdPackages.modprobe)
 
       # busybox's own `mount` applet doesn't understand `X-mount.mkdir` and other util-linux specific options used below
       (lib.hiPrio pkgs.util-linux.mount)

@@ -8,23 +8,16 @@
 let
   cfg = config.programs.xorg;
 
-  # gardendevd needs libudev-garden; mdevd/keventd need libudev-zero
-  udevApi =
-    if config.services.gardendevd.enable then
-      pkgs.libudev-garden
-    else if config.services.mdevd.enable || config.services.keventd.enable then
-      pkgs.libudev-zero
-    else
-      null;
+  xorgPackages = config.environment.commonPackages.xorg;
+
+  globalPackages = config.environment.commonPackages.global;
 
   xf86-input-libinput' = pkgs.xf86-input-libinput.override {
     xorg-server = cfg.package;
-    libinput = pkgs.libinput.override (
-      lib.optionalAttrs (udevApi != null) {
-        udev = udevApi;
-        wacomSupport = false;
-      }
-    );
+    libinput = pkgs.libinput.override {
+      udev = xorgPackages.libudev;
+      wacomSupport = false;
+    };
   };
 in
 {
@@ -44,11 +37,9 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.xorg-server.override (
-        lib.optionalAttrs (udevApi != null) {
-          udev = udevApi;
-        }
-      );
+      default = pkgs.xorg-server.override {
+        udev = xorgPackages.libudev;
+      };
       defaultText = lib.literalExpression "pkgs.xorg-server";
       description = ''
         The package to use for `xorg`.
@@ -119,6 +110,14 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+
+    environment.commonPackages = {
+      xorg = {
+        # We expect this value to be set properly by the device manager we have chosen.
+        libudev = lib.mkDefault globalPackages.libudev;
+      };
+    };
+
     programs.xinit.enable = true;
     programs.xorg.modules = [
       cfg.package.out
