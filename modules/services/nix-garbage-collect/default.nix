@@ -13,7 +13,7 @@ in
       type = lib.types.enum [ "none" "nix-collect-garbage" "nix store" "nix-store" ];
       default = "none";
       description = ''
-        The backend to use for automatic garbage collection, has no function if `services.nix-garbage-collect.command` has a value value other than `cfg.backend`.
+        The backend to use for automatic garbage collection, has no function if `services.nix-garbage-collect.command` has a value value that does not contain `cfg.backend`.
       '';
     };
     command = lib.mkOption {
