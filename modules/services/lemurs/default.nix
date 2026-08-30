@@ -124,6 +124,8 @@ in
     # disable the tty that lemurs runs on
     finit.ttys."tty${toString cfg.settings.tty}".enable = false;
 
+    services.sysklogd.enable = true;
+
     finit.services.lemurs = {
       description = "lemurs terminal user interface display/login manager";
       conditions = "service/syslogd/ready";

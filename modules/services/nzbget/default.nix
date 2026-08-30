@@ -114,6 +114,8 @@ in
       UpdateCheck = "none";
     };
 
+    services.sysklogd.enable = true;
+
     finit.services.nzbget =
       let
         configOpts = lib.concatStringsSep " " (

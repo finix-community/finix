@@ -135,6 +135,8 @@ in
         pkgs.writeShellScript "ssh-keygen.sh" script;
     };
 
+    services.sysklogd.enable = true;
+
     finit.services.dropbear = {
       description = "dropbear ssh daemon";
       conditions = [

@@ -58,6 +58,8 @@ in
       in
       lib.mkMerge [ etcTree ];
 
+    services.sysklogd.enable = true;
+
     finit.services.acpid = {
       description = "acpi daemon";
       conditions = "service/syslogd/ready";

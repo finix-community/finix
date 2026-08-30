@@ -161,6 +161,7 @@ in
     programs.ifupdown-ng.extraArgs = [ "-a" ] ++ lib.optionals cfg.debug [ "-v" ];
 
     environment.systemPackages = [ cfg.package ];
+    services.sysklogd.enable = true;
 
     environment.etc."network/ifupdown-ng.conf".source = format.generate "ifupdown-ng.conf" cfg.settings;
     environment.etc."network/interfaces".text =

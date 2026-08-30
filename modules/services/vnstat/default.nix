@@ -136,6 +136,8 @@ in
       "d ${cfg.settings.DatabaseDir} 0750 ${cfg.user} ${cfg.group}"
     ];
 
+    services.sysklogd.enable = true;
+
     finit.services.vnstat = {
       inherit (cfg) user group;
 

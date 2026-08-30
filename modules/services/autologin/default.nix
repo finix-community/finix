@@ -67,6 +67,8 @@ in
       '';
     };
 
+    services.sysklogd.enable = true;
+
     # autologin is hardcoded to run on tty1
     finit.ttys.tty1.enable = lib.mkForce false;
 

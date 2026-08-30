@@ -54,6 +54,8 @@ in
       text = lib.concatStringsSep "\n" cfg.deny;
     };
 
+    services.sysklogd.enable = true;
+
     finit.services.atd = {
       description = "deferred execution scheduler";
       conditions = "service/syslogd/ready";

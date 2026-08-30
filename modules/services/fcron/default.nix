@@ -197,6 +197,8 @@ in
       };
     };
 
+    services.sysklogd.enable = true;
+
     finit.tasks.fcrontab = {
       description = "reload fcrontab";
       conditions = [

@@ -51,6 +51,8 @@ in
   config = lib.mkIf cfg.enable {
     services.earlyoom.extraArgs = [ "-p" ] ++ lib.optionals cfg.debug [ "--debug" ];
 
+    services.sysklogd.enable = true;
+
     finit.services.earlyoom = {
       description = "early oom daemon";
       command = "${cfg.package}/bin/earlyoom --syslog " + lib.escapeShellArgs cfg.extraArgs;

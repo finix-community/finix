@@ -50,6 +50,8 @@ in
       cfg.package
     ];
 
+    services.sysklogd.enable = true;
+
     finit.services.zerotierone = {
       description = "zerotier one";
       conditions = [

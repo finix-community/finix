@@ -193,6 +193,7 @@ in
     environment.systemPackages = [
       cfg.package
     ];
+    services.sysklogd.enable = true;
 
     finit.tmpfiles.rules = [
       "d /var/cron 0710"

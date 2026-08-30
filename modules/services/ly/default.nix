@@ -113,6 +113,7 @@ in
 
     # Disable the tty that ly runs on
     finit.ttys."tty${toString cfg.tty}".enable = false;
+    services.sysklogd.enable = true;
 
     finit.services.ly = {
       description = "ly terminal display/login manager";

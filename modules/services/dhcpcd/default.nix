@@ -169,6 +169,8 @@ in
       (toString cfg.configFile)
     ];
 
+    services.sysklogd.enable = true;
+
     services.dhcpcd.settings = {
       # Inform the DHCP server of our hostname for DDNS.
       hostname = "";

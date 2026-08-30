@@ -37,6 +37,7 @@ in
 
   config = lib.mkIf cfg.enable {
     time.timeZone = null;
+    services.sysklogd.enable = true;
 
     finit.tasks.tzupdate = {
       description = "timezone update service";

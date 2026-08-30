@@ -53,6 +53,7 @@ in
     ++ lib.optionals cfg.debug [ "--loglevel=debug" ];
 
     services.dbus.packages = [ cfg.package ];
+    services.sysklogd.enable = true;
 
     finit.services.thermald = {
       description = "thermal daemon service";

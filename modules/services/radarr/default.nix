@@ -143,6 +143,8 @@ in
     };
   };
 
+  services.sysklogd.enable = true;
+
   config = lib.mkIf cfg.enable {
     finit.tmpfiles.rules = lib.optionals (cfg.dataDir == "/var/lib/radarr") [
       "d ${cfg.dataDir} 0700 ${cfg.user} ${cfg.group}"

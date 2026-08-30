@@ -147,6 +147,8 @@ in
       "/share/sddm"
     ];
 
+    services.sysklogd.enable = true;
+
     providers.privileges.rules = lib.mkIf config.services.seatd.enable [
       {
         command = "/run/current-system/sw/bin/reboot";

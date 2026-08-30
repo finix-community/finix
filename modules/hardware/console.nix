@@ -64,6 +64,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    services.sysklogd.enable = true;
     environment.systemPackages = [ pkgs.kbd ];
 
     # Include binary keymap in the initramfs.

@@ -148,6 +148,8 @@ in
       "d ${cfg.dataDir} 0700 ${cfg.user} ${cfg.group}"
     ];
 
+    services.sysklogd.enable = true;
+
     finit.services.sonarr = {
       inherit (cfg) user group;
 

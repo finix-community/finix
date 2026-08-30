@@ -105,6 +105,7 @@ in
     environment.systemPackages = [
       cfg.package
     ];
+    services.sysklogd.enable = true;
 
     services.dbus.packages = [
       cfg.package

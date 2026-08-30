@@ -144,6 +144,8 @@ in
       # ${config.environment.etc."postgresql/${cfg.package.psqlSchema}/pg_ident.conf".source}
     '';
 
+    services.sysklogd.enable = true;
+
     finit.services.postgresql = {
       inherit (cfg) user group;
 

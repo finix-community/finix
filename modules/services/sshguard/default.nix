@@ -93,6 +93,8 @@ in
       )
     );
 
+    services.sysklogd.enable = true;
+
     finit.services.sshguard = {
       command = lib.getExe cfg.package;
       conditions = [

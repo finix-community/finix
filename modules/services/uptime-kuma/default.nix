@@ -98,6 +98,8 @@ in
       NODE_ENV = "production";
     };
 
+    services.sysklogd.enable = true;
+
     finit.services.uptime-kuma = {
       inherit (cfg) user group;
 

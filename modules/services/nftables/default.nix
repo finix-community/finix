@@ -46,6 +46,8 @@ in
     };
   };
 
+  services.sysklogd.enable = true;
+
   config = lib.mkIf cfg.enable {
     # boot.blacklistedKernelModules = [ "ip_tables" ];
 

@@ -308,6 +308,8 @@ in
       '';
     };
 
+    services.sysklogd.enable = true;
+
     finit.services.sshd = {
       description = "openssh daemon";
       conditions = [

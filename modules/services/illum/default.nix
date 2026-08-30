@@ -41,6 +41,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    services.sysklogd.enable = true;
     finit.services.illum = {
       description = "backlight adjustment service";
       command = lib.getExe cfg.package;

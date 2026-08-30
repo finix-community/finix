@@ -278,6 +278,7 @@ in
 
   config = lib.mkIf cfg.enable {
     environment.etc."nix/nix.conf".source = configFile;
+    services.sysklogd.enable = true;
 
     finit.services.nix-daemon = {
       description = "nix daemon";

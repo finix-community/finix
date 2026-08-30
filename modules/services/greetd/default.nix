@@ -40,6 +40,8 @@ in
       };
     };
 
+    services.sysklogd.enable = true;
+
     finit.services.greetd = {
       description = "greeter daemon";
       runlevels = "34";

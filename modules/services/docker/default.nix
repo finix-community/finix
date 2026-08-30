@@ -237,6 +237,8 @@ in
       docker = { };
     };
 
+    services.sysklogd.enable = true;
+
     finit.services.docker = {
       description = "docker daemon";
       conditions = [

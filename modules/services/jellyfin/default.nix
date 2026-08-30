@@ -70,6 +70,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    services.sysklogd.enable = true;
     finit.services.jellyfin = {
       inherit (cfg) user group;
 

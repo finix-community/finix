@@ -79,6 +79,8 @@ in
       # -SUBSYSTEM=block;DEVTYPE=disk;.* root:root 0600 +${cfg.package}/lib/udev/tlp-usb-udev disk /sys/$DEVPATH
     '';
 
+    services.sysklogd.enable = true;
+
     finit.tasks = {
       "tlp@start" = {
         description = "tlp system startup";

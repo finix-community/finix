@@ -126,6 +126,8 @@ in
     };
   };
 
+  services.sysklogd.enable = true;
+
   config = lib.mkIf cfg.enable {
     services.php-fpm.settings = {
       error_log = "syslog";

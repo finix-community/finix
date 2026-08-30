@@ -44,6 +44,8 @@ in
       seat = { };
     };
 
+    services.sysklogd.enable = true;
+
     finit.services.seatd = {
       description = "seat management daemon";
       runlevels = "34";

@@ -136,6 +136,8 @@ in
       };
     };
 
+    services.sysklogd.enable = true;
+
     finit.services.mariadb = {
       inherit (cfg) user group;
 

@@ -68,6 +68,8 @@ in
       "d /var/lib/iwd 0700"
     ];
 
+    services.sysklogd.enable = true;
+
     finit.services.iwd = {
       description = "wireless service";
       conditions = "service/syslogd/ready";

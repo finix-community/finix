@@ -86,6 +86,8 @@ in
       # ${config.environment.etc."avahi/avahi-daemon.conf".source}
     '';
 
+    services.sysklogd.enable = true;
+
     finit.services.avahi-daemon = {
       description = "avahi daemon service";
       conditions = [

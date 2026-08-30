@@ -122,6 +122,7 @@ in
 
   config = lib.mkIf cfg.enable {
     hardware.uinput.enable = true;
+    services.sysklogd.enable = true;
 
     environment.etc =
       let

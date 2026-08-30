@@ -89,6 +89,7 @@ in
     ];
 
     environment.systemPackages = [ cfg.package ];
+    services.sysklogd.enable = true;
 
     finit.services.chronyd = {
       description = "chrony ntp daemon";

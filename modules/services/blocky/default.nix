@@ -85,6 +85,8 @@ in
       queryLog.type = lib.mkDefault "none";
     };
 
+    services.sysklogd.enable = true;
+
     finit.services.blocky = {
       inherit (cfg) user group;
 
