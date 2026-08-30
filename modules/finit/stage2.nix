@@ -740,7 +740,9 @@ in
           plymouth = config.programs.plymouth.package;
         }).overrideAttrs
           (o: {
-            configureFlags = o.configureFlags ++ [ "--with-plugin-path=${finix-setup}/lib/finit/plugins" ];
+            configureFlags = (o.configureFlags or [ ]) ++ [
+              "--with-plugin-path=${finix-setup}/lib/finit/plugins"
+            ];
           });
       description = ''
         The package to use for `finit`.

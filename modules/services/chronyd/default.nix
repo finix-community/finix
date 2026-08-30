@@ -27,7 +27,7 @@ in
         package:
         if cfg.debug then
           package.overrideAttrs (o: {
-            configureFlags = o.configureFlags ++ [ "--enable-debug" ];
+            configureFlags = (o.configureFlags or [ ]) ++ [ "--enable-debug" ];
           })
         else
           package;

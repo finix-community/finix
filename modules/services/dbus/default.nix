@@ -34,7 +34,7 @@ in
         package:
         if cfg.debug then
           package.overrideAttrs (o: {
-            configureFlags = o.configureFlags ++ [ "--enable-verbose-mode" ];
+            configureFlags = (o.configureFlags or [ ]) ++ [ "--enable-verbose-mode" ];
           })
         else
           package;
