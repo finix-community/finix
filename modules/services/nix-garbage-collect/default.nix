@@ -10,7 +10,12 @@ in
   options.services.nix-garbage-collect = {
     enable = lib.mkEnableOption "Whether to enable an automatic garbage collection service";
     backend = lib.mkOption {
-      type = lib.types.enum [ "none" "nix-collect-garbage" "nix store" "nix-store" ];
+      type = lib.types.enum [
+        "none"
+        "nix-collect-garbage"
+        "nix store"
+        "nix-store"
+      ];
       default = "none";
       description = ''
         The backend to use for automatic garbage collection, has no function if `services.nix-garbage-collect.command` has a value value that does not contain `cfg.backend`.
@@ -36,7 +41,7 @@ in
       example = "--keep 5 --keep-since 3d";
       description = ''
         Options given to backend when the service is run automatically.
-        
+
         For nix-collect-garbage see `nix-collect-garbage --help`
         For nix-store see `nix-store --help`
         For nix store see `nix store --help`
@@ -50,12 +55,13 @@ in
   config = {
     assertions = [
       {
-        assertion = (cfg.enable == true) && ((cfg.backend == "none") -> !(lib.hasInfix cfg.backend cfg.command));
+        assertion =
+          (cfg.enable == true) && ((cfg.backend == "none") -> !(lib.hasInfix cfg.backend cfg.command));
         message = "Backend is none but command calls for a backend";
       }
     ];
 
-    providers.scheduler.tasks.nix-garbage-collect =  lib.mkIf cfg.enable {
+    providers.scheduler.tasks.nix-garbage-collect = lib.mkIf cfg.enable {
       command =
         if cfg.command != cfg.backend then
           "${cfg.command} ${cfg.extraArgs}"
@@ -65,7 +71,7 @@ in
           "${cfg.command} --gc ${cfg.extraArgs}"
         else
           "${cfg.command} gc ${cfg.extraArgs}";
-      interval = cfg.interval;  
+      interval = cfg.interval;
     };
   };
 }
