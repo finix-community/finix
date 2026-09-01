@@ -2966,11 +2966,27 @@
     <details class="toc-category">
       <summary title="finit.tmpfiles">
         <span>finit.tmpfiles</span>
-        <span class="toc-count">1</span>
+        <span class="toc-count">3</span>
       </summary>
       <ul>
         
 
+        
+        <li>
+          <a href='#option-finit.tmpfiles.clean.enable' title="finit.tmpfiles.clean.enable">
+            clean.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-finit.tmpfiles.clean.interval' title="finit.tmpfiles.clean.interval">
+            clean.interval
+            
+            
+          </a>
+        </li>
         
         <li>
           <a href='#option-finit.tmpfiles.rules' title="finit.tmpfiles.rules">
@@ -14706,6 +14722,40 @@ configured value and the above (<code>2</code> and <code>5</code>) will be used.
 </body></html></div>
   <div class="option-default">Default: <code>null</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank">&lt;finix/modules/finit/stage2.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-finit.tmpfiles.clean.enable">
+  <h3 class="option-name">
+    <a href="#option-finit.tmpfiles.clean.enable" class="option-anchor">finit.tmpfiles.clean.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable automatic cleaning of temporary files.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You must have a scheduler backend configured with
+<code>providers.scheduler.backend</code> to utilize this option.</p>
+</div>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/tmpfiles.nix" target="_blank">&lt;finix/modules/finit/tmpfiles.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-finit.tmpfiles.clean.interval">
+  <h3 class="option-name">
+    <a href="#option-finit.tmpfiles.clean.interval" class="option-anchor">finit.tmpfiles.clean.interval</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>string</code></div>
+  <div class="option-description"><html><head></head><body><p>The interval at which this task should run its specified <code class="nixos-option">command</code>. Accepts either a
+standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression or one of: <code>hourly</code>, <code>daily</code>, <code>weekly</code>, <code>monthly</code>, or <code>yearly</code>.</p>
+<p>If a standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression is provided this value will be passed directly
+to the <code>scheduler</code> implementation and execute exactly as specified.</p>
+<p>If one of the special values, <code>hourly</code>, <code>daily</code>, <code>monthly</code>, <code>weekly</code>, or <code>yearly</code>, is provided then the
+underlying <code>scheduler</code> implementation will use its features to decide when best to run.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>"daily"</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/tmpfiles.nix" target="_blank">&lt;finix/modules/finit/tmpfiles.nix&gt;</a></code></div>
 </div>
 <div class="option" id="option-finit.tmpfiles.rules">
   <h3 class="option-name">
