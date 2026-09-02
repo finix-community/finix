@@ -1,0 +1,210 @@
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+let
+  cfg = config.services.autofs;
+
+  format = pkgs.formats.ini { };
+
+  mountRuleOptions = {
+    options = {
+      mountPoint = lib.mkOption {
+        type = with lib.types; nullOr str;
+        default = null;
+        description = ''
+          Target to mount the specified source at. Should be relative to the
+          root mount point. If left null, then the attribute name is used.
+          See {manpage}`autofs(5)` for additional details.
+        '';
+      };
+
+      source = lib.mkOption {
+        type = with lib.types; nullOr str;
+        default = null;
+        description = ''
+          Source to mount at the specified location. See {manpage}`autofs(5)`
+          for additional details.
+        '';
+      };
+
+      rules = lib.mkOption {
+        type = with lib.types; nullOr (listOf str);
+        default = [ ];
+        description = ''
+          List of options to apply to mount. Strings are stripped of spaces.
+        '';
+      };
+
+      fsType = lib.mkOption {
+        type = with lib.types; nullOr str;
+        default = null;
+        description = ''
+          File system type. String is stripped of spaces.
+        '';
+      };
+    };
+  };
+
+  mountCollection = {
+    options = {
+      rootMountPoint = lib.mkOption {
+        type = with lib.types; nullOr str;
+        default = null;
+        description = ''
+          Root mount point for the associated collection of mounts.
+        '';
+      };
+
+      extraArgs = lib.mkOption {
+        type = with lib.types; nullOr (listOf str);
+        default = null;
+        description = ''
+          Extra args to be used on the mount collection.
+        '';
+      };
+
+      mounts = lib.mkOption {
+        type = with lib.types; attrsOf (submodule mountRuleOptions);
+        default = { };
+        description = ''
+          The set of mounts to be used under the root mount point. Directory name defaults to the attribute name but can be changed with <attr>.mountPoint.
+        '';
+      };
+
+      extraConfig = lib.mkOption {
+        type = with lib.types; listOf str;
+        default = [ ];
+        description = ''
+          Additional mount lines to add to `auto.master`. See {manpage}`auto.master(5)`
+          for additional details.
+        '';
+      };
+    };
+  };
+
+in
+{
+  options.services.autofs = {
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to enable [autofs](${pkgs.autofs5.meta.homepage}) as a system service.
+      '';
+    };
+
+    package = lib.mkOption {
+      type = lib.types.package;
+      default = pkgs.autofs5;
+      defaultText = lib.literalExpression "pkgs.autofs5";
+      description = ''
+        The package to use for `autofs`.
+      '';
+    };
+
+    debug = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to enable debug logging.
+      '';
+    };
+
+    settings = lib.mkOption {
+      inherit (format) type;
+      default = { };
+      description = ''
+        `autofs` configuration. See {manpage}`autofs.conf(5)`
+        for additional details.
+      '';
+    };
+
+    extraArgs = lib.mkOption {
+      type = with lib.types; listOf str;
+      default = [ ];
+      description = ''
+        Additional arguments to pass to `autofs`. See {manpage}`automount(8)`
+        for additional details.
+      '';
+    };
+
+    extraMasterConfig = lib.mkOption {
+      type = with lib.types; listOf str;
+      default = [ ];
+      description = ''
+        Additional mount lines to add to `auto.master`. See {manpage}`auto.master(5)`
+        for additional details.
+      '';
+    };
+
+    mountCollections = lib.mkOption {
+      type = with lib.types; attrsOf (submodule mountCollection);
+      default = { };
+      description = ''
+        Set of collections of mounts to be supervised by `autofs`.
+      '';
+    };
+  };
+
+  config = lib.mkIf cfg.enable {
+    services.autofs.extraArgs = [ "--foreground" ] ++ lib.optionals cfg.debug [ "--debug" ];
+
+    boot.kernelModules = [ "autofs" ];
+
+    environment.etc = lib.mkMerge [
+      {
+        "autofs.conf".source = format.generate "autofs.conf" cfg.settings;
+        "auto.master".text = lib.mkMerge [
+          (lib.strings.concatStringsSep "\n" (
+            lib.attrsets.mapAttrsToList (
+              n: v:
+              if (v.rootMountPoint != null) then
+                (v.rootMountPoint + " /etc/autofs/auto." + n + " " + (lib.concatStringsSep " " v.extraArgs))
+              else
+                (builtins.abort ("Please set mount point for mountCollection " + n + "."))
+            ) cfg.mountCollections
+          ))
+
+          (lib.strings.concatStringsSep "\n" cfg.extraMasterConfig)
+        ];
+      }
+
+      (lib.attrsets.mapAttrs' (
+        n1: v1:
+        lib.nameValuePair ("autofs/auto." + n1) {
+          text = lib.concatStringsSep "\n" (
+            (lib.attrsets.mapAttrsToList (
+              n2: v2:
+              (if v2.mountPoint != null then v2.mountPoint else n2)
+              + " -"
+              + (lib.strings.replaceString " " "" (
+                lib.concatStringsSep "," (
+                  v2.rules
+                  ++ (lib.lists.optional (v2.fsType != null) "fstype=${lib.strings.replaceString " " "" v2.fsType}")
+                )
+              ))
+              + " "
+              + (
+                if (v2.source != null) then
+                  v2.source
+                else
+                  builtins.abort ("Please set source for mount " + n2 + " in mountCollection " + n1 + ".")
+              )
+            ) v1.mounts)
+            ++ v1.extraConfig
+          );
+        }
+      ) cfg.mountCollections)
+    ];
+
+    finit.services.autofs = {
+      description = "on-demand filesystem automounter";
+      conditions = "service/syslogd/ready";
+      command = "${lib.getExe cfg.package} " + lib.escapeShellArgs cfg.extraArgs;
+      log = true;
+    };
+  };
+}
