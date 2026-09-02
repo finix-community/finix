@@ -55,7 +55,9 @@ in
           esac
         done
 
-        # TODO: modify `initctl switch-root` call in finit to have a proper return code
+        # `initctl switch-root` returns a real exit code on failure (finit-project/finit#496)
+        # Keep these checks anyway: they're cheap, catch the common cases before weeven spawn initctl,
+        # and don't depend on finit being patched
         if [ ! -d /sysroot ] || ! mountpoint -q /sysroot || [ ! -x "/sysroot$stage2Init" ]; then
           cat > /dev/console <<EOF
 
