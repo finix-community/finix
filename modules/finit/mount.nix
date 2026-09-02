@@ -61,10 +61,19 @@ let
     else
       [ ];
 
+  # Full settle: every device triggered and processed. For consumers that can't tolerate a device being absent *yet*.
   deviceConditions =
     lib.optionals config.services.mdevd.enable [ "run/coldplug/success" ]
     ++ lib.optionals config.services.gardendevd.enable [ "run/gardendevctl:2/success" ]
     ++ lib.optionals config.services.udev.enable [ "run/udevadm:5/success" ]
+    ++ lib.optionals config.services.keventd.enable [ "service/keventd/ready" ];
+
+  # Daemon up only: device manager running, but coldplug may still be in flight for other devices.
+  # Fine for tasks that poll for their own device under a timeout; a full settle adds latency, not correctness.
+  deviceReadyConditions =
+    lib.optionals config.services.mdevd.enable [ "service/mdevd/ready" ]
+    ++ lib.optionals config.services.gardendevd.enable [ "service/gardendevd/ready" ]
+    ++ lib.optionals config.services.udev.enable [ "service/udevd/ready" ]
     ++ lib.optionals config.services.keventd.enable [ "service/keventd/ready" ];
 
   names = map (fs: utils.escapePath fs.mountPoint) mountable;
@@ -80,7 +89,7 @@ in
       (lib.genAttrs' waitDevs (
         fs:
         lib.nameValuePair "wait-dev-${waitDevName fs}" {
-          conditions = deviceConditions;
+          conditions = deviceReadyConditions;
           script = ''
             # 90s total timeout, polled every 0.1s (busybox sleep supports fractional)
             tries=900

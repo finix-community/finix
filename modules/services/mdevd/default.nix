@@ -243,6 +243,10 @@ in
         command = "mdevd-coldplug -O 2";
         conditions = "service/mdevd/ready";
         priority = 300;
+
+        # Don't block switch_root on coldplug; wait-dev-* tasks poll for their
+        # own device.
+        required = false;
       };
 
       contents = [
