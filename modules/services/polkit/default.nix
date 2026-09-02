@@ -77,6 +77,19 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = lib.optionals config.services.sessiond.enable [
+      {
+        assertion = pkgs.polkit.override.__functionArgs ? useConsoleKit;
+        message = "services.polkit.package is trying to use a feature which doesn't yet exist in your version of polkit - sessiond support; please try updating your nixpkgs source";
+      }
+    ];
+
+    services.polkit.package = lib.mkIf config.services.sessiond.enable (
+      pkgs.polkit.override {
+        useConsoleKit = true;
+        useSystemd = false;
+      }
+    );
 
     environment.systemPackages = [
       cfg.package.bin
@@ -85,11 +98,13 @@ in
 
     finit.services.polkit = {
       description = "policykit authorization manager";
-      conditions = "service/dbus/ready";
+      conditions = [
+        "service/dbus/ready"
+      ]
+      ++ lib.optionals config.services.sessiond.enable [ "service/sessiond/ready" ];
       command =
         "${cfg.package.out}/lib/polkit-1/polkitd --no-debug "
         + lib.optionalString cfg.debug "--log-level=debug";
-      notify = "systemd";
     };
 
     # The polkit daemon reads action/rule files

@@ -34,6 +34,19 @@ in
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [ cfg.package ];
 
+    services.sessiond.settings = lib.mkIf config.services.sessiond.enable {
+      power = lib.mapAttrs (_: lib.mkDefault) {
+        hibernate = [
+          "${config.programs.zzz.package}/bin/zzz"
+          "-Z"
+        ];
+        suspend = [
+          "${config.programs.zzz.package}/bin/zzz"
+          "-z"
+        ];
+      };
+    };
+
     # this module supplies an implementation for `providers.resumeAndSuspend`
     providers.resumeAndSuspend.backend = "zzz";
   };
