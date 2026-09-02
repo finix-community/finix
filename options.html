@@ -9024,6 +9024,98 @@
   
   <li>
     <details class="toc-category">
+      <summary title="services.sessiond">
+        <span>services.sessiond</span>
+        <span class="toc-count">4</span>
+      </summary>
+      <ul>
+        
+
+        
+        <li>
+          <a href='#option-services.sessiond.debug' title="services.sessiond.debug">
+            debug
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.sessiond.enable' title="services.sessiond.enable">
+            enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.sessiond.package' title="services.sessiond.package">
+            package
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.sessiond.settings' title="services.sessiond.settings">
+            settings
+            
+            
+          </a>
+        </li>
+        
+      </ul>
+    </details>
+  </li>
+  
+  <li>
+    <details class="toc-category">
+      <summary title="services.sessiond-uaccess">
+        <span>services.sessiond-uaccess</span>
+        <span class="toc-count">4</span>
+      </summary>
+      <ul>
+        
+
+        
+        <li>
+          <a href='#option-services.sessiond-uaccess.debug' title="services.sessiond-uaccess.debug">
+            debug
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.sessiond-uaccess.enable' title="services.sessiond-uaccess.enable">
+            enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.sessiond-uaccess.extraConfig' title="services.sessiond-uaccess.extraConfig">
+            extraConfig
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.sessiond-uaccess.package' title="services.sessiond-uaccess.package">
+            package
+            
+            
+          </a>
+        </li>
+        
+      </ul>
+    </details>
+  </li>
+  
+  <li>
+    <details class="toc-category">
       <summary title="services.sonarr">
         <span>services.sonarr</span>
         <span class="toc-count">11</span>
@@ -11584,7 +11676,7 @@ builds, during board bringup, or similar.</p>
   <div class="option-description"><html><head></head><body><p>Packages providing LUKS utilities in the initial ramdisk.</p>
 </body></html></div>
   <div class="option-default">Default: <code>[
-  &lt;derivation cryptsetup-2.8.6&gt;
+  &lt;derivation cryptsetup-2.8.7&gt;
 ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/luks.nix" target="_blank">&lt;finix/modules/filesystems/luks.nix&gt;</a></code></div>
 </div>
@@ -11758,7 +11850,7 @@ builds, during board bringup, or similar.</p>
   <div class="option-description"><html><head></head><body><p>Packages providing filesystem utilities for <code>zfs</code> in the initial ramdisk.</p>
 </body></html></div>
   <div class="option-default">Default: <code>[
-  &lt;derivation zfs-user-2.4.3&gt;
+  &lt;derivation zfs-user-2.4.4&gt;
 ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/zfs.nix" target="_blank">&lt;finix/modules/filesystems/zfs.nix&gt;</a></code></div>
 </div>
@@ -12188,7 +12280,7 @@ Setting this option wires the hook into the <code>script</code> <code>providers.
   <div class="option-description"><html><head></head><body><p>Packages providing LUKS utilities.</p>
 </body></html></div>
   <div class="option-default">Default: <code>[
-  &lt;derivation cryptsetup-2.8.6&gt;
+  &lt;derivation cryptsetup-2.8.7&gt;
 ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/luks.nix" target="_blank">&lt;finix/modules/filesystems/luks.nix&gt;</a></code></div>
 </div>
@@ -12362,7 +12454,7 @@ Setting this option wires the hook into the <code>script</code> <code>providers.
   <div class="option-description"><html><head></head><body><p>Packages providing filesystem utilities for <code>zfs</code>.</p>
 </body></html></div>
   <div class="option-default">Default: <code>[
-  &lt;derivation zfs-user-2.4.3&gt;
+  &lt;derivation zfs-user-2.4.4&gt;
 ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/zfs.nix" target="_blank">&lt;finix/modules/filesystems/zfs.nix&gt;</a></code></div>
 </div>
@@ -22843,6 +22935,112 @@ them to this group.</p>
 </body></html></div>
   <div class="option-default">Default: <code>"seat"</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/seatd" target="_blank">&lt;finix/modules/services/seatd&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.sessiond-uaccess.debug">
+  <h3 class="option-name">
+    <a href="#option-services.sessiond-uaccess.debug" class="option-anchor">services.sessiond-uaccess.debug</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sessiond-uaccess" target="_blank">&lt;finix/modules/services/sessiond-uaccess&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.sessiond-uaccess.enable">
+  <h3 class="option-name">
+    <a href="#option-services.sessiond-uaccess.enable" class="option-anchor">services.sessiond-uaccess.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://tangled.org/r0chd.pl/sessiond-uaccess">sessiond</a> as a system service.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sessiond-uaccess" target="_blank">&lt;finix/modules/services/sessiond-uaccess&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.sessiond-uaccess.extraConfig">
+  <h3 class="option-name">
+    <a href="#option-services.sessiond-uaccess.extraConfig" class="option-anchor">services.sessiond-uaccess.extraConfig</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>strings concatenated with "\n"</code></div>
+  <div class="option-description"><html><head></head><body><p>Additional <code>lua</code> rules loaded after the packaged <code>sessiond-uaccess</code> rules. See <a href="https://tangled.org/r0chd.pl/sessiond-uaccess/blob/master/rules/70-uaccess.lua">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>""</code></div>
+  <div class="option-example">Example: <pre><code>''
+  device {
+    access = "rw",
+    match = function(dev)
+      return dev.subsystem == "backlight"
+    end,
+  }
+''</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sessiond-uaccess" target="_blank">&lt;finix/modules/services/sessiond-uaccess&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.sessiond-uaccess.package">
+  <h3 class="option-name">
+    <a href="#option-services.sessiond-uaccess.package" class="option-anchor">services.sessiond-uaccess.package</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>sessiond</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.sessiond-uaccess</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sessiond-uaccess" target="_blank">&lt;finix/modules/services/sessiond-uaccess&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.sessiond.debug">
+  <h3 class="option-name">
+    <a href="#option-services.sessiond.debug" class="option-anchor">services.sessiond.debug</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sessiond" target="_blank">&lt;finix/modules/services/sessiond&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.sessiond.enable">
+  <h3 class="option-name">
+    <a href="#option-services.sessiond.enable" class="option-anchor">services.sessiond.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://tangled.org/r0chd.pl/sessiond">sessiond</a> as a system service.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sessiond" target="_blank">&lt;finix/modules/services/sessiond&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.sessiond.package">
+  <h3 class="option-name">
+    <a href="#option-services.sessiond.package" class="option-anchor">services.sessiond.package</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>sessiond</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.sessiond</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sessiond" target="_blank">&lt;finix/modules/services/sessiond&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.sessiond.settings">
+  <h3 class="option-name">
+    <a href="#option-services.sessiond.settings" class="option-anchor">services.sessiond.settings</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>TOML value</code></div>
+  <div class="option-description"><html><head></head><body><p><code>sessiond</code> configuration. See <a href="https://tangled.org/r0chd.pl/sessiond/blob/master/docs/CONFIGURATION.md">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sessiond" target="_blank">&lt;finix/modules/services/sessiond&gt;</a></code></div>
 </div>
 <div class="option" id="option-services.sonarr.dataDir">
   <h3 class="option-name">
