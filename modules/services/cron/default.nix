@@ -215,14 +215,8 @@ in
       conditions = "service/syslogd/ready";
       command = "${lib.getExe cfg.package} -n " + lib.escapeShellArgs cfg.extraArgs;
       notify = "pid";
+      reload-triggers = [ config.environment.etc.crontab.source ];
     };
-
-    # TODO: add finit.services.restartTriggers option
-    environment.etc."finit.d/cron.conf".text = lib.mkAfter ''
-
-      # standard nixos trick to force a restart when something has changed
-      # ${config.environment.etc.crontab.source}
-    '';
 
     # this module supplies an implementation for `providers.scheduler`
     providers.scheduler.backend = lib.mkDefault "cron";

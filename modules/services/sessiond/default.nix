@@ -63,7 +63,9 @@ in
       conditions = "service/dbus/ready";
       command = "${lib.getExe' cfg.package "sessiond"} --config ${configFile} --log-target syslog";
       notify = "systemd";
-      cgroup.delegate = true;
+      cgroup.system = {
+        delegate = true;
+      };
       environment =
         if cfg.debug then
           {

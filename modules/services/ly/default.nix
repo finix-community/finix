@@ -125,15 +125,15 @@ in
 
     finit.services.ly = {
       description = "ly terminal display/login manager";
-      runlevels = "34";
+      runlevel = "34";
       conditions = [
         "service/syslogd/ready"
       ]
       ++ lib.optionals config.services.elogind.enable [ "service/elogind/ready" ]
       ++ lib.optionals config.services.seatd.enable [ "service/seatd/ready" ];
       command = "${pkgs.util-linux}/bin/agetty -nil ${cfg.package}/bin/ly tty${toString cfg.tty}";
-      nohup = true;
-      cgroup.name = "user";
+      reload-signal = "none";
+      cgroup.user = { };
     };
   };
 }
