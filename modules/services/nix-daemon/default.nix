@@ -1,4 +1,5 @@
 {
+  modules,
   config,
   pkgs,
   lib,
@@ -65,6 +66,8 @@ let
     '';
 in
 {
+  imports = [ modules.nix-channel ];
+
   options.services.nix-daemon = {
     enable = lib.mkOption {
       type = lib.types.bool;
