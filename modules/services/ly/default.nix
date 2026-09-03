@@ -10,7 +10,7 @@ let
 
   format = pkgs.formats.keyValue { };
 
-  brightnessctl = config.programs.brightnessctl.package or pkgs.brightnessctl;
+  brightnessctl = config.programs.brightnessctl.package;
 
   session_rundir =
     if config.services.sessiond.enable then
@@ -77,8 +77,6 @@ in
 
       restart_cmd = "${config.finit.package}/bin/initctl reboot";
       shutdown_cmd = "${config.finit.package}/bin/initctl poweroff";
-      brightness_up_cmd = lib.mkDefault "${lib.getExe brightnessctl} -q s +10%";
-      brightness_down_cmd = lib.mkDefault "${lib.getExe brightnessctl} -q s 10%-";
     }
     // lib.optionalAttrs (lib.versionAtLeast cfg.package.version "1.5.0") {
       # write to syslog
@@ -92,6 +90,10 @@ in
         else
           (lib.getExe config.programs.xorg.package);
       xsessions = "/run/current-system/sw/share/xsessions";
+    }
+    // lib.optionalAttrs config.programs.brightnessctl.enable or false {
+      brightness_up_cmd = lib.mkDefault "${lib.getExe brightnessctl} -q s +10%";
+      brightness_down_cmd = lib.mkDefault "${lib.getExe brightnessctl} -q s 10%-";
     };
 
     environment.etc."ly/config.ini".source = format.generate "config.ini" cfg.settings;
