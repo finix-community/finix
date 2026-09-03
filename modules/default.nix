@@ -26,6 +26,7 @@ let
       "keventd"
       "mdevd"
       "seatd"
+      "sessiond"
       "udev"
     ]
   );
@@ -61,6 +62,7 @@ in
       ./services/keventd
       ./services/mdevd
       ./services/seatd
+      ./services/sessiond
       ./services/udev
       ./system/activation
       ./system/activation/specialisation.nix
