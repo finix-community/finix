@@ -53,6 +53,9 @@ in
         {
           inherit libinput;
           ${wlrootsAttr} = o.${wlrootsAttr}.override { inherit libinput; };
+        }
+        // lib.optionalAttrs (udevApi != null) {
+          # since we're recompiling go ahead and disable systemd
           enableSystemd = false;
         }
       );
