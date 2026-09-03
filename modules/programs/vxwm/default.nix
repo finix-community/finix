@@ -8,11 +8,16 @@
 let
   cfg = config.programs.vxwm;
 
+  sessionScript = pkgs.writeShellScript "vxwm-session" ''
+    ${lib.concatStringsSep "\n" cfg.autostart}
+    exec ${cfg.package}/bin/vxwm
+  '';
+
   sessionFile = pkgs.writeTextDir "share/xsessions/vxwm.desktop" ''
     [Desktop Entry]
     Name=vxwm
     Comment=Versatile X Window Manager
-    Exec=${pkgs.dbus}/bin/dbus-run-session -- ${cfg.package}/bin/vxwm
+    Exec=${pkgs.dbus}/bin/dbus-run-session -- ${sessionScript}
     TryExec=${cfg.package}/bin/vxwm
     Type=Application
     DesktopNames=vxwm
@@ -33,6 +38,13 @@ in
       default = pkgs.vxwm;
       defaultText = lib.literalExpression "pkgs.vxwm";
       description = "The package to use for `vxwm`.";
+    };
+
+    autostart = lib.mkOption {
+      type = with lib.types; listOf str;
+      default = [ ];
+      example = lib.literalExpression ''[ "pipewire &" "picom &" ]'';
+      description = "Commands to run before starting vxwm. Each string is a shell command.";
     };
   };
 
