@@ -18,6 +18,8 @@ let
       lib.filterAttrs (_: value: value != null) config.environment.variables
     )
   );
+
+  shell = lib.getExe config.users.defaultUserShell;
 in
 {
   options.environment.shells = lib.mkOption {
@@ -55,6 +57,11 @@ in
   };
 
   config = {
+    environment.shells = [
+      "/run/current-system/sw/bin/${builtins.baseNameOf shell}"
+      shell
+    ];
+
     environment.etc.shells.text = ''
       ${lib.concatStringsSep "\n" (map utils.toShellPath config.environment.shells)}
       /bin/sh

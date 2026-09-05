@@ -46,7 +46,7 @@
       util-linux
       which
 
-      bashInteractive
+      config.users.defaultUserShell
       gawk
       gnugrep
     ];
