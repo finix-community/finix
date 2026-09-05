@@ -176,6 +176,7 @@ in
       conditions = [
         "service/syslogd/ready"
       ]
+      ++ lib.optionals config.services.sessiond.enable [ "service/sessiond/ready" ]
       ++ lib.optionals config.services.elogind.enable [ "service/elogind/ready" ]
       ++ lib.optionals config.services.seatd.enable [ "service/seatd/ready" ];
       command = "/run/current-system/sw/bin/sddm";
