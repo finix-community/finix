@@ -86,13 +86,18 @@ let
       remove)
         # Remove symlinks pointing to this device.
         # We scan directories instead of calling blkid since the device may already be gone.
+        #
+        # Guard against a fast remove+add reorder
         for dir in /dev/disk/by-id /dev/disk/by-label /dev/disk/by-uuid /dev/disk/by-partlabel /dev/disk/by-partuuid; do
           [ -d "$dir" ] || continue
           for link in "$dir"/*; do
             [ -L "$link" ] || continue
             target=$(readlink "$link")
             case "$target" in
-              "../../$MDEV") rm -f "$link" ;;
+             "../../$MDEV")
+                [ -e "/dev/$MDEV" ] && continue
+                rm -f "$link"
+                ;;
             esac
           done
         done
