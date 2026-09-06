@@ -58,6 +58,12 @@ in
 
     services.polkit.enable = true;
 
+    services.sessiond.settings.power = {
+      reboot = lib.mkDefault [ "/run/current-system/sw/bin/reboot" ];
+      poweroff = lib.mkDefault [ "/run/current-system/sw/bin/poweroff" ];
+      suspend = lib.mkDefault [ "/run/current-system/sw/bin/suspend" ];
+    };
+
     finit.services.sessiond = {
       description = "daemon for power management";
       conditions = "service/dbus/ready";
