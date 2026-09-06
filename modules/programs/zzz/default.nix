@@ -35,8 +35,8 @@ in
     environment.systemPackages = [ cfg.package ];
 
     services.sessiond.settings = lib.mkIf config.services.sessiond.enable {
-      power = lib.mapAttrs (_: lib.mkDefault) {
-        hibernate = [
+      power = {
+        hibernate = lib.mkDefault [
           "${config.programs.zzz.package}/bin/zzz"
           "-Z"
         ];
