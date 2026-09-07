@@ -8,16 +8,22 @@
 let
   cfg = config.programs.vxwm;
 
-  sessionScript = pkgs.writeShellScript "vxwm-session" ''
-    ${lib.concatStringsSep "\n" cfg.autostart}
-    exec ${cfg.package}/bin/vxwm
-  '';
+  sessionScript = pkgs.writeTextFile {
+    name = "vxwm-session";
+    executable = true;
+    destination = "/bin/vxwm-session";
+    text = ''
+      #!${pkgs.dash}/bin/dash
+      ${lib.concatStringsSep "\n" cfg.autostart}
+      exec ${cfg.package}/bin/vxwm
+    '';
+  };
 
   sessionFile = pkgs.writeTextDir "share/xsessions/vxwm.desktop" ''
     [Desktop Entry]
     Name=vxwm
     Comment=Versatile X Window Manager
-    Exec=${pkgs.dbus}/bin/dbus-run-session -- ${sessionScript}
+    Exec=${pkgs.dbus}/bin/dbus-run-session -- ${sessionScript}/bin/vxwm-session
     TryExec=${cfg.package}/bin/vxwm
     Type=Application
     DesktopNames=vxwm
