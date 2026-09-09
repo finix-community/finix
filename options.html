@@ -10294,6 +10294,52 @@
   
   <li>
     <details class="toc-category">
+      <summary title="services.zram-swap">
+        <span>services.zram-swap</span>
+        <span class="toc-count">4</span>
+      </summary>
+      <ul>
+        
+
+        
+        <li>
+          <a href='#option-services.zram-swap.algorithm' title="services.zram-swap.algorithm">
+            algorithm
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.zram-swap.enable' title="services.zram-swap.enable">
+            enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.zram-swap.memoryPercent' title="services.zram-swap.memoryPercent">
+            memoryPercent
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.zram-swap.priority' title="services.zram-swap.priority">
+            priority
+            
+            
+          </a>
+        </li>
+        
+      </ul>
+    </details>
+  </li>
+  
+  <li>
+    <details class="toc-category">
       <summary title="swapDevices.*">
         <span>swapDevices.*</span>
         <span class="toc-count">11</span>
@@ -24705,6 +24751,58 @@ reversals due to daylight savings, timezone or other date/time changes.</p>
 </body></html></div>
   <div class="option-default">Default: <code>4</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zfs" target="_blank">&lt;finix/modules/services/zfs&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.zram-swap.algorithm">
+  <h3 class="option-name">
+    <a href="#option-services.zram-swap.algorithm" class="option-anchor">services.zram-swap.algorithm</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>string</code></div>
+  <div class="option-description"><html><head></head><body><p>Compression algorithm passed to <code class="command">zramctl</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>"zstd"</code></div>
+  <div class="option-example">Example: <code>"lz4"</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zram-swap" target="_blank">&lt;finix/modules/services/zram-swap&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.zram-swap.enable">
+  <h3 class="option-name">
+    <a href="#option-services.zram-swap.enable" class="option-anchor">services.zram-swap.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable swap on a compressed zram block device.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zram-swap" target="_blank">&lt;finix/modules/services/zram-swap&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.zram-swap.memoryPercent">
+  <h3 class="option-name">
+    <a href="#option-services.zram-swap.memoryPercent" class="option-anchor">services.zram-swap.memoryPercent</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>positive integer, meaning &gt;0</code></div>
+  <div class="option-description"><html><head></head><body><p>Size of the zram device as a percentage of total memory.</p>
+<p>Must be positive. Values above 100 are allowed because the device
+stores compressed data; actual memory usage depends on compressibility.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>50</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zram-swap" target="_blank">&lt;finix/modules/services/zram-swap&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.zram-swap.priority">
+  <h3 class="option-name">
+    <a href="#option-services.zram-swap.priority" class="option-anchor">services.zram-swap.priority</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>signed integer</code></div>
+  <div class="option-description"><html><head></head><body><p>Swap priority of the zram device. Higher values are preferred by
+the kernel over lower-priority swap devices.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>5</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zram-swap" target="_blank">&lt;finix/modules/services/zram-swap&gt;</a></code></div>
 </div>
 <div class="option" id="option-specialisation">
   <h3 class="option-name">
