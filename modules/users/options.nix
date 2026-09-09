@@ -6,6 +6,7 @@
 }:
 let
   cfg = config.users;
+  systemConfig = config;
 in
 {
   options = {
@@ -49,7 +50,7 @@ in
                   This automatically sets {option}`group` to `users`,
                   {option}`createHome` to `true`,
                   {option}`home` to {file}`/home/«username»`,
-                  {option}`shell` to {option}`users.defaultUserShell`,
+                  {option}`shell` to {option}`programs.sh.defaultUserShell` if enabled or `bashInteractive` otherwise,
                   and {option}`isSystemUser` to `false`.
                   Exactly one of `isNormalUser` and `isSystemUser` must be true.
                 '';
@@ -178,7 +179,12 @@ in
                 group = lib.mkDefault "users";
                 createHome = lib.mkDefault true;
                 home = lib.mkDefault "/home/${config.name}";
-                shell = lib.mkDefault cfg.defaultUserShell;
+                shell = lib.mkDefault (
+                  if (systemConfig.programs.sh.enable or false) then
+                    systemConfig.programs.sh.defaultUserShell
+                  else
+                    pkgs.bashInteractive
+                );
                 isSystemUser = lib.mkDefault false;
               })
             ];
@@ -186,17 +192,6 @@ in
         )
       );
       default = { };
-    };
-
-    users.defaultUserShell = lib.mkOption {
-      type = with lib.types; either shellPackage (passwdEntry path);
-      default = pkgs.bashInteractive;
-      defaultText = lib.literalExpression "pkgs.bashInteractive";
-      example = lib.literalExpression "pkgs.zsh";
-      description = ''
-        The default shell assigned to user accounts created with
-        {option}`isNormalUser = true`.
-      '';
     };
 
     users.groups = lib.mkOption {

@@ -5,6 +5,12 @@
   ...
 }:
 let
+  binShell =
+    if (config.programs.sh.enable or false) then
+      "${config.programs.sh.environmentShell}${config.programs.sh.environmentShell.shellPath}"
+    else
+      lib.getExe pkgs.dash;
+
   buildEtc =
     pkgs.runCommandLocal "etc"
       {
@@ -207,7 +213,7 @@ in
 
       # Create the required /bin/sh symlink; otherwise lots of things
       # (notably the system() function) won't work.
-      ln -sfn "${config.environment.binsh}" /bin/sh
+      ln -sfn "${binShell}" /bin/sh
     '';
   };
 }
