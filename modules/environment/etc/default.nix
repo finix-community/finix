@@ -198,12 +198,5 @@ in
       echo "setting up /etc..."
       ${lib.getExe config.programs.sh.package} ${./setup-etc.sh} ${buildEtc}/etc
     '';
-
-    system.activation.scripts.shebangCompatibility = ''
-      mkdir -p -m 0755 /usr/bin
-
-      # Create /usr/bin/env for shebangs.
-      ln -sfn ${lib.getExe' config.programs.coreutils.package "env"} /usr/bin/env
-    '';
   };
 }
