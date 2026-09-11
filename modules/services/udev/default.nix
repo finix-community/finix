@@ -191,6 +191,15 @@ in
       apply = map lib.getBin;
     };
 
+    package = lib.mkOption {
+      type = lib.types.package;
+      default = udev;
+      defaultText = lib.literalExpression "pkgs.eudev";
+      description = ''
+        The package to use for `eudev`.
+      '';
+    };
+
     path = lib.mkOption {
       type = with lib.types; listOf path;
       default = [ ];
@@ -292,10 +301,10 @@ in
 
     # build out the default initramfs image
     boot.initrd = {
-      path = [ config.services.udev.package ];
+      path = [ udev ];
 
       finit.services.udevd = {
-        command = "/lib/systemd/systemd-udevd";
+        command = "${udev}/lib/systemd/systemd-udevd";
         notify = "systemd";
       };
 
@@ -333,6 +342,7 @@ in
           source = udevRulesEarly;
         }
         { source = "${udev}/lib/udev"; }
+        { source = "${udev}/lib/systemd"; }
       ];
     };
   };

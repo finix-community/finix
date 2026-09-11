@@ -9,6 +9,7 @@
     { ... }:
     {
       services.mdevd.enable = true;
+      services.getty.enable = true;
     };
 
   testScript = ''

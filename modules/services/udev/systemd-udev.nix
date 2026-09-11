@@ -19,7 +19,6 @@ let
       withHostnamed = false;
       withImportd = false;
       withImds = false;
-      withKmod = false;
       withLibidn2 = false;
       withLocaled = false;
       withLogind = false;
@@ -62,6 +61,10 @@ let
           find $out/lib -mindepth 1 -maxdepth 1 ! -name "udev" ! -name "systemd" ! -name "libudev.*" -exec rm -rf {} +
           find $out/lib/systemd -mindepth 1 -maxdepth 1 ! -name "libsystemd*" ! -name "systemd-udevd" -exec rm -rf {} +
           find $out/bin -mindepth 1 -maxdepth 1 ! -name "udevadm" ! -name "systemd-hwdb" -exec rm -rf {} +
+
+          # remove tpm2 rules
+          rm $out/lib/udev/rules.d/60-tpm2-id.rules
+          rm $out/lib/udev/hwdb.d/60-tpm2.hwdb
 
           # remove udev rule requiring full systemd install
           rm $out/lib/udev/rules.d/99-systemd.rules

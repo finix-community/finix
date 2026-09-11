@@ -144,9 +144,10 @@ let
     options = {
       notify = lib.mkOption {
         type = lib.types.enum [
-          "none"
           "pid"
+          "systemd"
           "s6"
+          "none"
         ];
         default = config.finit.readiness;
         defaultText = lib.literalExpression "config.finit.readiness";
