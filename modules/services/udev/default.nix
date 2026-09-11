@@ -7,6 +7,8 @@
 let
   cfg = config.services.udev;
 
+  udev = pkgs.callPackage ./systemd-udev.nix { };
+
   # Udev has a 512-character limit for ENV{PATH}, so create a symlink
   # tree to work around this.
   udevPath = pkgs.buildEnv {
@@ -121,7 +123,7 @@ let
   initrdUdevRules = pkgs.runCommand "initrd-udev-rules" { } ''
     mkdir -p $out/etc/udev/rules.d
     for f in 60-cdrom_id 60-persistent-storage 75-net-description 80-drivers; do # 80-net-setup-link; do
-      cp ${pkgs.eudev}/var/lib/udev/rules.d/$f.rules $out/etc/udev/rules.d
+      cp ${udev}/lib/udev/rules.d/$f.rules $out/etc/udev/rules.d
     done
   '';
 
@@ -129,7 +131,7 @@ let
     name = "udev-rules";
     udevPackages = [ initrdUdevRules ];
     binPackages = [ initrdUdevRules ];
-    udev = pkgs.eudev;
+    udev = udev;
 
     inherit udevPath;
   };
@@ -152,7 +154,7 @@ let
 
         echo "Generating hwdb database..."
         # hwdb --update doesn't return error code even on errors!
-        res="$(${pkgs.buildPackages.eudev}/bin/udevadm hwdb --update --root $(pwd) 2>&1)"
+        res="$(${udev}/bin/systemd-hwdb --root $(pwd) 2>&1)"
         echo "$res"
         [ -z "$(echo "$res" | egrep '^Error')" ]
         mv etc/udev/hwdb.bin $out
@@ -164,25 +166,7 @@ in
       type = lib.types.bool;
       default = false;
       description = ''
-        Whether to enable [eudev](${pkgs.eudev.meta.homepage}) as a system service.
-      '';
-    };
-
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.eudev.overrideAttrs (o: {
-        # see https://github.com/eudev-project/eudev/pull/290
-        patches = (o.patches or [ ]) ++ [
-          (pkgs.fetchpatch {
-            name = "s6-readiness.patch";
-            url = "https://github.com/eudev-project/eudev/pull/290/commits/48e9923a1d0218d714989d8aec119e301aa930ae.patch";
-            sha256 = "sha256-Icor2v2OYizquLW0ytYONjhCUW+oTs5srABamQR9Uvk=";
-          })
-        ];
-      });
-      defaultText = lib.literalExpression "pkgs.eudev";
-      description = ''
-        The package to use for `eudev`.
+        Whether to enable [udev](${pkgs.udev.meta.homepage}) as a system service.
       '';
     };
 
@@ -227,15 +211,15 @@ in
       pkgs.gnused
       pkgs.gnugrep
       pkgs.util-linux
-      cfg.package
+      udev
     ];
 
     # adapted from https://github.com/troglobit/finit/blob/master/system/10-hotplug.conf.in
     finit.services.udevd = {
-      description = "device event daemon (${cfg.package.pname})";
+      description = "device event daemon (${udev.pname})";
       runlevels = "S12345789";
-      command = "${cfg.package}/bin/udevd --ready-notify=%n" + lib.optionalString cfg.debug " -D";
-      notify = "s6";
+      command = "${udev}/lib/systemd/systemd-udevd" + lib.optionalString cfg.debug " -D";
+      notify = "systemd";
       pid = "udevd";
       log = true;
       nohup = true;
@@ -259,32 +243,32 @@ in
       {
         "udevadm@1" = defaults // {
           description = "";
-          command = "${cfg.package}/bin/udevadm settle -t 0";
+          command = "${udev}/bin/udevadm settle -t 0";
         };
         "udevadm@2" = defaults // {
           description = "";
-          command = "${cfg.package}/bin/udevadm control --reload";
+          command = "${udev}/bin/udevadm control --reload";
         };
         "udevadm@3" = defaults // {
           description = "requesting device events";
-          command = "${cfg.package}/bin/udevadm trigger -c add -t devices";
+          command = "${udev}/bin/udevadm trigger -c add -t devices";
         };
         "udevadm@4" = defaults // {
           description = "requesting subsystem events";
-          command = "${cfg.package}/bin/udevadm trigger -c add -t subsystems";
+          command = "${udev}/bin/udevadm trigger -c add -t subsystems";
         };
         "udevadm@5" = defaults // {
           description = "waiting for udev to finish";
-          command = "${cfg.package}/bin/udevadm settle -t 30";
+          command = "${udev}/bin/udevadm settle -t 30";
         };
       };
 
     environment.etc."udev/hwdb.bin" = lib.mkIf (cfg.packages != [ ]) { source = hwdbBin; };
     environment.etc."udev/rules.d".source = udevRulesFor {
       name = "udev-rules";
-      udevPackages = [ cfg.package ] ++ cfg.packages;
-      binPackages = [ cfg.package ] ++ cfg.packages;
-      udev = cfg.package;
+      udevPackages = [ udev ] ++ cfg.packages;
+      binPackages = [ udev ] ++ cfg.packages;
+      udev = udev;
 
       inherit udevPath;
     };
@@ -311,8 +295,8 @@ in
       path = [ config.services.udev.package ];
 
       finit.services.udevd = {
-        command = "/bin/udevd --ready-notify=%n";
-        notify = "s6";
+        command = "/lib/systemd/systemd-udevd";
+        notify = "systemd";
       };
 
       finit.run = {
@@ -348,7 +332,7 @@ in
           target = "/etc/udev/rules.d";
           source = udevRulesEarly;
         }
-        { source = "${pkgs.eudev}/lib/udev"; }
+        { source = "${udev}/lib/udev"; }
       ];
     };
   };
