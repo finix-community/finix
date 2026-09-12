@@ -5782,6 +5782,92 @@
   
   <li>
     <details class="toc-category">
+      <summary title="providers.firewall">
+        <span>providers.firewall</span>
+        <span class="toc-count">9</span>
+      </summary>
+      <ul>
+        
+
+        
+        <li>
+          <a href='#option-providers.firewall.allowedTCPPortRanges' title="providers.firewall.allowedTCPPortRanges">
+            allowedTCPPortRanges
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-providers.firewall.allowedTCPPortRanges._.from' title="providers.firewall.allowedTCPPortRanges.*.from">
+            allowedTCPPortRanges.*.from
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-providers.firewall.allowedTCPPortRanges._.to' title="providers.firewall.allowedTCPPortRanges.*.to">
+            allowedTCPPortRanges.*.to
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-providers.firewall.allowedTCPPorts' title="providers.firewall.allowedTCPPorts">
+            allowedTCPPorts
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-providers.firewall.allowedUDPPortRanges' title="providers.firewall.allowedUDPPortRanges">
+            allowedUDPPortRanges
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-providers.firewall.allowedUDPPortRanges._.from' title="providers.firewall.allowedUDPPortRanges.*.from">
+            allowedUDPPortRanges.*.from
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-providers.firewall.allowedUDPPortRanges._.to' title="providers.firewall.allowedUDPPortRanges.*.to">
+            allowedUDPPortRanges.*.to
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-providers.firewall.allowedUDPPorts' title="providers.firewall.allowedUDPPorts">
+            allowedUDPPorts
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-providers.firewall.backend' title="providers.firewall.backend">
+            backend
+            
+            
+          </a>
+        </li>
+        
+      </ul>
+    </details>
+  </li>
+  
+  <li>
+    <details class="toc-category">
       <summary title="providers.privileges">
         <span>providers.privileges</span>
         <span class="toc-count">9</span>
@@ -8336,19 +8422,11 @@
     <details class="toc-category">
       <summary title="services.nftables">
         <span>services.nftables</span>
-        <span class="toc-count">3</span>
+        <span class="toc-count">9</span>
       </summary>
       <ul>
         
 
-        
-        <li>
-          <a href='#option-services.nftables.configFile' title="services.nftables.configFile">
-            configFile
-            
-            
-          </a>
-        </li>
         
         <li>
           <a href='#option-services.nftables.enable' title="services.nftables.enable">
@@ -8361,6 +8439,62 @@
         <li>
           <a href='#option-services.nftables.package' title="services.nftables.package">
             package
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.nftables.rejectPackets' title="services.nftables.rejectPackets">
+            rejectPackets
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.nftables.tables' title="services.nftables.tables">
+            tables
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.nftables.tables._name_.content' title="services.nftables.tables.&lt;name&gt;.content">
+            tables.&lt;name&gt;.content
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.nftables.tables._name_.enable' title="services.nftables.tables.&lt;name&gt;.enable">
+            tables.&lt;name&gt;.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.nftables.tables._name_.family' title="services.nftables.tables.&lt;name&gt;.family">
+            tables.&lt;name&gt;.family
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.nftables.tables._name_.name' title="services.nftables.tables.&lt;name&gt;.name">
+            tables.&lt;name&gt;.name
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.nftables.trustedInterfaces' title="services.nftables.trustedInterfaces">
+            trustedInterfaces
             
             
           </a>
@@ -18879,6 +19013,130 @@ configuration. Card-specific drivers that need explicit configuration
 </code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/bootloader" target="_blank">&lt;finix/modules/providers/bootloader&gt;</a></code></div>
 </div>
+<div class="option" id="option-providers.firewall.allowedTCPPortRanges">
+  <h3 class="option-name">
+    <a href="#option-providers.firewall.allowedTCPPortRanges" class="option-anchor">providers.firewall.allowedTCPPortRanges</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of (submodule)</code></div>
+  <div class="option-description"><html><head></head><body><p>A range of TCP ports on which incoming connections are accepted.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-example">Example: <pre><code>[
+  {
+    from = 8999;
+    to = 9003;
+  }
+]</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/firewall" target="_blank">&lt;finix/modules/providers/firewall&gt;</a></code></div>
+</div>
+<div class="option" id="option-providers.firewall.allowedTCPPortRanges._.from">
+  <h3 class="option-name">
+    <a href="#option-providers.firewall.allowedTCPPortRanges._.from" class="option-anchor">providers.firewall.allowedTCPPortRanges.*.from</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>16 bit unsigned integer; between 0 and 65535 (both inclusive)</code></div>
+  <div class="option-description"><html><head></head><body><p>The first port of the range, inclusive.</p>
+</body></html></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/firewall" target="_blank">&lt;finix/modules/providers/firewall&gt;</a></code></div>
+</div>
+<div class="option" id="option-providers.firewall.allowedTCPPortRanges._.to">
+  <h3 class="option-name">
+    <a href="#option-providers.firewall.allowedTCPPortRanges._.to" class="option-anchor">providers.firewall.allowedTCPPortRanges.*.to</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>16 bit unsigned integer; between 0 and 65535 (both inclusive)</code></div>
+  <div class="option-description"><html><head></head><body><p>The last port of the range, inclusive.</p>
+</body></html></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/firewall" target="_blank">&lt;finix/modules/providers/firewall&gt;</a></code></div>
+</div>
+<div class="option" id="option-providers.firewall.allowedTCPPorts">
+  <h3 class="option-name">
+    <a href="#option-providers.firewall.allowedTCPPorts" class="option-anchor">providers.firewall.allowedTCPPorts</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of 16 bit unsigned integer; between 0 and 65535 (both inclusive)</code></div>
+  <div class="option-description"><html><head></head><body><p>List of TCP ports on which incoming connections are accepted.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-example">Example: <pre><code>[
+  22
+  80
+  443
+]</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/firewall" target="_blank">&lt;finix/modules/providers/firewall&gt;</a></code></div>
+</div>
+<div class="option" id="option-providers.firewall.allowedUDPPortRanges">
+  <h3 class="option-name">
+    <a href="#option-providers.firewall.allowedUDPPortRanges" class="option-anchor">providers.firewall.allowedUDPPortRanges</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of (submodule)</code></div>
+  <div class="option-description"><html><head></head><body><p>Range of open UDP ports.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-example">Example: <pre><code>[
+  {
+    from = 60000;
+    to = 61000;
+  }
+]</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/firewall" target="_blank">&lt;finix/modules/providers/firewall&gt;</a></code></div>
+</div>
+<div class="option" id="option-providers.firewall.allowedUDPPortRanges._.from">
+  <h3 class="option-name">
+    <a href="#option-providers.firewall.allowedUDPPortRanges._.from" class="option-anchor">providers.firewall.allowedUDPPortRanges.*.from</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>16 bit unsigned integer; between 0 and 65535 (both inclusive)</code></div>
+  <div class="option-description"><html><head></head><body><p>The first port of the range, inclusive.</p>
+</body></html></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/firewall" target="_blank">&lt;finix/modules/providers/firewall&gt;</a></code></div>
+</div>
+<div class="option" id="option-providers.firewall.allowedUDPPortRanges._.to">
+  <h3 class="option-name">
+    <a href="#option-providers.firewall.allowedUDPPortRanges._.to" class="option-anchor">providers.firewall.allowedUDPPortRanges.*.to</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>16 bit unsigned integer; between 0 and 65535 (both inclusive)</code></div>
+  <div class="option-description"><html><head></head><body><p>The last port of the range, inclusive.</p>
+</body></html></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/firewall" target="_blank">&lt;finix/modules/providers/firewall&gt;</a></code></div>
+</div>
+<div class="option" id="option-providers.firewall.allowedUDPPorts">
+  <h3 class="option-name">
+    <a href="#option-providers.firewall.allowedUDPPorts" class="option-anchor">providers.firewall.allowedUDPPorts</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of 16 bit unsigned integer; between 0 and 65535 (both inclusive)</code></div>
+  <div class="option-description"><html><head></head><body><p>List of open UDP ports.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-example">Example: <pre><code>[
+  53
+]</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/firewall" target="_blank">&lt;finix/modules/providers/firewall&gt;</a></code></div>
+</div>
+<div class="option" id="option-providers.firewall.backend">
+  <h3 class="option-name">
+    <a href="#option-providers.firewall.backend" class="option-anchor">providers.firewall.backend</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>one of "nftables", "none"</code></div>
+  <div class="option-description"><html><head></head><body><p>The selected module which should implement functionality for the <code class="nixos-option">providers.firewall</code> contract.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>"none"</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nftables/providers.firewall.nix" target="_blank">&lt;finix/modules/services/nftables/providers.firewall.nix&gt;</a></code></div>
+</div>
 <div class="option" id="option-providers.privileges.backend">
   <h3 class="option-name">
     <a href="#option-providers.privileges.backend" class="option-anchor">providers.privileges.backend</a>
@@ -22174,18 +22432,6 @@ for additional details.</p>
   <div class="option-default">Default: <code>"symlink"</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/networkmanager" target="_blank">&lt;finix/modules/services/networkmanager&gt;</a></code></div>
 </div>
-<div class="option" id="option-services.nftables.configFile">
-  <h3 class="option-name">
-    <a href="#option-services.nftables.configFile" class="option-anchor">services.nftables.configFile</a>
-    <span class="copy-link" title="Copy link to this option"></span>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-type">Type: <code>absolute path</code></div>
-  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
-</body></html></div>
-  <div class="option-default">Default: <code>&lt;derivation nftables.conf&gt;</code></div>
-  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nftables" target="_blank">&lt;finix/modules/services/nftables&gt;</a></code></div>
-</div>
 <div class="option" id="option-services.nftables.enable">
   <h3 class="option-name">
     <a href="#option-services.nftables.enable" class="option-anchor">services.nftables.enable</a>
@@ -22208,6 +22454,111 @@ for additional details.</p>
   <div class="option-description"><html><head></head><body><p>The package to use for <code>nftables</code>.</p>
 </body></html></div>
   <div class="option-default">Default: <code>pkgs.nftables</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nftables" target="_blank">&lt;finix/modules/services/nftables&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.nftables.rejectPackets">
+  <h3 class="option-name">
+    <a href="#option-services.nftables.rejectPackets" class="option-anchor">services.nftables.rejectPackets</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether refused packets are rejected rather than dropped. When enabled an
+ICMP "port unreachable" error is sent back to the client, or a TCP reset in
+case of TCP, instead of the packet being silently ignored.</p>
+<p>Rejecting makes connections to closed ports fail immediately rather than
+time out, at the cost of making the host trivial to port scan.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nftables" target="_blank">&lt;finix/modules/services/nftables&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.nftables.tables">
+  <h3 class="option-name">
+    <a href="#option-services.nftables.tables" class="option-anchor">services.nftables.tables</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>attribute set of (submodule)</code></div>
+  <div class="option-description"><html><head></head><body><p>Tables to be added to the ruleset.
+Tables will be added together with delete statements to clean up the
+table before every update.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-example">Example: <pre><code>{
+  filter = {
+    family = "inet";
+    content = ''
+      chain input {
+        type filter hook input priority filter; policy drop;
+        tcp dport 22 accept
+      }
+    '';
+  };
+}
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nftables" target="_blank">&lt;finix/modules/services/nftables&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.nftables.tables._name_.content">
+  <h3 class="option-name">
+    <a href="#option-services.nftables.tables._name_.content" class="option-anchor">services.nftables.tables.&lt;name&gt;.content</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>strings concatenated with "\n"</code></div>
+  <div class="option-description"><html><head></head><body><p>The table content.</p>
+</body></html></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nftables" target="_blank">&lt;finix/modules/services/nftables&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.nftables.tables._name_.enable">
+  <h3 class="option-name">
+    <a href="#option-services.nftables.tables._name_.enable" class="option-anchor">services.nftables.tables.&lt;name&gt;.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Enable this table.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>true</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nftables" target="_blank">&lt;finix/modules/services/nftables&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.nftables.tables._name_.family">
+  <h3 class="option-name">
+    <a href="#option-services.nftables.tables._name_.family" class="option-anchor">services.nftables.tables.&lt;name&gt;.family</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>one of "ip", "ip6", "inet", "arp", "bridge", "netdev"</code></div>
+  <div class="option-description"><html><head></head><body><p>Table family.</p>
+</body></html></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nftables" target="_blank">&lt;finix/modules/services/nftables&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.nftables.tables._name_.name">
+  <h3 class="option-name">
+    <a href="#option-services.nftables.tables._name_.name" class="option-anchor">services.nftables.tables.&lt;name&gt;.name</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>string</code></div>
+  <div class="option-description"><html><head></head><body><p>Table name.</p>
+</body></html></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nftables" target="_blank">&lt;finix/modules/services/nftables&gt;</a></code></div>
+</div>
+<div class="option" id="option-services.nftables.trustedInterfaces">
+  <h3 class="option-name">
+    <a href="#option-services.nftables.trustedInterfaces" class="option-anchor">services.nftables.trustedInterfaces</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>Traffic arriving on these interfaces is accepted unconditionally,
+without regard for the ports opened through <code class="nixos-option">providers.firewall</code>.</p>
+<p>The loopback interface is always trusted and cannot be removed from
+this list.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-example">Example: <pre><code>[
+  "enp0s2"
+]</code></pre></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nftables" target="_blank">&lt;finix/modules/services/nftables&gt;</a></code></div>
 </div>
 <div class="option" id="option-services.nix-daemon.enable">
