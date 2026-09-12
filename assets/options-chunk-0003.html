@@ -1,0 +1,1915 @@
+<div class="option" id="option-finit.tasks._name_.extraConfig">
+  <h3 class="option-name">
+    <a href="#option-finit.tasks._name_.extraConfig" class="option-anchor">finit.tasks.&lt;name&gt;.extraConfig</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A place for <code>finit</code> configuration options which have not been added to the <code>nix</code> module yet.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>strings concatenated with " "</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.tasks._name_.group">
+  <h3 class="option-name">
+    <a href="#option-finit.tasks._name_.group" class="option-anchor">finit.tasks.&lt;name&gt;.group</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The group this service should be executed as.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.tasks._name_.id">
+  <h3 class="option-name">
+    <a href="#option-finit.tasks._name_.id" class="option-anchor">finit.tasks.&lt;name&gt;.id</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-metadata"><span class="option-badge">read-only</span></div>
+  <div class="option-description"><html><head></head><body><p>The instance identifier, derived from the attribute name if it contains an <code>@</code> character.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.tasks._name_.log">
+  <h3 class="option-name">
+    <a href="#option-finit.tasks._name_.log" class="option-anchor">finit.tasks.&lt;name&gt;.log</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Redirect <code>stderr</code> and <code>stdout</code> of the application to a file or <code>syslog</code> using the native <code>logit</code>
+tool. This is useful for programs that do not support <code>syslog</code> on their own, which is sometimes
+the case when running in the foreground.</p>
+<p>See <a href="https://finit-project.github.io/config/logging/">upstream documentation</a> for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean or non-empty string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.tasks._name_.manual">
+  <h3 class="option-name">
+    <a href="#option-finit.tasks._name_.manual" class="option-anchor">finit.tasks.&lt;name&gt;.manual</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>If a service should not be automatically started, it can be configured as
+manual. The service can then be started at any time by running <code>initctl start &lt;service&gt;</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.tasks._name_.name">
+  <h3 class="option-name">
+    <a href="#option-finit.tasks._name_.name" class="option-anchor">finit.tasks.&lt;name&gt;.name</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-metadata"><span class="option-badge">read-only</span></div>
+  <div class="option-description"><html><head></head><body><p>The name of this stanza, derived from the attribute name.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.tasks._name_.path">
+  <h3 class="option-name">
+    <a href="#option-finit.tasks._name_.path" class="option-anchor">finit.tasks.&lt;name&gt;.path</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Packages added to the <code>PATH</code> environment variable of this service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of (package or string)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.tasks._name_.post">
+  <h3 class="option-name">
+    <a href="#option-finit.tasks._name_.post" class="option-anchor">finit.tasks.&lt;name&gt;.post</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A script which will be called after the service has stopped.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or main program, path or command</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.tasks._name_.pre">
+  <h3 class="option-name">
+    <a href="#option-finit.tasks._name_.pre" class="option-anchor">finit.tasks.&lt;name&gt;.pre</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A script which will be called before the service is started.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or main program, path or command</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.tasks._name_.remain">
+  <h3 class="option-name">
+    <a href="#option-finit.tasks._name_.remain" class="option-anchor">finit.tasks.&lt;name&gt;.remain</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>By default, a <code>run</code> or <code>task</code> will re-run each time its runlevel is
+entered, and its <code>post:</code> script does not run on completion.</p>
+<p>With <code>remain:yes</code>, the task runs once and does not re-run on runlevel. The
+<code>post:</code> script will run if the task is explicitly stopped or when the task
+leaves its valid runlevels.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.tasks._name_.respawn">
+  <h3 class="option-name">
+    <a href="#option-finit.tasks._name_.respawn" class="option-anchor">finit.tasks.&lt;name&gt;.respawn</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Enable endless restarts without counting toward the retry limit. When set, the service
+will be restarted indefinitely regardless of the <code>restart</code> limit.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.tasks._name_.restart">
+  <h3 class="option-name">
+    <a href="#option-finit.tasks._name_.restart" class="option-anchor">finit.tasks.&lt;name&gt;.restart</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The number of times <code>finit</code> tries to restart a crashing service. When
+this limit is reached the service is marked crashed and must be restarted
+manually with <code>initctl restart NAME</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>integer between -1 and 255 (both inclusive)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">10</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.tasks._name_.restart_sec">
+  <h3 class="option-name">
+    <a href="#option-finit.tasks._name_.restart_sec" class="option-anchor">finit.tasks.&lt;name&gt;.restart_sec</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The number of seconds before Finit tries to restart a crashing service, default: <code>2</code>
+seconds for the first five retries, then back-off to <code>5</code> seconds. The maximum of this
+configured value and the above (<code>2</code> and <code>5</code>) will be used.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or (unsigned integer, meaning &gt;=0)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.tasks._name_.rlimits">
+  <h3 class="option-name">
+    <a href="#option-finit.tasks._name_.rlimits" class="option-anchor">finit.tasks.&lt;name&gt;.rlimits</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>An attribute set of resource limits that will be apply by <code>finit</code>.</p>
+<p>See <a href="https://finit-project.github.io/config/runlevels/#resource-limits">upstream documentation</a> for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of (value "unlimited" (singular enum) or signed integer or (submodule))</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.tasks._name_.runlevels">
+  <h3 class="option-name">
+    <a href="#option-finit.tasks._name_.runlevels" class="option-anchor">finit.tasks.&lt;name&gt;.runlevels</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>See <a href="https://finit-project.github.io/runlevels/">upstream documentation</a> for details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">234</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.tasks._name_.supplementary_groups">
+  <h3 class="option-name">
+    <a href="#option-finit.tasks._name_.supplementary_groups" class="option-anchor">finit.tasks.&lt;name&gt;.supplementary_groups</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Explicitly specify supplementary groups, in addition to reading group membership from <code class="file-path">/etc/group</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.tasks._name_.tty">
+  <h3 class="option-name">
+    <a href="#option-finit.tasks._name_.tty" class="option-anchor">finit.tasks.&lt;name&gt;.tty</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Give this stanza a controlling terminal on the given device, connecting its <code>stdin</code>, <code>stdout</code>, and
+<code>stderr</code> to the TTY. May be a device node like <code>/dev/ttyS0</code> or the special keyword <code>@console</code>.</p>
+<p>See <a href="https://finit-project.github.io/config/tty/">upstream documentation</a> for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or non-empty string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/dev/tty1</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.tasks._name_.user">
+  <h3 class="option-name">
+    <a href="#option-finit.tasks._name_.user" class="option-anchor">finit.tasks.&lt;name&gt;.user</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The user this service should be executed as.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.tmpfiles.clean.enable">
+  <h3 class="option-name">
+    <a href="#option-finit.tmpfiles.clean.enable" class="option-anchor">finit.tmpfiles.clean.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable automatic cleaning of temporary files.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You must have a scheduler backend configured with
+<code>providers.scheduler.backend</code> to utilize this option.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/tmpfiles.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/tmpfiles.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.tmpfiles.clean.interval">
+  <h3 class="option-name">
+    <a href="#option-finit.tmpfiles.clean.interval" class="option-anchor">finit.tmpfiles.clean.interval</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The interval at which this task should run its specified <code class="nixos-option">command</code>. Accepts either a
+standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression or one of: <code>hourly</code>, <code>daily</code>, <code>weekly</code>, <code>monthly</code>, or <code>yearly</code>.</p>
+<p>If a standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression is provided this value will be passed directly
+to the <code>scheduler</code> implementation and execute exactly as specified.</p>
+<p>If one of the special values, <code>hourly</code>, <code>daily</code>, <code>monthly</code>, <code>weekly</code>, or <code>yearly</code>, is provided then the
+underlying <code>scheduler</code> implementation will use its features to decide when best to run.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">daily</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/tmpfiles.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/tmpfiles.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.tmpfiles.rules">
+  <h3 class="option-name">
+    <a href="#option-finit.tmpfiles.rules" class="option-anchor">finit.tmpfiles.rules</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Rules for creation, deletion and cleaning of volatile and temporary files
+automatically. See <a href="https://man.archlinux.org/man/tmpfiles.d.5" class="manpage-reference">tmpfiles.d(5)</a> for the exact format.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">d&nbsp;/tmp&nbsp;1777&nbsp;root&nbsp;root&nbsp;10d</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/tmpfiles.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/tmpfiles.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.ttys">
+  <h3 class="option-name">
+    <a href="#option-finit.ttys" class="option-anchor">finit.ttys</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>An attribute set of TTYs that <code>finit</code> should manage.</p>
+<p>See <a href="https://finit-project.github.io/config/tty/">upstream documentation</a> for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of (submodule)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.ttys._name_.enable">
+  <h3 class="option-name">
+    <a href="#option-finit.ttys._name_.enable" class="option-anchor">finit.ttys.&lt;name&gt;.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable this stanza.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.ttys._name_.baud">
+  <h3 class="option-name">
+    <a href="#option-finit.ttys._name_.baud" class="option-anchor">finit.ttys.&lt;name&gt;.baud</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Baud rate for serial TTYs.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or non-empty string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.ttys._name_.cgroup.delegate">
+  <h3 class="option-name">
+    <a href="#option-finit.ttys._name_.cgroup.delegate" class="option-anchor">finit.ttys.&lt;name&gt;.cgroup.delegate</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>For services that need to create their own child <code>cgroups</code> (container runtimes like <code>docker</code>, <code>podman</code>, <code>systemd-nspawn</code>, <code>lxc</code>, etc...).</p>
+<p>See <a href="https://finit-project.github.io/config/cgroups/#cgroup-delegation">upstream documentation</a> for details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.ttys._name_.cgroup.name">
+  <h3 class="option-name">
+    <a href="#option-finit.ttys._name_.cgroup.name" class="option-anchor">finit.ttys.&lt;name&gt;.cgroup.name</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The name of the cgroup to place this process under.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">system</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.ttys._name_.cgroup.settings">
+  <h3 class="option-name">
+    <a href="#option-finit.ttys._name_.cgroup.settings" class="option-anchor">finit.ttys.&lt;name&gt;.cgroup.settings</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The cgroup settings to apply to this process.</p>
+<p>See <a href="https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html">kernel documentation</a> for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of (atom (null, bool, int, float or string))</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.ttys._name_.command">
+  <h3 class="option-name">
+    <a href="#option-finit.ttys._name_.command" class="option-anchor">finit.ttys.&lt;name&gt;.command</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Specify an external <code>getty</code>, like <code>agetty</code> or the BusyBox <code>getty</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or main program, path or command</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.ttys._name_.conditions">
+  <h3 class="option-name">
+    <a href="#option-finit.ttys._name_.conditions" class="option-anchor">finit.ttys.&lt;name&gt;.conditions</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>See <a href="https://finit-project.github.io/conditions/">upstream documentation</a> for details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>(list of non-empty string) or non-empty string convertible to it</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">pid/syslog</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.ttys._name_.description">
+  <h3 class="option-name">
+    <a href="#option-finit.ttys._name_.description" class="option-anchor">finit.ttys.&lt;name&gt;.description</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A human-readable description of this service, displayed by <code>initctl</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.ttys._name_.device">
+  <h3 class="option-name">
+    <a href="#option-finit.ttys._name_.device" class="option-anchor">finit.ttys.&lt;name&gt;.device</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Embedded systems may want to enable automatic <code>device</code> by supplying the special <code>@console</code> device. This
+works regardless weather the system uses <code>ttyS0</code>, <code>ttyAMA0</code>, <code>ttyMXC0</code>, or anything else. <code>finit</code> figures
+it out by querying sysfs: <code>/sys/class/tty/console/active</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or non-empty string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.ttys._name_.extraConfig">
+  <h3 class="option-name">
+    <a href="#option-finit.ttys._name_.extraConfig" class="option-anchor">finit.ttys.&lt;name&gt;.extraConfig</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A place for <code>finit</code> configuration options which have not been added to the <code>nix</code> module yet.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>strings concatenated with " "</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.ttys._name_.id">
+  <h3 class="option-name">
+    <a href="#option-finit.ttys._name_.id" class="option-anchor">finit.ttys.&lt;name&gt;.id</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Explicit instance ID for the TTY. If not set, finit auto-derives it from the device name
+(e.g., <code>tty1</code> becomes <code>:1</code>, <code>ttyS0</code> becomes <code>:S0</code>).</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or non-empty string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.ttys._name_.noclear">
+  <h3 class="option-name">
+    <a href="#option-finit.ttys._name_.noclear" class="option-anchor">finit.ttys.&lt;name&gt;.noclear</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Disables clearing the TTY after each session. Clearing the TTY when a user logs out is usually preferable.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.ttys._name_.nologin">
+  <h3 class="option-name">
+    <a href="#option-finit.ttys._name_.nologin" class="option-anchor">finit.ttys.&lt;name&gt;.nologin</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Disables <code>getty</code> and <code>/bin/login</code>, and gives the user a <code>root</code> (login) shell on the given TTY <code>device</code>
+immediately. Needless to say, this is a rather insecure option, but can be very useful for developer
+builds, during board bringup, or similar.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.ttys._name_.notty">
+  <h3 class="option-name">
+    <a href="#option-finit.ttys._name_.notty" class="option-anchor">finit.ttys.&lt;name&gt;.notty</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>No device node mode. This is insecure and intended only for board bringup or testing scenarios.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.ttys._name_.nowait">
+  <h3 class="option-name">
+    <a href="#option-finit.ttys._name_.nowait" class="option-anchor">finit.ttys.&lt;name&gt;.nowait</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Disables the press <code>Enter to activate console</code> message before actually starting the <code>getty</code> program.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.ttys._name_.rescue">
+  <h3 class="option-name">
+    <a href="#option-finit.ttys._name_.rescue" class="option-anchor">finit.ttys.&lt;name&gt;.rescue</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Start <code>sulogin</code> instead of a regular shell, requiring the root password. Useful for rescue/single-user mode.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.ttys._name_.runlevels">
+  <h3 class="option-name">
+    <a href="#option-finit.ttys._name_.runlevels" class="option-anchor">finit.ttys.&lt;name&gt;.runlevels</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>See <a href="https://finit-project.github.io/runlevels/">upstream documentation</a> for details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">234</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.ttys._name_.term">
+  <h3 class="option-name">
+    <a href="#option-finit.ttys._name_.term" class="option-anchor">finit.ttys.&lt;name&gt;.term</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The <code>TERM</code> environment variable value for the TTY.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or non-empty string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fonts.enableDefaultPackages">
+  <h3 class="option-name">
+    <a href="#option-fonts.enableDefaultPackages" class="option-anchor">fonts.enableDefaultPackages</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Enable a basic set of fonts providing several styles
+and families and reasonable coverage of Unicode.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/nixos/packages.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/nixos/packages.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fonts.packages">
+  <h3 class="option-name">
+    <a href="#option-fonts.packages" class="option-anchor">fonts.packages</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>List of primary font packages.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of absolute path</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">dejavu_fonts</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/nixos/packages.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/nixos/packages.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fonts.fontconfig.enable">
+  <h3 class="option-name">
+    <a href="#option-fonts.fontconfig.enable" class="option-anchor">fonts.fontconfig.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>If enabled, a Fontconfig configuration file will be built
+pointing to a set of default fonts.  If you don't care about
+running X11 applications or any other program that uses
+Fontconfig, you can leave this option off and prevent a
+dependency on all those fonts.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/fonts/fontconfig.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/fonts/fontconfig.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fonts.fontconfig.allowBitmaps">
+  <h3 class="option-name">
+    <a href="#option-fonts.fontconfig.allowBitmaps" class="option-anchor">fonts.fontconfig.allowBitmaps</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Allow bitmap fonts. Set to <code>false</code> to ban all
+bitmap fonts.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/fonts/fontconfig.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/fonts/fontconfig.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fonts.fontconfig.allowType1">
+  <h3 class="option-name">
+    <a href="#option-fonts.fontconfig.allowType1" class="option-anchor">fonts.fontconfig.allowType1</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Allow Type-1 fonts. Default is <code>false</code> because of
+poor rendering.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/fonts/fontconfig.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/fonts/fontconfig.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fonts.fontconfig.antialias">
+  <h3 class="option-name">
+    <a href="#option-fonts.fontconfig.antialias" class="option-anchor">fonts.fontconfig.antialias</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Enable font antialiasing. At high resolution (&gt; 200 DPI),
+antialiasing has no visible effect; users of such displays may want
+to disable this option.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/fonts/fontconfig.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/fonts/fontconfig.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fonts.fontconfig.cache32Bit">
+  <h3 class="option-name">
+    <a href="#option-fonts.fontconfig.cache32Bit" class="option-anchor">fonts.fontconfig.cache32Bit</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Generate system fonts cache for 32-bit applications.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/fonts/fontconfig.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/fonts/fontconfig.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fonts.fontconfig.defaultFonts.emoji">
+  <h3 class="option-name">
+    <a href="#option-fonts.fontconfig.defaultFonts.emoji" class="option-anchor">fonts.fontconfig.defaultFonts.emoji</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>System-wide default emoji font(s). Multiple fonts may be listed
+in case a font does not support all emoji.</p>
+<p>Note that fontconfig matches color emoji fonts preferentially,
+so if you want to use a black and white font while having
+a color font installed (eg. Noto Color Emoji installed alongside
+Noto Emoji), fontconfig will still choose the color font even
+when it is later in the list.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">Noto&nbsp;Color&nbsp;Emoji</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/fonts/fontconfig.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/fonts/fontconfig.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fonts.fontconfig.defaultFonts.monospace">
+  <h3 class="option-name">
+    <a href="#option-fonts.fontconfig.defaultFonts.monospace" class="option-anchor">fonts.fontconfig.defaultFonts.monospace</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>System-wide default monospace font(s). Multiple fonts may be
+listed in case multiple languages must be supported.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">DejaVu&nbsp;Sans&nbsp;Mono</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/fonts/fontconfig.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/fonts/fontconfig.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fonts.fontconfig.defaultFonts.sansSerif">
+  <h3 class="option-name">
+    <a href="#option-fonts.fontconfig.defaultFonts.sansSerif" class="option-anchor">fonts.fontconfig.defaultFonts.sansSerif</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>System-wide default sans serif font(s). Multiple fonts may be
+listed in case multiple languages must be supported.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">DejaVu&nbsp;Sans</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/fonts/fontconfig.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/fonts/fontconfig.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fonts.fontconfig.defaultFonts.serif">
+  <h3 class="option-name">
+    <a href="#option-fonts.fontconfig.defaultFonts.serif" class="option-anchor">fonts.fontconfig.defaultFonts.serif</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>System-wide default serif font(s). Multiple fonts may be listed
+in case multiple languages must be supported.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">DejaVu&nbsp;Serif</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/fonts/fontconfig.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/fonts/fontconfig.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fonts.fontconfig.hinting.enable">
+  <h3 class="option-name">
+    <a href="#option-fonts.fontconfig.hinting.enable" class="option-anchor">fonts.fontconfig.hinting.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Enable font hinting. Hinting aligns glyphs to pixel boundaries to
+improve rendering sharpness at low resolution. At high resolution
+(&gt; 200 dpi) hinting will do nothing (at best); users of such
+displays may want to disable this option.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/fonts/fontconfig.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/fonts/fontconfig.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fonts.fontconfig.hinting.autohint">
+  <h3 class="option-name">
+    <a href="#option-fonts.fontconfig.hinting.autohint" class="option-anchor">fonts.fontconfig.hinting.autohint</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Enable the autohinter in place of the default interpreter.
+The results are usually lower quality than correctly-hinted
+fonts, but better than unhinted fonts.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/fonts/fontconfig.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/fonts/fontconfig.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fonts.fontconfig.hinting.style">
+  <h3 class="option-name">
+    <a href="#option-fonts.fontconfig.hinting.style" class="option-anchor">fonts.fontconfig.hinting.style</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Hintstyle is the amount of font reshaping done to line up
+to the grid.</p>
+<p>slight will make the font more fuzzy to line up to the grid but
+will be better in retaining font shape, while full will be a
+crisp font that aligns well to the pixel grid but will lose a
+greater amount of font shape.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>one of "none", "slight", "medium", "full"</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">slight</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/fonts/fontconfig.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/fonts/fontconfig.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fonts.fontconfig.includeUserConf">
+  <h3 class="option-name">
+    <a href="#option-fonts.fontconfig.includeUserConf" class="option-anchor">fonts.fontconfig.includeUserConf</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Include the user configuration from
+<code class="file-path"><del>/.config/fontconfig/fonts.conf</del></code> or
+<code class="file-path">/.config/fontconfig/conf.d</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/fonts/fontconfig.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/fonts/fontconfig.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fonts.fontconfig.localConf">
+  <h3 class="option-name">
+    <a href="#option-fonts.fontconfig.localConf" class="option-anchor">fonts.fontconfig.localConf</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>System-wide customization file contents, has higher priority than
+<code>defaultFonts</code> settings.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>strings concatenated with "\n"</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/fonts/fontconfig.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/fonts/fontconfig.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fonts.fontconfig.subpixel.lcdfilter">
+  <h3 class="option-name">
+    <a href="#option-fonts.fontconfig.subpixel.lcdfilter" class="option-anchor">fonts.fontconfig.subpixel.lcdfilter</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>FreeType LCD filter. At high resolution (&gt; 200 DPI), LCD filtering
+has no visible effect; users of such displays may want to select
+<code>none</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>one of "none", "default", "light", "legacy"</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">default</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/fonts/fontconfig.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/fonts/fontconfig.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fonts.fontconfig.subpixel.rgba">
+  <h3 class="option-name">
+    <a href="#option-fonts.fontconfig.subpixel.rgba" class="option-anchor">fonts.fontconfig.subpixel.rgba</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Subpixel order. The overwhelming majority of displays are
+<code>rgb</code> in their normal orientation. Select
+<code>vrgb</code> for mounting such a display 90 degrees
+clockwise from its normal orientation or <code>vbgr</code>
+for mounting 90 degrees counter-clockwise. Select
+<code>bgr</code> in the unlikely event of mounting 180
+degrees from the normal orientation. Reverse these directions in
+the improbable event that the display's native subpixel order is
+<code>bgr</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>one of "rgb", "bgr", "vrgb", "vbgr", "none"</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">none</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/fonts/fontconfig.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/fonts/fontconfig.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fonts.fontconfig.useEmbeddedBitmaps">
+  <h3 class="option-name">
+    <a href="#option-fonts.fontconfig.useEmbeddedBitmaps" class="option-anchor">fonts.fontconfig.useEmbeddedBitmaps</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Use embedded bitmaps in fonts like Calibri.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/fonts/fontconfig.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/fonts/fontconfig.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.console.enable">
+  <h3 class="option-name">
+    <a href="#option-hardware.console.enable" class="option-anchor">hardware.console.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to configure the console at boot.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/console.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/console.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.console.packages">
+  <h3 class="option-name">
+    <a href="#option-hardware.console.packages" class="option-anchor">hardware.console.packages</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Extra packages providing console fonts and keymaps
+(beyond the default kbd package).</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/console.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/console.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.console.binaryKeyMap">
+  <h3 class="option-name">
+    <a href="#option-hardware.console.binaryKeyMap" class="option-anchor">hardware.console.binaryKeyMap</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Binary keymap file.
+If unset then this is generated from the hardware.console.keyMap option.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>absolute path</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">Binary&nbsp;form&nbsp;of&nbsp;hardware.console.keyMap.</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/console.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/console.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.console.colors">
+  <h3 class="option-name">
+    <a href="#option-hardware.console.colors" class="option-anchor">hardware.console.colors</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A list of 16 terminal color codes, in the format RRGGBB,
+to override the default terminal colors. For example,
+a Nord-like palette. Leave empty to use defaults.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">2E3440</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">BF616A</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">A3BE8C</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">EBCB8B</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">81A1C1</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">B48EAD</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">88C0D0</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">E5E9F0</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">4C566A</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">BF616A</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">A3BE8C</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">EBCB8B</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">81A1C1</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">B48EAD</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">8FBCBB</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">ECEFF4</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/console.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/console.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.console.earlySetup">
+  <h3 class="option-name">
+    <a href="#option-hardware.console.earlySetup" class="option-anchor">hardware.console.earlySetup</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to set the font in the initrd. Useful if you want the
+right font before the system fully boots.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/console.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/console.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.console.font">
+  <h3 class="option-name">
+    <a href="#option-hardware.console.font" class="option-anchor">hardware.console.font</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The font to use for the virtual consoles.
+Set to null to use the kernel default.
+Must be available in kbd or one of the packages in
+hardware.console.packages.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">Lat2-Terminus16</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/console.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/console.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.console.keyMap">
+  <h3 class="option-name">
+    <a href="#option-hardware.console.keyMap" class="option-anchor">hardware.console.keyMap</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The keyboard mapping table for the virtual consoles.
+This option may have no effect if hardware.console.binaryKeyMap is set.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string or absolute path</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">us</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/console.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/console.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.console.setvesablank">
+  <h3 class="option-name">
+    <a href="#option-hardware.console.setvesablank" class="option-anchor">hardware.console.setvesablank</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Turn VESA screen blanking on or off.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/console.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/console.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.cpu.amd.microcodePackage">
+  <h3 class="option-name">
+    <a href="#option-hardware.cpu.amd.microcodePackage" class="option-anchor">hardware.cpu.amd.microcodePackage</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix">&lt;<span style="color:rgb(86,182,194);">derivation</span>&nbsp;<span style="color:rgb(171,178,191);">amd-ucode-20260810</span>&gt;</code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/cpu/amd-ucode.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/cpu/amd-ucode.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.cpu.amd.updateMicrocode">
+  <h3 class="option-name">
+    <a href="#option-hardware.cpu.amd.updateMicrocode" class="option-anchor">hardware.cpu.amd.updateMicrocode</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Update the CPU microcode for AMD processors.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/cpu/amd-ucode.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/cpu/amd-ucode.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.cpu.intel.microcodePackage">
+  <h3 class="option-name">
+    <a href="#option-hardware.cpu.intel.microcodePackage" class="option-anchor">hardware.cpu.intel.microcodePackage</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix">&lt;<span style="color:rgb(86,182,194);">derivation</span>&nbsp;<span style="color:rgb(171,178,191);">microcode-intel-20260812</span>&gt;</code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/cpu/intel-ucode.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/cpu/intel-ucode.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.cpu.intel.updateMicrocode">
+  <h3 class="option-name">
+    <a href="#option-hardware.cpu.intel.updateMicrocode" class="option-anchor">hardware.cpu.intel.updateMicrocode</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Update the CPU microcode for Intel processors.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/cpu/intel-ucode.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/cpu/intel-ucode.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.firmware">
+  <h3 class="option-name">
+    <a href="#option-hardware.firmware" class="option-anchor">hardware.firmware</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>List of packages containing firmware files.  Such files
+will be loaded automatically if the kernel asks for them
+(i.e., when it has detected specific hardware that requires
+firmware to function).  If multiple packages contain firmware
+files with the same name, the first package in the list takes
+precedence.  Note that you must rebuild your system if you add
+files to any of these directories.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.graphics.enable">
+  <h3 class="option-name">
+    <a href="#option-hardware.graphics.enable" class="option-anchor">hardware.graphics.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable hardware accelerated graphics drivers.</p>
+<p>This is required to allow most graphical applications and
+environments to use hardware rendering, video encode/decode
+acceleration, etc.</p>
+<p>This option should be enabled by default by the corresponding modules,
+so you do not usually have to set it yourself.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/graphics.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/graphics.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.graphics.enable32Bit">
+  <h3 class="option-name">
+    <a href="#option-hardware.graphics.enable32Bit" class="option-anchor">hardware.graphics.enable32Bit</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>On 64-bit systems, whether to also install 32-bit drivers for
+32-bit applications (such as Wine).</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/graphics.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/graphics.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.graphics.extraPackages">
+  <h3 class="option-name">
+    <a href="#option-hardware.graphics.extraPackages" class="option-anchor">hardware.graphics.extraPackages</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Additional packages to add to the default graphics driver lookup path.
+This can be used to add OpenCL drivers, VA-API/VDPAU drivers, etc.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>intel-media-driver supports hardware Broadwell (2014) or newer. Older hardware should use the mostly unmaintained intel-vaapi-driver driver.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(198,120,221);">with</span>&nbsp;<span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">;</span>&nbsp;<span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(171,178,191);">intel-media-driver</span>&nbsp;<span style="color:rgb(171,178,191);">intel-ocl</span>&nbsp;<span style="color:rgb(171,178,191);">intel-vaapi-driver</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/graphics.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/graphics.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.graphics.extraPackages32">
+  <h3 class="option-name">
+    <a href="#option-hardware.graphics.extraPackages32" class="option-anchor">hardware.graphics.extraPackages32</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Additional packages to add to 32-bit graphics driver lookup path on 64-bit systems.
+Used when <code class="nixos-option">enable32Bit</code> is set. This can be used to add OpenCL drivers, VA-API/VDPAU drivers, etc.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>intel-media-driver supports hardware Broadwell (2014) or newer. Older hardware should use the mostly unmaintained intel-vaapi-driver driver.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(198,120,221);">with</span>&nbsp;<span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">pkgsi686Linux</span><span style="color:rgb(132,139,152);">;</span>&nbsp;<span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(171,178,191);">intel-media-driver</span>&nbsp;<span style="color:rgb(171,178,191);">intel-vaapi-driver</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/graphics.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/graphics.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.i2c.enable">
+  <h3 class="option-name">
+    <a href="#option-hardware.i2c.enable" class="option-anchor">hardware.i2c.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable support for <code>i2c</code> devices. Access to these devices is granted
+to users in the <a class="option-reference" href="options.html#option-hardware.i2c.group"><code class="nixos-option">hardware.i2c.group</code></a> group.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/i2c.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/i2c.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.i2c.group">
+  <h3 class="option-name">
+    <a href="#option-hardware.i2c.group" class="option-anchor">hardware.i2c.group</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Group to own the <code>/dev/i2c-*</code> devices.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you want non-<code>root</code> users to be able to access these <code>i2c</code> devices, add
+them to this group.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this group will automatically be created
+on system activation, otherwise you are responsible for
+ensuring the group exists before system activation has completed.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">i2c</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/i2c.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/i2c.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.nvidia.enable">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.enable" class="option-anchor">hardware.nvidia.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable NVIDIA driver support.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/video/nvidia.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.nvidia.package">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.package" class="option-anchor">hardware.nvidia.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The NVIDIA driver package to use.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>unspecified value</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">config</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">boot</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">kernelPackages</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">nvidiaPackages</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">stable</span><br></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">config.boot.kernelPackages.nvidiaPackages.legacy_470</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/video/nvidia.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.nvidia.gsp.enable">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.gsp.enable" class="option-anchor">hardware.nvidia.gsp.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable the GPU System Processor (GSP) on the video card.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">config</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">hardware</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">nvidia</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">kernelModule</span>&nbsp;<span style="color:rgb(171,178,191);">==</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">open</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(171,178,191);">||</span>&nbsp;<span style="color:rgb(171,178,191);">lib</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">versionAtLeast</span>&nbsp;<span style="color:rgb(171,178,191);">config</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">hardware</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">nvidia</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">package</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">version</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">555</span><span style="color:rgb(152,195,121);">"</span><br></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/video/nvidia.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.nvidia.kernelModule">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.kernelModule" class="option-anchor">hardware.nvidia.kernelModule</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Which NVIDIA kernel module to use: the "open" source GPU kernel
+modules (recommended on Turing and later GPUs, required on the newest
+GPUs) or the "closed" proprietary ones.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>one of "open", "closed"</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">closed</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">open</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/video/nvidia.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.nvidia.modesetting.enable">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.modesetting.enable" class="option-anchor">hardware.nvidia.modesetting.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable kernel modesetting when using the NVIDIA proprietary
+driver.</p>
+<p>Enabling this can fix screen tearing. This is not enabled by default
+because it is not officially supported by NVIDIA and would not work
+with SLI.</p>
+<p>Enabling this and using version 545 or newer of the proprietary NVIDIA
+driver causes it to provide its own framebuffer device, which can cause
+Wayland compositors to work when they otherwise wouldn't.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">lib</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">versionAtLeast</span>&nbsp;<span style="color:rgb(171,178,191);">cfg</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">package</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">version</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">535</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/video/nvidia.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.nvidia.power.runtime.enable">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.power.runtime.enable" class="option-anchor">hardware.nvidia.power.runtime.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable fine-grained dynamic power management. When enabled,
+the NVIDIA GPU is powered down when not in use. Only works in PRIME
+offload mode (prime.offload.enable = true). Requires kernel &gt;= 5.5 and
+a Turing or newer GPU. Sets NVreg_DynamicPowerManagement=0x02.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/video/nvidia.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.nvidia.power.suspend.enable">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.power.suspend.enable" class="option-anchor">hardware.nvidia.power.suspend.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to preserve video memory allocations across system suspend and
+hibernate. For more information, see the NVIDIA docs, on Chapter 21.
+Configuring Power Management Support.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/video/nvidia.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.nvidia.power.suspend.notifier">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.power.suspend.notifier" class="option-anchor">hardware.nvidia.power.suspend.notifier</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>How the NVIDIA driver is notified of system suspend and resume events
+when <code>power.suspend.enable</code> is set:</p>
+<ul>
+<li><code>kernel</code>: the kernel notifies the driver directly. Requires NVIDIA
+driver version 595 or newer, and the open source kernel modules.</li>
+<li><code>userspace</code>: relies on nvidia-sleep.sh being run by the sleep backend
+(requires a sleep backend, e.g. programs.zzz).</li>
+</ul>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>one of "kernel", "userspace"</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(198,120,221);">if</span>&nbsp;<span style="color:rgb(171,178,191);">config</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">hardware</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">nvidia</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">kernelModule</span>&nbsp;<span style="color:rgb(171,178,191);">==</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">open</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(171,178,191);">&amp;&amp;</span>&nbsp;<span style="color:rgb(171,178,191);">lib</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">versionAtLeast</span>&nbsp;<span style="color:rgb(171,178,191);">config</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">hardware</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">nvidia</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">package</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">version</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">595</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(198,120,221);">then</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">kernel</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(198,120,221);">else</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">userspace</span><span style="color:rgb(152,195,121);">"</span><br></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/video/nvidia.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.nvidia.prime.enable">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.prime.enable" class="option-anchor">hardware.nvidia.prime.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-metadata"><span class="option-badge">read-only</span></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable nvidia PRIME support.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">config</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">hardware</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">nvidia</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">prime</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">offload</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">enable</span>&nbsp;<span style="color:rgb(171,178,191);">||</span>&nbsp;<span style="color:rgb(171,178,191);">config</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">hardware</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">nvidia</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">prime</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">sync</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">enable</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia-prime.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/video/nvidia-prime.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.nvidia.prime.amdgpuBusId">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.prime.amdgpuBusId" class="option-anchor">hardware.nvidia.prime.amdgpuBusId</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The PCI bus ID of the AMD iGPU (for AMD+NVIDIA Optimus laptops).
+Find it with: lspci | grep -i amd | grep -i vga</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string matching the pattern ([[:print:]]+[:@][0-9]{1,3}:[0-9]{1,2}:[0-9])?</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">PCI:4:0:0</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia-prime.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/video/nvidia-prime.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.nvidia.prime.intelBusId">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.prime.intelBusId" class="option-anchor">hardware.nvidia.prime.intelBusId</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The PCI bus ID of the Intel iGPU. Find it with:
+lspci | grep -i intel | grep -i vga
+then convert the hex address (e.g. 00:02.0) to PCI:0:2:0.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string matching the pattern ([[:print:]]+[:@][0-9]{1,3}:[0-9]{1,2}:[0-9])?</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">PCI:0:2:0</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia-prime.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/video/nvidia-prime.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.nvidia.prime.nvidiaBusId">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.prime.nvidiaBusId" class="option-anchor">hardware.nvidia.prime.nvidiaBusId</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The PCI bus ID of the NVIDIA GPU. Find it with:
+lspci | grep -i nvidia
+then convert the hex address (e.g. 01:00.0) to PCI:1:0:0.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string matching the pattern ([[:print:]]+[:@][0-9]{1,3}:[0-9]{1,2}:[0-9])?</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">PCI:1:0:0</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia-prime.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/video/nvidia-prime.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.nvidia.prime.offload.enable">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.prime.offload.enable" class="option-anchor">hardware.nvidia.prime.offload.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable PRIME offload mode. The iGPU handles display output
+and general rendering; the NVIDIA GPU is used only when explicitly
+requested (via the nvidia-offload wrapper or DRI_PRIME env var).
+Cannot be used together with prime.sync.enable.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia-prime.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/video/nvidia-prime.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.nvidia.prime.offload.enableOffloadCmd">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.prime.offload.enableOffloadCmd" class="option-anchor">hardware.nvidia.prime.offload.enableOffloadCmd</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to add an <code>nvidia-offload</code> wrapper script to systemPackages.
+Run <code>nvidia-offload &lt;program&gt;</code> to launch a program on the NVIDIA GPU.
+Requires prime.offload.enable = true.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia-prime.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/video/nvidia-prime.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.nvidia.prime.sync.enable">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.prime.sync.enable" class="option-anchor">hardware.nvidia.prime.sync.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable PRIME sync mode. Both GPUs are active simultaneously;
+the NVIDIA GPU renders and the iGPU handles display. Eliminates tearing
+but uses more power than offload mode. Cannot be used with
+prime.offload.enable.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia-prime.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/video/nvidia-prime.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.nvidia.reduceTearing">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.reduceTearing" class="option-anchor">hardware.nvidia.reduceTearing</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Reduce screen tearing on displays connected directly to the NVIDIA GPU by
+enabling its full composition pipeline. This sets the
+<code>ForceFullCompositionPipeline</code> metamode and, alongside it, disables
+indirect GLX and enables triple buffering on the X screen.</p>
+<p>Trade-offs: it forces the screen to be redrawn even when nothing changed,
+which can reduce the performance of OpenGL/fullscreen applications (and
+has been reported to cause issues with WebGL), and it increases the time
+the driver takes to clock down after load.</p>
+<p>See &lt;<a href="https://wiki.archlinux.org/title/NVIDIA/Troubleshooting#Avoid_screen_tearing_on_Xorg">https://wiki.archlinux.org/title/NVIDIA/Troubleshooting#Avoid_screen_tearing_on_Xorg</a>&gt;.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/xorg/nvidia.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/xorg/nvidia.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.nvidia.videoAcceleration">
+  <h3 class="option-name">
+    <a href="#option-hardware.nvidia.videoAcceleration" class="option-anchor">hardware.nvidia.videoAcceleration</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable video acceleration (VA-API).</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/video/nvidia.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/video/nvidia.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.uinput.enable">
+  <h3 class="option-name">
+    <a href="#option-hardware.uinput.enable" class="option-anchor">hardware.uinput.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://kernel.org/doc/html/latest/input/uinput.html">uinput</a> support.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/uinput.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/uinput.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-hardware.uinput.group">
+  <h3 class="option-name">
+    <a href="#option-hardware.uinput.group" class="option-anchor">hardware.uinput.group</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Group to own the <code>uinput</code> devices.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you want non-<code>root</code> users to be able to access these <code>uinput</code> devices, add
+them to this group.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this group will automatically be created
+on system activation, otherwise you are responsible for
+ensuring the group exists before system activation has completed.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">uinput</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/uinput.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/hardware/uinput.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-i18n.defaultLocale">
+  <h3 class="option-name">
+    <a href="#option-i18n.defaultLocale" class="option-anchor">i18n.defaultLocale</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The default locale.  It determines the language for program
+messages, the format for dates and times, sort order, and so on.
+It also determines the character set, such as UTF-8.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">en_US.UTF-8</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">nl_NL.UTF-8</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/i18n" target="_blank" rel="noopener noreferrer">&lt;finix/modules/i18n&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-i18n.extraLocaleSettings">
+  <h3 class="option-name">
+    <a href="#option-i18n.extraLocaleSettings" class="option-anchor">i18n.extraLocaleSettings</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A set of additional system-wide locale settings other than
+<code>LANG</code> which can be configured with
+<a class="option-reference" href="options.html#option-i18n.defaultLocale"><code class="nixos-option">i18n.defaultLocale</code></a>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">LC_MESSAGES</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">en_US.UTF-8</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">LC_TIME</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">de_DE.UTF-8</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/i18n" target="_blank" rel="noopener noreferrer">&lt;finix/modules/i18n&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-i18n.glibcLocales">
+  <h3 class="option-name">
+    <a href="#option-i18n.glibcLocales" class="option-anchor">i18n.glibcLocales</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Customized pkg.glibcLocales package.</p>
+<p>Changing this option can disable handling of i18n.defaultLocale
+and supportedLocale.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or absolute path</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">glibcLocales</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">override</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">allLocales</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(171,178,191);">lib</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">any</span>&nbsp;<span style="color:rgb(132,139,152);">(</span><span style="color:rgb(232,102,113);">x</span><span style="color:rgb(232,102,113);">:</span>&nbsp;<span style="color:rgb(171,178,191);">x</span>&nbsp;<span style="color:rgb(171,178,191);">==</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">all</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">)</span>&nbsp;<span style="color:rgb(171,178,191);">config</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">i18n</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">supportedLocales</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">locales</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(171,178,191);">config</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">i18n</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">supportedLocales</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><br></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">glibcLocales</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/i18n" target="_blank" rel="noopener noreferrer">&lt;finix/modules/i18n&gt;</a></code></dd>
+  </dl>
+</div>

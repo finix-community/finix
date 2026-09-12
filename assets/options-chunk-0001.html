@@ -1,0 +1,1807 @@
+<div class="option" id="option-boot.kernel.sysctl._net.core.rmem_max_">
+  <h3 class="option-name">
+    <a href="#option-boot.kernel.sysctl._net.core.rmem_max_" class="option-anchor">boot.kernel.sysctl."net.core.rmem_max"</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The maximum receive socket buffer size in bytes. In case of conflicting values, the highest will be used.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or (unsigned integer, meaning &gt;=0)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/boot/sysctl.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/boot/sysctl.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.kernel.sysctl._net.core.wmem_max_">
+  <h3 class="option-name">
+    <a href="#option-boot.kernel.sysctl._net.core.wmem_max_" class="option-anchor">boot.kernel.sysctl."net.core.wmem_max"</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The maximum send socket buffer size in bytes. In case of conflicting values, the highest will be used.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or (unsigned integer, meaning &gt;=0)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/boot/sysctl.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/boot/sysctl.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.kernel.sysctl._vm.max_map_count_">
+  <h3 class="option-name">
+    <a href="#option-boot.kernel.sysctl._vm.max_map_count_" class="option-anchor">boot.kernel.sysctl."vm.max_map_count"</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The maximum number of memory map areas a process may have. In case of conflicting values, the highest will be used.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or (unsigned integer, meaning &gt;=0)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/boot/sysctl.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/boot/sysctl.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.kernelModules">
+  <h3 class="option-name">
+    <a href="#option-boot.kernelModules" class="option-anchor">boot.kernelModules</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The set of kernel modules to be loaded in the second stage of
+the boot process.  Note that modules that are needed to
+mount the root file system should be added to
+<a class="option-reference" href="options.html#option-boot.initrd.availableKernelModules"><code class="nixos-option">boot.initrd.availableKernelModules</code></a> or
+<a class="option-reference" href="options.html#option-boot.initrd.kernelModules"><code class="nixos-option">boot.initrd.kernelModules</code></a>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/boot/kernel.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/boot/kernel.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.kernelPackages">
+  <h3 class="option-name">
+    <a href="#option-boot.kernelPackages" class="option-anchor">boot.kernelPackages</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>This option allows you to override the Linux kernel used by
+NixOS.  Since things like external kernel module packages are
+tied to the kernel you're using, it also overrides those.
+This option is a function that takes Nixpkgs as an argument
+(as a convenience), and returns an attribute set containing at
+the very least an attribute <code class="nix-var">kernel</code>.
+Additional attributes may be needed depending on your
+configuration.  For instance, if you use the NVIDIA X driver,
+then it also needs to contain an attribute
+<code class="nix-var">nvidia_x11</code>.</p>
+<p>Please note that we strictly support kernel versions that are
+maintained by the Linux developers only. More information on the
+availability of kernel versions is documented
+<a href="https://nixos.org/manual/nixos/unstable/index.html#sec-kernel-config">in the Linux section of the manual</a>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>raw value</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">linuxPackages</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">linuxKernel</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">packages</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">linux_5_10</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/boot/kernel.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/boot/kernel.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.kernelParams">
+  <h3 class="option-name">
+    <a href="#option-boot.kernelParams" class="option-anchor">boot.kernelParams</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Parameters added to the kernel command line.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string, with spaces inside double quotes</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/boot/kernel.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/boot/kernel.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.kernelPatches">
+  <h3 class="option-name">
+    <a href="#option-boot.kernelPatches" class="option-anchor">boot.kernelPatches</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A list of additional patches to apply to the kernel.</p>
+<p>Every item should be an attribute set with the following attributes:</p>
+<html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">name</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">foo</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;descriptive&nbsp;name,&nbsp;required</span><br><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">patch</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(232,102,113);">./foo.patch</span><span style="color:rgb(132,139,152);">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;path&nbsp;or&nbsp;derivation&nbsp;that&nbsp;contains&nbsp;the&nbsp;patch&nbsp;source</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;(required,&nbsp;but&nbsp;can&nbsp;be&nbsp;null&nbsp;if&nbsp;only&nbsp;config&nbsp;changes</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;are&nbsp;needed)</span><br><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">extraStructuredConfig</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;attrset&nbsp;of&nbsp;extra&nbsp;configuration&nbsp;parameters&nbsp;without&nbsp;the&nbsp;CONFIG_&nbsp;prefix</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">FOO</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(171,178,191);">lib</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">kernel</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">yes</span><span style="color:rgb(132,139,152);">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;(optional)</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;values&nbsp;should&nbsp;generally&nbsp;be&nbsp;lib.kernel.yes,</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;lib.kernel.no&nbsp;or&nbsp;lib.kernel.module</span><br><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">features</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;attrset&nbsp;of&nbsp;extra&nbsp;"features"&nbsp;the&nbsp;kernel&nbsp;is&nbsp;considered&nbsp;to&nbsp;have</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">foo</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">true</span><span style="color:rgb(132,139,152);">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;(may&nbsp;be&nbsp;checked&nbsp;by&nbsp;other&nbsp;NixOS&nbsp;modules,&nbsp;optional)</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">extraConfig</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">FOO&nbsp;y</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;extra&nbsp;configuration&nbsp;options&nbsp;in&nbsp;string&nbsp;form&nbsp;without&nbsp;the&nbsp;CONFIG_&nbsp;prefix</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;(optional,&nbsp;multiple&nbsp;lines&nbsp;allowed&nbsp;to&nbsp;specify&nbsp;multiple&nbsp;options)</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;(deprecated,&nbsp;use&nbsp;extraStructuredConfig&nbsp;instead)</span><br><span style="color:rgb(132,139,152);">}</span><br></code></pre></body></html>
+<p>There's a small set of existing kernel patches in Nixpkgs, available as <code>pkgs.kernelPatches</code>,
+that follow this format and can be used directly.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of (attribute set)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">name</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">foo</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">patch</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(232,102,113);">./foo.patch</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">extraStructuredConfig</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">FOO</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(171,178,191);">lib</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">kernel</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">yes</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">features</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">foo</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">true</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">name</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">foo-ml-mbox</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">patch</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">(</span><span style="color:rgb(86,182,194);">fetchurl</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">url</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">https://lore.kernel.org/lkml/19700205182810.58382-1-email@domain/t.mbox.gz</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">hash</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">sha256-...</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">)</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><br><span style="color:rgb(132,139,152);">]</span><br></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/boot/kernel.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/boot/kernel.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.loader.efi.canTouchEfiVariables">
+  <h3 class="option-name">
+    <a href="#option-boot.loader.efi.canTouchEfiVariables" class="option-anchor">boot.loader.efi.canTouchEfiVariables</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether the installation process is allowed to modify EFI boot variables.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/boot/efi.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/boot/efi.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.loader.efi.efiSysMountPoint">
+  <h3 class="option-name">
+    <a href="#option-boot.loader.efi.efiSysMountPoint" class="option-anchor">boot.loader.efi.efiSysMountPoint</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Where the EFI System Partition is mounted.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/boot</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/boot/efi.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/boot/efi.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.loader.script.enable">
+  <h3 class="option-name">
+    <a href="#option-boot.loader.script.enable" class="option-anchor">boot.loader.script.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable an externally-provided bootloader install hook.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/bootloader" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/bootloader&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.loader.script.installHook">
+  <h3 class="option-name">
+    <a href="#option-boot.loader.script.installHook" class="option-anchor">boot.loader.script.installHook</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A program that installs the bootloader. Called with one argument: the path to the system toplevel.</p>
+<p>This is the same contract as <a class="option-reference" href="options.html#option-providers.bootloader.installHook"><code class="nixos-option">providers.bootloader.installHook</code></a>.
+Setting this option wires the hook into the <code>script</code> <code>providers.bootloader</code> backend automatically.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>absolute path</code></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/bootloader" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/bootloader&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.resumeDevice">
+  <h3 class="option-name">
+    <a href="#option-boot.resumeDevice" class="option-anchor">boot.resumeDevice</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Device from which to resume after hibernation. Empty = disabled. When set, adds resume=&lt;device&gt; to boot.kernelParams.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/boot/kernel.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/boot/kernel.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems._9p_.enable">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems._9p_.enable" class="option-anchor">boot.supportedFilesystems."9p".enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable support for the <code>9p</code> filesystem.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/9p.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/9p.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.btrfs.enable">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.btrfs.enable" class="option-anchor">boot.supportedFilesystems.btrfs.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable support for the <code>btrfs</code> filesystem.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/btrfs.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/btrfs.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.btrfs.packages">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.btrfs.packages" class="option-anchor">boot.supportedFilesystems.btrfs.packages</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Packages providing filesystem utilities for <code>btrfs</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(171,178,191);">&lt;</span><span style="color:rgb(86,182,194);">derivation</span>&nbsp;<span style="color:rgb(171,178,191);">btrfs-progs-7</span><span style="color:rgb(209,154,102);">.1</span>&gt;<br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/btrfs.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/btrfs.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.efivarfs.enable">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.efivarfs.enable" class="option-anchor">boot.supportedFilesystems.efivarfs.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable support for the <code>efivarfs</code> filesystem.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/efivarfs.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/efivarfs.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.ext2.enable">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.ext2.enable" class="option-anchor">boot.supportedFilesystems.ext2.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable support for the <code>ext2</code> filesystem.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/ext2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/ext2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.ext2.packages">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.ext2.packages" class="option-anchor">boot.supportedFilesystems.ext2.packages</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Packages providing filesystem utilities for <code>ext2</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/ext2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/ext2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.ext4.enable">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.ext4.enable" class="option-anchor">boot.supportedFilesystems.ext4.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable support for the <code>ext4</code> filesystem.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/ext4.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/ext4.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.ext4.packages">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.ext4.packages" class="option-anchor">boot.supportedFilesystems.ext4.packages</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Packages providing filesystem utilities for <code>ext4</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/ext4.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/ext4.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.f2fs.enable">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.f2fs.enable" class="option-anchor">boot.supportedFilesystems.f2fs.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable support for the <code>f2fs</code> filesystem.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/f2fs.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/f2fs.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.f2fs.packages">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.f2fs.packages" class="option-anchor">boot.supportedFilesystems.f2fs.packages</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Packages providing filesystem utilities for <code>f2fs</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/f2fs.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/f2fs.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.fuse.enable">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.fuse.enable" class="option-anchor">boot.supportedFilesystems.fuse.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable support for the <code>fuse</code> filesystem.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/fuse.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/fuse.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems._fuse.mergerfs_.enable">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems._fuse.mergerfs_.enable" class="option-anchor">boot.supportedFilesystems."fuse.mergerfs".enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable support for the <code>mergerfs</code> fuse filesystem.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/fuse.mergerfs.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/fuse.mergerfs.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.iso9660.enable">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.iso9660.enable" class="option-anchor">boot.supportedFilesystems.iso9660.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable support for the <code>iso9660</code> filesystem.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/iso9660.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/iso9660.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.iso9660.packages">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.iso9660.packages" class="option-anchor">boot.supportedFilesystems.iso9660.packages</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Packages providing filesystem utilities for <code>iso9660</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/iso9660.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/iso9660.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.luks.enable">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.luks.enable" class="option-anchor">boot.supportedFilesystems.luks.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable LUKS encrypted device support.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/luks.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/luks.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.luks.packages">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.luks.packages" class="option-anchor">boot.supportedFilesystems.luks.packages</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Packages providing LUKS utilities.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(171,178,191);">&lt;</span><span style="color:rgb(86,182,194);">derivation</span>&nbsp;<span style="color:rgb(171,178,191);">cryptsetup-2</span><span style="color:rgb(209,154,102);">.8</span><span style="color:rgb(209,154,102);">.7</span>&gt;<br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/luks.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/luks.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.lvm.enable">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.lvm.enable" class="option-anchor">boot.supportedFilesystems.lvm.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable LVM support.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/lvm.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/lvm.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.lvm.packages">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.lvm.packages" class="option-anchor">boot.supportedFilesystems.lvm.packages</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Packages providing lvm utilities.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(171,178,191);">&lt;</span><span style="color:rgb(86,182,194);">derivation</span>&nbsp;<span style="color:rgb(171,178,191);">lvm2-2</span><span style="color:rgb(209,154,102);">.03</span><span style="color:rgb(209,154,102);">.41</span>&gt;<br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/lvm.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/lvm.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.none.enable">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.none.enable" class="option-anchor">boot.supportedFilesystems.none.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable support for bind mounts.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/special.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/special.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.ntfs3.enable">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.ntfs3.enable" class="option-anchor">boot.supportedFilesystems.ntfs3.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/ntfs3.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/ntfs3.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.ntfs3.packages">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.ntfs3.packages" class="option-anchor">boot.supportedFilesystems.ntfs3.packages</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/ntfs3.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/ntfs3.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.squashfs.enable">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.squashfs.enable" class="option-anchor">boot.supportedFilesystems.squashfs.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable support for the <code>squashfs</code> filesystem.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/squashfs.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/squashfs.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.squashfs.packages">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.squashfs.packages" class="option-anchor">boot.supportedFilesystems.squashfs.packages</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Packages providing filesystem utilities for <code>squashfs</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/squashfs.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/squashfs.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.tmpfs.enable">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.tmpfs.enable" class="option-anchor">boot.supportedFilesystems.tmpfs.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable support for the <code>tmpfs</code> filesystem.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/tmpfs.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/tmpfs.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.vfat.enable">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.vfat.enable" class="option-anchor">boot.supportedFilesystems.vfat.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable support for the <code>vfat</code> filesystem.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/vfat.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/vfat.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.vfat.packages">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.vfat.packages" class="option-anchor">boot.supportedFilesystems.vfat.packages</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Packages providing filesystem utilities for <code>vfat</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/vfat.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/vfat.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.xfs.enable">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.xfs.enable" class="option-anchor">boot.supportedFilesystems.xfs.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable support for the <code>xfs</code> filesystem.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/xfs.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/xfs.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.xfs.packages">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.xfs.packages" class="option-anchor">boot.supportedFilesystems.xfs.packages</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Packages providing filesystem utilities for <code>xfs</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(171,178,191);">&lt;</span><span style="color:rgb(86,182,194);">derivation</span>&nbsp;<span style="color:rgb(171,178,191);">xfsprogs-7</span><span style="color:rgb(209,154,102);">.1</span><span style="color:rgb(209,154,102);">.1</span>&gt;<br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/xfs.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/xfs.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.zfs.enable">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.zfs.enable" class="option-anchor">boot.supportedFilesystems.zfs.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable support for the <code>zfs</code> filesystem.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/zfs.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/zfs.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.supportedFilesystems.zfs.packages">
+  <h3 class="option-name">
+    <a href="#option-boot.supportedFilesystems.zfs.packages" class="option-anchor">boot.supportedFilesystems.zfs.packages</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Packages providing filesystem utilities for <code>zfs</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(171,178,191);">&lt;</span><span style="color:rgb(86,182,194);">derivation</span>&nbsp;<span style="color:rgb(171,178,191);">zfs-user-2</span><span style="color:rgb(209,154,102);">.4</span><span style="color:rgb(209,154,102);">.4</span>&gt;<br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/zfs.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/zfs.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.zfs.importPools">
+  <h3 class="option-name">
+    <a href="#option-boot.zfs.importPools" class="option-anchor">boot.zfs.importPools</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>List of ZFS pools to import at boot.
+Defaults to the pools necessary for booting.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">jug</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">bucket</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/zfs.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/zfs.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-boot.zfs.loadKeys">
+  <h3 class="option-name">
+    <a href="#option-boot.zfs.loadKeys" class="option-anchor">boot.zfs.loadKeys</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>List of ZFS dataset names to load keys for during boot.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/zfs.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/zfs.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-environment.etc">
+  <h3 class="option-name">
+    <a href="#option-environment.etc" class="option-anchor">environment.etc</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Set of files that have to be linked in <code class="file-path">/etc</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of (submodule)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(86,182,194);">example-configuration-file</span>&nbsp;<span style="color:rgb(171,178,191);">=</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(86,182,194);">source</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/nix/store/.../etc/dir/file.conf.example</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">mode</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">0440</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">default/useradd</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">text</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">GROUP=100&nbsp;...</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><br></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/environment/etc" target="_blank" rel="noopener noreferrer">&lt;finix/modules/environment/etc&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-environment.etc._name_.enable">
+  <h3 class="option-name">
+    <a href="#option-environment.etc._name_.enable" class="option-anchor">environment.etc.&lt;name&gt;.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether this /etc file should be generated.  This
+option allows specific /etc files to be disabled.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/environment/etc" target="_blank" rel="noopener noreferrer">&lt;finix/modules/environment/etc&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-environment.etc._name_.gid">
+  <h3 class="option-name">
+    <a href="#option-environment.etc._name_.gid" class="option-anchor">environment.etc.&lt;name&gt;.gid</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>GID of created file. Only takes effect when the file is
+copied (that is, the mode is not 'symlink').</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>signed integer</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">0</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/environment/etc" target="_blank" rel="noopener noreferrer">&lt;finix/modules/environment/etc&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-environment.etc._name_.group">
+  <h3 class="option-name">
+    <a href="#option-environment.etc._name_.group" class="option-anchor">environment.etc.&lt;name&gt;.group</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Group name of created file.
+Only takes effect when the file is copied (that is, the mode is not 'symlink').
+Changing this option takes precedence over <code>gid</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">+0</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/environment/etc" target="_blank" rel="noopener noreferrer">&lt;finix/modules/environment/etc&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-environment.etc._name_.mode">
+  <h3 class="option-name">
+    <a href="#option-environment.etc._name_.mode" class="option-anchor">environment.etc.&lt;name&gt;.mode</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>If set to something else than <code>symlink</code>,
+the file is copied instead of symlinked, with the given
+file mode.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">symlink</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">0600</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/environment/etc" target="_blank" rel="noopener noreferrer">&lt;finix/modules/environment/etc&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-environment.etc._name_.source">
+  <h3 class="option-name">
+    <a href="#option-environment.etc._name_.source" class="option-anchor">environment.etc.&lt;name&gt;.source</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Path of the source file.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>absolute path</code></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/environment/etc" target="_blank" rel="noopener noreferrer">&lt;finix/modules/environment/etc&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-environment.etc._name_.target">
+  <h3 class="option-name">
+    <a href="#option-environment.etc._name_.target" class="option-anchor">environment.etc.&lt;name&gt;.target</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Name of symlink (relative to
+<code class="file-path">/etc</code>).  Defaults to the attribute
+name.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/environment/etc" target="_blank" rel="noopener noreferrer">&lt;finix/modules/environment/etc&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-environment.etc._name_.text">
+  <h3 class="option-name">
+    <a href="#option-environment.etc._name_.text" class="option-anchor">environment.etc.&lt;name&gt;.text</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Text of the file.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or strings concatenated with "\n"</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/environment/etc" target="_blank" rel="noopener noreferrer">&lt;finix/modules/environment/etc&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-environment.etc._name_.uid">
+  <h3 class="option-name">
+    <a href="#option-environment.etc._name_.uid" class="option-anchor">environment.etc.&lt;name&gt;.uid</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>UID of created file. Only takes effect when the file is
+copied (that is, the mode is not 'symlink').</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>signed integer</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">0</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/environment/etc" target="_blank" rel="noopener noreferrer">&lt;finix/modules/environment/etc&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-environment.etc._name_.user">
+  <h3 class="option-name">
+    <a href="#option-environment.etc._name_.user" class="option-anchor">environment.etc.&lt;name&gt;.user</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>User name of created file.
+Only takes effect when the file is copied (that is, the mode is not 'symlink').
+Changing this option takes precedence over <code>uid</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">+0</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/environment/etc" target="_blank" rel="noopener noreferrer">&lt;finix/modules/environment/etc&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-environment.extraSetup">
+  <h3 class="option-name">
+    <a href="#option-environment.extraSetup" class="option-anchor">environment.extraSetup</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Shell fragments to be run after the system environment has been created. This should only be used for things that need to modify the internals of the environment, e.g. generating MIME caches. The environment being built can be accessed at $out.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>strings concatenated with "\n"</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/environment/path" target="_blank" rel="noopener noreferrer">&lt;finix/modules/environment/path&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-environment.path">
+  <h3 class="option-name">
+    <a href="#option-environment.path" class="option-anchor">environment.path</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-metadata"><span class="option-badge">read-only</span></div>
+  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>absolute path</code></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/environment/path" target="_blank" rel="noopener noreferrer">&lt;finix/modules/environment/path&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-environment.pathsToLink">
+  <h3 class="option-name">
+    <a href="#option-environment.pathsToLink" class="option-anchor">environment.pathsToLink</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>List of directories to be symlinked in <code class="file-path">/run/current-system/sw</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/environment/path" target="_blank" rel="noopener noreferrer">&lt;finix/modules/environment/path&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-environment.shells">
+  <h3 class="option-name">
+    <a href="#option-environment.shells" class="option-anchor">environment.shells</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of (package or absolute path)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/environment/shells" target="_blank" rel="noopener noreferrer">&lt;finix/modules/environment/shells&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-environment.systemPackages">
+  <h3 class="option-name">
+    <a href="#option-environment.systemPackages" class="option-anchor">environment.systemPackages</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/environment/path" target="_blank" rel="noopener noreferrer">&lt;finix/modules/environment/path&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-environment.variables">
+  <h3 class="option-name">
+    <a href="#option-environment.variables" class="option-anchor">environment.variables</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Environment variables to set for POSIX-compliant login shells (bash, zsh,
+dash, ...) via <code class="file-path">/etc/profile.d/</code>. Shells with non-POSIX syntax,
+such as <code>fish</code>, do not source these scripts and will not pick up these
+variables.</p>
+<p>The value of each variable can be a string, a path, an integer, or a
+list of those, in which case the list is joined with <code>:</code>.</p>
+<p>Setting a variable to <code>null</code> does not set anything on its own, but lets
+you override a value set by another module to effectively cancel it out.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of (null or ((list of (signed integer or string or absolute path)) or (signed integer or string or absolute path) convertible to it))</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">EDITOR</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">nvim</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">XDG_DATA_DIRS</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/usr/share</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/usr/local/share</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/environment/shells" target="_blank" rel="noopener noreferrer">&lt;finix/modules/environment/shells&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fileSystems">
+  <h3 class="option-name">
+    <a href="#option-fileSystems" class="option-anchor">fileSystems</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The file systems to be mounted.  It must include an entry for
+the root directory (<code>mountPoint = "/"</code>).  Each
+entry in the list is an attribute set with the following fields:
+<code>mountPoint</code>, <code>device</code>,
+<code>fsType</code> (a file system type recognised by
+<code class="command">mount</code>; defaults to
+<code>"auto"</code>), and <code>options</code>
+(the mount options passed to <code class="command">mount</code> using the
+<code class="nixos-option">-o</code> flag; defaults to <code>[ "defaults" ]</code>).</p>
+<p>Instead of specifying <code>device</code>, you can also
+specify a volume label (<code>label</code>) for file
+systems that support it, such as ext2/ext3 (see <code class="command">mke2fs -L</code>).</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of (submodule)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">device</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/dev/hda1</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/data</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">device</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/dev/hda2</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">fsType</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">ext3</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">options</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">data=journal</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/bigdisk</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">label</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">bigdisk</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><br></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/options.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fileSystems._name_.depends">
+  <h3 class="option-name">
+    <a href="#option-fileSystems._name_.depends" class="option-anchor">fileSystems.&lt;name&gt;.depends</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>List of paths that should be mounted before this one. This filesystem's
+<code class="nixos-option">device</code> and <code class="nixos-option">mountPoint</code> are always
+checked and do not need to be included explicitly. If a path is added
+to this list, any other filesystem whose mount point is a parent of
+the path will be mounted before this filesystem. The paths do not need
+to actually be the <code class="nixos-option">mountPoint</code> of some other filesystem.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string (with check: non-empty without trailing slash)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/persist</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/options.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fileSystems._name_.device">
+  <h3 class="option-name">
+    <a href="#option-fileSystems._name_.device" class="option-anchor">fileSystems.&lt;name&gt;.device</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Location of the device.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or non-empty string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/dev/sda</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/options.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fileSystems._name_.fsType">
+  <h3 class="option-name">
+    <a href="#option-fileSystems._name_.fsType" class="option-anchor">fileSystems.&lt;name&gt;.fsType</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Type of the file system.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>non-empty string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">auto</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">ext3</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/options.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fileSystems._name_.label">
+  <h3 class="option-name">
+    <a href="#option-fileSystems._name_.label" class="option-anchor">fileSystems.&lt;name&gt;.label</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Label of the device (if any).</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or non-empty string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">root-partition</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/options.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fileSystems._name_.mountPoint">
+  <h3 class="option-name">
+    <a href="#option-fileSystems._name_.mountPoint" class="option-anchor">fileSystems.&lt;name&gt;.mountPoint</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Location of the mounted file system.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string (with check: non-empty without trailing slash)</code></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/mnt/usb</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/options.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fileSystems._name_.neededForBoot">
+  <h3 class="option-name">
+    <a href="#option-fileSystems._name_.neededForBoot" class="option-anchor">fileSystems.&lt;name&gt;.neededForBoot</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether this filesystem is needed for boot. If set, the filesystem
+will be mounted in the initial ramdisk.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/options.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fileSystems._name_.noCheck">
+  <h3 class="option-name">
+    <a href="#option-fileSystems._name_.noCheck" class="option-anchor">fileSystems.&lt;name&gt;.noCheck</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Disable running fsck on this filesystem.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/options.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-fileSystems._name_.options">
+  <h3 class="option-name">
+    <a href="#option-fileSystems._name_.options" class="option-anchor">fileSystems.&lt;name&gt;.options</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Options used to mount the file system.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>non-empty (list of non-empty string)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">defaults</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">data=journal</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/options.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.package">
+  <h3 class="option-name">
+    <a href="#option-finit.package" class="option-anchor">finit.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>finit</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The specified package will have its <code>configureFlags</code> appended to with
+a finit plugin path (<code>--with-plugin-path</code>) set to the required
+<code>finix-setup</code> plugin.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">finit</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.cgroups">
+  <h3 class="option-name">
+    <a href="#option-finit.cgroups" class="option-anchor">finit.cgroups</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>An attribute set of cgroups (v2) that will be created by <code>finit</code>.</p>
+<p>See <a href="https://finit-project.github.io/config/cgroups/">upstream documentation</a> for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of (submodule)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.cgroups._name_.name">
+  <h3 class="option-name">
+    <a href="#option-finit.cgroups._name_.name" class="option-anchor">finit.cgroups.&lt;name&gt;.name</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The name of the cgroup to create.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">‹name›</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.cgroups._name_.settings">
+  <h3 class="option-name">
+    <a href="#option-finit.cgroups._name_.settings" class="option-anchor">finit.cgroups.&lt;name&gt;.settings</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Settings to apply to this cgroup.</p>
+<p>See <a href="https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html">kernel documentation</a> for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of (atom (null, bool, int, float or string))</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">cpu.weight</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">100</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.environment">
+  <h3 class="option-name">
+    <a href="#option-finit.environment" class="option-anchor">finit.environment</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Environment variables passed to <em>all</em> <code>finit</code> services.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.path">
+  <h3 class="option-name">
+    <a href="#option-finit.path" class="option-anchor">finit.path</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Packages added to the <code>finit</code> PATH environment variable.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of (absolute path or string)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.readiness">
+  <h3 class="option-name">
+    <a href="#option-finit.readiness" class="option-anchor">finit.readiness</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>In this mode of operation,
+every service needs to explicitly declare their readiness notification</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>one of "none", "pid"</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">none</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.rlimits">
+  <h3 class="option-name">
+    <a href="#option-finit.rlimits" class="option-anchor">finit.rlimits</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>An attribute set of resource limits that will be apply by <code>finit</code>.</p>
+<p>See <a href="https://finit-project.github.io/config/runlevels/#resource-limits">upstream documentation</a> for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of (value "unlimited" (singular enum) or signed integer or (submodule))</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run">
+  <h3 class="option-name">
+    <a href="#option-finit.run" class="option-anchor">finit.run</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>An attribute set of one-shot commands to run in sequence when entering a runlevel. <code>run</code> commands
+are guaranteed to be completed before running the next command. Useful when serialization is required.</p>
+<p>See <a href="https://finit-project.github.io/config/task-and-run/">upstream documentation</a> for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of (submodule)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.enable">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.enable" class="option-anchor">finit.run.&lt;name&gt;.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable this stanza.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.caps">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.caps" class="option-anchor">finit.run.&lt;name&gt;.caps</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Allow services to run with minimal required privileges instead of running as <code>root</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>(list of non-empty string) or non-empty string convertible to it</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">^cap_net_bind_service</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.cgroup.delegate">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.cgroup.delegate" class="option-anchor">finit.run.&lt;name&gt;.cgroup.delegate</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>For services that need to create their own child <code>cgroups</code> (container runtimes like <code>docker</code>, <code>podman</code>, <code>systemd-nspawn</code>, <code>lxc</code>, etc...).</p>
+<p>See <a href="https://finit-project.github.io/config/cgroups/#cgroup-delegation">upstream documentation</a> for details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.cgroup.name">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.cgroup.name" class="option-anchor">finit.run.&lt;name&gt;.cgroup.name</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The name of the cgroup to place this process under.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">system</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.cgroup.settings">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.cgroup.settings" class="option-anchor">finit.run.&lt;name&gt;.cgroup.settings</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The cgroup settings to apply to this process.</p>
+<p>See <a href="https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html">kernel documentation</a> for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of (atom (null, bool, int, float or string))</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.cleanup">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.cleanup" class="option-anchor">finit.run.&lt;name&gt;.cleanup</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A script which will be called when the service is removed.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or main program, path or command</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.command">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.command" class="option-anchor">finit.run.&lt;name&gt;.command</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The command to execute.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>main program, path or command</code></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.conditions">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.conditions" class="option-anchor">finit.run.&lt;name&gt;.conditions</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>See <a href="https://finit-project.github.io/conditions/">upstream documentation</a> for details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>(list of non-empty string) or non-empty string convertible to it</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">pid/syslog</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.conflict">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.conflict" class="option-anchor">finit.run.&lt;name&gt;.conflict</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>If you have conflicting services and want to prevent them from starting.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>(list of non-empty string) or non-empty string convertible to it</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.description">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.description" class="option-anchor">finit.run.&lt;name&gt;.description</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A human-readable description of this service, displayed by <code>initctl</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.env">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.env" class="option-anchor">finit.run.&lt;name&gt;.env</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>either a path or a path prefixed with a '-' to indicate a missing file is fine.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string or absolute path</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.environment">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.environment" class="option-anchor">finit.run.&lt;name&gt;.environment</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Environment variables passed to this service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of (atom (null, bool, int, float or string))</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">TZ</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">CET</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.extraConfig">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.extraConfig" class="option-anchor">finit.run.&lt;name&gt;.extraConfig</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A place for <code>finit</code> configuration options which have not been added to the <code>nix</code> module yet.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>strings concatenated with " "</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.group">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.group" class="option-anchor">finit.run.&lt;name&gt;.group</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The group this service should be executed as.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.id">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.id" class="option-anchor">finit.run.&lt;name&gt;.id</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-metadata"><span class="option-badge">read-only</span></div>
+  <div class="option-description"><html><head></head><body><p>The instance identifier, derived from the attribute name if it contains an <code>@</code> character.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.log">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.log" class="option-anchor">finit.run.&lt;name&gt;.log</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Redirect <code>stderr</code> and <code>stdout</code> of the application to a file or <code>syslog</code> using the native <code>logit</code>
+tool. This is useful for programs that do not support <code>syslog</code> on their own, which is sometimes
+the case when running in the foreground.</p>
+<p>See <a href="https://finit-project.github.io/config/logging/">upstream documentation</a> for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean or non-empty string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.manual">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.manual" class="option-anchor">finit.run.&lt;name&gt;.manual</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>If a service should not be automatically started, it can be configured as
+manual. The service can then be started at any time by running <code>initctl start &lt;service&gt;</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.name">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.name" class="option-anchor">finit.run.&lt;name&gt;.name</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-metadata"><span class="option-badge">read-only</span></div>
+  <div class="option-description"><html><head></head><body><p>The name of this stanza, derived from the attribute name.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.path">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.path" class="option-anchor">finit.run.&lt;name&gt;.path</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Packages added to the <code>PATH</code> environment variable of this service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of (package or string)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.post">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.post" class="option-anchor">finit.run.&lt;name&gt;.post</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A script which will be called after the service has stopped.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or main program, path or command</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.pre">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.pre" class="option-anchor">finit.run.&lt;name&gt;.pre</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A script which will be called before the service is started.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or main program, path or command</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.priority">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.priority" class="option-anchor">finit.run.&lt;name&gt;.priority</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Order of this <code>run</code> command in relation to the others. The semantics are the same as
+with <code>lib.mkOrder</code>. Smaller values have a greater priority.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>signed integer</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">1000</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>

@@ -1,0 +1,1810 @@
+<div class="option" id="option-providers.privileges.rules">
+  <h3 class="option-name">
+    <a href="#option-providers.privileges.rules" class="option-anchor">providers.privileges.rules</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A list of rules which provide a way to temporarily elevate the privileges of a command for a given user or group.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of (submodule)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/privileges" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/privileges&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-providers.privileges.rules._.args">
+  <h3 class="option-name">
+    <a href="#option-providers.privileges.rules._.args" class="option-anchor">providers.privileges.rules.*.args</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Arguments that must be provided to the command. When
+empty, the command must be run without any arguments.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/privileges" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/privileges&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-providers.privileges.rules._.command">
+  <h3 class="option-name">
+    <a href="#option-providers.privileges.rules._.command" class="option-anchor">providers.privileges.rules.*.command</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The command the user or group members are allowed to run.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is best practice to specify absolute paths.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>main program, path or command</code></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/privileges" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/privileges&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-providers.privileges.rules._.groups">
+  <h3 class="option-name">
+    <a href="#option-providers.privileges.rules._.groups" class="option-anchor">providers.privileges.rules.*.groups</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The groups that are able to run this command.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of non-empty string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/privileges" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/privileges&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-providers.privileges.rules._.requirePassword">
+  <h3 class="option-name">
+    <a href="#option-providers.privileges.rules._.requirePassword" class="option-anchor">providers.privileges.rules.*.requirePassword</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether the user is required to enter a password.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/privileges" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/privileges&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-providers.privileges.rules._.runAs">
+  <h3 class="option-name">
+    <a href="#option-providers.privileges.rules._.runAs" class="option-anchor">providers.privileges.rules.*.runAs</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The user the command is allowed to run as, or <code>"*"</code> for allowing the command to run as any user.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>non-empty string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">root</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/privileges" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/privileges&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-providers.privileges.rules._.users">
+  <h3 class="option-name">
+    <a href="#option-providers.privileges.rules._.users" class="option-anchor">providers.privileges.rules.*.users</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The users that are able to run this command.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of non-empty string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/privileges" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/privileges&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-providers.resumeAndSuspend.backend">
+  <h3 class="option-name">
+    <a href="#option-providers.resumeAndSuspend.backend" class="option-anchor">providers.resumeAndSuspend.backend</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The selected module which should implement functionality for the <code class="nixos-option">providers.resumeAndSuspend</code> contract.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>one of "zzz", "none"</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">none</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/zzz/providers.resume-and-suspend.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/zzz/providers.resume-and-suspend.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-providers.resumeAndSuspend.hooks">
+  <h3 class="option-name">
+    <a href="#option-providers.resumeAndSuspend.hooks" class="option-anchor">providers.resumeAndSuspend.hooks</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A set of hooks which are to be run on system <em>suspend</em>, <em>hibernate</em> or <em>resume</em>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of (submodule)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/resume-and-suspend" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/resume-and-suspend&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-providers.resumeAndSuspend.hooks._name_.enable">
+  <h3 class="option-name">
+    <a href="#option-providers.resumeAndSuspend.hooks._name_.enable" class="option-anchor">providers.resumeAndSuspend.hooks.&lt;name&gt;.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether this hook should be executed on the given <code>event</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/resume-and-suspend" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/resume-and-suspend&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-providers.resumeAndSuspend.hooks._name_.action">
+  <h3 class="option-name">
+    <a href="#option-providers.resumeAndSuspend.hooks._name_.action" class="option-anchor">providers.resumeAndSuspend.hooks.&lt;name&gt;.action</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Shell commands to execute when the <code>event</code> is triggered.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>strings concatenated with "\n"</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/resume-and-suspend" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/resume-and-suspend&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-providers.resumeAndSuspend.hooks._name_.event">
+  <h3 class="option-name">
+    <a href="#option-providers.resumeAndSuspend.hooks._name_.event" class="option-anchor">providers.resumeAndSuspend.hooks.&lt;name&gt;.event</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The event type.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>one of "suspend", "resume", "hibernate"</code></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/resume-and-suspend" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/resume-and-suspend&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-providers.resumeAndSuspend.hooks._name_.priority">
+  <h3 class="option-name">
+    <a href="#option-providers.resumeAndSuspend.hooks._name_.priority" class="option-anchor">providers.resumeAndSuspend.hooks.&lt;name&gt;.priority</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Order of this hook in relation to the others. The semantics are
+the same as with <code>lib.mkOrder</code>. Smaller values are inserted first.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>integer between 0 and 9999 (both inclusive)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">1000</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/resume-and-suspend" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/resume-and-suspend&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-providers.scheduler.backend">
+  <h3 class="option-name">
+    <a href="#option-providers.scheduler.backend" class="option-anchor">providers.scheduler.backend</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The selected module which should implement functionality for the <code class="nixos-option">providers.scheduler</code> contract.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>one of "fcron", "none", "cron", "anacron"</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">none</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fcron/providers.scheduler.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/fcron/providers.scheduler.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-providers.scheduler.supportedFeatures.user">
+  <h3 class="option-name">
+    <a href="#option-providers.scheduler.supportedFeatures.user" class="option-anchor">providers.scheduler.supportedFeatures.user</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether the selected <code class="nixos-option">providers.scheduler</code> implementation supports running tasks as
+a specified user.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/scheduler" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/scheduler&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-providers.scheduler.tasks">
+  <h3 class="option-name">
+    <a href="#option-providers.scheduler.tasks" class="option-anchor">providers.scheduler.tasks</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A set of tasks which are to be run at specified intervals.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of (submodule)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/scheduler" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/scheduler&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-providers.scheduler.tasks._name_.command">
+  <h3 class="option-name">
+    <a href="#option-providers.scheduler.tasks._name_.command" class="option-anchor">providers.scheduler.tasks.&lt;name&gt;.command</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The command this task should execute at specified <code class="nixos-option">interval</code>s.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>main program, path or command</code></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/scheduler" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/scheduler&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-providers.scheduler.tasks._name_.interval">
+  <h3 class="option-name">
+    <a href="#option-providers.scheduler.tasks._name_.interval" class="option-anchor">providers.scheduler.tasks.&lt;name&gt;.interval</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The interval at which this task should run its specified <code class="nixos-option">command</code>. Accepts either a
+standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression or one of: <code>hourly</code>, <code>daily</code>, <code>weekly</code>, <code>monthly</code>, or <code>yearly</code>.</p>
+<p>If a standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression is provided this value will be passed directly
+to the <code>scheduler</code> implementation and execute exactly as specified.</p>
+<p>If one of the special values, <code>hourly</code>, <code>daily</code>, <code>monthly</code>, <code>weekly</code>, or <code>yearly</code>, is provided then the
+underlying <code>scheduler</code> implementation will use its features to decide when best to run.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">15&nbsp;*&nbsp;*&nbsp;*&nbsp;*</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/scheduler" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/scheduler&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-providers.scheduler.tasks._name_.user">
+  <h3 class="option-name">
+    <a href="#option-providers.scheduler.tasks._name_.user" class="option-anchor">providers.scheduler.tasks.&lt;name&gt;.user</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The user this task should run as, subject to <code class="nixos-option">provider.scheduler</code> implementation
+capabilities. See <code class="nixos-option">providers.scheduler.supportedFeatures</code> and your selected backend
+implementation for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/scheduler" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/scheduler&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.pam.enable">
+  <h3 class="option-name">
+    <a href="#option-security.pam.enable" class="option-anchor">security.pam.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/security/pam" target="_blank" rel="noopener noreferrer">&lt;finix/modules/security/pam&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.pam.package">
+  <h3 class="option-name">
+    <a href="#option-security.pam.package" class="option-anchor">security.pam.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix">&lt;<span style="color:rgb(86,182,194);">derivation</span>&nbsp;<span style="color:rgb(171,178,191);">linux-pam-1</span><span style="color:rgb(209,154,102);">.7</span><span style="color:rgb(209,154,102);">.2</span>&gt;</code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/security/pam" target="_blank" rel="noopener noreferrer">&lt;finix/modules/security/pam&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.pam.debug">
+  <h3 class="option-name">
+    <a href="#option-security.pam.debug" class="option-anchor">security.pam.debug</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/security/pam" target="_blank" rel="noopener noreferrer">&lt;finix/modules/security/pam&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.pam.environment">
+  <h3 class="option-name">
+    <a href="#option-security.pam.environment" class="option-anchor">security.pam.environment</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Set of rules for <a href="https://man.archlinux.org/man/pam_env.8" class="manpage-reference">pam_env(8)</a>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of (submodule)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/security/pam" target="_blank" rel="noopener noreferrer">&lt;finix/modules/security/pam&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.pam.environment._name_.default">
+  <h3 class="option-name">
+    <a href="#option-security.pam.environment._name_.default" class="option-anchor">security.pam.environment.&lt;name&gt;.default</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The <code>DEFAULT</code> environment variables to be set, unset or modified by <a href="https://man.archlinux.org/man/pam_env.8" class="manpage-reference">pam_env(8)</a>. See
+<a href="https://man.archlinux.org/man/pam_env.conf.5" class="manpage-reference">pam_env.conf(5)</a> for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or ((list of (signed integer or string or absolute path)) or (signed integer or string or absolute path) convertible to it)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/security/pam" target="_blank" rel="noopener noreferrer">&lt;finix/modules/security/pam&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.pam.environment._name_.override">
+  <h3 class="option-name">
+    <a href="#option-security.pam.environment._name_.override" class="option-anchor">security.pam.environment.&lt;name&gt;.override</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The environment variables to be set, unset or modified by <a href="https://man.archlinux.org/man/pam_env.8" class="manpage-reference">pam_env(8)</a>. See
+<a href="https://man.archlinux.org/man/pam_env.conf.5" class="manpage-reference">pam_env.conf(5)</a> for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or ((list of (signed integer or string or absolute path)) or (signed integer or string or absolute path) convertible to it)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/security/pam" target="_blank" rel="noopener noreferrer">&lt;finix/modules/security/pam&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.pam.services">
+  <h3 class="option-name">
+    <a href="#option-security.pam.services" class="option-anchor">security.pam.services</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of (submodule)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/security/pam" target="_blank" rel="noopener noreferrer">&lt;finix/modules/security/pam&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.pam.services._name_.enable">
+  <h3 class="option-name">
+    <a href="#option-security.pam.services._name_.enable" class="option-anchor">security.pam.services.&lt;name&gt;.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/security/pam" target="_blank" rel="noopener noreferrer">&lt;finix/modules/security/pam&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.pam.services._name_.name">
+  <h3 class="option-name">
+    <a href="#option-security.pam.services._name_.name" class="option-anchor">security.pam.services.&lt;name&gt;.name</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">‹name›</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/security/pam" target="_blank" rel="noopener noreferrer">&lt;finix/modules/security/pam&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.pam.services._name_.text">
+  <h3 class="option-name">
+    <a href="#option-security.pam.services._name_.text" class="option-anchor">security.pam.services.&lt;name&gt;.text</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>strings concatenated with "\n"</code></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/security/pam" target="_blank" rel="noopener noreferrer">&lt;finix/modules/security/pam&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.pki.caBundle">
+  <h3 class="option-name">
+    <a href="#option-security.pki.caBundle" class="option-anchor">security.pki.caBundle</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-metadata"><span class="option-badge">read-only</span></div>
+  <div class="option-description"><html><head></head><body><p>(Read-only) the path to the final bundle of certificate authorities as a single file.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>absolute path</code></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/nixos/ca.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/nixos/ca.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.pki.caCertificateBlacklist">
+  <h3 class="option-name">
+    <a href="#option-security.pki.caCertificateBlacklist" class="option-anchor">security.pki.caCertificateBlacklist</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A list of blacklisted CA certificate names that won't be imported from
+the Mozilla Trust Store into
+<code class="file-path">/etc/ssl/certs/ca-certificates.crt</code>. Use the
+names from that file.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">WoSign</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">WoSign&nbsp;China</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">CA&nbsp;WoSign&nbsp;ECC&nbsp;Root</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">Certification&nbsp;Authority&nbsp;of&nbsp;WoSign&nbsp;G2</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/nixos/ca.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/nixos/ca.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.pki.certificateFiles">
+  <h3 class="option-name">
+    <a href="#option-security.pki.certificateFiles" class="option-anchor">security.pki.certificateFiles</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A list of files containing trusted root certificates in PEM
+format. These are concatenated to form
+<code class="file-path">/etc/ssl/certs/ca-certificates.crt</code>, which is
+used by many programs that use OpenSSL, such as
+<code class="command">curl</code> and <code class="command">git</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of absolute path</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(232,102,113);">${</span><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">dn42-cacert</span><span style="color:rgb(232,102,113);">}</span><span style="color:rgb(152,195,121);">/etc/ssl/certs/dn42-ca.crt</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/nixos/ca.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/nixos/ca.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.pki.certificates">
+  <h3 class="option-name">
+    <a href="#option-security.pki.certificates" class="option-anchor">security.pki.certificates</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A list of trusted root certificates in PEM format.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(152,195,121);">''</span><span style="color:rgb(152,195,121);"></span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;NixOS.org</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;=========</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;-----BEGIN&nbsp;CERTIFICATE-----</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;MIIGUDCCBTigAwIBAgIDD8KWMA0GCSqGSIb3DQEBBQUAMIGMMQswCQYDVQQGEwJJ</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;TDEWMBQGA1UEChMNU3RhcnRDb20gTHRkLjErMCkGA1UECxMiU2VjdXJlIERpZ2l0</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;...</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;-----END&nbsp;CERTIFICATE-----</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;</span><span style="color:rgb(152,195,121);">''</span><br><span style="color:rgb(132,139,152);">]</span><br></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/nixos/ca.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/nixos/ca.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.pki.useCompatibleBundle">
+  <h3 class="option-name">
+    <a href="#option-security.pki.useCompatibleBundle" class="option-anchor">security.pki.useCompatibleBundle</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable usage of a compatibility bundle.</p>
+<p>Such a bundle consists exclusively of <code>BEGIN CERTIFICATE</code> and no <code>BEGIN TRUSTED CERTIFICATE</code>,
+which is an OpenSSL specific PEM format.</p>
+<p>It is known to be incompatible with certain software stacks.</p>
+<p>Nevertheless, enabling this will strip all additional trust rules provided by the
+certificates themselves. This can have security consequences depending on your usecases
+.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/nixos/ca.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/nixos/ca.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.wrapperDirSize">
+  <h3 class="option-name">
+    <a href="#option-security.wrapperDirSize" class="option-anchor">security.wrapperDirSize</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Size limit for the /run/wrappers tmpfs. Look at <a href="https://man.archlinux.org/man/mount.8" class="manpage-reference">mount(8)</a>, tmpfs size option,
+for the accepted syntax. WARNING: don't set to less than 64MB.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">50%</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">10G</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/security/wrappers" target="_blank" rel="noopener noreferrer">&lt;finix/modules/security/wrappers&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.wrappers">
+  <h3 class="option-name">
+    <a href="#option-security.wrappers" class="option-anchor">security.wrappers</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>This option effectively allows adding setuid/setgid bits, capabilities,
+changing file ownership and permissions of a program without directly
+modifying it. This works by creating a wrapper program under the
+<code class="nixos-option">security.wrapperDir</code> directory, which is then added to
+the shell <code>PATH</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of (submodule)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/security/wrappers" target="_blank" rel="noopener noreferrer">&lt;finix/modules/security/wrappers&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.wrappers._name_.enable">
+  <h3 class="option-name">
+    <a href="#option-security.wrappers._name_.enable" class="option-anchor">security.wrappers.&lt;name&gt;.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable the wrapper.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/security/wrappers" target="_blank" rel="noopener noreferrer">&lt;finix/modules/security/wrappers&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.wrappers._name_.capabilities">
+  <h3 class="option-name">
+    <a href="#option-security.wrappers._name_.capabilities" class="option-anchor">security.wrappers.&lt;name&gt;.capabilities</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A comma-separated list of capability clauses to be given to the
+wrapper program. The format for capability clauses is described in the
+“TEXTUAL REPRESENTATION” section of the <a href="https://man.archlinux.org/man/cap_from_text.3" class="manpage-reference">cap_from_text(3)</a>
+manual page. For a list of capabilities supported by the system, check
+the <a href="https://man.archlinux.org/man/capabilities.7" class="manpage-reference">capabilities(7)</a> manual page.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code>cap_setpcap</code>, which is required for the wrapper
+program to be able to raise caps into the Ambient set is NOT raised
+to the Ambient set so that the real program cannot modify its own
+capabilities!! This may be too restrictive for cases in which the
+real program needs cap_setpcap but it at least leans on the side
+security paranoid vs. too relaxed.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>strings concatenated with ","</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/security/wrappers" target="_blank" rel="noopener noreferrer">&lt;finix/modules/security/wrappers&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.wrappers._name_.group">
+  <h3 class="option-name">
+    <a href="#option-security.wrappers._name_.group" class="option-anchor">security.wrappers.&lt;name&gt;.group</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The group of the wrapper program.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/security/wrappers" target="_blank" rel="noopener noreferrer">&lt;finix/modules/security/wrappers&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.wrappers._name_.owner">
+  <h3 class="option-name">
+    <a href="#option-security.wrappers._name_.owner" class="option-anchor">security.wrappers.&lt;name&gt;.owner</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The owner of the wrapper program.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/security/wrappers" target="_blank" rel="noopener noreferrer">&lt;finix/modules/security/wrappers&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.wrappers._name_.permissions">
+  <h3 class="option-name">
+    <a href="#option-security.wrappers._name_.permissions" class="option-anchor">security.wrappers.&lt;name&gt;.permissions</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The permissions of the wrapper program. The format is that of a
+symbolic or numeric file mode understood by <code class="command">chmod</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>file mode string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">u+rx,g+x,o+x</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">a+rx</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/security/wrappers" target="_blank" rel="noopener noreferrer">&lt;finix/modules/security/wrappers&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.wrappers._name_.program">
+  <h3 class="option-name">
+    <a href="#option-security.wrappers._name_.program" class="option-anchor">security.wrappers.&lt;name&gt;.program</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The name of the wrapper program. Defaults to the attribute name.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">‹name›</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/security/wrappers" target="_blank" rel="noopener noreferrer">&lt;finix/modules/security/wrappers&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.wrappers._name_.setgid">
+  <h3 class="option-name">
+    <a href="#option-security.wrappers._name_.setgid" class="option-anchor">security.wrappers.&lt;name&gt;.setgid</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to add the setgid bit the wrapper program.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/security/wrappers" target="_blank" rel="noopener noreferrer">&lt;finix/modules/security/wrappers&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.wrappers._name_.setuid">
+  <h3 class="option-name">
+    <a href="#option-security.wrappers._name_.setuid" class="option-anchor">security.wrappers.&lt;name&gt;.setuid</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to add the setuid bit the wrapper program.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/security/wrappers" target="_blank" rel="noopener noreferrer">&lt;finix/modules/security/wrappers&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-security.wrappers._name_.source">
+  <h3 class="option-name">
+    <a href="#option-security.wrappers._name_.source" class="option-anchor">security.wrappers.&lt;name&gt;.source</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The absolute path to the program to be wrapped.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>absolute path</code></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/security/wrappers" target="_blank" rel="noopener noreferrer">&lt;finix/modules/security/wrappers&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.accounts-daemon.enable">
+  <h3 class="option-name">
+    <a href="#option-services.accounts-daemon.enable" class="option-anchor">services.accounts-daemon.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://www.freedesktop.org/wiki/Software/AccountsService">accountsservice</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/accounts-daemon" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/accounts-daemon&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.accounts-daemon.package">
+  <h3 class="option-name">
+    <a href="#option-services.accounts-daemon.package" class="option-anchor">services.accounts-daemon.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>accountsservice</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">accountsservice</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/accounts-daemon" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/accounts-daemon&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.accounts-daemon.debug">
+  <h3 class="option-name">
+    <a href="#option-services.accounts-daemon.debug" class="option-anchor">services.accounts-daemon.debug</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/accounts-daemon" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/accounts-daemon&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.acpid.enable">
+  <h3 class="option-name">
+    <a href="#option-services.acpid.enable" class="option-anchor">services.acpid.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://sourceforge.net/projects/acpid2/">acpid</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/acpid" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/acpid&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.acpid.handlers">
+  <h3 class="option-name">
+    <a href="#option-services.acpid.handlers" class="option-anchor">services.acpid.handlers</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of (submodule)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/acpid" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/acpid&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.acpid.handlers._name_.enable">
+  <h3 class="option-name">
+    <a href="#option-services.acpid.handlers._name_.enable" class="option-anchor">services.acpid.handlers.&lt;name&gt;.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/acpid" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/acpid&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.acpid.handlers._name_.action">
+  <h3 class="option-name">
+    <a href="#option-services.acpid.handlers._name_.action" class="option-anchor">services.acpid.handlers.&lt;name&gt;.action</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Shell commands to execute when the event is triggered.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>strings concatenated with "\n"</code></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/acpid" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/acpid&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.acpid.handlers._name_.event">
+  <h3 class="option-name">
+    <a href="#option-services.acpid.handlers._name_.event" class="option-anchor">services.acpid.handlers.&lt;name&gt;.event</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Event type.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">button/power.*</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">button/lid.*</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">ac_adapter.*</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">button/mute.*</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">button/volumedown.*</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">cd/play.*</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">cd/next.*</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/acpid" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/acpid&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.anacron.enable">
+  <h3 class="option-name">
+    <a href="#option-services.anacron.enable" class="option-anchor">services.anacron.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://github.com/cronie-crond/cronie">anacron</a> as a system service.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code>cron</code> module will also be imported and <a class="option-reference" href="options.html#option-services.cron.enable"><code class="nixos-option">services.cron.enable</code></a> set
+to <code>true</code>.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/anacron" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/anacron&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.anacron.package">
+  <h3 class="option-name">
+    <a href="#option-services.anacron.package" class="option-anchor">services.anacron.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>anacron</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">cronie</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/anacron" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/anacron&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.anacron.extraArgs">
+  <h3 class="option-name">
+    <a href="#option-services.anacron.extraArgs" class="option-anchor">services.anacron.extraArgs</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <code>anacron</code>. See <a href="https://man.archlinux.org/man/anacron.8" class="manpage-reference">anacron(8)</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">-s</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/anacron" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/anacron&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.anacron.settings">
+  <h3 class="option-name">
+    <a href="#option-services.anacron.settings" class="option-anchor">services.anacron.settings</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p><code>anacrontab</code> configuration. See <a href="https://man.archlinux.org/man/anacrontab.5" class="manpage-reference">anacrontab(5)</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>open submodule of attribute set of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/anacron" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/anacron&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.anacron.settings.NO_MAIL_OUTPUT">
+  <h3 class="option-name">
+    <a href="#option-services.anacron.settings.NO_MAIL_OUTPUT" class="option-anchor">services.anacron.settings.NO_MAIL_OUTPUT</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>If defined (and non-empty), the standard output and error descriptors of job processes
+are not redirected and e-mailed.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or signed integer</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/anacron" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/anacron&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.anacron.settings.PREFERRED_HOUR">
+  <h3 class="option-name">
+    <a href="#option-services.anacron.settings.PREFERRED_HOUR" class="option-anchor">services.anacron.settings.PREFERRED_HOUR</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Preferred hour of start of the job. If the hour is missed job will be skipped.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or signed integer</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/anacron" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/anacron&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.anacron.settings.RANDOM_DELAY">
+  <h3 class="option-name">
+    <a href="#option-services.anacron.settings.RANDOM_DELAY" class="option-anchor">services.anacron.settings.RANDOM_DELAY</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Allows delaying job startups by random amount of minutes with upper limit specified
+by this value. The random scaling factor is determined during the cron daemon startup
+so it remains constant for the whole run time of the daemon.</p>
+<p>The maximum number of minutes that will be added to the delay in minutes variable which
+is specified for each job. A <code>RANDOM_DELAY</code> set to <code>12</code> would therefore add, randomly,
+between <code>0</code> and <code>12</code> minutes to the delay in minutes for each job in that particular
+<code>anacrontab</code>. When set to <code>0</code>, no random delay is added.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or signed integer</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/anacron" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/anacron&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.anacron.settings.START_HOURS_RANGE">
+  <h3 class="option-name">
+    <a href="#option-services.anacron.settings.START_HOURS_RANGE" class="option-anchor">services.anacron.settings.START_HOURS_RANGE</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>An interval (in hours) when scheduled jobs can be run. In case this time interval is
+missed, for example, due to a power down, then scheduled jobs are not executed that day.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string matching the pattern ^([[:digit:]]+)-([[:digit:]]+)$</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/anacron" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/anacron&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.anacron.systab">
+  <h3 class="option-name">
+    <a href="#option-services.anacron.systab" class="option-anchor">services.anacron.systab</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A list of <code>anacron</code> jobs to be appended to the system-wide <code>anacrontab</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of non-empty string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/anacron" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/anacron&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.atd.enable">
+  <h3 class="option-name">
+    <a href="#option-services.atd.enable" class="option-anchor">services.atd.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://tracker.debian.org/pkg/at">atd</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/atd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/atd&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.atd.allow">
+  <h3 class="option-name">
+    <a href="#option-services.atd.allow" class="option-anchor">services.atd.allow</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Users allowed to use <code>at</code>. See <a href="https://man.archlinux.org/man/at.allow.5" class="manpage-reference">at.allow(5)</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or (list of string)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/atd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/atd&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.atd.deny">
+  <h3 class="option-name">
+    <a href="#option-services.atd.deny" class="option-anchor">services.atd.deny</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Users who are not allowed to use <code>at</code>. See <a href="https://man.archlinux.org/man/at.deny.5" class="manpage-reference">at.deny(5)</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or (list of string)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/atd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/atd&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.atd.extraArgs">
+  <h3 class="option-name">
+    <a href="#option-services.atd.extraArgs" class="option-anchor">services.atd.extraArgs</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <code>atd</code>. See <a href="https://man.archlinux.org/man/atd.8" class="manpage-reference">atd(8)</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/atd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/atd&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.autologin.enable">
+  <h3 class="option-name">
+    <a href="#option-services.autologin.enable" class="option-anchor">services.autologin.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://git.sr.ht/~kennylevinsen/autologin">autologin</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/autologin" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/autologin&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.autologin.command">
+  <h3 class="option-name">
+    <a href="#option-services.autologin.command" class="option-anchor">services.autologin.command</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Command to execute once <code class="nixos-option">user</code> is logged in on <code>tty1</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>absolute path</code></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">writeShellScript</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">autologin.sh</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(152,195,121);">''</span><span style="color:rgb(152,195,121);"></span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;</span><span style="color:rgb(86,182,194);">exec</span><span style="color:rgb(152,195,121);">&nbsp;</span><span style="color:rgb(232,102,113);">${</span><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">dbus</span><span style="color:rgb(232,102,113);">}</span><span style="color:rgb(152,195,121);">/bin/dbus-run-session</span><span style="color:rgb(232,102,113);">&nbsp;</span><span style="color:rgb(232,102,113);">--</span><span style="color:rgb(232,102,113);">&nbsp;</span><span style="color:rgb(232,102,113);">${</span><span style="color:rgb(171,178,191);">lib</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">getExe</span>&nbsp;<span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">labwc</span><span style="color:rgb(232,102,113);">}</span><span style="color:rgb(152,195,121);"></span><br><span style="color:rgb(152,195,121);">''</span><br></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/autologin" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/autologin&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.autologin.user">
+  <h3 class="option-name">
+    <a href="#option-services.autologin.user" class="option-anchor">services.autologin.user</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>User account under which <code>autologin</code> runs.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You are responsible for ensuring the user exists before the <code>autologin</code> service starts.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/autologin" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/autologin&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.avahi.enable">
+  <h3 class="option-name">
+    <a href="#option-services.avahi.enable" class="option-anchor">services.avahi.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="http://avahi.org">avahi</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/avahi" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/avahi&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.avahi.package">
+  <h3 class="option-name">
+    <a href="#option-services.avahi.package" class="option-anchor">services.avahi.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>avahi</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">avahi</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/avahi" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/avahi&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.avahi.debug">
+  <h3 class="option-name">
+    <a href="#option-services.avahi.debug" class="option-anchor">services.avahi.debug</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/avahi" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/avahi&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.avahi.extraArgs">
+  <h3 class="option-name">
+    <a href="#option-services.avahi.extraArgs" class="option-anchor">services.avahi.extraArgs</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <code>avahi</code>. See <a href="https://man.archlinux.org/man/avahi-daemon.8" class="manpage-reference">avahi-daemon(8)</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/avahi" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/avahi&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.avahi.settings">
+  <h3 class="option-name">
+    <a href="#option-services.avahi.settings" class="option-anchor">services.avahi.settings</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p><code>avahi</code> configuration. See <a href="https://man.archlinux.org/man/avahi-daemon.conf.5" class="manpage-reference">avahi-daemon.conf(5)</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string) or a non-empty list of them)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/avahi" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/avahi&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.blocky.enable">
+  <h3 class="option-name">
+    <a href="#option-services.blocky.enable" class="option-anchor">services.blocky.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://0xerr0r.github.io/blocky">blocky</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/blocky" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/blocky&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.blocky.package">
+  <h3 class="option-name">
+    <a href="#option-services.blocky.package" class="option-anchor">services.blocky.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>blocky</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">blocky</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/blocky" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/blocky&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.blocky.debug">
+  <h3 class="option-name">
+    <a href="#option-services.blocky.debug" class="option-anchor">services.blocky.debug</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/blocky" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/blocky&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.blocky.group">
+  <h3 class="option-name">
+    <a href="#option-services.blocky.group" class="option-anchor">services.blocky.group</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Group account under which <code>blocky</code> runs.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this group will automatically be created
+on system activation, otherwise you are responsible for
+ensuring the group exists before the <code>blocky</code> service starts.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">blocky</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/blocky" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/blocky&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.blocky.settings">
+  <h3 class="option-name">
+    <a href="#option-services.blocky.settings" class="option-anchor">services.blocky.settings</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p><code>blocky</code> configuration. See <a href="https://0xerr0r.github.io/blocky/configuration">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>YAML 1.1 value</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/blocky" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/blocky&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.blocky.user">
+  <h3 class="option-name">
+    <a href="#option-services.blocky.user" class="option-anchor">services.blocky.user</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>User account under which <code>blocky</code> runs.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this user will automatically be created
+on system activation, otherwise you are responsible for
+ensuring the user exists before the <code>blocky</code> service starts.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">blocky</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/blocky" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/blocky&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.bluetooth.enable">
+  <h3 class="option-name">
+    <a href="#option-services.bluetooth.enable" class="option-anchor">services.bluetooth.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://bluez.github.io/">bluez</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/bluetooth" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/bluetooth&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.bluetooth.package">
+  <h3 class="option-name">
+    <a href="#option-services.bluetooth.package" class="option-anchor">services.bluetooth.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>bluez</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">bluez</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/bluetooth" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/bluetooth&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.bluetooth.debug">
+  <h3 class="option-name">
+    <a href="#option-services.bluetooth.debug" class="option-anchor">services.bluetooth.debug</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/bluetooth" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/bluetooth&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.bluetooth.settings">
+  <h3 class="option-name">
+    <a href="#option-services.bluetooth.settings" class="option-anchor">services.bluetooth.settings</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p><code>bluez</code> configuration. See <a href="https://github.com/bluez/bluez/blob/master/src/main.conf">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/bluetooth" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/bluetooth&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.chrony.enable">
+  <h3 class="option-name">
+    <a href="#option-services.chrony.enable" class="option-anchor">services.chrony.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://chrony-project.org/">chrony</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/chronyd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/chronyd&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.chrony.package">
+  <h3 class="option-name">
+    <a href="#option-services.chrony.package" class="option-anchor">services.chrony.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>chrony</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">chrony</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/chronyd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/chronyd&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.chrony.configFile">
+  <h3 class="option-name">
+    <a href="#option-services.chrony.configFile" class="option-anchor">services.chrony.configFile</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>absolute path</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix">&lt;<span style="color:rgb(86,182,194);">derivation</span>&nbsp;<span style="color:rgb(171,178,191);">chrony</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">conf</span>&gt;</code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/chronyd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/chronyd&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.chrony.debug">
+  <h3 class="option-name">
+    <a href="#option-services.chrony.debug" class="option-anchor">services.chrony.debug</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/chronyd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/chronyd&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.chrony.extraArgs">
+  <h3 class="option-name">
+    <a href="#option-services.chrony.extraArgs" class="option-anchor">services.chrony.extraArgs</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <code>chrony</code>. See <a href="https://man.archlinux.org/man/chronyd.8" class="manpage-reference">chronyd(8)</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/chronyd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/chronyd&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.cron.enable">
+  <h3 class="option-name">
+    <a href="#option-services.cron.enable" class="option-anchor">services.cron.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://github.com/cronie-crond/cronie">cron</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/cron" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/cron&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.cron.package">
+  <h3 class="option-name">
+    <a href="#option-services.cron.package" class="option-anchor">services.cron.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>cron</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">cronie</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">cron</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">override</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">sendmailPath</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/run/wrappers/bin/sendmail</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/cron" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/cron&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.cron.extraArgs">
+  <h3 class="option-name">
+    <a href="#option-services.cron.extraArgs" class="option-anchor">services.cron.extraArgs</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <code>cron</code>. See <a href="https://man.archlinux.org/man/cron.8" class="manpage-reference">cron(8)</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">-s</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/cron" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/cron&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.cron.settings">
+  <h3 class="option-name">
+    <a href="#option-services.cron.settings" class="option-anchor">services.cron.settings</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p><code>crontab</code> configuration. See <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>open submodule of attribute set of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/cron" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/cron&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.cron.settings.CONTENT_TRANSFER_ENCODING">
+  <h3 class="option-name">
+    <a href="#option-services.cron.settings.CONTENT_TRANSFER_ENCODING" class="option-anchor">services.cron.settings.CONTENT_TRANSFER_ENCODING</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The encoding for email notifications. This is useful for properly displaying special
+characters or when sending emails in a format other than plain text.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/cron" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/cron&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.cron.settings.CONTENT_TYPE">
+  <h3 class="option-name">
+    <a href="#option-services.cron.settings.CONTENT_TYPE" class="option-anchor">services.cron.settings.CONTENT_TYPE</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The MIME type and character encoding for the output of a cron job when it is sent
+via email. This allows the mail client to properly display the output, especially
+if it contains rich text or is not plain ASCII.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/cron" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/cron&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.cron.settings.CRON_TZ">
+  <h3 class="option-name">
+    <a href="#option-services.cron.settings.CRON_TZ" class="option-anchor">services.cron.settings.CRON_TZ</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The time zone specific for the <code>cron</code> table. The user should enter a time according to the
+specified time zone into the table. The time used for writing into a log file is taken from
+the local time zone, where the daemon is running.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">config</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">time</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">timeZone</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/cron" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/cron&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.cron.settings.MAILFROM">
+  <h3 class="option-name">
+    <a href="#option-services.cron.settings.MAILFROM" class="option-anchor">services.cron.settings.MAILFROM</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>If <code>MAILFROM</code> is defined (and non-empty), it is used as the envelope sender
+address, otherwise, the username of the executing user is used.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This variable is also inherited from the <code>cron</code> process environment.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Both <code>MAILFROM</code> and <code>MAILTO</code> variables are expanded, so setting them as in the following
+example works as expected:</p>
+<pre><code>MAILFROM=cron-$USER@cron.com
+</code></pre>
+<p><code>$USER</code> is replaced by the system user.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or non-empty string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/cron" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/cron&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.cron.settings.MAILTO">
+  <h3 class="option-name">
+    <a href="#option-services.cron.settings.MAILTO" class="option-anchor">services.cron.settings.MAILTO</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>If <code>MAILTO</code> is defined (and non-empty), mail is sent to the specified address. If <code>MAILTO</code>
+is defined but empty (<code>MAILTO = "";</code>), no mail is sent. Otherwise, mail is sent to the owner
+of the crontab.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/cron" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/cron&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.cron.settings.PATH">
+  <h3 class="option-name">
+    <a href="#option-services.cron.settings.PATH" class="option-anchor">services.cron.settings.PATH</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Packages added to the <code>cron</code> PATH environment variable.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of (absolute path or package)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(232,102,113);">/run/wrappers</span><br>&nbsp;&nbsp;<span style="color:rgb(171,178,191);">config</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">programs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">coreutils</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">package</span><br><span style="color:rgb(132,139,152);">]</span><br></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/cron" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/cron&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.cron.settings.RANDOM_DELAY">
+  <h3 class="option-name">
+    <a href="#option-services.cron.settings.RANDOM_DELAY" class="option-anchor">services.cron.settings.RANDOM_DELAY</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Allows delaying job startups by random amount of minutes with upper limit specified
+by this value. The random scaling factor is determined during the cron daemon startup
+so it remains constant for the whole run time of the daemon.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or signed integer</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/cron" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/cron&gt;</a></code></dd>
+  </dl>
+</div>
