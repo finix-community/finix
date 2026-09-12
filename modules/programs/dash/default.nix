@@ -55,7 +55,7 @@ in
       };
       extraArgs = lib.mkOption {
         type = lib.types.str;
-        default = "-c";
+        default = " ";
         description = ''
           Extra arguments used for wrapping dash
         '';
