@@ -1,6 +1,23 @@
-{ config, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.providers.firewall;
+
+  openPorts =
+    cfg.allowedTCPPorts ++ cfg.allowedTCPPortRanges ++ cfg.allowedUDPPorts ++ cfg.allowedUDPPortRanges;
+
+  # mangle nixos-firewall-tool into working with finit instead of systemd
+  nixos-firewall-tool = pkgs.nixos-firewall-tool.overrideAttrs (o: {
+    postPatch = o.postPatch + ''
+      substituteInPlace nixos-firewall-tool \
+        --replace-fail /etc/systemd/system/firewall.service /etc/finit.d/iptables.conf \
+        --replace-fail /etc/systemd/system/nftables.service /etc/finit.d/nftables.conf
+    '';
+  });
 
   portRange = lib.types.submodule {
     options = {
@@ -81,15 +98,14 @@ in
     };
   };
 
-  config.warnings =
-    let
-      openPorts =
-        cfg.allowedTCPPorts ++ cfg.allowedTCPPortRanges ++ cfg.allowedUDPPorts ++ cfg.allowedUDPPortRanges;
-    in
-    lib.optionals (openPorts != [ ] && cfg.backend == "none") [
+  config = {
+    warnings = lib.optionals (openPorts != [ ] && cfg.backend == "none") [
       ''
         no firewall provider backend has been enabled, yet ports are requested to be opened
         select a backend implementation to use the firewall
       ''
     ];
+
+    environment.systemPackages = lib.optionals (cfg.backend != "none") [ nixos-firewall-tool ];
+  };
 }

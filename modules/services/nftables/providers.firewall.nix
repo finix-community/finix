@@ -26,11 +26,18 @@ in
   };
 
   config = lib.mkIf (cfg.backend == "nftables") {
-    # named after the table NixOS installs, for consistency with the tooling and
-    # documentation that refers to `inet nixos-fw`.
+    # piggyback off nixos table names for compatibility with nixos-firewall-tool
     services.nftables.tables.nixos-fw = {
       family = "inet";
       content = ''
+        # ports opened at runtime by `nixos-firewall-tool open`, discarded on reload
+        set temp-ports {
+          comment "temporarily opened ports"
+          type inet_proto . inet_service
+          flags interval
+          auto-merge
+        }
+
         chain input {
           type filter hook input priority filter; policy drop;
 
@@ -55,6 +62,8 @@ in
         chain input-allow {
           ${lib.optionalString (tcpSet != "") "tcp dport { ${tcpSet} } accept"}
           ${lib.optionalString (udpSet != "") "udp dport { ${udpSet} } accept"}
+
+          meta l4proto . th dport @temp-ports accept
         }
       '';
     };
