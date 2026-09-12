@@ -1,0 +1,219 @@
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
+let
+  cfg = config.services.dnsmasq;
+  stateDir = "/var/lib/dnsmasq";
+  # True values are just put as `name` instead of `name=true`, and false values
+  # are turned to comments (false values are expected to be overrides e.g.
+  # lib.mkForce)
+  formatKeyValue =
+    name: value:
+    if value == true then
+      name
+    else if value == false then
+      "# setting `${name}` explicitly set to false"
+    else
+      lib.generators.mkKeyValueDefault { } "=" name value;
+
+  settingsFormat = pkgs.formats.keyValue {
+    mkKeyValue = formatKeyValue;
+    # FIXME: This causes booleans to be turned into list of booleans.
+    # This could cause confusion on configurations merging.
+    # A workaround for this is defining any boolean values explicitly in the service settings.
+    listsAsDuplicateKeys = true;
+  };
+  dnsmasqConf = settingsFormat.generate "dnsmasq.conf" cfg.settings;
+in
+{
+  options = {
+    services.dnsmasq = {
+      enable = lib.mkEnableOption "Whether to run [dnsmasq](${pkgs.dnsmasq.meta.homepage}) as a system service.";
+
+      resolveLocalQueries = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Whether [dnsmasq](${pkgs.dnsmasq.meta.homepage}) should resolve local queries using [resolvconf](${pkgs.resolvconf.meta.homepage}).
+        '';
+      };
+
+      settings = lib.mkOption {
+        type = lib.types.submodule {
+
+          freeformType = settingsFormat.type;
+
+          options.enable-dbus = lib.mkOption {
+            type = lib.types.bool;
+            default = false;
+            description = ''
+              Whether [dnsmasq](${pkgs.dnsmasq.meta.homepage}) should interface with `dbus`.
+            '';
+          };
+
+          options.no-resolv = lib.mkOption {
+            type = lib.types.bool;
+            default = false;
+            description = ''
+              Whether [dnsmasq](${pkgs.dnsmasq.meta.homepage}) should read `/etc/resolv.conf`.
+            '';
+          };
+
+          options.server = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            default = [ ];
+            example = [
+              "8.8.8.8"
+              "8.8.4.4"
+            ];
+            description = ''
+              The DNS servers which [dnsmasq](${pkgs.dnsmasq.meta.homepage}) should query.
+            '';
+          };
+
+          options.port = lib.mkOption {
+            type = lib.types.port;
+            default = 53;
+            description = "The port number [dnsmasq](${pkgs.dnsmasq.meta.homepage}) will listen on.";
+          };
+
+        };
+        default = { };
+        description = ''
+          Configuration of [dnsmasq]((${pkgs.dnsmasq.meta.homepage})). Lists get added one value per line (empty
+          lists and false values don't get added, though false values get
+          turned to comments).
+        '';
+        example = lib.literalExpression ''
+          {
+            domain-needed = true;
+            dhcp-range = [ "192.168.0.2,192.168.0.254" ];
+          }
+        '';
+      };
+
+      configFile = lib.mkOption {
+        type = lib.types.package;
+        readOnly = true;
+        default = dnsmasqConf;
+        defaultText = lib.literalExpression "Path of [dnsmasq]((${pkgs.dnsmasq.meta.homepage})) config file.";
+        description = ''
+          Path to the configuration file of [dnsmasq]((${pkgs.dnsmasq.meta.homepage})).
+        '';
+      };
+
+      package = lib.mkPackageOption pkgs "dnsmasq" { };
+    };
+  };
+
+  config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = cfg.resolveLocalQueries -> !(cfg.settings.no-resolv or false);
+        message = ''
+          `services.dnsmasq.resolveLocalQueries` requires that `no-resolv` is `false`.
+          Either set `services.dnsmasq.settings.no-resolv` to `false` or disable `resolveLocalQueries`.
+        '';
+      }
+      {
+        assertion = cfg.resolveLocalQueries -> config.programs.resolvconf.enable;
+        message = ''
+          `services.dnsmasq.resolveLocalQueries` requires `programs.resolvconf` to be enabled.
+          Set `programs.resolvconf.enable` to true.
+        '';
+      }
+      {
+        assertion = cfg.settings.enable-dbus -> config.services.dbus.enable;
+        message = ''
+          `services.dnsmasq.settings.enable-dbus` requires `services.dbus` to be enabled.
+          Set `services.dbus.enable` to true.
+        '';
+      }
+    ];
+    services.dnsmasq = {
+      settings = {
+        dhcp-leasefile = lib.mkDefault "${stateDir}/dnsmasq.leases";
+      }
+      // lib.optionalAttrs cfg.resolveLocalQueries {
+        conf-file = lib.mkDefault "/etc/dnsmasq-conf.conf";
+        resolv-file = lib.mkDefault "/etc/dnsmasq-resolv.conf";
+      }
+      # Moved from the service args to settings so the user can control if the service should/shouldn't use dbus even if dbus is enabled.
+      // lib.optionalAttrs config.services.dbus.enable {
+        enable-dbus = lib.mkDefault true;
+      };
+    };
+
+    # dnsmasq_conf and dnsmasq_resolv are both generated by openresolv.
+    # https://man.archlinux.org/man/resolvconf.conf.5
+    # `dnsmasq_conf` changes are detected by `dnsmasq` via dbus or dnsmasq_restart.
+    # `dnsmasq_resolv` changes are polled by `dnsmasq`, unless if `no-poll` is set in `dnsmasq` settings.
+    # https://github.com/NetworkConfiguration/openresolv/blob/master/dnsmasq.in
+    programs.resolvconf.settings =
+      lib.mkIf (!cfg.settings.no-resolv && config.programs.resolvconf.enable)
+        (
+          {
+            dnsmasq_conf = "/etc/dnsmasq-conf.conf";
+            dnsmasq_resolv = "/etc/dnsmasq-resolv.conf";
+            dnsmasq_restart = "initctl restart dnsmasq";
+          }
+          // lib.optionalAttrs cfg.resolveLocalQueries {
+            name_servers = "127.0.0.1";
+          }
+        );
+
+    users.users.dnsmasq = {
+      isSystemUser = true;
+      group = config.users.groups.dnsmasq.name;
+      description = "Dnsmasq daemon user";
+    };
+    users.groups.dnsmasq = { };
+
+    services.dbus.packages = lib.optional (config.services.dbus.enable) cfg.package;
+
+    finit.tmpfiles.rules = [
+      "d ${stateDir} 0755 ${config.users.users.dnsmasq.name} root - -"
+      "f ${stateDir}/dnsmasq.leases 0644 ${config.users.users.dnsmasq.name} root -"
+    ]
+    ++ lib.optionals (cfg.resolveLocalQueries) [
+      "f /etc/dnsmasq-conf.conf 0644 root root - -"
+      "f /etc/dnsmasq-resolv.conf 0644 root root - -"
+    ];
+
+    finit.services.dnsmasq = {
+      description = "Dnsmasq Daemon";
+      conditions = [
+        "service/syslogd/running"
+        "net/lo/up"
+      ]
+      ++ lib.optionals (config.services.dbus.enable) [ "service/dbus/ready" ]
+      ++ lib.optionals (cfg.settings ? interface) (
+        map (interface: "net/${interface}/up") cfg.settings.interface
+      );
+
+      # TODO: check if PID could be a valid notification for this service.
+      #notify = if config.services.dbus.enable then "systemd" else "none";
+
+      pre = pkgs.writeShellScript "dnsmasq-pre.sh" ''
+        ${lib.getExe cfg.package} --test -C ${cfg.configFile}
+      '';
+
+      command = lib.escapeShellArgs (
+        [
+          "${lib.getExe cfg.package}"
+          "-k"
+        ]
+        ++ [
+          "--user=${config.users.users.dnsmasq.name}"
+          "-C"
+          "${cfg.configFile}"
+        ]
+      );
+
+      respawn = true;
+    };
+  };
+}

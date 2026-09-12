@@ -13,6 +13,7 @@
   "crontab(5)": "https://man.archlinux.org/man/crontab.5",
   "dhcpcd(8)":"https://man.archlinux.org/man/dhcpcd.8",
   "dhcpcd.conf(5)":"https://man.archlinux.org/man/dhcpcd.conf.5",
+  "dnsmasq(8)":"https://man.archlinux.org/man/dnsmasq.8",
   "dropbear(8)": "https://man.archlinux.org/man/dropbear.8",
   "dropbearkey(1)": "https://man.archlinux.org/man/dropbearkey.1",
   "earlyoom(1)": "https://man.archlinux.org/man/earlyoom.1",
