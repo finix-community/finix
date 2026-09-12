@@ -8,10 +8,13 @@
   nodes.machine =
     { ... }:
     {
+      services.getty.enable = true;
       services.mdevd.enable = true;
     };
 
   testScript = ''
+    import datetime
+
     machine.start()
     machine.wait_for_console_text("finix - stage 1")
     machine.wait_for_console_text("finix - stage 2")
@@ -49,7 +52,7 @@
         assert user.strip() == "root", f"expected USER=root, got: {user}"
 
     with subtest("wait_until_succeeds"):
-        machine.wait_until_succeeds("test -f /etc/passwd", timeout=10)
+        machine.wait_until_succeeds("test -f /etc/passwd", timeout=datetime.timedelta(seconds=10))
 
     with subtest("shutdown"):
         machine.shutdown()

@@ -8,6 +8,7 @@
   nodes.machine =
     { pkgs, ... }:
     {
+      services.getty.enable = true;
       services.mdevd.enable = true;
 
       # pre-create test tmpfiles.d configs for boot-time testing

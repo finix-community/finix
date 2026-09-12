@@ -8,6 +8,7 @@
   nodes.machine =
     { ... }:
     {
+      services.getty.enable = true;
       services.mdevd.enable = true;
     };
 

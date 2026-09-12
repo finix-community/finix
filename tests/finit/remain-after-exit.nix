@@ -8,6 +8,7 @@
   nodes.machine =
     { pkgs, ... }:
     {
+      services.getty.enable = true;
       services.mdevd.enable = true;
 
       # test task with remain:yes that runs in runlevels S and 2

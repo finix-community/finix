@@ -11,17 +11,6 @@ in
     ./shells
   ];
 
-  options.environment.binsh = lib.mkOption {
-    type = lib.types.path;
-    default = lib.getExe pkgs.dash;
-    defaultText = lib.literalExpression "lib.getExe pkgs.dash";
-    example = lib.literalExpression "lib.getExe pkgs.bashInteractive";
-    description = ''
-      Default shell linked system-wide to `/bin/sh`. Do your best to make sure any
-      modifications to this shell are POSIX-compliant.
-    '';
-  };
-
   config = {
     environment.systemPackages = [ finix-logo ];
     environment.etc."nsswitch.conf".text = ''
