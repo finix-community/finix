@@ -8,7 +8,7 @@ let
   cfg = config.programs.dash;
   dashCommand =
     if cfg.wrapper.enable then
-      "${lib.getExe cfg.wrapper.package} ${cfg.wrapper.extraArgs} ${lib.getExe pkgs.dash}"
+      "${lib.getExe cfg.wrapper.package} ${cfg.wrapper.extraArgs} ${cfg.package}${cfg.package.shellPath}"
     else
       lib.getExe pkgs.dash;
   dashInteractive =
