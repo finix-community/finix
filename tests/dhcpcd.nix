@@ -8,6 +8,7 @@
   nodes.server =
     { pkgs, ... }:
     {
+      services.getty.enable = true;
       services.mdevd.enable = true;
 
       # TODO: write a dnsmasq service
@@ -24,6 +25,7 @@
   nodes.client =
     { lib, ... }:
     {
+      services.getty.enable = true;
       services.mdevd.enable = true;
       services.dhcpcd.enable = true;
 
@@ -33,19 +35,21 @@
     };
 
   testScript = ''
+    import datetime
+
     start_all()
 
     server.wait_for_console_text("entering runlevel 2")
     client.wait_for_console_text("entering runlevel 2")
 
     with subtest("server has static ip"):
-        server.wait_until_succeeds("ip addr show eth0 | grep 'inet 192.168.1.2'", timeout=30)
+        server.wait_until_succeeds("ip addr show eth0 | grep 'inet 192.168.1.2'", timeout=datetime.timedelta(seconds=30))
 
     with subtest("dnsmasq is running"):
-        server.wait_until_succeeds("initctl status dnsmasq | grep running", timeout=30)
+        server.wait_until_succeeds("initctl status dnsmasq | grep running", timeout=datetime.timedelta(seconds=30))
 
     with subtest("client obtains dhcp lease"):
-        client.wait_until_succeeds("ip addr show eth0 | grep 'inet 192.168.1'", timeout=30)
+        client.wait_until_succeeds("ip addr show eth0 | grep 'inet 192.168.1'", timeout=datetime.timedelta(seconds=30))
 
     with subtest("client can ping server"):
         client.succeed("ping -c 1 192.168.1.2")

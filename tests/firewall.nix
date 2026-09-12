@@ -43,16 +43,18 @@
     };
 
   testScript = ''
+    import datetime
+
     start_all()
 
     client.wait_for_console_text("entering runlevel 2")
     nftables.wait_for_console_text("entering runlevel 2")
 
-    nftables.wait_until_succeeds("initctl status allowed-port | grep running", timeout=30)
-    nftables.wait_until_succeeds("initctl status blocked-port | grep running", timeout=30)
+    nftables.wait_until_succeeds("initctl status allowed-port | grep running", timeout=datetime.timedelta(seconds=30))
+    nftables.wait_until_succeeds("initctl status blocked-port | grep running", timeout=datetime.timedelta(seconds=30))
 
     # wait until the ruleset is actually loaded before probing
-    nftables.wait_until_succeeds("nft list table inet nixos-fw", timeout=30)
+    nftables.wait_until_succeeds("nft list table inet nixos-fw", timeout=datetime.timedelta(seconds=30))
 
     with subtest("nftables: ping is blocked by default"):
         client.fail("ping -c 1 -W 3 192.168.1.2")
@@ -82,7 +84,7 @@
 
     with subtest("nftables: stopping the firewall removes the rules"):
         nftables.succeed("initctl runlevel 3")
-        nftables.wait_until_fails("nft list table inet nixos-fw", timeout=30)
+        nftables.wait_until_fails("nft list table inet nixos-fw", timeout=datetime.timedelta(seconds=30))
         client.succeed("ncat -z -w 3 192.168.1.2 8081")
         nftables.succeed("test ! -s /var/lib/nftables/deletions.nft")
 
