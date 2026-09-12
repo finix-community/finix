@@ -6,13 +6,14 @@
 }:
 let
   cfg = config.programs.ash;
-  ashInteractive = pkgs.writeScriptBin "ashInteractive" ''
-    #!${lib.getExe config.programs.sh.package}
-    exec ${lib.getExe' pkgs.busybox "ash"} -il
-  ''
-  // {
+  ashInteractive =
+    pkgs.writeScriptBin "ashInteractive" ''
+      #!${lib.getExe config.programs.sh.package}
+      exec ${lib.getExe' pkgs.busybox "ash"} -il
+    ''
+    // {
       shellPath = "/bin/ashInteractive";
-  };
+    };
 in
 {
   options.programs.ash = {
@@ -32,7 +33,7 @@ in
       '';
     };
     interactiveShellInit = lib.mkOption {
-      default =''
+      default = ''
         # Provide a nice prompt if the terminal supports it.
         prompt() {
             color='1;31m'
