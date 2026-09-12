@@ -196,18 +196,7 @@ in
     # TODO: create an alternative implementation with... https://github.com/Gerg-L/linker
     system.activation.scripts.etc = lib.stringAfter [ "users" ] ''
       echo "setting up /etc..."
-      ${pkgs.dash}/bin/dash ${./setup-etc.sh} ${buildEtc}/etc
-    '';
-
-    system.activation.scripts.shebangCompatibility = ''
-      mkdir -p -m 0755 /usr/bin /bin
-
-      # Create /usr/bin/env for shebangs.
-      ln -sfn ${lib.getExe' config.programs.coreutils.package "env"} /usr/bin/env
-
-      # Create the required /bin/sh symlink; otherwise lots of things
-      # (notably the system() function) won't work.
-      ln -sfn "${config.environment.binsh}" /bin/sh
+      ${lib.getExe config.programs.sh.package} ${./setup-etc.sh} ${buildEtc}/etc
     '';
   };
 }

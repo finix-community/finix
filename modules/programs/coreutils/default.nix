@@ -4,6 +4,9 @@
   lib,
   ...
 }:
+let
+  cfg = config.programs.coreutils;
+in
 {
   options.programs.coreutils.package = lib.mkOption {
     type = lib.types.package;
@@ -19,5 +22,14 @@
     '';
   };
 
-  config.environment.systemPackages = [ config.programs.coreutils.package ];
+  config = {
+    environment.systemPackages = [ cfg.package ];
+
+    system.activation.scripts.usrbinenv = ''
+      mkdir -p -m 0755 /usr/bin
+
+      # required /usr/bin/env symlink
+      ln -sfn ${lib.getExe' cfg.package "env"} /usr/bin/env
+    '';
+  };
 }
