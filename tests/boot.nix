@@ -10,6 +10,7 @@
     {
       services.getty.enable = true;
       services.mdevd.enable = true;
+      services.getty.enable = true;
     };
 
   testScript = ''
