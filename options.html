@@ -3320,7 +3320,7 @@
     <details class="toc-category">
       <summary title="hardware.console">
         <span>hardware.console</span>
-        <span class="toc-count">4</span>
+        <span class="toc-count">8</span>
       </summary>
       <ul>
         
@@ -3335,6 +3335,22 @@
         </li>
         
         <li>
+          <a href='#option-hardware.console.colors' title="hardware.console.colors">
+            colors
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-hardware.console.earlySetup' title="hardware.console.earlySetup">
+            earlySetup
+            
+            
+          </a>
+        </li>
+        
+        <li>
           <a href='#option-hardware.console.enable' title="hardware.console.enable">
             enable
             
@@ -3343,8 +3359,24 @@
         </li>
         
         <li>
+          <a href='#option-hardware.console.font' title="hardware.console.font">
+            font
+            
+            
+          </a>
+        </li>
+        
+        <li>
           <a href='#option-hardware.console.keyMap' title="hardware.console.keyMap">
             keyMap
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-hardware.console.packages' title="hardware.console.packages">
+            packages
             
             
           </a>
@@ -15691,10 +15723,54 @@ the improbable event that the display's native subpixel order is
   </h3>
   <div class="option-type">Type: <code>absolute path</code></div>
   <div class="option-description"><html><head></head><body><p>Binary keymap file.
-If unset then this is generated from
-the hardware.console.keyMap option.</p>
+If unset then this is generated from the hardware.console.keyMap option.</p>
 </body></html></div>
   <div class="option-default">Default: <code>"Binary form of hardware.console.keyMap."</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/console.nix" target="_blank">&lt;finix/modules/hardware/console.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-hardware.console.colors">
+  <h3 class="option-name">
+    <a href="#option-hardware.console.colors" class="option-anchor">hardware.console.colors</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>A list of 16 terminal color codes, in the format RRGGBB,
+to override the default terminal colors. For example,
+a Nord-like palette. Leave empty to use defaults.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-example">Example: <pre><code>[
+  "2E3440"
+  "BF616A"
+  "A3BE8C"
+  "EBCB8B"
+  "81A1C1"
+  "B48EAD"
+  "88C0D0"
+  "E5E9F0"
+  "4C566A"
+  "BF616A"
+  "A3BE8C"
+  "EBCB8B"
+  "81A1C1"
+  "B48EAD"
+  "8FBCBB"
+  "ECEFF4"
+]</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/console.nix" target="_blank">&lt;finix/modules/hardware/console.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-hardware.console.earlySetup">
+  <h3 class="option-name">
+    <a href="#option-hardware.console.earlySetup" class="option-anchor">hardware.console.earlySetup</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to set the font in the initrd. Useful if you want the
+right font before the system fully boots.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/console.nix" target="_blank">&lt;finix/modules/hardware/console.nix&gt;</a></code></div>
 </div>
 <div class="option" id="option-hardware.console.enable">
@@ -15709,6 +15785,22 @@ the hardware.console.keyMap option.</p>
   <div class="option-default">Default: <code>true</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/console.nix" target="_blank">&lt;finix/modules/hardware/console.nix&gt;</a></code></div>
 </div>
+<div class="option" id="option-hardware.console.font">
+  <h3 class="option-name">
+    <a href="#option-hardware.console.font" class="option-anchor">hardware.console.font</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>null or string</code></div>
+  <div class="option-description"><html><head></head><body><p>The font to use for the virtual consoles.
+Set to null to use the kernel default.
+Must be available in kbd or one of the packages in
+hardware.console.packages.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>null</code></div>
+  <div class="option-example">Example: <code>"Lat2-Terminus16"</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/console.nix" target="_blank">&lt;finix/modules/hardware/console.nix&gt;</a></code></div>
+</div>
 <div class="option" id="option-hardware.console.keyMap">
   <h3 class="option-name">
     <a href="#option-hardware.console.keyMap" class="option-anchor">hardware.console.keyMap</a>
@@ -15717,10 +15809,22 @@ the hardware.console.keyMap option.</p>
   </h3>
   <div class="option-type">Type: <code>string or absolute path</code></div>
   <div class="option-description"><html><head></head><body><p>The keyboard mapping table for the virtual consoles.
-This option may have no effect if
-hardware.console.binaryKeyMap is set.</p>
+This option may have no effect if hardware.console.binaryKeyMap is set.</p>
 </body></html></div>
   <div class="option-default">Default: <code>"us"</code></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/console.nix" target="_blank">&lt;finix/modules/hardware/console.nix&gt;</a></code></div>
+</div>
+<div class="option" id="option-hardware.console.packages">
+  <h3 class="option-name">
+    <a href="#option-hardware.console.packages" class="option-anchor">hardware.console.packages</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of package</code></div>
+  <div class="option-description"><html><head></head><body><p>Extra packages providing console fonts and keymaps
+(beyond the default kbd package).</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
   <div class="option-declared">Declared in: <code><a href="https://github.com/finix-community/finix/blob/main/modules/hardware/console.nix" target="_blank">&lt;finix/modules/hardware/console.nix&gt;</a></code></div>
 </div>
 <div class="option" id="option-hardware.console.setvesablank">
