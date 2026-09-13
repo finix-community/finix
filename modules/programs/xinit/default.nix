@@ -6,6 +6,36 @@
 }:
 let
   cfg = config.programs.xinit;
+
+  sessionNames = lib.sort (a: b: a < b) (lib.attrNames cfg.sessions);
+
+  mkSession =
+    name:
+    lib.concatStringsSep "\n" [
+      "${name})"
+      (lib.concatMapStringsSep "\n" (cmd: "  ${cmd}") cfg.sessions.${name})
+      "  ;;"
+    ];
+
+  xinitrc = pkgs.writeText "xinitrc" (
+    lib.concatStringsSep "\n" [
+      "#!/bin/sh"
+      ""
+      "# merge X resources if present"
+      "[ -f ~/.Xresources ] && xrdb -merge ~/.Xresources"
+      ""
+      "session=\"\${1:-}\""
+      ""
+      "case \"$session\" in"
+      (lib.concatMapStringsSep "\n" mkSession sessionNames)
+      "*)"
+      "  echo \"unknown session: $session\""
+      "  echo \"available sessions: ${lib.concatStringsSep " " sessionNames}\""
+      "  exit 1"
+      "  ;;"
+      "esac"
+    ]
+  );
 in
 {
   options.programs.xinit = {
@@ -37,9 +67,36 @@ in
         The package to use for `xinit`.
       '';
     };
+
+    sessions = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.listOf lib.types.str);
+      default = { };
+      example = lib.literalExpression ''
+        {
+          "vxwm" = [ "pipewire &" "wireplumber &" "exec vxwm" ];
+          "oxwm" = [ "sxhkd &" "exec openbox-session" ];
+        }
+      '';
+
+      description = ''
+        Sessions generated into {file}`/etc/X11/xinit/xinitrc`.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = cfg.sessions != { };
+        message = "programs.xinit.sessions must define at least one session when programs.xinit.enable = true.";
+      }
+      {
+        assertion = lib.all (n: builtins.match "[A-Za-z0-9_-]+" n != null) sessionNames;
+        message = "programs.xinit.sessions: session names may only contain [A-Za-z0-9_-]";
+      }
+    ];
+
+    environment.etc."X11/xinit/xinitrc".source = xinitrc;
     environment.systemPackages = [ cfg.package ];
   };
 }
