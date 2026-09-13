@@ -51,11 +51,13 @@ in
     finit.services.syslogd = {
       description = "system logging daemon";
       runlevels = "S0123456789";
+      # Daemon up, not full settle: coldplug/settle may be non-blocking or killed at the runlevel change
+      # syslogd must not wait on their success
       conditions =
-        lib.optionals config.services.gardendevd.enable [ "run/gardendevctl:2/success" ]
-        ++ lib.optionals config.services.keventd.enable [ "pid/keventd" ]
-        ++ lib.optionals config.services.udev.enable [ "run/udevadm:5/success" ]
-        ++ lib.optionals config.services.mdevd.enable [ "run/coldplug/success" ];
+        lib.optionals config.services.gardendevd.enable [ "service/gardendevd/ready" ]
+        ++ lib.optionals config.services.keventd.enable [ "service/keventd/ready" ]
+        ++ lib.optionals config.services.udev.enable [ "service/udevd/ready" ]
+        ++ lib.optionals config.services.mdevd.enable [ "service/mdevd/ready" ];
       command = "${pkgs.rsyslog-light}/bin/rsyslogd -n -d -f ${configFile}";
     };
 
