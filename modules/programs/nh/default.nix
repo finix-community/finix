@@ -131,7 +131,7 @@ in
         description = ''
           Settings passed to nh as environment variables.
           
-          See [the documentation](https://github.com/nix-community/nh/tree/master/docs#environment-variables) (or man 1 nh) for a complete list of
+          See [the documentation](https://github.com/nix-community/nh/tree/master/docs#environment-variables) (or `man 1 nh`) for a complete list of
           available environment variables.
         '';
         };
