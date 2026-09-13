@@ -17,7 +17,11 @@
           config = lib.evalModules {
             class = "nixos";
             specialArgs = lib.recursiveUpdate { modules = self.nixosModules; } specialArgs;
-            modules = [ self.nixosModules.default ] ++ modules;
+            modules = [
+              self.nixosModules.default
+              ({pkgs,...}:{ services.nix-daemon.flake.source = toString pkgs.path; })
+            ]
+            ++ modules;
           };
         in
         config
