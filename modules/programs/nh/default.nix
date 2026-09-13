@@ -28,18 +28,22 @@ in
       };
       settings = lib.mkOption {
         type = lib.types.submodule {
-          freeformType = lib.types.attrsOf (lib.types.nullOr (lib.types.oneOf [
-            lib.types.str
-            lib.types.int
-            lib.types.bool
-            lib.types.path
-          ]));
+          freeformType = lib.types.attrsOf (
+            lib.types.nullOr (
+              lib.types.oneOf [
+                lib.types.str
+                lib.types.int
+                lib.types.bool
+                lib.types.path
+              ]
+            )
+          );
 
           options = {
             NH_FLAKE = lib.mkOption {
               type = lib.types.nullOr lib.types.str;
               default = null;
-              description = ''                
+              description = ''
                 The string that will be used for the `NH_FLAKE` environment variable.
 
                 `NH_FLAKE` is used by nh as the default flake for performing actions, such as
@@ -78,7 +82,7 @@ in
             NH_FILE = lib.mkOption {
               type = lib.types.nullOr lib.types.str;
               default = null;
-              description = ''                
+              description = ''
                 The string that will be used for the `NH_FILE` environment variable.
 
                 `NH_FILE` is used by nh as the default configuration file for performing actions, such as
@@ -89,7 +93,7 @@ in
             NH_ATTRP = lib.mkOption {
               type = lib.types.nullOr lib.types.str;
               default = null;
-              description = ''                
+              description = ''
                 The string that will be used for the `NH_ATTRP` environment variable.
 
                 `NH_ATTRP` is used by nh as the default attribute for performing actions, such as
@@ -127,13 +131,13 @@ in
               '';
             };
           };
-        default = { };
-        description = ''
-          Settings passed to nh as environment variables.
-          
-          See [the documentation](https://github.com/nix-community/nh/tree/master/docs#environment-variables) (or `man 1 nh`) for a complete list of
-          available environment variables.
-        '';
+          default = { };
+          description = ''
+            Settings passed to nh as environment variables.
+
+            See [the documentation](https://github.com/nix-community/nh/tree/master/docs#environment-variables) (or `man 1 nh`) for a complete list of
+            available environment variables.
+          '';
         };
       };
 
@@ -194,7 +198,11 @@ in
         };
 
         platform = lib.mkOption {
-          type = lib.types.enum [ "os" "home" "darwin" ];
+          type = lib.types.enum [
+            "os"
+            "home"
+            "darwin"
+          ];
           default = "os";
           description = ''
             Select the platform for which to perform the auto-updating.
@@ -215,28 +223,43 @@ in
               NH_DARWIN_FLAKE
             ];
           in
-            lib.all
-              (flake: !lib.hasSuffix ".nix" flake)
-              (lib.filter (flake: flake != null) flakes);
+          lib.all (flake: !lib.hasSuffix ".nix" flake) (lib.filter (flake: flake != null) flakes);
 
         message = "FLAKE options must be a directory, or valid repository, not a .nix file.";
       }
       {
-        assertion = !((cfg.settings.NH_FLAKE != null || cfg.settings.NH_OS_FLAKE != null || cfg.settings.NH_HOME_FLAKE != null || cfg.settings.NH_DARWIN_FLAKE != null) && cfg.settings.NH_FILE != null);
+        assertion =
+          !(
+            (
+              cfg.settings.NH_FLAKE != null
+              || cfg.settings.NH_OS_FLAKE != null
+              || cfg.settings.NH_HOME_FLAKE != null
+              || cfg.settings.NH_DARWIN_FLAKE != null
+            )
+            && cfg.settings.NH_FILE != null
+          );
         message = "NH_FILE and may FLAKE option can not be set at the same time, they are opposite components";
       }
       {
-        assertion = !((cfg.settings.NH_FLAKE == null && cfg.settings.NH_OS_FLAKE == null && cfg.settings.NH_HOME_FLAKE == null && cfg.settings.NH_DARWIN_FLAKE == null) && cfg.update.enable);
+        assertion =
+          !(
+            (
+              cfg.settings.NH_FLAKE == null
+              && cfg.settings.NH_OS_FLAKE == null
+              && cfg.settings.NH_HOME_FLAKE == null
+              && cfg.settings.NH_DARWIN_FLAKE == null
+            )
+            && cfg.update.enable
+          );
         message = "The update service depends on a FLAKE option being set";
       }
     ];
 
     environment = lib.mkIf cfg.enable {
       systemPackages = [ cfg.package ];
-      variables =
-      lib.mapAttrs
-        (_: v: if builtins.isBool v then (if v then "1" else "0") else toString v)
-        (lib.filterAttrs (_: v: v != null) cfg.settings);
+      variables = lib.mapAttrs (
+        _: v: if builtins.isBool v then (if v then "1" else "0") else toString v
+      ) (lib.filterAttrs (_: v: v != null) cfg.settings);
     };
 
     providers.scheduler.tasks = {
