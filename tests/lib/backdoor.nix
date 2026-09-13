@@ -80,6 +80,10 @@ in
     environment.systemPackages = [
       pkgs.iproute2
       pkgs.iputils
+
+      # the test driver runs every command as `bash -c ... | base64`
+      pkgs.bashNonInteractive
+      pkgs.coreutils
     ];
 
     # backdoor service for finit
