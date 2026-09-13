@@ -7,8 +7,26 @@
 let
   cfg = config.services.udev;
 
-  # Udev has a 512-character limit for ENV{PATH}, so create a symlink
-  # tree to work around this.
+  # HACK: finit binds the notify socket after forking... wait for it before exec'ing udevd
+  notifyWait = pkgs.writeScript "finit-notify-wait" ''
+    #!/bin/sh
+    if [ -n "''${NOTIFY_SOCKET:-}" ]; then
+      found=
+      tries=0
+      while [ -z "$found" ] && [ "$tries" -lt 100000 ]; do
+        while read -r _ _ _ _ _ _ _ name; do
+          if [ "$name" = "$NOTIFY_SOCKET" ]; then
+            found=1
+            break
+          fi
+        done < /proc/net/unix
+        tries=$((tries + 1))
+      done
+    fi
+    exec "$@"
+  '';
+
+  # udev has a 512-character limit for ENV{PATH}, so create a symlink tree to work around this
   udevPath = pkgs.buildEnv {
     name = "udev-path";
     paths = cfg.path;
@@ -19,144 +37,6 @@ let
     ignoreCollisions = true;
   };
 
-  # Perform substitutions in all udev rules files.
-  udevRulesFor =
-    {
-      name,
-      udevPackages,
-      udevPath,
-      udev,
-      binPackages,
-    }:
-    pkgs.runCommand name
-      {
-        preferLocalBuild = true;
-        allowSubstitutes = false;
-        packages = lib.unique (map toString udevPackages);
-      }
-      ''
-        mkdir -p $out
-        shopt -s nullglob
-        set +o pipefail
-
-        # Set a reasonable $PATH for programs called by udev rules.
-        echo 'ENV{PATH}="${udevPath}/bin:${udevPath}/sbin"' > $out/00-path.rules
-
-        # Add the udev rules from other packages.
-        for i in $packages; do
-          echo "Adding rules for package $i"
-          for j in $i/{etc,lib,var/lib}/udev/rules.d/*; do
-            echo "Copying $j to $out/$(basename $j)"
-            cat $j > $out/$(basename $j)
-          done
-        done
-
-        # Fix some paths in the standard udev rules.  Hacky.
-        for i in $out/*.rules; do
-          substituteInPlace $i \
-            --replace-quiet \"/sbin/modprobe \"${lib.getExe' pkgs.kmod "modprobe"} \
-            --replace-quiet \"/sbin/mdadm \"${pkgs.mdadm}/sbin/mdadm \
-            --replace-quiet \"/sbin/blkid \"${pkgs.util-linux}/sbin/blkid \
-            --replace-quiet \"/bin/mount \"${pkgs.util-linux}/bin/mount \
-            --replace-quiet /usr/bin/readlink ${lib.getExe' config.programs.coreutils.package "readline"} \
-            --replace-quiet /usr/bin/cat ${lib.getExe' config.programs.coreutils.package "cat"} \
-            --replace-quiet /usr/bin/basename ${lib.getExe' config.programs.coreutils.package "basename"} 2>/dev/null
-        done
-
-        echo -n "Checking that all programs called by relative paths in udev rules exist in ${udev}/lib/udev... "
-        import_progs=$(grep 'IMPORT{program}="[^/$]' $out/* |
-          sed -e 's/.*IMPORT{program}="\([^ "]*\)[ "].*/\1/' | uniq)
-        run_progs=$(grep -v '^[[:space:]]*#' $out/* | grep 'RUN+="[^/$]' |
-          sed -e 's/.*RUN+="\([^ "]*\)[ "].*/\1/' | uniq)
-        for i in $import_progs $run_progs; do
-          if [[ ! -x ${udev}/lib/udev/$i && ! $i =~ socket:.* ]]; then
-            echo "FAIL"
-            echo "$i is called in udev rules but not installed by udev"
-            exit 1
-          fi
-        done
-        echo "OK"
-
-        echo -n "Checking that all programs called by absolute paths in udev rules exist... "
-        import_progs=$(grep 'IMPORT{program}="/' $out/* |
-          sed -e 's/.*IMPORT{program}="\([^ "]*\)[ "].*/\1/' | uniq)
-        run_progs=$(grep -v '^[[:space:]]*#' $out/* | grep 'RUN+="/' |
-          sed -e 's/.*RUN+="\([^ "]*\)[ "].*/\1/' | uniq)
-        for i in $import_progs $run_progs; do
-          if [[ ! -x $i ]]; then
-            echo "FAIL"
-            echo "$i is called in udev rules but is not executable or does not exist"
-            exit 1
-          fi
-        done
-        echo "OK"
-
-        filesToFixup="$(for i in "$out"/*; do
-          # list all files referring to (/usr)/bin paths, but allow references to /bin/sh.
-          grep -P -l '\B(?!\/bin\/sh\b)(\/usr)?\/bin(?:\/.*)?' "$i" || :
-        done)"
-
-        if [ -n "$filesToFixup" ]; then
-          echo "Consider fixing the following udev rules:"
-          echo "$filesToFixup" | while read localFile; do
-            remoteFile="origin unknown"
-            for i in ${toString binPackages}; do
-              for j in "$i"/*/udev/rules.d/*; do
-                [ -e "$out/$(basename "$j")" ] || continue
-                [ "$(basename "$j")" = "$(basename "$localFile")" ] || continue
-                remoteFile="originally from $j"
-                break 2
-              done
-            done
-            refs="$(
-              grep -o '\B\(/usr\)\?/s\?bin/[^ "]\+' "$localFile" \
-                | sed -e ':r;N;''${s/\n/ and /;br};s/\n/, /g;br'
-            )"
-            echo "$localFile ($remoteFile) contains references to $refs."
-          done
-          exit 1
-        fi
-      '';
-
-  initrdUdevRules = pkgs.runCommand "initrd-udev-rules" { } ''
-    mkdir -p $out/etc/udev/rules.d
-    for f in 60-cdrom_id 60-persistent-storage 75-net-description 80-drivers; do # 80-net-setup-link; do
-      cp ${pkgs.eudev}/var/lib/udev/rules.d/$f.rules $out/etc/udev/rules.d
-    done
-  '';
-
-  udevRulesEarly = udevRulesFor {
-    name = "udev-rules";
-    udevPackages = [ initrdUdevRules ];
-    binPackages = [ initrdUdevRules ];
-    udev = pkgs.eudev;
-
-    inherit udevPath;
-  };
-
-  hwdbBin =
-    pkgs.runCommand "hwdb.bin"
-      {
-        preferLocalBuild = true;
-        allowSubstitutes = false;
-        packages = lib.unique (map toString ([ pkgs.udev ] ++ cfg.packages));
-      }
-      ''
-        mkdir -p etc/udev/hwdb.d
-        for i in $packages; do
-          echo "Adding hwdb files for package $i"
-          for j in $i/{etc,lib,var/lib}/udev/hwdb.d/*; do
-            ln -s $j etc/udev/hwdb.d/$(basename $j)
-          done
-        done
-
-        echo "Generating hwdb database..."
-        # hwdb --update doesn't return error code even on errors!
-        res="$(${pkgs.buildPackages.eudev}/bin/udevadm hwdb --update --root $(pwd) 2>&1)"
-        echo "$res"
-        [ -z "$(echo "$res" | egrep '^Error')" ]
-        mv etc/udev/hwdb.bin $out
-      '';
 in
 {
   options.services.udev = {
@@ -164,25 +44,7 @@ in
       type = lib.types.bool;
       default = false;
       description = ''
-        Whether to enable [eudev](${pkgs.eudev.meta.homepage}) as a system service.
-      '';
-    };
-
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.eudev.overrideAttrs (o: {
-        # see https://github.com/eudev-project/eudev/pull/290
-        patches = (o.patches or [ ]) ++ [
-          (pkgs.fetchpatch {
-            name = "s6-readiness.patch";
-            url = "https://github.com/eudev-project/eudev/pull/290/commits/48e9923a1d0218d714989d8aec119e301aa930ae.patch";
-            sha256 = "sha256-Icor2v2OYizquLW0ytYONjhCUW+oTs5srABamQR9Uvk=";
-          })
-        ];
-      });
-      defaultText = lib.literalExpression "pkgs.eudev";
-      description = ''
-        The package to use for `eudev`.
+        Whether to enable [udev](${pkgs.systemdMinimal.meta.homepage}) as a system service.
       '';
     };
 
@@ -207,6 +69,15 @@ in
       apply = map lib.getBin;
     };
 
+    package = lib.mkOption {
+      type = lib.types.package;
+      default = pkgs.systemdMinimal;
+      defaultText = lib.literalExpression "pkgs.systemdMinimal";
+      description = ''
+        The package to use for `udev`.
+      '';
+    };
+
     path = lib.mkOption {
       type = with lib.types; listOf path;
       default = [ ];
@@ -221,7 +92,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    # services.udev.packages = [ extraUdevRules extraHwdbFile ];
     services.udev.path = [
       config.programs.coreutils.package
       pkgs.gnused
@@ -230,20 +100,18 @@ in
       cfg.package
     ];
 
-    # adapted from https://github.com/troglobit/finit/blob/master/system/10-hotplug.conf.in
     finit.services.udevd = {
-      description = "device event daemon (${cfg.package.pname})";
+      description = "device event daemon";
       runlevels = "S12345789";
-      command = "${cfg.package}/bin/udevd --ready-notify=%n" + lib.optionalString cfg.debug " -D";
-      notify = "s6";
+      command =
+        "${notifyWait} ${cfg.package}/lib/systemd/systemd-udevd" + lib.optionalString cfg.debug " -D";
+      notify = "systemd";
       pid = "udevd";
       log = true;
       nohup = true;
       cgroup.name = "system";
     };
 
-    # Wait for udevd to start, then trigger coldplug events and module loading.
-    # The last 'settle' call waits for it to finalize processing all uevents.
     finit.run =
       let
         defaults = {
@@ -279,15 +147,71 @@ in
         };
       };
 
-    environment.etc."udev/hwdb.bin" = lib.mkIf (cfg.packages != [ ]) { source = hwdbBin; };
-    environment.etc."udev/rules.d".source = udevRulesFor {
-      name = "udev-rules";
-      udevPackages = [ cfg.package ] ++ cfg.packages;
-      binPackages = [ cfg.package ] ++ cfg.packages;
-      udev = cfg.package;
+    environment.etc."udev/hwdb.bin" = lib.mkIf (cfg.packages != [ ]) {
+      source =
+        pkgs.runCommand "hwdb.bin"
+          {
+            __structuredAttrs = true;
+            preferLocalBuild = true;
+            allowSubstitutes = false;
+            packages = lib.unique (map toString ([ pkgs.buildPackages.systemd ] ++ cfg.packages));
+          }
+          ''
+            shopt -s nullglob
 
-      inherit udevPath;
+            mkdir -p etc/udev/hwdb.d
+            for i in "''${packages[@]}"; do
+              echo "adding hwdb files for package $i"
+              for j in "$i"/{etc,lib,var/lib}/udev/hwdb.d/*; do
+                # must be a copy, not a symlink: `--root` below chases links *within* the root
+                cp "$j" "etc/udev/hwdb.d/$(basename "$j")"
+              done
+            done
+
+            echo "generating hwdb database..."
+            ${pkgs.buildPackages.systemd}/bin/systemd-hwdb --strict --root="$PWD" update
+            mv etc/udev/hwdb.bin $out
+          '';
     };
+
+    environment.etc."udev/rules.d".source =
+      pkgs.runCommand "udev-rules"
+        {
+          __structuredAttrs = true;
+          preferLocalBuild = true;
+          allowSubstitutes = false;
+          packages = lib.unique (map toString ([ cfg.package ] ++ cfg.packages));
+        }
+        ''
+          mkdir -p $out
+          shopt -s nullglob
+
+          # set a reasonable $PATH for programs called by udev rules
+          echo 'ENV{PATH}="${udevPath}/bin:${udevPath}/sbin"' > $out/00-path.rules
+
+          for i in "''${packages[@]}"; do
+            echo "Adding rules for package $i"
+            for j in "$i"/{etc,lib,var/lib}/udev/rules.d/*; do
+              echo "Copying $j to $out/$(basename "$j")"
+              cat "$j" > "$out/$(basename "$j")"
+            done
+          done
+
+          # unused or problematic
+          rm -f $out/99-systemd.rules $out/60-tpm2-id.rules
+
+          # fix some paths in the standard udev rules
+          for i in $out/*.rules; do
+            substituteInPlace $i \
+              --replace-quiet \"/sbin/modprobe \"${lib.getExe' pkgs.kmod "modprobe"} \
+              --replace-quiet \"/sbin/mdadm \"${pkgs.mdadm}/sbin/mdadm \
+              --replace-quiet \"/sbin/blkid \"${pkgs.util-linux}/sbin/blkid \
+              --replace-quiet \"/bin/mount \"${pkgs.util-linux}/bin/mount \
+              --replace-quiet /usr/bin/readlink ${lib.getExe' config.programs.coreutils.package "readlink"} \
+              --replace-quiet /usr/bin/cat ${lib.getExe' config.programs.coreutils.package "cat"} \
+              --replace-quiet /usr/bin/basename ${lib.getExe' config.programs.coreutils.package "basename"} 2>/dev/null
+          done
+        '';
 
     # where does this belong?
     system.activation.scripts.udevd = lib.mkIf config.boot.kernel.enable {
@@ -308,48 +232,77 @@ in
 
     # build out the default initramfs image
     boot.initrd = {
-      path = [ config.services.udev.package ];
-
       finit.services.udevd = {
-        command = "/bin/udevd --ready-notify=%n";
-        notify = "s6";
+        command = "${notifyWait} ${cfg.package}/lib/systemd/systemd-udevd";
+        notify = "systemd";
       };
 
       finit.run = {
         "udevadm@1" = {
-          command = "udevadm settle -t 0";
+          command = "${cfg.package}/bin/udevadm settle -t 0";
           conditions = "service/udevd/ready";
           priority = 200;
         };
         "udevadm@2" = {
-          command = "udevadm control --reload";
+          command = "${cfg.package}/bin/udevadm control --reload";
           conditions = "service/udevd/ready";
           priority = 210;
         };
         "udevadm@3" = {
-          command = "udevadm trigger -c add -t devices";
+          command = "${cfg.package}/bin/udevadm trigger -c add -t devices";
           conditions = "service/udevd/ready";
           priority = 220;
         };
         "udevadm@4" = {
-          command = "udevadm trigger -c add -t subsystems";
+          command = "${cfg.package}/bin/udevadm trigger -c add -t subsystems";
           conditions = "service/udevd/ready";
           priority = 230;
         };
         "udevadm@5" = {
-          command = "udevadm settle -t 30";
+          command = "${cfg.package}/bin/udevadm settle -t 30";
           conditions = "service/udevd/ready";
           priority = 240;
         };
       };
 
       contents = [
+        { source = notifyWait; }
         {
-          target = "/etc/udev/rules.d";
-          source = udevRulesEarly;
+          source = "${cfg.package}/bin/udevadm";
+          dlopen = "recommended";
         }
-        { source = "${pkgs.eudev}/lib/udev"; }
-      ];
+        {
+          # without the dlopen'd libkmod, MODALIAS autoloading silently stops
+          source = "${cfg.package}/lib/systemd/systemd-udevd";
+          dlopen = "recommended";
+        }
+      ]
+      ++
+        # minimal set of rules needed for initramfs
+        map
+          (v: {
+            target = "/etc/udev/rules.d/${v}.rules";
+            source = "${cfg.package}/lib/udev/rules.d/${v}.rules";
+          })
+          [
+            "60-block"
+            "60-cdrom_id"
+            "60-persistent-storage"
+            "75-net-description"
+            "80-drivers"
+          ]
+      ++
+        # helpers called by bare name, which udev resolves against its own libexec directory
+        map
+          (v: {
+            source = "${cfg.package}/lib/udev/${v}";
+            dlopen = "recommended";
+          })
+          [
+            "ata_id"
+            "cdrom_id"
+            "scsi_id"
+          ];
     };
   };
 }

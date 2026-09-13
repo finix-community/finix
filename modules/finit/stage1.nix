@@ -147,6 +147,7 @@ let
           "none"
           "pid"
           "s6"
+          "systemd"
         ];
         default = config.finit.readiness;
         defaultText = lib.literalExpression "config.finit.readiness";
