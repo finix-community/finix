@@ -58,25 +58,11 @@ in
       mkdir -p /etc
 
       # userborn logs using the sd-daemon priority-prefix convention
-      # (e.g. "<6>Created group foo"), which systemd-journald normally
-      # strips and colorizes. finix has no journald, so translate the
-      # prefixes into ANSI colors ourselves instead of leaking them raw.
-      ${pkgs.userborn}/bin/userborn ${configFile} 2>&1 | while IFS= read -r line; do
-        case "$line" in
-          '<'[0-3]'>'*)
-            printf '\e[31m%s\e[0m\n' "''${line#<[0-3]>}"
-            ;;
-          '<4>'*)
-            printf '\e[33m%s\e[0m\n' "''${line#<4>}"
-            ;;
-          '<'[5-7]'>'*)
-            printf '%s\n' "''${line#<[5-7]>}"
-            ;;
-          *)
-            printf '%s\n' "$line"
-            ;;
-        esac
-      done
+      # (e.g. "<6>Created group foo"), meant for systemd-journald to pick up. 
+      # finix has none, so route it into syslog instead: logger's
+      # --prio-prefix understands this exact format and turns it into a syslog priority, so the message doesn't just get dropped
+      ${pkgs.userborn}/bin/userborn ${configFile} 2>&1 \
+        | ${pkgs.util-linux}/bin/logger --prio-prefix -t userborn
       _localstatus=''${PIPESTATUS[0]}
     '';
 
