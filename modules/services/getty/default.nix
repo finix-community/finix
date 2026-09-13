@@ -57,7 +57,7 @@ in
     environment.etc.issue = lib.mkDefault {
       text = ''
 
-        [1;32m<<< welcome to finix >>>[0m
+        ${"\e"}[1;32m<<< welcome to finix >>>${"\e"}[0m
 
       '';
     };
