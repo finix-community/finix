@@ -19,6 +19,9 @@ fi
 # Ensure /tmp exists for mktemp (specialfs activation runs after us).
 mkdir -p /tmp
 
+# TMPDIR may leak in from outside the chroot (e.g. nixos-install sets it before chrooting into /mnt) pointing mktemp at a path that doesn't exist
+unset TMPDIR
+
 # Atomically update /etc/static to point at current configuration's etc.
 ln -sfn "$etc" "$static"
 
