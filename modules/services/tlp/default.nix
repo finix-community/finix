@@ -35,7 +35,7 @@ in {
         type = lib.types.bool;
         default = false;
         description = ''
-          Whether to enable tlp-pd, a power-profile-daemon like DBus interface for TLP.
+          Whether to enable [tlp-pd](${pkgs.tlp-pd.meta.homepage}) as a system service.
         '';
       };
       package = lib.mkOption {
@@ -122,7 +122,6 @@ in {
     finit.services.tlp-pd = {
       description = "tlp-pd service";
       command = lib.getExe cfg.pd.package;
-      runlevels = "2345";
     };
 
     # TODO: add finit.services.restartTriggers option
