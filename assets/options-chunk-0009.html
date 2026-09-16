@@ -1,3 +1,20 @@
+<div class="option" id="option-services.openssh.sftp.enable">
+  <h3 class="option-name">
+    <a href="#option-services.openssh.sftp.enable" class="option-anchor">services.openssh.sftp.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable the SFTP subsystem.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/openssh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/openssh&gt;</a></code></dd>
+  </dl>
+</div>
 <div class="option" id="option-services.openssh.sftp.executable">
   <h3 class="option-name">
     <a href="#option-services.openssh.sftp.executable" class="option-anchor">services.openssh.sftp.executable</a>
@@ -1763,24 +1780,6 @@ for additional details.</p>
   <dl class="option-details">
     <dt>Type</dt><dd class="option-value"><code>package</code></dd>
     <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">upower</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/upower" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/upower&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.upower.settings">
-  <h3 class="option-name">
-    <a href="#option-services.upower.settings" class="option-anchor">services.upower.settings</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p><code>upower</code> configuration. See <a href="https://gitlab.freedesktop.org/upower/upower/-/blob/master/etc/UPower.conf">upstream documentation</a>
-for additional details.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>open submodule of attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
 </body></html></dd>
   </dl>
   <dl class="option-details option-sources">
