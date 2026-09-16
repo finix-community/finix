@@ -1,3 +1,42 @@
+<div class="option" id="option-programs.micro.defaultEditor">
+  <h3 class="option-name">
+    <a href="#option-programs.micro.defaultEditor" class="option-anchor">programs.micro.defaultEditor</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to configure <a href="https://micro-editor.github.io">micro</a> as the
+default editor using the <code>EDITOR</code> environment variable.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/micro" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/micro&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-programs.modprobe.enable">
+  <h3 class="option-name">
+    <a href="#option-programs.modprobe.enable" class="option-anchor">programs.modprobe.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git/">modprobe</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is useful for systems like containers which do not require a kernel.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/modprobe" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/modprobe&gt;</a></code></dd>
+  </dl>
+</div>
 <div class="option" id="option-programs.modprobe.blacklist">
   <h3 class="option-name">
     <a href="#option-programs.modprobe.blacklist" class="option-anchor">programs.modprobe.blacklist</a>
@@ -1743,39 +1782,5 @@ configuration. Card-specific drivers that need explicit configuration
   </dl>
   <dl class="option-details option-sources">
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nftables/providers.firewall.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nftables/providers.firewall.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-providers.privileges.backend">
-  <h3 class="option-name">
-    <a href="#option-providers.privileges.backend" class="option-anchor">providers.privileges.backend</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The selected module which should implement functionality for the <code class="nixos-option">providers.privileges</code> contract.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>one of "sudo", "doas", "none"</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">none</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/sudo/providers.privileges.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/sudo/providers.privileges.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-providers.privileges.command">
-  <h3 class="option-name">
-    <a href="#option-providers.privileges.command" class="option-anchor">providers.privileges.command</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The command to be used by modules requiring privilege escalation.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>main program, path or command</code></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/run/wrappers/bin/sudo</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/privileges" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/privileges&gt;</a></code></dd>
   </dl>
 </div>

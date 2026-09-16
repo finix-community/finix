@@ -1,3 +1,38 @@
+<div class="option" id="option-services.iwd.debug">
+  <h3 class="option-name">
+    <a href="#option-services.iwd.debug" class="option-anchor">services.iwd.debug</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/iwd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/iwd&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.iwd.settings">
+  <h3 class="option-name">
+    <a href="#option-services.iwd.settings" class="option-anchor">services.iwd.settings</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p><code>iwd</code> configuration. See <a href="https://man.archlinux.org/man/iwd.config.5" class="manpage-reference">iwd.config(5)</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/iwd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/iwd&gt;</a></code></dd>
+  </dl>
+</div>
 <div class="option" id="option-services.jellyfin.enable">
   <h3 class="option-name">
     <a href="#option-services.jellyfin.enable" class="option-anchor">services.jellyfin.enable</a>
@@ -1859,42 +1894,6 @@ and
   <dl class="option-details">
     <dt>Type</dt><dd class="option-value"><code>list of 16 bit unsigned integer; between 0 and 65535 (both inclusive)</code></dd>
     <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(209,154,102);">22</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/openssh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/openssh&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.openssh.settings.StrictModes">
-  <h3 class="option-name">
-    <a href="#option-services.openssh.settings.StrictModes" class="option-anchor">services.openssh.settings.StrictModes</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Whether sshd should check file modes and ownership of directories</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/openssh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/openssh&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.openssh.settings.UsePAM">
-  <h3 class="option-name">
-    <a href="#option-services.openssh.settings.UsePAM" class="option-anchor">services.openssh.settings.UsePAM</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Whether to enable PAM authentication.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
-</body></html></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
 </body></html></dd>
   </dl>
   <dl class="option-details option-sources">

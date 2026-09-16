@@ -1,3 +1,37 @@
+<div class="option" id="option-services.upower.enable">
+  <h3 class="option-name">
+    <a href="#option-services.upower.enable" class="option-anchor">services.upower.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://upower.freedesktop.org/">upower</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/upower" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/upower&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.upower.package">
+  <h3 class="option-name">
+    <a href="#option-services.upower.package" class="option-anchor">services.upower.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>upower</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">upower</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/upower" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/upower&gt;</a></code></dd>
+  </dl>
+</div>
 <div class="option" id="option-services.upower.settings">
   <h3 class="option-name">
     <a href="#option-services.upower.settings" class="option-anchor">services.upower.settings</a>
@@ -1836,40 +1870,6 @@ specifications</a> for more information.</p>
   <dl class="option-details">
     <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
     <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/xdg/portal.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/xdg/portal.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-xdg.portal.package">
-  <h3 class="option-name">
-    <a href="#option-xdg.portal.package" class="option-anchor">xdg.portal.package</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The package to use for <code>xdg-desktop-portal</code>.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">xdg-desktop-portal</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/xdg/portal.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/xdg/portal.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-xdg.portal.portals">
-  <h3 class="option-name">
-    <a href="#option-xdg.portal.portals" class="option-anchor">xdg.portal.portals</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>List of XDG desktop portal packages to install.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>list of package</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
 </body></html></dd>
   </dl>
   <dl class="option-details option-sources">

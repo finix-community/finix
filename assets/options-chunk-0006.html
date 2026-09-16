@@ -1,3 +1,37 @@
+<div class="option" id="option-providers.privileges.backend">
+  <h3 class="option-name">
+    <a href="#option-providers.privileges.backend" class="option-anchor">providers.privileges.backend</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The selected module which should implement functionality for the <code class="nixos-option">providers.privileges</code> contract.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>one of "sudo", "doas", "none"</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">none</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/sudo/providers.privileges.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/sudo/providers.privileges.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-providers.privileges.command">
+  <h3 class="option-name">
+    <a href="#option-providers.privileges.command" class="option-anchor">providers.privileges.command</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The command to be used by modules requiring privilege escalation.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>main program, path or command</code></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/run/wrappers/bin/sudo</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/privileges" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/privileges&gt;</a></code></dd>
+  </dl>
+</div>
 <div class="option" id="option-providers.privileges.rules">
   <h3 class="option-name">
     <a href="#option-providers.privileges.rules" class="option-anchor">providers.privileges.rules</a>
@@ -1765,42 +1799,6 @@ of the crontab.</p>
 </body></html></div>
   <dl class="option-details">
     <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/cron" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/cron&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.cron.settings.PATH">
-  <h3 class="option-name">
-    <a href="#option-services.cron.settings.PATH" class="option-anchor">services.cron.settings.PATH</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Packages added to the <code>cron</code> PATH environment variable.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>list of (absolute path or package)</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(232,102,113);">/run/wrappers</span><br>&nbsp;&nbsp;<span style="color:rgb(171,178,191);">config</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">programs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">coreutils</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">package</span><br><span style="color:rgb(132,139,152);">]</span><br></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/cron" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/cron&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.cron.settings.RANDOM_DELAY">
-  <h3 class="option-name">
-    <a href="#option-services.cron.settings.RANDOM_DELAY" class="option-anchor">services.cron.settings.RANDOM_DELAY</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Allows delaying job startups by random amount of minutes with upper limit specified
-by this value. The random scaling factor is determined during the cron daemon startup
-so it remains constant for the whole run time of the daemon.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>null or signed integer</code></dd>
     <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
 </body></html></dd>
   </dl>
