@@ -735,10 +735,17 @@ in
       defaultText = lib.literalExpression "pkgs.finit";
       apply =
         package:
-        (package.override {
-          plymouthSupport = config.programs.plymouth.enable;
-          plymouth = config.programs.plymouth.package;
-        }).overrideAttrs
+        (package.override (
+          {
+            plymouthSupport = config.programs.plymouth.enable;
+            plymouth = config.programs.plymouth.package;
+          }
+          //
+            lib.optionalAttrs (config.services.keventd.enable && package.override.__functionArgs ? udevSupport)
+              {
+                udevSupport = true;
+              }
+        )).overrideAttrs
           (o: {
             configureFlags = o.configureFlags ++ [ "--with-plugin-path=${finix-setup}/lib/finit/plugins" ];
           });
