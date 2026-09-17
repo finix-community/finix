@@ -3,15 +3,17 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.services.tlp;
   tlpExe = lib.getExe cfg.package;
 
   format = pkgs.formats.keyValue {
-    mkKeyValue = lib.generators.mkKeyValueDefault {} "=";
+    mkKeyValue = lib.generators.mkKeyValueDefault { } "=";
     listToValue = l: "\"${toString l}\"";
   };
-in {
+in
+{
   options.services.tlp = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -50,7 +52,7 @@ in {
 
     settings = lib.mkOption {
       type = format.type;
-      default = {};
+      default = { };
       description = ''
         `tlp` configuration. See [upstream documentation](https://linrunner.de/tlp/settings)
         for additional details.
@@ -61,11 +63,10 @@ in {
   config = lib.mkIf cfg.enable {
     environment.etc."tlp.conf".source = format.generate "tlp.conf" cfg.settings;
 
-    environment.systemPackages =
-      [
-        cfg.package
-      ]
-      ++ lib.optionals cfg.pd.enable [cfg.pd.package];
+    environment.systemPackages = [
+      cfg.package
+    ]
+    ++ lib.optionals cfg.pd.enable [ cfg.pd.package ];
 
     finit.tmpfiles.rules = [
       "d /var/lib/tlp"
@@ -83,7 +84,7 @@ in {
       };
     };
 
-    services.udev.packages = [cfg.package];
+    services.udev.packages = [ cfg.package ];
 
     # TODO: revisit rules... compare with udev
     services.mdevd.hotplugRules = ''
