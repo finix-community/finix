@@ -120,7 +120,7 @@ in
       };
     };
 
-    finit.services.tlp-pd = {
+    finit.services.tlp-pd = lib.mkIf cfg.pd.enable {
       description = "tlp-pd service";
       command = lib.getExe cfg.pd.package;
     };
