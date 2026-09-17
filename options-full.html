@@ -8626,6 +8626,52 @@
   
   <li>
     <details class="toc-category">
+      <summary title="services.nix-collect-garbage">
+        <span>services.nix-collect-garbage</span>
+        <span class="toc-count">4</span>
+      </summary>
+      <ul>
+        
+
+        
+        <li>
+          <a href='#option-services.nix-collect-garbage.enable' title="services.nix-collect-garbage.enable">
+            enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.nix-collect-garbage.extraArgs' title="services.nix-collect-garbage.extraArgs">
+            extraArgs
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.nix-collect-garbage.interval' title="services.nix-collect-garbage.interval">
+            interval
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.nix-collect-garbage.package' title="services.nix-collect-garbage.package">
+            package
+            
+            
+          </a>
+        </li>
+        
+      </ul>
+    </details>
+  </li>
+  
+  <li>
+    <details class="toc-category">
       <summary title="services.nix-daemon">
         <span>services.nix-daemon</span>
         <span class="toc-count">15</span>
@@ -26763,6 +26809,82 @@ this list.</p>
   </dl>
   <dl class="option-details option-sources">
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nftables" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nftables&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.nix-collect-garbage.enable">
+  <h3 class="option-name">
+    <a href="#option-services.nix-collect-garbage.enable" class="option-anchor">services.nix-collect-garbage.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://nixos.org/nix">nix-collect-garbage</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nix-collect-garbage" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nix-collect-garbage&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.nix-collect-garbage.package">
+  <h3 class="option-name">
+    <a href="#option-services.nix-collect-garbage.package" class="option-anchor">services.nix-collect-garbage.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>nix-collect-garbage</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">nix</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nix-collect-garbage" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nix-collect-garbage&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.nix-collect-garbage.extraArgs">
+  <h3 class="option-name">
+    <a href="#option-services.nix-collect-garbage.extraArgs" class="option-anchor">services.nix-collect-garbage.extraArgs</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <code>nix-collect-garbage</code>. See <a href="https://man.archlinux.org/man/extra/nix/nix-collect-garbage.1" class="manpage-reference">nix-collect-garbage(1)</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">--delete-older-than</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nix-collect-garbage" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nix-collect-garbage&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.nix-collect-garbage.interval">
+  <h3 class="option-name">
+    <a href="#option-services.nix-collect-garbage.interval" class="option-anchor">services.nix-collect-garbage.interval</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The interval at which this task should run its specified <code class="nixos-option">command</code>. Accepts either a
+standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression or one of: <code>hourly</code>, <code>daily</code>, <code>weekly</code>, <code>monthly</code>, or <code>yearly</code>.</p>
+<p>If a standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression is provided this value will be passed directly
+to the <code>scheduler</code> implementation and execute exactly as specified.</p>
+<p>If one of the special values, <code>hourly</code>, <code>daily</code>, <code>monthly</code>, <code>weekly</code>, or <code>yearly</code>, is provided then the
+underlying <code>scheduler</code> implementation will use its features to decide when best to run.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">weekly</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nix-collect-garbage" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nix-collect-garbage&gt;</a></code></dd>
   </dl>
 </div>
 <div class="option" id="option-services.nix-daemon.enable">
