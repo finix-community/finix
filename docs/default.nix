@@ -44,15 +44,19 @@ let
         ) opt.declarations;
       };
   };
+
+  ndgConfig = pkgs.replaceVars ./ndg.toml { logo = "${../assets/finix-logo.svg}"; };
 in
-pkgs.runCommandLocal "finix-options-doc" { nativeBuildInputs = [ pkgs.ndg ]; } ''
+pkgs.runCommandLocal "finix-documentation" { nativeBuildInputs = [ pkgs.ndg ]; } ''
   mkdir -p $out
 
-  ndg html \
+  ndg --config-file ${ndgConfig} \
+    html \
     --jobs $NIX_BUILD_CORES \
     --title finix \
     --module-options ${doc.optionsJSON}/share/doc/nixos/options.json \
     --manpage-urls ${./manpage-urls.json} \
-    --input-dir ${./.} \
+    --input-dir ${./manual} \
+    --template-dir ${./templates} \
     --output-dir "$out"
 ''

@@ -1,0 +1,10 @@
+<nav class="header-nav" aria-label="Primary">
+  <ul>
+    <li {{ has_options|safe }}>
+      <a href="{{ options_path }}">Options</a>
+    </li>
+    {% if generate_search %}
+    <li><a href="{{ search_path }}">Site Search</a></li>
+    {% endif %}
+  </ul>
+</nav>
