@@ -84,6 +84,7 @@ in
       };
     };
 
+    services.dbus.packages = lib.mkIf cfg.pd.enable [ cfg.pd.package ];
     services.udev.packages = [ cfg.package ];
 
     # TODO: revisit rules... compare with udev
