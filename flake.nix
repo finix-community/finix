@@ -3,6 +3,16 @@
 
   outputs =
     { self }:
+    let
+      sources = import ./lon.nix;
+      lib = import (sources.nixpkgs + "/lib");
+
+      forAllSystems =
+        function:
+        lib.genAttrs [ "x86_64-linux" "aarch64-linux" ] (
+          system: function (import sources.nixpkgs { inherit system; })
+        );
+    in
     {
       nixosModules = import ./modules;
 
@@ -26,15 +36,10 @@
           inherit lib;
         };
 
-      formatter =
-        let
-          sources = import ./lon.nix;
-          lib = import (sources.nixpkgs + "/lib");
+      formatter = forAllSystems (pkgs: pkgs.nixfmt-tree);
 
-          pkgsFor = system: import sources.nixpkgs { inherit system; };
-        in
-        lib.genAttrs' [ "aarch64-linux" "x86_64-linux" ] (
-          system: lib.nameValuePair system (pkgsFor system).nixfmt-tree
-        );
+      devShells = forAllSystems (pkgs: {
+        default = import ./shell.nix { inherit pkgs; };
+      });
     };
 }
