@@ -111,8 +111,7 @@ in
       nohup = true;
       log = true;
 
-      # TODO: now we're hijacking `envfile` and no one else can use it...
-      envfile = cfg.settings;
+      environment = cfg.settings;
       path = [ pkgs.unixtools.ping ];
     };
 
