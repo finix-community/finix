@@ -245,7 +245,7 @@ in
       ];
       command = "${cfg.package}/bin/dockerd " + lib.escapeShellArgs cfg.extraArgs;
       notify = "systemd";
-      reload = "${pkgs.procps}/bin/kill -s HUP $MAINPID";
+      exec-reload = "${pkgs.procps}/bin/kill -s HUP $MAINPID";
       path = [
         pkgs.kmod
       ]

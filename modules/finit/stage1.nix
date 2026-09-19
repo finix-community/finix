@@ -23,6 +23,10 @@ let
 
   # baseOpts: options shared by ALL stanza types (service, task, run, tty)
   baseOpts = {
+    imports = [
+      (lib.mkRenamedOptionModule [ "runlevels" ] [ "runlevel" ])
+    ];
+
     options = {
       enable = lib.mkOption {
         type = lib.types.bool;
@@ -59,7 +63,7 @@ let
         '';
       };
 
-      runlevels = lib.mkOption {
+      runlevel = lib.mkOption {
         type = lib.types.str; # TODO: string  matching 0-9S
         default = "S";
         description = ''
@@ -141,6 +145,10 @@ let
 
   # serviceOpts: options specific to service stanzas only
   serviceOpts = {
+    imports = [
+      (lib.mkRenamedOptionModule [ "restart" ] [ "restart-max" ])
+    ];
+
     options = {
       notify = lib.mkOption {
         type = lib.types.enum [
@@ -155,7 +163,7 @@ let
         '';
       };
 
-      restart = lib.mkOption {
+      restart-max = lib.mkOption {
         type = with lib.types; nullOr (ints.between (-1) 255);
         default = null;
         description = ''
@@ -171,7 +179,7 @@ let
         default = false;
         description = ''
           Enable endless restarts without counting toward the retry limit. When set, the service
-          will be restarted indefinitely regardless of the `restart` limit.
+          will be restarted indefinitely regardless of the `restart-max` limit.
         '';
       };
     };
@@ -279,12 +287,12 @@ let
     lib.concatStringsSep " " (
       [
         svcType
-        "[${svc.runlevels}]"
+        "[${svc.runlevel}]"
       ]
       ++ lib.optional (svc.name or null != null) "name:${svc.name}"
       ++ lib.optional (svc.id or null != null) ":${svc.id}"
       ++ lib.optional (svc.respawn or false) "respawn"
-      ++ lib.optional (svc.restart or null != null) "restart:${toString svc.restart}"
+      ++ lib.optional (svc.restart-max or null != null) "restart:${toString svc.restart-max}"
       ++ lib.optional (svc.notify or null != null) "notify:${svc.notify}"
       ++ lib.optional (svc.conditions or [ ] != [ ]) "<${lib.concatStringsSep "," svc.conditions}>"
       ++ lib.optional (svc.tty or null != null) "tty:${svc.tty}"

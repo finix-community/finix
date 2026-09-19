@@ -42,7 +42,7 @@ in
     };
 
     finit.run.switch-root = {
-      runlevels = "1";
+      runlevel = "1";
       script = ''
         # process the kernel command line to find init=
         stage2Init=/init
@@ -96,7 +96,7 @@ in
     };
 
     finit.ttys.rescue = {
-      runlevels = "1";
+      runlevel = "1";
       device = "@console";
       conditions = "run/switch-root/failure";
       rescue = true;

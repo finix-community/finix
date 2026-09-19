@@ -129,7 +129,7 @@ let
         in
         {
           description = "Encrypted swap device on ${sw.device}";
-          runlevels = "S";
+          runlevel = "S";
           command = toString (
             pkgs.writeShellScript name ''
               set -eu

@@ -84,7 +84,7 @@ in
         description = "tlp system startup";
         command = "${tlpExe} init start";
         conditions = "service/syslogd/ready";
-        runlevels = "S";
+        runlevel = "S";
       };
 
       "tlp@reload" = {
@@ -97,7 +97,7 @@ in
         description = "tlp system shutdown";
         command = "${tlpExe} init stop";
         conditions = "service/syslogd/ready";
-        runlevels = "06";
+        runlevel = "06";
       };
     };
 

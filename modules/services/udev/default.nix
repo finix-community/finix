@@ -233,10 +233,10 @@ in
     # adapted from https://github.com/troglobit/finit/blob/master/system/10-hotplug.conf.in
     finit.services.udevd = {
       description = "device event daemon (${cfg.package.pname})";
-      runlevels = "S12345789";
+      runlevel = "S12345789";
       command = "${cfg.package}/bin/udevd --ready-notify=%n" + lib.optionalString cfg.debug " -D";
       notify = "s6";
-      pid = "udevd";
+      pidfile = "udevd";
       log = true;
       nohup = true;
       cgroup.name = "system";
@@ -247,7 +247,7 @@ in
     finit.run =
       let
         defaults = {
-          runlevels = "S";
+          runlevel = "S";
           conditions = "service/udevd/ready";
           log = true;
           cgroup.name = "init";

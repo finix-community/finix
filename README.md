@@ -28,7 +28,7 @@ An example of defining a `finit` service in `nix`:
 {
   finit.services.network-manager = {
     description = "network manager service";
-    runlevels = "2345";
+    runlevel = "2345";
     conditions = "service/syslogd/ready";
     command = "${pkgs.networkmanager}/bin/NetworkManager -n";
   };

@@ -69,7 +69,7 @@ in
 
     finit.services.syslogd = {
       description = "system logging daemon";
-      runlevels = "S0123456789";
+      runlevel = "S0123456789";
       conditions =
         lib.optionals config.services.gardendevd.enable [ "run/gardendevctl:2/success" ]
         ++ lib.optionals config.services.keventd.enable [ "pid/keventd" ]

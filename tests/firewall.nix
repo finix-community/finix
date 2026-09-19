@@ -29,7 +29,7 @@
 
       environment.systemPackages = [ pkgs.nmap ];
 
-      finit.tasks.nftables.runlevels = "2";
+      finit.tasks.nftables.runlevel = "2";
 
       finit.services.allowed-port = {
         description = "listener on allowed port";
