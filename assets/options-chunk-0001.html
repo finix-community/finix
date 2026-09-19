@@ -1435,9 +1435,9 @@ are guaranteed to be completed before running the next command. Useful when seri
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
   </dl>
 </div>
-<div class="option" id="option-finit.run._name_.caps">
+<div class="option" id="option-finit.run._name_.capabilities">
   <h3 class="option-name">
-    <a href="#option-finit.run._name_.caps" class="option-anchor">finit.run.&lt;name&gt;.caps</a>
+    <a href="#option-finit.run._name_.capabilities" class="option-anchor">finit.run.&lt;name&gt;.capabilities</a>
     <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
     <span class="copy-feedback">Link copied!</span>
   </h3>
@@ -1507,23 +1507,6 @@ are guaranteed to be completed before running the next command. Useful when seri
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
   </dl>
 </div>
-<div class="option" id="option-finit.run._name_.cleanup">
-  <h3 class="option-name">
-    <a href="#option-finit.run._name_.cleanup" class="option-anchor">finit.run.&lt;name&gt;.cleanup</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>A script which will be called when the service is removed.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>null or main program, path or command</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
-  </dl>
-</div>
 <div class="option" id="option-finit.run._name_.command">
   <h3 class="option-name">
     <a href="#option-finit.run._name_.command" class="option-anchor">finit.run.&lt;name&gt;.command</a>
@@ -1558,9 +1541,9 @@ are guaranteed to be completed before running the next command. Useful when seri
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
   </dl>
 </div>
-<div class="option" id="option-finit.run._name_.conflict">
+<div class="option" id="option-finit.run._name_.conflicts">
   <h3 class="option-name">
-    <a href="#option-finit.run._name_.conflict" class="option-anchor">finit.run.&lt;name&gt;.conflict</a>
+    <a href="#option-finit.run._name_.conflicts" class="option-anchor">finit.run.&lt;name&gt;.conflicts</a>
     <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
     <span class="copy-feedback">Link copied!</span>
   </h3>
@@ -1592,9 +1575,9 @@ are guaranteed to be completed before running the next command. Useful when seri
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
   </dl>
 </div>
-<div class="option" id="option-finit.run._name_.env">
+<div class="option" id="option-finit.run._name_.envfile">
   <h3 class="option-name">
-    <a href="#option-finit.run._name_.env" class="option-anchor">finit.run.&lt;name&gt;.env</a>
+    <a href="#option-finit.run._name_.envfile" class="option-anchor">finit.run.&lt;name&gt;.envfile</a>
     <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
     <span class="copy-feedback">Link copied!</span>
   </h3>
@@ -1622,6 +1605,74 @@ are guaranteed to be completed before running the next command. Useful when seri
     <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
 </body></html></dd>
     <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">TZ</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">CET</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.exec-cleanup">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.exec-cleanup" class="option-anchor">finit.run.&lt;name&gt;.exec-cleanup</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A script which will be called when the service is removed.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or main program, path or command</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.exec-start-pre">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.exec-start-pre" class="option-anchor">finit.run.&lt;name&gt;.exec-start-pre</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A script which will be called before the service is started.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or main program, path or command</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.exec-stop-post">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.exec-stop-post" class="option-anchor">finit.run.&lt;name&gt;.exec-stop-post</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A script which will be called after the service has stopped.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or main program, path or command</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-finit.run._name_.extra-groups">
+  <h3 class="option-name">
+    <a href="#option-finit.run._name_.extra-groups" class="option-anchor">finit.run.&lt;name&gt;.extra-groups</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Explicitly specify supplementary groups, in addition to reading group membership from <code class="file-path">/etc/group</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
 </body></html></dd>
   </dl>
   <dl class="option-details option-sources">
@@ -1702,9 +1753,9 @@ the case when running in the foreground.</p>
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
   </dl>
 </div>
-<div class="option" id="option-finit.run._name_.manual">
+<div class="option" id="option-finit.run._name_.manual-start">
   <h3 class="option-name">
-    <a href="#option-finit.run._name_.manual" class="option-anchor">finit.run.&lt;name&gt;.manual</a>
+    <a href="#option-finit.run._name_.manual-start" class="option-anchor">finit.run.&lt;name&gt;.manual-start</a>
     <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
     <span class="copy-feedback">Link copied!</span>
   </h3>
@@ -1747,58 +1798,6 @@ manual. The service can then be started at any time by running <code>initctl sta
   <dl class="option-details">
     <dt>Type</dt><dd class="option-value"><code>list of (package or string)</code></dd>
     <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-finit.run._name_.post">
-  <h3 class="option-name">
-    <a href="#option-finit.run._name_.post" class="option-anchor">finit.run.&lt;name&gt;.post</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>A script which will be called after the service has stopped.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>null or main program, path or command</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-finit.run._name_.pre">
-  <h3 class="option-name">
-    <a href="#option-finit.run._name_.pre" class="option-anchor">finit.run.&lt;name&gt;.pre</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>A script which will be called before the service is started.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>null or main program, path or command</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/finit/stage2.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/finit/stage2.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-finit.run._name_.priority">
-  <h3 class="option-name">
-    <a href="#option-finit.run._name_.priority" class="option-anchor">finit.run.&lt;name&gt;.priority</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Order of this <code>run</code> command in relation to the others. The semantics are the same as
-with <code>lib.mkOrder</code>. Smaller values have a greater priority.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>signed integer</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">1000</span></code></pre></body></html>
 </body></html></dd>
   </dl>
   <dl class="option-details option-sources">
