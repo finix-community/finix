@@ -178,9 +178,9 @@ in
     # carefully review https://finit-project.github.io/config/task-and-run/ before making any changes to this
     finit.tasks.nftables = {
       command = startScript;
-      post = stopScript;
+      exec-stop-post = stopScript;
       log = true;
-      remain = true;
+      remain-after-exit = true;
     };
 
     # this module supplies an implementation for `providers.firewall`

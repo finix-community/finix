@@ -52,7 +52,7 @@ in
 
     finit.services.greetd = {
       description = "greeter daemon";
-      runlevels = "34";
+      runlevel = "34";
       conditions = [
         "service/syslogd/ready"
       ]

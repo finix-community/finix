@@ -64,7 +64,7 @@ in
       conditions = [
         "service/dbus/ready"
       ];
-      restart = 10;
+      restart-max = 10;
       notify = "none";
     };
 

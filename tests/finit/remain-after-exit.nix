@@ -13,35 +13,35 @@
 
       # test task with remain:yes that runs in runlevels S and 2
       finit.tasks.test-remain = {
-        runlevels = "S2";
+        runlevel = "S2";
         command = pkgs.writeShellScript "test-remain-start" ''
           echo "remain task started" > /run/remain-test/started
           echo "setting up resources"
         '';
-        post = pkgs.writeShellScript "test-remain-stop" ''
+        exec-stop-post = pkgs.writeShellScript "test-remain-stop" ''
           echo "remain task stopped" > /run/remain-test/stopped
           echo "cleaning up resources"
         '';
-        remain = true;
+        remain-after-exit = true;
         description = "Test task with remain:yes";
       };
 
       # test task with remain:yes for runlevels 2 and 3
       finit.tasks.multi-runlevel = {
-        runlevels = "23";
+        runlevel = "23";
         command = pkgs.writeShellScript "multi-rl-start" ''
           echo "multi-runlevel started in rl $(cat /run/finit/runlevel 2>/dev/null || echo unknown)" > /run/remain-test/multi-rl
         '';
-        post = pkgs.writeShellScript "multi-rl-stop" ''
+        exec-stop-post = pkgs.writeShellScript "multi-rl-stop" ''
           echo "multi-runlevel cleanup" > /run/remain-test/multi-rl-cleanup
         '';
-        remain = true;
+        remain-after-exit = true;
         description = "Multi-runlevel remain task";
       };
 
       # service that depends on the remain task
       finit.services.dependent-service = {
-        runlevels = "2";
+        runlevel = "2";
         conditions = "task/test-remain/success";
         command = pkgs.writeShellScript "dependent-service" ''
           echo "dependent service started" > /run/remain-test/dependent
@@ -52,11 +52,11 @@
 
       # regular task (no remain) for comparison
       finit.tasks.regular-task = {
-        runlevels = "S2";
+        runlevel = "S2";
         command = pkgs.writeShellScript "regular-task" ''
           echo "regular task ran" > /run/remain-test/regular
         '';
-        post = pkgs.writeShellScript "regular-post" ''
+        exec-stop-post = pkgs.writeShellScript "regular-post" ''
           echo "regular post ran" > /run/remain-test/regular-post
         '';
         description = "Regular task without remain";

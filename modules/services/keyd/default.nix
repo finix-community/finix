@@ -158,7 +158,7 @@ in
       description = "keyd, a key remapping daemon";
       command = "${cfg.package}/bin/keyd";
       conditions = "service/syslogd/ready";
-      reload = "${cfg.package}/bin/keyd reload";
+      exec-reload = "${cfg.package}/bin/keyd reload";
       log = true;
       environment = lib.optionalAttrs cfg.debug { KEYD_DEBUG = 2; };
     };

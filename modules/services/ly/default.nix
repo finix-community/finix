@@ -127,7 +127,7 @@ in
 
     finit.services.ly = {
       description = "ly terminal display/login manager";
-      runlevels = "34";
+      runlevel = "34";
       conditions = [
         "service/syslogd/ready"
       ]

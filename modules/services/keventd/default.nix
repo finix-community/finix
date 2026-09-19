@@ -108,7 +108,7 @@ in
 
       description = "device event daemon (keventd)";
       command = "${config.finit.package}/libexec/finit/keventd " + lib.escapeShellArgs cfg.extraArgs;
-      runlevels = "S12345789";
+      runlevel = "S12345789";
       cgroup.name = "init";
       notify = "pid";
       log = true;

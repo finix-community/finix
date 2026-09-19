@@ -180,7 +180,7 @@ in
 
     finit.tasks.console-setup = lib.mkIf (cfg.font != null || cfg.colors != [ ]) {
       description = "Set console font and colors";
-      runlevels = "S";
+      runlevel = "S";
       conditions = "service/syslogd/ready";
       command = pkgs.writeShellScript "console-setup" ''
         ${lib.optionalString (cfg.font != null) setfontCmd}

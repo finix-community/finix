@@ -83,8 +83,8 @@ in
       command = pkgs.writeShellScript "load-kernel-modules" ''
         ${lib.getExe' pkgs.kmod "modprobe"} -a ${lib.escapeShellArgs config.boot.kernelModules}
       '';
-      runlevels = "S12345789";
-      remain = true;
+      runlevel = "S12345789";
+      remain-after-exit = true;
     };
 
     # TODO: can this be converted to a `finit.run` stanza to run in runlevel S? is that early enough?

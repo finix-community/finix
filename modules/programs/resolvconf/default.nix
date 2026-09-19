@@ -76,7 +76,7 @@ in
 
     finit.tasks.resolvconf = {
       command = "${lib.getExe cfg.package} -u";
-      remain = true;
+      remain-after-exit = true;
     };
 
     environment.etc."finit.d/resolvconf.conf".text = lib.mkAfter ''
