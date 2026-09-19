@@ -1,5 +1,6 @@
 {
   imports = [
+    ./facter
     ./firmware.nix
     ./console.nix
     ./graphics.nix
