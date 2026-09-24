@@ -26,20 +26,22 @@ in
       enable = lib.mkOption {
         type = types.bool;
         default = false;
-        description = "Enable COSMIC applets.";
+        description = ''
+          Whether to enable [cosmic-applets](${pkgs.cosmic-applets.meta.homepage}).
+        '';
       };
       package = lib.mkOption {
         type = types.package;
-        default = pkgs.cosmic-applets.override {
-          udev = udevApi;
-          libinput = pkgs.libinput.override (
-            lib.optionalAttrs (udevApi != null) {
+        default = pkgs.cosmic-applets.override (
+          lib.optionalAttrs (udevApi != null) {
+            udev = udevApi;
+            libinput = pkgs.libinput.override {
               udev = udevApi;
               wacomSupport = false;
-            }
-          );
-          pipewire = config.programs.pipewire.package;
-        };
+            };
+            pipewire = config.programs.pipewire.package;
+          }
+        );
         defaultText = lib.literalExpression "pkgs.cosmic-applets";
         description = ''
           The package to use for `cosmic-applets`.

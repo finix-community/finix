@@ -20,7 +20,9 @@ in
     enable = lib.mkOption {
       type = types.bool;
       default = false;
-      description = "Enable COSMIC session.";
+      description = ''
+        Whether to enable [cosmic-session](${pkgs.cosmic-session.meta.homepage}).
+      '';
     };
     package = lib.mkOption {
       type = types.package;

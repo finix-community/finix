@@ -30,20 +30,22 @@ in
       enable = lib.mkOption {
         type = types.bool;
         default = false;
-        description = "Enable COSMIC compositor.";
+        description = ''
+          Whether to enable [cosmic-comp](${pkgs.cosmic-comp.meta.homepage}).
+        '';
       };
       package = lib.mkOption {
         type = types.package;
-        default = pkgs.cosmic-comp.override {
-          useSystemd = false;
-          udev = udevApi;
-          libinput = pkgs.libinput.override (
-            lib.optionalAttrs (udevApi != null) {
+        default = pkgs.cosmic-comp.override (
+          lib.optionalAttrs (udevApi != null) {
+            useSystemd = false;
+            udev = udevApi;
+            libinput = pkgs.libinput.override {
               udev = udevApi;
               wacomSupport = false;
-            }
-          );
-        };
+            };
+          }
+        );
         defaultText = lib.literalExpression "pkgs.cosmic-comp";
         description = ''
           The package to use for `cosmic-comp`.
@@ -66,5 +68,9 @@ in
       (lib.lowPrio sessionFile)
     ]
     ++ lib.optionals cfg.xwayland.enable [ pkgs.xwayland ];
+
+    finit.tmpfiles.rules = lib.optionals cfg.xwayland.enable [
+      "d /tmp/.X11-unix 1777 root root -"
+    ];
   };
 }

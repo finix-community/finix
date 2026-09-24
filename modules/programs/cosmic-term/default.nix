@@ -17,17 +17,23 @@ let
 in
 {
   options.programs.cosmic-term = {
-    enable = lib.mkEnableOption "COSMIC term";
+    enable = lib.mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Whether to enable [cosmic-term](${pkgs.cosmic-term.meta.homepage}).
+      '';
+    };
     package = lib.mkOption {
       type = types.package;
-      default = pkgs.cosmic-term.override {
-        libinput = pkgs.libinput.override (
-          lib.optionalAttrs (udevApi != null) {
+      default = pkgs.cosmic-term.override (
+        lib.optionalAttrs (udevApi != null) {
+          libinput = pkgs.libinput.override ({
             udev = udevApi;
             wacomSupport = false;
-          }
-        );
-      };
+          });
+        }
+      );
       defaultText = lib.literalExpression "pkgs.cosmic-term";
       description = ''
         The package to use for `cosmic-term`.
