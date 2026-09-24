@@ -29,7 +29,11 @@ in
 
   options = {
     programs.cosmic-settings = {
-      enable = lib.mkEnableOption "COSMIC settings";
+      enable = lib.mkOption {
+        type = types.bool;
+        default = false;
+        description = "Enable COSMIC settings.";
+      };
       package = lib.mkOption {
         type = types.package;
         default = pkgs.cosmic-settings.override {

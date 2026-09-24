@@ -7,6 +7,7 @@
 }:
 let
   cfg = config.programs.cosmic-session;
+  inherit (lib) types;
 in
 {
   imports = [
@@ -16,8 +17,19 @@ in
   ];
 
   options.programs.cosmic-session = {
-    enable = lib.mkEnableOption "COSMIC session";
-    package = lib.mkPackageOption pkgs "cosmic-session" { };
+    enable = lib.mkOption {
+      type = types.bool;
+      default = false;
+      description = "Enable COSMIC session.";
+    };
+    package = lib.mkOption {
+      type = types.package;
+      default = pkgs.cosmic-session;
+      defaultText = lib.literalExpression "pkgs.cosmic-session";
+      description = ''
+        The package to use for `cosmic-session`.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {

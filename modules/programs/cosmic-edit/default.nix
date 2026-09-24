@@ -6,6 +6,7 @@
 }:
 let
   cfg = config.programs.cosmic-edit;
+  inherit (lib) types;
   udevApi =
     if config.services.gardendevd.enable then
       pkgs.libudev-garden
@@ -22,9 +23,13 @@ let
 in
 {
   options.programs.cosmic-edit = {
-    enable = lib.mkEnableOption "COSMIC edit";
+    enable = lib.mkOption {
+      type = types.bool;
+      default = false;
+      description = "Enable COSMIC edit.";
+    };
     package = lib.mkOption {
-      type = lib.types.package;
+      type = types.package;
       default = pkgs.cosmic-edit.override { inherit libinput; };
       defaultText = lib.literalExpression "pkgs.cosmic-edit";
       description = ''

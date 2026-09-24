@@ -26,7 +26,11 @@ in
   ];
 
   options.programs.cosmic-greeter = {
-    enable = lib.mkEnableOption "COSMIC greeter";
+    enable = lib.mkOption {
+      type = types.bool;
+      default = false;
+      description = "Enable COSMIC greeter.";
+    };
 
     package = lib.mkOption {
       type = types.package;

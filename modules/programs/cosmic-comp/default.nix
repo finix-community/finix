@@ -27,7 +27,11 @@ in
 {
   options = {
     programs.cosmic-comp = {
-      enable = lib.mkEnableOption "COSMIC compositor";
+      enable = lib.mkOption {
+        type = types.bool;
+        default = false;
+        description = "Enable COSMIC compositor.";
+      };
       package = lib.mkOption {
         type = types.package;
         default = pkgs.cosmic-comp.override {
@@ -45,8 +49,10 @@ in
           The package to use for `cosmic-comp`.
         '';
       };
-      xwayland.enable = lib.mkEnableOption "Xwayland support for the COSMIC compositor" // {
+      xwayland.enable = lib.mkOption {
+        type = types.bool;
         default = true;
+        description = "Enable Xwayland support for the COSMIC compositor.";
       };
     };
   };

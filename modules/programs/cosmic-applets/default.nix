@@ -23,7 +23,11 @@ in
 
   options = {
     programs.cosmic-applets = {
-      enable = lib.mkEnableOption "COSMIC applets";
+      enable = lib.mkOption {
+        type = types.bool;
+        default = false;
+        description = "Enable COSMIC applets.";
+      };
       package = lib.mkOption {
         type = types.package;
         default = pkgs.cosmic-applets.override {
