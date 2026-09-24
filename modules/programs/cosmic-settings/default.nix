@@ -15,12 +15,10 @@ let
       pkgs.libudev-zero
     else
       null;
-  libinput = pkgs.libinput.override (
-    lib.optionalAttrs (udevApi != null) {
-      udev = udevApi;
-      wacomSupport = false;
-    }
-  );
+  libinput = pkgs.libinput.override {
+    udev = udevApi;
+    wacomSupport = false;
+  };
 in
 {
   imports = [
@@ -32,15 +30,19 @@ in
       enable = lib.mkOption {
         type = types.bool;
         default = false;
-        description = "Enable COSMIC settings.";
+        description = ''
+          Whether to enable [cosmic-settings](${pkgs.cosmic-settings.meta.homepage}).
+        '';
       };
       package = lib.mkOption {
         type = types.package;
-        default = pkgs.cosmic-settings.override {
-          udev = udevApi;
-          inherit libinput;
-          pipewire = config.programs.pipewire.package;
-        };
+        default = pkgs.cosmic-settings.override (
+          lib.optionalAttrs (udevApi != null) {
+            udev = udevApi;
+            inherit libinput;
+            pipewire = config.programs.pipewire.package;
+          }
+        );
         defaultText = lib.literalExpression "pkgs.cosmic-settings";
         description = ''
           The package to use for `cosmic-settings`.
@@ -48,11 +50,13 @@ in
       };
       daemon.package = lib.mkOption {
         type = types.package;
-        default = pkgs.cosmic-settings-daemon.override {
-          udev = udevApi;
-          inherit libinput;
-          pipewire = config.programs.pipewire.package;
-        };
+        default = pkgs.cosmic-settings-daemon.override (
+          lib.optionalAttrs (udevApi != null) {
+            udev = udevApi;
+            inherit libinput;
+            pipewire = config.programs.pipewire.package;
+          }
+        );
         defaultText = lib.literalExpression "pkgs.cosmic-settings-daemon";
         description = ''
           The package to use for `cosmic-settings-daemon`.
