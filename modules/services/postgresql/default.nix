@@ -153,10 +153,10 @@ in
         "service/syslogd/ready"
         "net/lo/up"
       ];
-      kill = 120;
+      stop-timeout = 120;
     }
     // lib.optionalAttrs cfg.initdb.enable {
-      pre = pkgs.writeShellScript "pre.sh" ''
+      exec-start-pre = pkgs.writeShellScript "pre.sh" ''
         if [ ! -f "${cfg.dataDir}/PG_VERSION" ]; then
           ${lib.getExe' cfg.package "initdb"} ${lib.escapeShellArgs cfg.initdb.extraArgs} ${cfg.dataDir}
         fi

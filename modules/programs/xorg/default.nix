@@ -8,15 +8,24 @@
 let
   cfg = config.programs.xorg;
 
-  xf86-input-libinput' = pkgs.xf86-input-libinput.override (
-    lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
-      xorg-server = cfg.package;
-      libinput = pkgs.libinput.override {
-        udev = pkgs.libudev-zero;
+  # gardendevd needs libudev-garden; mdevd/keventd need libudev-zero
+  udevApi =
+    if config.services.gardendevd.enable then
+      pkgs.libudev-garden
+    else if config.services.mdevd.enable || config.services.keventd.enable then
+      pkgs.libudev-zero
+    else
+      null;
+
+  xf86-input-libinput' = pkgs.xf86-input-libinput.override {
+    xorg-server = cfg.package;
+    libinput = pkgs.libinput.override (
+      lib.optionalAttrs (udevApi != null) {
+        udev = udevApi;
         wacomSupport = false;
-      };
-    }
-  );
+      }
+    );
+  };
 in
 {
   imports = [
@@ -36,8 +45,8 @@ in
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.xorg-server.override (
-        lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
-          udev = pkgs.libudev-zero;
+        lib.optionalAttrs (udevApi != null) {
+          udev = udevApi;
         }
       );
       defaultText = lib.literalExpression "pkgs.xorg-server";
@@ -115,6 +124,9 @@ in
       cfg.package.out
       xf86-input-libinput'
     ];
+
+    # allows hotplugging in xserver with mdevd
+    services.mdevd.nlgroups = 4;
 
     environment.pathsToLink = [
       "/share/X11"

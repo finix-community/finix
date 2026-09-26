@@ -68,13 +68,18 @@ let
     ++ lib.optionals config.services.keventd.enable [ "service/keventd/ready" ];
 
   names = map (fs: utils.escapePath fs.mountPoint) mountable;
+
+  waitDevs = lib.filter (fs: needsWaitDev fs && (fs.neededForBoot || isPseudo fs)) (
+    lib.attrValues config.fileSystems
+  );
+  waitDevName = fs: utils.escapePath (if isPseudo fs then fs.device else fs.mountPoint);
 in
 {
   config = {
     boot.initrd.finit.tasks = lib.mkMerge [
-      (lib.genAttrs' (lib.filter needsWaitDev mountable) (
+      (lib.genAttrs' waitDevs (
         fs:
-        lib.nameValuePair "wait-dev-${utils.escapePath fs.mountPoint}" {
+        lib.nameValuePair "wait-dev-${waitDevName fs}" {
           conditions = deviceConditions;
           script = ''
             # 90s total timeout, polled every 0.1s (busybox sleep supports fractional)

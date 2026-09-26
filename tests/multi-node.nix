@@ -8,12 +8,14 @@
   nodes.client =
     { ... }:
     {
+      services.getty.enable = true;
       services.mdevd.enable = true;
     };
 
   nodes.server =
     { ... }:
     {
+      services.getty.enable = true;
       services.mdevd.enable = true;
     };
 

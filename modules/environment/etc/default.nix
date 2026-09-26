@@ -12,8 +12,6 @@ let
         passthru.targets = map (x: x.target) etc';
       }
       /* sh */ ''
-        set -euo pipefail
-
         makeEtcEntry() {
           src="$1"
           target="$2"
@@ -21,7 +19,7 @@ let
           user="$4"
           group="$5"
 
-          if [[ "$src" = *'*'* ]]; then
+          if echo "$src" | grep -q "*"; then
             # If the source name contains '*', perform globbing.
             mkdir -p "$out/etc/$target"
             for fn in $src; do
@@ -42,7 +40,7 @@ let
               fi
             fi
 
-            if [ "$mode" != symlink ]; then
+            if [ "$mode" != "symlink" ]; then
               echo "$mode" > "$out/etc/$target.mode"
               echo "$user" > "$out/etc/$target.uid"
               echo "$group" > "$out/etc/$target.gid"
@@ -198,18 +196,7 @@ in
     # TODO: create an alternative implementation with... https://github.com/Gerg-L/linker
     system.activation.scripts.etc = lib.stringAfter [ "users" ] ''
       echo "setting up /etc..."
-      ${pkgs.perl.withPackages (p: [ p.FileSlurp ])}/bin/perl ${./setup-etc.pl} ${buildEtc}/etc
-    '';
-
-    system.activation.scripts.shebangCompatibility = ''
-      mkdir -p -m 0755 /usr/bin /bin
-
-      # Create /usr/bin/env for shebangs.
-      ln -sfn ${lib.getExe' config.programs.coreutils.package "env"} /usr/bin/env
-
-      # Create the required /bin/sh symlink; otherwise lots of things
-      # (notably the system() function) won't work.
-      ln -sfn "${config.environment.binsh}" /bin/sh
+      ${lib.getExe config.programs.sh.package} ${./setup-etc.sh} ${buildEtc}/etc
     '';
   };
 }

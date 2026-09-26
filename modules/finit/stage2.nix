@@ -103,22 +103,30 @@ let
 
   # oneshotOpts: options specific to oneshot stanzas (task, run) - not services
   oneshotOpts = {
-    options.remain = lib.mkOption {
+    imports = [
+      (lib.mkRenamedOptionModule [ "remain" ] [ "remain-after-exit" ])
+    ];
+
+    options.remain-after-exit = lib.mkOption {
       type = lib.types.bool;
       default = false;
       description = ''
         By default, a `run` or `task` will re-run each time its runlevel is
-        entered, and its `post:` script does not run on completion.
+        entered, and its `exec-stop-post` script does not run on completion.
 
-        With `remain:yes`, the task runs once and does not re-run on runlevel. The
-        `post:` script will run if the task is explicitly stopped or when the task
-        leaves its valid runlevels.
+        With `remain-after-exit`, the task runs once and does not re-run on runlevel.
+        The `exec-stop-post` script will run if the task is explicitly stopped or when
+        the task leaves its valid runlevels.
       '';
     };
   };
 
   # baseOpts: options shared by ALL stanza types (service, task, run, tty, sysv)
   baseOpts = {
+    imports = [
+      (lib.mkRenamedOptionModule [ "runlevels" ] [ "runlevel" ])
+    ];
+
     options = {
       enable = lib.mkOption {
         type = lib.types.bool;
@@ -155,7 +163,7 @@ let
         '';
       };
 
-      runlevels = lib.mkOption {
+      runlevel = lib.mkOption {
         type = lib.types.str; # TODO: string  matching 0-9S
         default = "234";
         description = ''
@@ -199,6 +207,19 @@ let
   execOpts =
     { config, name, ... }:
     {
+      imports = [
+        (lib.mkRenamedOptionModule [ "caps" ] [ "capabilities" ])
+        (lib.mkRenamedOptionModule [ "cleanup" ] [ "exec-cleanup" ])
+        (lib.mkRenamedOptionModule [ "conflict" ] [ "conflicts" ])
+        (lib.mkRenamedOptionModule [ "env" ] [ "envfile" ])
+        (lib.mkRenamedOptionModule [ "manual" ] [ "manual-start" ])
+        (lib.mkRenamedOptionModule [ "post" ] [ "exec-stop-post" ])
+        (lib.mkRenamedOptionModule [ "pre" ] [ "exec-start-pre" ])
+        (lib.mkRenamedOptionModule [ "restart" ] [ "restart-max" ])
+        (lib.mkRenamedOptionModule [ "restart_sec" ] [ "restart-sec" ])
+        (lib.mkRenamedOptionModule [ "supplementary_groups" ] [ "extra-groups" ])
+      ];
+
       options = {
         name = lib.mkOption {
           type = lib.types.str; # TODO: limit name, no : allowed, only valid chars
@@ -232,7 +253,7 @@ let
           '';
         };
 
-        supplementary_groups = lib.mkOption {
+        extra-groups = lib.mkOption {
           type = with lib.types; listOf str;
           default = [ ];
           description = ''
@@ -240,7 +261,7 @@ let
           '';
         };
 
-        caps = lib.mkOption {
+        capabilities = lib.mkOption {
           type = with lib.types; coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr);
           apply = lib.unique;
           default = [ ];
@@ -258,7 +279,7 @@ let
           '';
         };
 
-        env = lib.mkOption {
+        envfile = lib.mkOption {
           type = with lib.types; nullOr (either str path);
           default = null;
           description = "either a path or a path prefixed with a '-' to indicate a missing file is fine.";
@@ -299,7 +320,7 @@ let
           '';
         };
 
-        manual = lib.mkOption {
+        manual-start = lib.mkOption {
           type = lib.types.bool;
           default = false;
           description = ''
@@ -308,7 +329,7 @@ let
           '';
         };
 
-        conflict = lib.mkOption {
+        conflicts = lib.mkOption {
           type = with lib.types; coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr);
           apply = lib.unique;
           default = [ ];
@@ -324,7 +345,7 @@ let
           '';
         };
 
-        pre = lib.mkOption {
+        exec-start-pre = lib.mkOption {
           type = lib.types.nullOr program;
           default = null;
           description = ''
@@ -332,7 +353,7 @@ let
           '';
         };
 
-        post = lib.mkOption {
+        exec-stop-post = lib.mkOption {
           type = lib.types.nullOr program;
           default = null;
           description = ''
@@ -340,7 +361,7 @@ let
           '';
         };
 
-        cleanup = lib.mkOption {
+        exec-cleanup = lib.mkOption {
           type = lib.types.nullOr program;
           default = null;
           description = ''
@@ -348,7 +369,7 @@ let
           '';
         };
 
-        restart = lib.mkOption {
+        restart-max = lib.mkOption {
           type = lib.types.ints.between (-1) 255;
           default = 10;
           description = ''
@@ -358,7 +379,7 @@ let
           '';
         };
 
-        restart_sec = lib.mkOption {
+        restart-sec = lib.mkOption {
           type = with lib.types; nullOr ints.unsigned;
           default = null;
           description = ''
@@ -373,7 +394,7 @@ let
           default = false;
           description = ''
             Enable endless restarts without counting toward the retry limit. When set, the service
-            will be restarted indefinitely regardless of the `restart` limit.
+            will be restarted indefinitely regardless of the `restart-max` limit.
           '';
         };
       };
@@ -393,7 +414,7 @@ let
               null;
 
           environment.PATH = lib.mkIf (config.path != [ ]) (lib.makeBinPath config.path);
-          env = lib.mkIf (config.environment != { }) (
+          envfile = lib.mkIf (config.environment != { }) (
             format.generate "${config.name}.env" config.environment
           );
         };
@@ -403,16 +424,27 @@ let
   serviceOpts =
     { config, ... }:
     {
+      imports = [
+        (lib.mkRenamedOptionModule [ "kill" ] [ "stop-timeout" ])
+        (lib.mkRenamedOptionModule [ "pid" ] [ "pidfile" ])
+        (lib.mkRenamedOptionModule [ "ready" ] [ "exec-start-ready" ])
+        (lib.mkRenamedOptionModule [ "reload" ] [ "exec-reload" ])
+        (lib.mkRenamedOptionModule [ "stop" ] [ "exec-stop" ])
+      ];
+
       options = {
         nohup = lib.mkOption {
           type = lib.types.bool;
           default = false;
           description = ''
-            Whether this service supports reload on `SIGHUP`.
+            Set when the service does *not* handle `SIGHUP`. `finit` then stops and
+            starts it on reconfiguration instead of reloading it in place.
+
+            See [upstream documentation](https://finit-project.github.io/conditions/) for details.
           '';
         };
 
-        pid = lib.mkOption {
+        pidfile = lib.mkOption {
           type = with lib.types; nullOr str;
           default = null;
           description = ''
@@ -445,7 +477,7 @@ let
           '';
         };
 
-        reload = lib.mkOption {
+        exec-reload = lib.mkOption {
           type = lib.types.nullOr program;
           default = null;
           apply =
@@ -454,34 +486,34 @@ let
           example = "kill -HUP $MAINPID";
           description = ''
             Some services do not support `SIGHUP` but may have other ways to update the configuration of a running daemon. When
-            `reload` is defined it is preferred over `SIGHUP`. Like `systemd`, `finit` sets ``$MAINPID` as a convenience to scripts,
-            which in effect also allow setting `reload` to `kill -HUP $MAINPID`.
+            `exec-reload` is defined it is preferred over `SIGHUP`. Like `systemd`, `finit` sets ``$MAINPID` as a convenience to scripts,
+            which in effect also allow setting `exec-reload` to `kill -HUP $MAINPID`.
 
             ::: {.note}
-            `reload` is called as PID 1, without any timeout! Meaning, it is up to you to ensure the script is not blocking for
+            `exec-reload` is called as PID 1, without any timeout! Meaning, it is up to you to ensure the script is not blocking for
             seconds at a time or never terminates.
             :::
           '';
         };
 
-        stop = lib.mkOption {
+        exec-stop = lib.mkOption {
           type = lib.types.nullOr program;
           default = null;
           apply =
             value:
             if value != null then "'" + (lib.removeSuffix "'" (lib.removePrefix "'" value)) + "'" else null;
           description = ''
-            Some services may require alternate methods to be stopped. If `stop` is defined it is preferred over `SIGTERM`. Similar
-            to `reload`, `finit` sets `$MAINPID`.
+            Some services may require alternate methods to be stopped. If `exec-stop` is defined it is preferred over `SIGTERM`. Similar
+            to `exec-reload`, `finit` sets `$MAINPID`.
 
             ::: {.note}
-            `stop` is called as PID 1, without any timeout! Meaning, it is up to you to ensure the script is not blocking for
+            `exec-stop` is called as PID 1, without any timeout! Meaning, it is up to you to ensure the script is not blocking for
             seconds at a time or never terminates.
             :::
           '';
         };
 
-        kill = lib.mkOption {
+        stop-timeout = lib.mkOption {
           type = with lib.types; nullOr (ints.between 1 300);
           default = null;
           defaultText = "3";
@@ -490,7 +522,7 @@ let
           '';
         };
 
-        ready = lib.mkOption {
+        exec-start-ready = lib.mkOption {
           type = lib.types.nullOr program;
           default = null;
           description = ''
@@ -508,7 +540,7 @@ let
           default = null;
           description = ''
             - `reboot` - when all retries have failed, and the service has crashed, if this option is set the system is rebooted.
-            - `script` - similarly, but instead of rebooting, call the `post:script` action if set.
+            - `script` - similarly, but instead of rebooting, call the `exec-stop-post` script if set.
           '';
         };
       };
@@ -617,8 +649,12 @@ let
     };
 
   rlimitOpts = {
+    imports = [
+      (lib.mkRenamedOptionModule [ "rlimits" ] [ "rlimit" ])
+    ];
+
     options = {
-      rlimits = lib.mkOption {
+      rlimit = lib.mkOption {
         type = rlimitsType;
         default = { };
         description = ''
@@ -665,14 +701,14 @@ let
 
   mkConfigFile =
     svcType: svc:
-    lib.optionalString (svc.rlimits or { } != { }) "${rlimitStr svc.rlimits}\n\n"
+    lib.optionalString (svc.rlimit or { } != { }) "${rlimitStr svc.rlimit}\n\n"
     + (serviceStr svcType svc);
 
   serviceStr =
     svcType: svc:
     lib.concatStringsSep " " (
       (lib.singleton svcType)
-      ++ (lib.singleton "[${svc.runlevels}]")
+      ++ (lib.singleton "[${svc.runlevel}]")
       ++
 
         (lib.optional (svc.name or null != null) "name:${svc.name}")
@@ -680,34 +716,42 @@ let
       ++ (lib.optional (svc.cgroup.name or null != null || svc.cgroup.settings or { } != { }) (
         cgroupToStr svc.cgroup
       ))
-      ++ (lib.optional (svc.restart or false != false) "restart:${toString svc.restart}")
-      ++ (lib.optional (svc.restart_sec or null != null) "restart_sec:${toString svc.restart_sec}")
+      ++ (lib.optional (svc.restart-max or false != false) "restart:${toString svc.restart-max}")
+      ++ (lib.optional (svc.restart-sec or null != null) "restart_sec:${toString svc.restart-sec}")
       ++ (lib.optional (svc.respawn or false) "respawn")
       ++ (lib.optional (svc.user or null != null) (
         "@${svc.user}"
         + lib.optionalString (svc.group != null) ":${svc.group}"
         + lib.optionalString (
-          svc.supplementary_groups or [ ] != [ ]
-        ) ",${lib.concatStringsSep "," svc.supplementary_groups}"
+          svc.extra-groups or [ ] != [ ]
+        ) ",${lib.concatStringsSep "," svc.extra-groups}"
       ))
+      # `!` only means "no SIGHUP" for service/sysv; on run/task it means "do not
+      # block bootstrap". `nohup` is declared in serviceOpts, so it never reaches those.
       ++ (lib.optional (svc.conditions or [ ] != [ ] || svc.nohup or false == true)
         "<${lib.optionalString (svc.nohup or false) "!"}${lib.concatStringsSep "," svc.conditions}>"
       )
-      ++ (lib.optional (svc.manual or false) "manual:yes")
-      ++ (lib.optional (svc.remain or false) "remain:yes")
-      ++ (lib.optional (svc.kill or null != null) "kill:${toString svc.kill}")
-      ++ (lib.optional (svc.caps or [ ] != [ ]) ("caps:${lib.concatStringsSep "," svc.caps}"))
-      ++ (lib.optional (svc.conflict or [ ] != [ ]) ("conflict:${lib.concatStringsSep "," svc.conflict}"))
-      ++ (lib.optional (svc.pid or null != null) "pid:${svc.pid}")
+      ++ (lib.optional (svc.manual-start or false) "manual:yes")
+      ++ (lib.optional (svc.remain-after-exit or false) "remain:yes")
+      ++ (lib.optional (svc.stop-timeout or null != null) "kill:${toString svc.stop-timeout}")
+      ++ (lib.optional (svc.capabilities or [ ] != [ ]) (
+        "caps:${lib.concatStringsSep "," svc.capabilities}"
+      ))
+      ++ (lib.optional (svc.conflicts or [ ] != [ ]) (
+        "conflict:${lib.concatStringsSep "," svc.conflicts}"
+      ))
+      ++ (lib.optional (svc.pidfile or null != null) "pid:${svc.pidfile}")
       ++ (lib.optional (svc.type or null != null) "type:${svc.type}")
       ++ (lib.optional (svc.notify or null != null) "notify:${svc.notify}")
-      ++ (lib.optional (svc.env or null != null) "env:${svc.env}")
+      ++ (lib.optional (svc.envfile or null != null) "env:${svc.envfile}")
       ++ (lib.optional (svc.log or false != false) (logToStr svc.log))
       ++ (lib.optional (svc.tty or null != null) "tty:${svc.tty}")
-      ++ (lib.optional (svc.reload or null != null) "reload:${svc.reload}")
-      ++ (lib.optional (svc.stop or null != null) "stop:${svc.stop}")
-      ++ (lib.optional (svc.pre or null != null) "pre:${svc.pre}")
-      ++ (lib.optional (svc.post or null != null) "post:${svc.post}")
+      ++ (lib.optional (svc.exec-reload or null != null) "reload:${svc.exec-reload}")
+      ++ (lib.optional (svc.exec-stop or null != null) "stop:${svc.exec-stop}")
+      ++ (lib.optional (svc.exec-start-pre or null != null) "pre:${svc.exec-start-pre}")
+      ++ (lib.optional (svc.exec-stop-post or null != null) "post:${svc.exec-stop-post}")
+      ++ (lib.optional (svc.exec-start-ready or null != null) "ready:${svc.exec-start-ready}")
+      ++ (lib.optional (svc.exec-cleanup or null != null) "cleanup:${svc.exec-cleanup}")
       ++ (lib.optional (svc.oncrash or null != null) "oncrash:${svc.oncrash}")
       ++ (lib.optional (svc.extraConfig or "" != "") svc.extraConfig)
       ++ (lib.optional (svc.command != null) svc.command)
@@ -735,10 +779,17 @@ in
       defaultText = lib.literalExpression "pkgs.finit";
       apply =
         package:
-        (package.override {
-          plymouthSupport = config.programs.plymouth.enable;
-          plymouth = config.programs.plymouth.package;
-        }).overrideAttrs
+        (package.override (
+          {
+            plymouthSupport = config.programs.plymouth.enable;
+            plymouth = config.programs.plymouth.package;
+          }
+          //
+            lib.optionalAttrs (config.services.keventd.enable && package.override.__functionArgs ? udevSupport)
+              {
+                udevSupport = true;
+              }
+        )).overrideAttrs
           (o: {
             configureFlags = o.configureFlags ++ [ "--with-plugin-path=${finix-setup}/lib/finit/plugins" ];
           });

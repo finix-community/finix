@@ -1,4 +1,8 @@
-{ lib, ... }:
+{
+  config,
+  lib,
+  ...
+}:
 let
   pathOrStr = with lib.types; coercedTo path (x: "${x}") str;
   program =
@@ -78,4 +82,15 @@ in
       '';
     };
   };
+
+  config.warnings =
+    lib.optionals
+      (config.providers.scheduler.tasks != { } && config.providers.scheduler.backend == "none")
+      [
+        ''
+          no scheduler provider backend has been enabled, yet the following scheduled tasks are defined:
+          ${lib.concatStringsSep ", " (lib.attrNames config.providers.scheduler.tasks)}
+          select a backend implementation to use scheduled tasks
+        ''
+      ];
 }

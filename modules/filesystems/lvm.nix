@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  utils,
   ...
 }:
 {
@@ -52,12 +53,9 @@
       boot.initrd.kernelModules = [ "dm_mod" ];
 
       boot.initrd.finit.tasks.lvm = {
-        conditions =
-          lib.optionals config.services.mdevd.enable [ "run/coldplug/success" ]
-          ++ lib.optionals config.services.gardendevd.enable [ "run/gardendevctl:2/success" ]
-          ++ lib.optionals config.services.udev.enable [ "run/udevadm:5/success" ]
-          ++ lib.optionals config.services.keventd.enable [ "service/keventd/ready" ]
-          ++ lib.optional config.boot.initrd.supportedFilesystems.luks.enable [ "task/luks/success" ];
+        conditions = map (fs: "task/wait-dev-${utils.escapePath fs.device}/success") (
+          lib.filter (fs: fs.fsType == "lvm") (lib.attrValues config.fileSystems)
+        );
 
         script = ''
           lvm vgchange -ay --noudevsync

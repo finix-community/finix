@@ -37,10 +37,8 @@ let
   );
 in
 {
-  options.providers.bootloader = {
-    backend = lib.mkOption {
-      type = lib.types.enum [ "limine" ];
-    };
+  options.providers.bootloader.backend = lib.mkOption {
+    type = lib.types.enum [ "limine" ];
   };
 
   config = lib.mkIf (config.providers.bootloader.backend == "limine") {

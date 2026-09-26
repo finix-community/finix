@@ -140,12 +140,12 @@ in
         description = "nzbget daemon";
         conditions = "service/syslogd/ready";
         command = "${script} --server";
-        stop = "${script} --quit";
-        reload = "${script} --reload";
+        exec-stop = "${script} --quit";
+        exec-reload = "${script} --reload";
 
-        pre = pkgs.writeShellScript "nzbget-pre.sh" ''
+        exec-start-pre = pkgs.writeShellScript "nzbget-pre.sh" ''
           if [ ! -f ${configFile} ]; then
-            ${lib.getExe' config.programs.coreutils "install"} -o ${cfg.user} -g ${cfg.group} -m 0700 ${cfg.package}/share/nzbget/nzbget.conf ${configFile}
+            ${lib.getExe' config.programs.coreutils.package "install"} -o ${cfg.user} -g ${cfg.group} -m 0700 ${cfg.package}/share/nzbget/nzbget.conf ${configFile}
           fi
         '';
       };

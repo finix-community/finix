@@ -5,13 +5,18 @@ This extends the NixOS test driver's Machine class with finit-specific
 methods, replacing systemd-specific functionality.
 """
 
+import datetime as dt
+
+from test_driver.duration import Duration
 from test_driver.machine import QemuMachine
 
 
 class FinitMachine(QemuMachine):
     """Machine with finit-specific methods instead of systemd."""
 
-    def wait_for_condition(self, condition: str, timeout: int = 900) -> None:
+    def wait_for_condition(
+        self, condition: str, timeout: Duration = dt.timedelta(minutes=15)
+    ) -> None:
         """
         Wait for a finit condition to be set.
 
@@ -22,18 +27,20 @@ class FinitMachine(QemuMachine):
 
         Args:
             condition: The finit condition to wait for
-            timeout: Maximum time to wait in seconds
+            timeout: Maximum time to wait, as a datetime.timedelta
         """
         with self.nested(f"waiting for finit condition '{condition}'"):
             self.wait_until_succeeds(f"initctl cond get {condition}", timeout=timeout)
 
-    def wait_for_runlevel(self, level: int, timeout: int = 900) -> None:
+    def wait_for_runlevel(
+        self, level: int, timeout: Duration = dt.timedelta(minutes=15)
+    ) -> None:
         """
         Wait for finit to reach a specific runlevel.
 
         Args:
             level: The runlevel number (0-9, S)
-            timeout: Maximum time to wait in seconds
+            timeout: Maximum time to wait, as a datetime.timedelta
         """
         with self.nested(f"waiting for runlevel {level}"):
             self.wait_for_console_text(f"entering runlevel {level}", timeout=timeout)
@@ -50,23 +57,27 @@ class FinitMachine(QemuMachine):
         """
         return self.execute(f"initctl {cmd}")
 
-    def wait_for_service(self, service: str, timeout: int = 900) -> None:
+    def wait_for_service(
+        self, service: str, timeout: Duration = dt.timedelta(minutes=15)
+    ) -> None:
         """
         Wait for a finit service to be running.
 
         Args:
             service: The service name
-            timeout: Maximum time to wait in seconds
+            timeout: Maximum time to wait, as a datetime.timedelta
         """
         self.wait_for_condition(f"service/{service}/running", timeout=timeout)
 
-    def wait_for_task(self, task: str, timeout: int = 900) -> None:
+    def wait_for_task(
+        self, task: str, timeout: Duration = dt.timedelta(minutes=15)
+    ) -> None:
         """
         Wait for a finit task to complete successfully.
 
         Args:
             task: The task name
-            timeout: Maximum time to wait in seconds
+            timeout: Maximum time to wait, as a datetime.timedelta
         """
         self.wait_for_condition(f"task/{task}/success", timeout=timeout)
 
@@ -120,7 +131,10 @@ class FinitMachine(QemuMachine):
 
     # override systemd-specific methods to prevent accidental use
     def wait_for_unit(
-        self, unit: str, user: str | None = None, timeout: int = 900
+        self,
+        unit: str,
+        user: str | None = None,
+        timeout: Duration = dt.timedelta(minutes=15),
     ) -> None:
         """Raises error - use wait_for_service() or wait_for_condition() instead."""
         raise NotImplementedError(

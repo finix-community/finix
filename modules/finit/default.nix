@@ -22,6 +22,11 @@ in
         assertion = lib.versionAtLeast cfg.package.version "4.16";
         message = "finit version must be at least 4.16";
       }
+
+      {
+        assertion = config.finit.ttys != { };
+        message = "you have not defined any ttys; consider importing and enabling the getty module";
+      }
     ];
 
     # TODO: decide a reasonable default here... user can override if needed

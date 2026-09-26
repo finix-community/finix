@@ -10,6 +10,20 @@ let
 
   format = pkgs.formats.ini { };
   configFile = format.generate "sddm.conf" cfg.settings;
+
+  package' = cfg.package.override (prev: {
+    extraPackages = prev.extraPackages or [ ] ++ cfg.extraPackages;
+  });
+
+  session_rundir =
+    if config.services.sessiond.enable then
+      "session optional ${config.services.sessiond.package}/lib/security/pam_sessiond.so"
+    else if config.services.elogind.enable then
+      "session optional ${pkgs.elogind}/lib/security/pam_elogind.so"
+    else if config.services.seatd.enable then
+      "session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so"
+    else
+      false;
 in
 {
   imports = [ modules.xorg ];
@@ -20,6 +34,34 @@ in
       default = false;
       description = ''
         Whether to enable [sddm](${pkgs.kdePackages.sddm.meta.homepage}) as a system service.
+      '';
+    };
+
+    package = lib.mkOption {
+      type = lib.types.package;
+      default = pkgs.kdePackages.sddm;
+      defaultText = lib.literalExpression "pkgs.kdePackages.sddm";
+      description = ''
+        The package to use for `sddm`.
+      '';
+    };
+
+    extraPackages = lib.mkOption {
+      type = with lib.types; listOf package;
+      default = [ ];
+      example = ''
+        with pkgs.kdePackages; [
+          breeze-icons
+          kirigami
+          libplasma
+          plasma5support
+          qtmultimedia
+          qtsvg
+          qtvirtualkeyboard
+        ]
+      '';
+      description = ''
+        Extra Qt plugins / QML libraries to add to the environment.
       '';
     };
 
@@ -64,7 +106,7 @@ in
         # MinimumVT = 7;
         ServerPath = "${config.programs.xorg.package.out}/bin/X";
         XephyrPath = "${config.programs.xorg.package.out}/bin/Xephyr";
-        SessionCommand = "${pkgs.kdePackages.sddm}/share/sddm/scripts/Xsession";
+        SessionCommand = "${package'}/share/sddm/scripts/Xsession";
         SessionDir = "/run/current-system/sw/share/xsessions";
         XauthPath = "${pkgs.xauth}/bin/xauth";
         # DisplayCommand = toString Xsetup;
@@ -77,7 +119,7 @@ in
         ServerArguments = "-logverbose 6 -xkbdir ${config.programs.xorg.xkb.dir} -terminate -verbose 7";
       };
       Wayland = {
-        SessionCommand = "${pkgs.kdePackages.sddm}/share/sddm/scripts/wayland-session";
+        SessionCommand = "${package'}/share/sddm/scripts/wayland-session";
         SessionDir = "/run/current-system/sw/share/wayland-sessions";
 
         # Path to the user session log file
@@ -104,10 +146,10 @@ in
       "X       /tmp/xauth_*"
     ];
 
-    services.dbus.packages = [ pkgs.kdePackages.sddm ];
+    services.dbus.packages = [ package' ];
 
     environment.systemPackages = [
-      pkgs.kdePackages.sddm
+      package'
     ];
 
     environment.etc."sddm.conf".source = configFile;
@@ -130,10 +172,11 @@ in
 
     finit.services.sddm = {
       description = "sddm display manager";
-      runlevels = "34";
+      runlevel = "34";
       conditions = [
         "service/syslogd/ready"
       ]
+      ++ lib.optionals config.services.sessiond.enable [ "service/sessiond/ready" ]
       ++ lib.optionals config.services.elogind.enable [ "service/elogind/ready" ]
       ++ lib.optionals config.services.seatd.enable [ "service/seatd/ready" ];
       command = "/run/current-system/sw/bin/sddm";
@@ -172,8 +215,7 @@ in
         # Session management.
         session  required       pam_succeed_if.so audit quiet_success user = sddm
         session  required       pam_env.so conffile=/etc/security/pam_env.conf readenv=0
-        ${lib.optionalString config.services.elogind.enable "session   optional       ${pkgs.elogind}/lib/security/pam_elogind.so"}
-        ${lib.optionalString config.services.seatd.enable "session   optional       ${pkgs.pam_rundir}/lib/security/pam_rundir.so"}
+        ${lib.optionalString (session_rundir != false) session_rundir}
         session  optional       pam_keyinit.so force revoke
         session  optional       pam_permit.so
         session  required       pam_limits.so

@@ -61,7 +61,7 @@ in
         };
       '';
       description = ''
-        Locally defined maps of hostnames to IP addresses.
+        Locally defined maps of IP addresses to hostnames.
       '';
     };
   };
@@ -88,8 +88,9 @@ in
     };
 
     networking.hosts = {
-      localhost = [ "127.0.0.1" ];
-      ${config.networking.hostName} = [ "127.0.0.2" ];
+      "127.0.0.1" = [ "localhost" ];
+      "::1" = [ "localhost" ];
+      "127.0.0.2" = [ config.networking.hostName ];
     };
 
     boot.initrd = {

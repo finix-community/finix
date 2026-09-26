@@ -25,7 +25,7 @@ Copy the template below and fill in each section:
 - **Status:** `proposed`
 - **Author:** @willowispll
 - **Date:** 2026-06-22
-- **Description:** Make finix do not evaluate any modules by default.
+- **Description:** Make finix not evaluate any modules by default.
 - **Motivation:** This will make the system even more lightweight and unopinionated; furthermore, users should primarily use profiles anyway.
 - **Proposed Approach:** Edit modules/default.nix?
 - **Related:** Multiple conversations in discord

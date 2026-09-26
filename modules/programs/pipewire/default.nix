@@ -8,6 +8,14 @@
 let
   cfg = config.programs.pipewire;
 
+  udevApi =
+    if config.services.gardendevd.enable then
+      pkgs.libudev-garden
+    else if config.services.mdevd.enable || config.services.keventd.enable then
+      pkgs.libudev-zero
+    else
+      null;
+
   format = pkgs.formats.json { };
 
   configFiles =
@@ -61,10 +69,14 @@ let
 
   pipewire' =
     (pkgs.pipewire.override (
-      lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
-        enableSystemd = false;
-        udev = pkgs.libudev-zero;
-      }
+      lib.optionalAttrs
+        (
+          config.services.mdevd.enable || config.services.keventd.enable || config.services.gardendevd.enable
+        )
+        {
+          enableSystemd = false;
+          udev = udevApi;
+        }
     )).overrideAttrs
       (o: {
         # https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/2398#note_2967898
@@ -77,10 +89,14 @@ let
 
   pipewire32' =
     (pkgs.pkgsi686Linux.pipewire.override (
-      lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
-        enableSystemd = false;
-        udev = pkgs.libudev-zero;
-      }
+      lib.optionalAttrs
+        (
+          config.services.mdevd.enable || config.services.keventd.enable || config.services.gardendevd.enable
+        )
+        {
+          enableSystemd = false;
+          udev = udevApi;
+        }
     )).overrideAttrs
       (o: {
         patches =

@@ -198,13 +198,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = cfg.prune.enable -> config.providers.scheduler.backend != "none";
-        message = "services.docker.prune.enable requires a scheduler backend to be enabled in your system configuration.";
-      }
-    ];
-
     services.docker.settings = {
       inherit (cfg) group;
     };
@@ -219,9 +212,9 @@ in
     services.docker.extraPackages = [
       config.services.nftables.package or pkgs.nftables
     ]
-    ++ lib.optionals (cfg.settings.storage-driver == "zfs") [
-      config.boot.zfs.package
-    ];
+    ++ lib.optionals (
+      cfg.settings.storage-driver == "zfs"
+    ) config.boot.supportedFilesystems.zfs.packages;
 
     boot.kernelModules = [
       "bridge"
@@ -252,7 +245,7 @@ in
       ];
       command = "${cfg.package}/bin/dockerd " + lib.escapeShellArgs cfg.extraArgs;
       notify = "systemd";
-      reload = "${pkgs.procps}/bin/kill -s HUP $MAINPID";
+      exec-reload = "${pkgs.procps}/bin/kill -s HUP $MAINPID";
       path = [
         pkgs.kmod
       ]

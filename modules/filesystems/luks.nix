@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  utils,
   ...
 }:
 {
@@ -73,11 +74,9 @@
           devices = lib.filterAttrs (_: fs: fs.fsType == "luks") config.fileSystems;
         in
         lib.mkIf (devices != { }) {
-          conditions =
-            lib.optionals config.services.mdevd.enable [ "run/coldplug/success" ]
-            ++ lib.optionals config.services.gardendevd.enable [ "run/gardendevctl:2/success" ]
-            ++ lib.optionals config.services.udev.enable [ "run/udevadm:5/success" ]
-            ++ lib.optionals config.services.keventd.enable [ "service/keventd/ready" ];
+          conditions = map (dev: "task/wait-dev-${utils.escapePath dev.device}/success") (
+            lib.attrValues devices
+          );
 
           tty = "@console";
           script = lib.concatMapAttrsStringSep "\n" (

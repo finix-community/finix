@@ -42,7 +42,7 @@ in
       };
       default = { };
       description = ''
-        `udisks2` configuration. See {manpage}`udisks2.conf(8)`
+        `udisks2` configuration. See {manpage}`udisks2.conf(5)`
         for additional details.
       '';
     };

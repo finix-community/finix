@@ -80,17 +80,21 @@ in
     environment.systemPackages = [
       pkgs.iproute2
       pkgs.iputils
+
+      # the test driver runs every command as `bash -c ... | base64`
+      pkgs.bashNonInteractive
+      pkgs.coreutils
     ];
 
     # backdoor service for finit
     finit.services.backdoor = {
       description = "test driver backdoor shell";
       command = backdoorScript;
-      runlevels = "234";
+      runlevel = "234";
       log = false;
 
       # the backdoor runs bash which executes commands from hvc0 until EOF, then exits
-      restart = 0;
+      restart-max = 0;
     };
   };
 }

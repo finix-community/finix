@@ -128,6 +128,12 @@
       '';
     };
 
+    boot.resumeDevice = lib.mkOption {
+      type = lib.types.str;
+      default = "";
+      description = "Device from which to resume after hibernation. Empty = disabled. When set, adds resume=<device> to boot.kernelParams.";
+    };
+
     boot.kernelParams = lib.mkOption {
       type = lib.types.listOf (
         lib.types.strMatching ''([^"[:space:]]|"[^"]*")+''
@@ -276,6 +282,10 @@
 
       # x86 RTC needed by the stage 2 init script.
       "rtc_cmos"
+    ];
+
+    boot.kernelParams = lib.mkIf (config.boot.resumeDevice != "") [
+      "resume=${config.boot.resumeDevice}"
     ];
 
     boot.initrd.kernelModules = [

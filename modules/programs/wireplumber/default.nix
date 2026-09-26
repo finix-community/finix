@@ -26,9 +26,13 @@ in
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.wireplumber.override (
-        lib.optionalAttrs (config.services.mdevd.enable || config.services.keventd.enable) {
-          pipewire = config.programs.pipewire.package;
-        }
+        lib.optionalAttrs
+          (
+            config.services.mdevd.enable || config.services.keventd.enable || config.services.gardendevd.enable
+          )
+          {
+            pipewire = config.programs.pipewire.package;
+          }
       );
       defaultText = lib.literalExpression "pkgs.wireplumber";
       description = ''

@@ -54,7 +54,7 @@ let
         # Fix some paths in the standard udev rules.  Hacky.
         for i in $out/*.rules; do
           substituteInPlace $i \
-            --replace-quiet \"/sbin/modprobe \"${pkgs.kmod}/bin/modprobe \
+            --replace-quiet \"/sbin/modprobe \"${lib.getExe' pkgs.kmod "modprobe"} \
             --replace-quiet \"/sbin/mdadm \"${pkgs.mdadm}/sbin/mdadm \
             --replace-quiet \"/sbin/blkid \"${pkgs.util-linux}/sbin/blkid \
             --replace-quiet \"/bin/mount \"${pkgs.util-linux}/bin/mount \
@@ -233,10 +233,10 @@ in
     # adapted from https://github.com/troglobit/finit/blob/master/system/10-hotplug.conf.in
     finit.services.udevd = {
       description = "device event daemon (${cfg.package.pname})";
-      runlevels = "S12345789";
+      runlevel = "S12345789";
       command = "${cfg.package}/bin/udevd --ready-notify=%n" + lib.optionalString cfg.debug " -D";
       notify = "s6";
-      pid = "udevd";
+      pidfile = "udevd";
       log = true;
       nohup = true;
       cgroup.name = "system";
@@ -247,7 +247,7 @@ in
     finit.run =
       let
         defaults = {
-          runlevels = "S";
+          runlevel = "S";
           conditions = "service/udevd/ready";
           log = true;
           cgroup.name = "init";
@@ -308,6 +308,8 @@ in
 
     # build out the default initramfs image
     boot.initrd = {
+      path = [ config.services.udev.package ];
+
       finit.services.udevd = {
         command = "/bin/udevd --ready-notify=%n";
         notify = "s6";

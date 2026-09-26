@@ -6,6 +6,8 @@
 }:
 let
   cfg = config.services.elogind;
+
+  format = pkgs.formats.systemd { };
 in
 {
   options.services.elogind = {
@@ -23,6 +25,32 @@ in
       defaultText = lib.literalExpression "pkgs.elogind";
       description = ''
         The package to use for `elogind`.
+      '';
+    };
+
+    debug = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to enable debug logging.
+      '';
+    };
+
+    settings.Login = lib.mkOption {
+      type = (pkgs.formats.keyValue { }).type;
+      default = { };
+      description = ''
+        `elogind` login manager configuration. See {manpage}`logind.conf(5)`
+        for additional details.
+      '';
+    };
+
+    settings.Sleep = lib.mkOption {
+      type = (pkgs.formats.keyValue { }).type;
+      default = { };
+      description = ''
+        `elogind` suspend and hibernation configuration. See {manpage}`sleep.conf(5)`
+        for additional details.
       '';
     };
   };
@@ -43,6 +71,13 @@ in
       description = "login manager";
       conditions = "service/dbus/ready";
       command = "${cfg.package}/libexec/elogind";
+      notify = "systemd";
+      environment = {
+        SYSTEMD_LOG_TARGET = "syslog";
+      }
+      // lib.optionalAttrs cfg.debug {
+        SYSTEMD_LOG_LEVEL = "debug";
+      };
     };
 
     services.dbus.enable = true;
@@ -51,12 +86,19 @@ in
 
     environment.systemPackages = [ cfg.package ];
 
-    environment.etc."elogind/logind.conf".text = ''
-      [Login]
-    '';
+    environment.etc."elogind/logind.conf.d/00-nixos.conf".source = format.generate "logind.conf" {
+      inherit (cfg.settings) Login;
+    };
+    environment.etc."elogind/sleep.conf.d/00-nixos.conf".source = format.generate "sleep.conf" {
+      inherit (cfg.settings) Sleep;
+    };
 
-    environment.etc."elogind/sleep.conf".text = ''
-      [Sleep]
+    # TODO: add finit.services.reloadTriggers option
+    environment.etc."finit.d/elogind.conf".text = lib.mkAfter ''
+
+      # reload trigger
+      # ${config.environment.etc."elogind/logind.conf.d/00-nixos.conf".source}
+      # ${config.environment.etc."elogind/sleep.conf.d/00-nixos.conf".source}
     '';
   };
 }

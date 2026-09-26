@@ -70,6 +70,16 @@ let
         in
         base.generate name transformedValue;
     };
+
+  session_rundir =
+    if config.services.sessiond.enable then
+      "session optional ${config.services.sessiond.package}/lib/security/pam_sessiond.so"
+    else if config.services.elogind.enable then
+      "session optional ${pkgs.elogind}/lib/security/pam_elogind.so"
+    else if config.services.seatd.enable then
+      "session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so"
+    else
+      false;
 in
 {
   options.services.openssh = {
@@ -345,8 +355,7 @@ in
         session required pam_env.so debug conffile=/etc/security/pam_env.conf readenv=0 # env (order 10100)
         session required pam_unix.so debug # unix (order 10200)
 
-        ${lib.optionalString config.services.elogind.enable "session optional ${pkgs.elogind}/lib/security/pam_elogind.so"}
-        ${lib.optionalString config.services.seatd.enable "session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so"}
+        ${lib.optionalString (session_rundir != false) session_rundir}
 
         session required pam_loginuid.so debug # loginuid (order 10300)
         session required pam_limits.so

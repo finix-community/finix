@@ -1,17 +1,18 @@
 {
   config,
-  pkgs,
   lib,
   ...
 }:
 let
   cfg = config.services.getty;
+  # ESC byte via JSON's \u escape
+  esc = builtins.fromJSON ''"\u001b"'';
 in
 {
   options.services.getty = {
     enable = lib.mkOption {
       type = lib.types.bool;
-      default = true;
+      default = false;
       description = ''
         Whether to enable `getty`.
       '';
@@ -58,7 +59,7 @@ in
     environment.etc.issue = lib.mkDefault {
       text = ''
 
-        [1;32m<<< welcome to finix >>>[0m
+        ${esc}[1;32m<<< welcome to finix >>>${esc}[0m
 
       '';
     };

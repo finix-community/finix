@@ -7,11 +7,15 @@
 {
   options.i18n = {
     glibcLocales = lib.mkOption {
-      type = lib.types.path;
-      default = pkgs.glibcLocales.override {
-        allLocales = lib.any (x: x == "all") config.i18n.supportedLocales;
-        locales = config.i18n.supportedLocales;
-      };
+      type = lib.types.nullOr lib.types.path;
+      default =
+        if pkgs.glibcLocales != null then
+          pkgs.glibcLocales.override {
+            allLocales = lib.any (x: x == "all") config.i18n.supportedLocales;
+            locales = config.i18n.supportedLocales;
+          }
+        else
+          null;
       defaultText = lib.literalExpression ''
         pkgs.glibcLocales.override {
           allLocales = lib.any (x: x == "all") config.i18n.supportedLocales;
@@ -93,11 +97,15 @@
   config = {
     environment.systemPackages =
       # We increase the priority a little, so that plain glibc in systemPackages can't win.
-      lib.optional (config.i18n.supportedLocales != [ ]) (lib.setPrio (-1) config.i18n.glibcLocales);
+      lib.optional (config.i18n.glibcLocales != null && config.i18n.supportedLocales != [ ]) (
+        lib.setPrio (-1) config.i18n.glibcLocales
+      );
 
     finit.environment = lib.mkIf (config.i18n.supportedLocales != [ ]) (
       {
         LANG = config.i18n.defaultLocale;
+      }
+      // lib.optionalAttrs (config.i18n.glibcLocales != null) {
         LOCALE_ARCHIVE = "${config.i18n.glibcLocales}/lib/locale/locale-archive";
       }
       // config.i18n.extraLocaleSettings

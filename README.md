@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://nixos.org"><img src="https://img.shields.io/badge/Built_with-Nix-5277C3?logo=nixos&logoColor=white" alt="Built with Nix"></a>
-  <a href="https://discord.gg/WHyqVFpnG4"><img src="https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
+  <a href="https://discord.gg/nVe5Zkaypg"><img src="https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
 </p>
 
 > `finix` - a daily-drivable experimental os, featuring [finit](https://github.com/finit-project/finit) as pid 1, to explore the NixOS design space
@@ -28,7 +28,7 @@ An example of defining a `finit` service in `nix`:
 {
   finit.services.network-manager = {
     description = "network manager service";
-    runlevels = "2345";
+    runlevel = "2345";
     conditions = "service/syslogd/ready";
     command = "${pkgs.networkmanager}/bin/NetworkManager -n";
   };
@@ -57,6 +57,17 @@ None of the above methods have been attempted in some time.
 `finix` does not yet have a disk image available to download - installation will need to take place from a standard NixOS image, which can be downloaded [here](https://nixos.org/download#nixos-iso). You may download and burn either the minimal image or the graphical image and the steps will remain the same. 
 
 For an installation guide, please see the [examples](https://github.com/finix-community/examples/tree/main/installations) repository and choose your preferred method. Credits to [@xZecora](https://github.com/xZecora) for writing these.
+
+# `cachix` binary cache
+
+A binary cache is generously provided by the [cachix](https://www.cachix.org/) free tier offering.
+
+```nix
+  services.nix-daemon.settings = {
+    substituters = [ "https://finix.cachix.org" ];
+    trusted-public-keys = [ "finix.cachix.org-1:0ejikHDeCp0UErsduUUHcg9IJczY2/h2e5132Z/As/c=" ];
+  };
+```
 
 # See also
 

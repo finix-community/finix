@@ -72,6 +72,7 @@ in
       description = "RealtimeKit scheduling policy service";
       command = "${cfg.package}/libexec/rtkit-daemon" + lib.optionalString cfg.debug " --debug";
       conditions = "service/polkit/ready";
+      nohup = true;
 
       cgroup.name = "root";
     };

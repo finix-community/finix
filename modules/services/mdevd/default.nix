@@ -45,7 +45,7 @@ let
 
   # Insert modules for devices with a modalias.
   # Use @ prefix to run via /bin/sh on add events.
-  modaliasRule = ''-$MODALIAS=.* 0:0 660 @modprobe --quiet "$MODALIAS"'';
+  modaliasRule = ''-$MODALIAS=.* 0:0 660 @${lib.getExe' pkgs.kmod "modprobe"} -q "$MODALIAS"'';
 
   # We need symlinks in /dev/disk/{by-id,by-label,by-uuid,by-partlabel,by-partuuid}
   # so we run this script for block device events.
@@ -86,13 +86,18 @@ let
       remove)
         # Remove symlinks pointing to this device.
         # We scan directories instead of calling blkid since the device may already be gone.
+        #
+        # Guard against a fast remove+add reorder
         for dir in /dev/disk/by-id /dev/disk/by-label /dev/disk/by-uuid /dev/disk/by-partlabel /dev/disk/by-partuuid; do
           [ -d "$dir" ] || continue
           for link in "$dir"/*; do
             [ -L "$link" ] || continue
             target=$(readlink "$link")
             case "$target" in
-              "../../$MDEV") rm -f "$link" ;;
+             "../../$MDEV")
+                [ -e "/dev/$MDEV" ] && continue
+                rm -f "$link"
+                ;;
             esac
           done
         done
@@ -134,7 +139,7 @@ in
       type = with lib.types; nullOr ints.unsigned;
       default = null;
       description = ''
-        After `mdevd` has handled the uevents, rebroadcast them to the netlink groups identified
+        After `mdevd` has handled the uevents for hotplugged devices, rebroadcast them to the netlink groups identified
         by the mask {option}`nlgroups`.
 
         ::: {.note}
@@ -187,7 +192,7 @@ in
         }"
         + lib.optionalString (cfg.nlgroups != null) " -O ${toString cfg.nlgroups}"
         + lib.optionalString cfg.debug " -v 3";
-      runlevels = "S12345789";
+      runlevel = "S12345789";
       cgroup.name = "init";
       notify = "s6";
       log = true;
@@ -196,18 +201,14 @@ in
       path = [
         config.programs.coreutils.package
         pkgs.execline
-        pkgs.kmod
         pkgs.util-linux
       ];
     };
 
     finit.run.coldplug = {
       description = "cold plugging system";
-      command =
-        "${cfg.package}/bin/mdevd-coldplug"
-        + lib.optionalString (cfg.nlgroups != null) " -O ${toString cfg.nlgroups}"
-        + lib.optionalString cfg.debug " -v 3";
-      runlevels = "S";
+      command = "${cfg.package}/bin/mdevd-coldplug" + lib.optionalString cfg.debug " -v 3";
+      runlevel = "S";
       conditions = "service/mdevd/ready";
       cgroup.name = "init";
       log = true;
@@ -232,6 +233,12 @@ in
 
     # build out the default initramfs image
     boot.initrd = {
+      path = [
+        config.services.mdevd.package
+        pkgs.execline
+        pkgs.util-linux
+      ];
+
       finit.services.mdevd = {
         command = "mdevd -D %n -O 2";
         notify = "s6";

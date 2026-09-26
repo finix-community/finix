@@ -26,13 +26,6 @@ let
       wacomSupport = false;
     }
   );
-
-  wlroots_0_20 = pkgs.wlroots_0_20.override {
-    inherit libinput;
-
-    # xwayland appears to cause issues - and not required in this context, so no harm in removing
-    enableXWayland = false;
-  };
 in
 {
   imports = with modules; [
@@ -83,9 +76,20 @@ in
     compositor = {
       package = lib.mkOption {
         type = lib.types.package;
-        default = pkgs.cage.override {
-          inherit wlroots_0_20;
-        };
+        default = pkgs.cage.override (
+          o:
+          let
+            wlrootsAttr = lib.head (lib.filter (lib.hasPrefix "wlroots") (lib.attrNames o));
+          in
+          {
+            ${wlrootsAttr} = o.${wlrootsAttr}.override {
+              inherit libinput;
+
+              # xwayland appears to cause issues - and not required in this context, so no harm in removing
+              enableXWayland = false;
+            };
+          }
+        );
         defaultText = lib.literalExpression "pkgs.cage";
         description = ''
           The package to use for `cage`.

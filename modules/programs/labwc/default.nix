@@ -45,12 +45,17 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.labwc.override {
-        inherit libinput;
-
-        wlroots_0_20 = pkgs.wlroots_0_20.override { inherit libinput; };
-        enableSystemd = false;
-      };
+      default = pkgs.labwc.override (
+        o:
+        let
+          wlrootsAttr = lib.head (lib.filter (lib.hasPrefix "wlroots") (lib.attrNames o));
+        in
+        {
+          inherit libinput;
+          ${wlrootsAttr} = o.${wlrootsAttr}.override { inherit libinput; };
+          enableSystemd = false;
+        }
+      );
       defaultText = lib.literalExpression "pkgs.labwc";
       description = ''
         The package to use for `labwc`.

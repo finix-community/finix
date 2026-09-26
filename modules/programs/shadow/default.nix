@@ -10,6 +10,18 @@ let
   format = pkgs.formats.keyValue {
     mkKeyValue = lib.generators.mkKeyValueDefault { } " ";
   };
+
+  encryptMethod = lib.toLower cfg.settings.ENCRYPT_METHOD;
+
+  session_rundir =
+    if config.services.sessiond.enable then
+      "session optional ${config.services.sessiond.package}/lib/security/pam_sessiond.so"
+    else if config.services.elogind.enable then
+      "session optional ${pkgs.elogind}/lib/security/pam_elogind.so"
+    else if config.services.seatd.enable then
+      "session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so"
+    else
+      false;
 in
 {
   options.programs.shadow = {
@@ -158,7 +170,7 @@ in
         auth required pam_deny.so # deny (order 13600)
 
         # Password management.
-        password sufficient pam_unix.so nullok yescrypt # unix (order 10200)
+        password sufficient pam_unix.so nullok ${encryptMethod} # unix (order 10200)
 
         # Session management.
         session required pam_env.so conffile=/etc/security/pam_env.conf readenv=0 # env (order 10100)
@@ -167,8 +179,7 @@ in
         session required pam_limits.so conf=/etc/security/limits.conf
         session required ${config.security.pam.package}/lib/security/pam_lastlog.so silent # lastlog (order 10700)
 
-        ${lib.optionalString config.services.elogind.enable "session optional ${pkgs.elogind}/lib/security/pam_elogind.so"}
-        ${lib.optionalString config.services.seatd.enable "session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so"}
+        ${lib.optionalString (session_rundir != false) session_rundir}
       '';
     };
 
@@ -184,7 +195,7 @@ in
         auth required pam_deny.so # deny (order 12300)
 
         # Password management.
-        password sufficient pam_unix.so nullok yescrypt # unix (order 10200)
+        password sufficient pam_unix.so nullok ${encryptMethod} # unix (order 10200)
 
         # Session management.
         session required pam_env.so conffile=/etc/security/pam_env.conf readenv=0 # env (order 10100)
@@ -206,7 +217,7 @@ in
         auth required pam_deny.so # deny (order 12300)
 
         # Password management.
-        password sufficient pam_unix.so nullok yescrypt # unix (order 10200)
+        password sufficient pam_unix.so nullok ${encryptMethod} # unix (order 10200)
 
         # Session management.
         session required pam_env.so conffile=/etc/security/pam_env.conf readenv=0 # env (order 10100)
