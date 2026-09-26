@@ -1631,6 +1631,40 @@ for additional details.</p>
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/tlp" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/tlp&gt;</a></code></dd>
   </dl>
 </div>
+<div class="option" id="option-services.tlp.pd.enable">
+  <h3 class="option-name">
+    <a href="#option-services.tlp.pd.enable" class="option-anchor">services.tlp.pd.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://linrunner.de/en/tlp/docs/tlp-linux-advanced-power-management.html">tlp-pd</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/tlp" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/tlp&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.tlp.pd.package">
+  <h3 class="option-name">
+    <a href="#option-services.tlp.pd.package" class="option-anchor">services.tlp.pd.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>tlp-pd</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">tlp-pd</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/tlp" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/tlp&gt;</a></code></dd>
+  </dl>
+</div>
 <div class="option" id="option-services.tlp.settings">
   <h3 class="option-name">
     <a href="#option-services.tlp.settings" class="option-anchor">services.tlp.settings</a>
@@ -1744,43 +1778,6 @@ for additional details.</p>
 All files found in
 <code class="file-path">«pkg»/etc/udev/rules.d</code>nd
 <code class="file-path">«pkg»/lib/udev/rules.d</code>ill be included.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>list of absolute path</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/udev" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/udev&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.udev.debug">
-  <h3 class="option-name">
-    <a href="#option-services.udev.debug" class="option-anchor">services.udev.debug</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/udev" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/udev&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.udev.path">
-  <h3 class="option-name">
-    <a href="#option-services.udev.path" class="option-anchor">services.udev.path</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Packages added to the <code class="env-var">PATH</code> environment variable when
-executing programs from Udev rules.</p>
-<p>coreutils, gnu{sed,grep}, util-linux
-automatically included.</p>
 </body></html></div>
   <dl class="option-details">
     <dt>Type</dt><dd class="option-value"><code>list of absolute path</code></dd>
