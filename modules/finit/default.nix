@@ -19,8 +19,8 @@ in
   config = {
     assertions = [
       {
-        assertion = lib.versionAtLeast cfg.package.version "4.16";
-        message = "finit version must be at least 4.16";
+        assertion = lib.versionAtLeast config.finit.package.version "5.0";
+        message = "finit version must be at least 5.0";
       }
 
       {
