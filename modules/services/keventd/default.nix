@@ -48,13 +48,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = lib.versionAtLeast config.finit.package.version "5.0";
-        message = "finit version must be at least 5.0";
-      }
-    ];
-
     services.keventd.extraArgs = [
       "-c"
       (if cfg.debug then "-d" else "-n")
