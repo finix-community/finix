@@ -1,3 +1,39 @@
+<div class="option" id="option-providers.firewall.allowedUDPPorts">
+  <h3 class="option-name">
+    <a href="#option-providers.firewall.allowedUDPPorts" class="option-anchor">providers.firewall.allowedUDPPorts</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>List of open UDP ports.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of 16 bit unsigned integer; between 0 and 65535 (both inclusive)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(209,154,102);">53</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/firewall" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/firewall&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-providers.firewall.backend">
+  <h3 class="option-name">
+    <a href="#option-providers.firewall.backend" class="option-anchor">providers.firewall.backend</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The selected module which should implement functionality for the <code class="nixos-option">providers.firewall</code> contract.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>one of "nftables", "none"</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">none</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nftables/providers.firewall.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nftables/providers.firewall.nix&gt;</a></code></dd>
+  </dl>
+</div>
 <div class="option" id="option-providers.privileges.backend">
   <h3 class="option-name">
     <a href="#option-providers.privileges.backend" class="option-anchor">providers.privileges.backend</a>
@@ -1751,55 +1787,6 @@ the local time zone, where the daemon is running.</p>
     <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
 </body></html></dd>
     <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">config</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">time</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">timeZone</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/cron" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/cron&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.cron.settings.MAILFROM">
-  <h3 class="option-name">
-    <a href="#option-services.cron.settings.MAILFROM" class="option-anchor">services.cron.settings.MAILFROM</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>If <code>MAILFROM</code> is defined (and non-empty), it is used as the envelope sender
-address, otherwise, the username of the executing user is used.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This variable is also inherited from the <code>cron</code> process environment.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Both <code>MAILFROM</code> and <code>MAILTO</code> variables are expanded, so setting them as in the following
-example works as expected:</p>
-<pre><code>MAILFROM=cron-$USER@cron.com
-</code></pre>
-<p><code>$USER</code> is replaced by the system user.</p>
-</div>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>null or non-empty string</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/cron" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/cron&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.cron.settings.MAILTO">
-  <h3 class="option-name">
-    <a href="#option-services.cron.settings.MAILTO" class="option-anchor">services.cron.settings.MAILTO</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>If <code>MAILTO</code> is defined (and non-empty), mail is sent to the specified address. If <code>MAILTO</code>
-is defined but empty (<code>MAILTO = "";</code>), no mail is sent. Otherwise, mail is sent to the owner
-of the crontab.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
 </body></html></dd>
   </dl>
   <dl class="option-details option-sources">
