@@ -52,11 +52,13 @@ An example of defining a `finit` service in `nix`:
 
 None of the above methods have been attempted in some time.
 
-# Installation
+# Getting Started
+
+[Documentation](https://finix-community.github.io/finix)
 
 `finix` does not yet have a disk image available to download - installation will need to take place from a standard NixOS image, which can be downloaded [here](https://nixos.org/download#nixos-iso). You may download and burn either the minimal image or the graphical image and the steps will remain the same. 
 
-For an installation guide, please see the [examples](https://github.com/finix-community/examples/tree/main/installations) repository and choose your preferred method. Credits to [@xZecora](https://github.com/xZecora) for writing these.
+For an installation guide, see [Installation](https://finix-community.github.io/finix/installation.html) on our documentation site. Credits to [@xZecora](https://github.com/xZecora) for writing the referenced [examples](https://github.com/finix-community/examples).
 
 # `cachix` binary cache
 
