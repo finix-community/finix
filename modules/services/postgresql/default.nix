@@ -135,15 +135,6 @@ in
     environment.etc."postgresql/${cfg.package.psqlSchema}/postgresql.conf".source =
       format.generate "postgresql.conf" cfg.settings;
 
-    # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/postgresql.conf".text = lib.mkAfter ''
-
-      # reload trigger
-      # ${config.environment.etc."postgresql/${cfg.package.psqlSchema}/postgresql.conf".source}
-      # ${config.environment.etc."postgresql/${cfg.package.psqlSchema}/pg_hba.conf".source}
-      # ${config.environment.etc."postgresql/${cfg.package.psqlSchema}/pg_ident.conf".source}
-    '';
-
     finit.services.postgresql = {
       inherit (cfg) user group;
 
@@ -154,6 +145,11 @@ in
         "net/lo/up"
       ];
       stop-timeout = 120;
+      reload-triggers = [
+        config.environment.etc."postgresql/${cfg.package.psqlSchema}/postgresql.conf".source
+        config.environment.etc."postgresql/${cfg.package.psqlSchema}/pg_hba.conf".source
+        config.environment.etc."postgresql/${cfg.package.psqlSchema}/pg_ident.conf".source
+      ];
     }
     // lib.optionalAttrs cfg.initdb.enable {
       exec-start-pre = pkgs.writeShellScript "pre.sh" ''
