@@ -715,6 +715,7 @@ in
           execOptsBase
           execOpts
           oneshotOpts
+          rlimitOpts
           runOpts
         ]);
       default = { };
@@ -789,6 +790,32 @@ in
           value.text = mkConfigFile "sysv" sysv;
         }) (lib.filterAttrs (_: sysv: sysv.enable) cfg.sysv);
 
+        # one file each, so a `run` can have a file scoped `rlimit {}`.
+        # The index is the ordering: `run` blocks run in read order, and digits sort ahead of the service and task names.
+        runTree =
+          let
+            pad = i: lib.strings.replicate (3 - lib.stringLength i) "0" + i;
+            ordered = lib.sortProperties (
+              lib.mapAttrsToList (name: run: {
+                inherit name;
+                value = run;
+                inherit (run) priority;
+              }) (lib.filterAttrs (_: run: run.enable) cfg.run)
+            );
+          in
+          lib.listToAttrs (
+            lib.imap0 (i: entry: {
+              name =
+                if entry.value.id != "%i" then
+                  "finit.d/${pad (toString i)}-run-${entry.name}.conf"
+                else
+                  "finit.d/available/${pad (toString i)}-run-${entry.name}.conf";
+
+              value.mode = "direct-symlink";
+              value.text = mkConfigFile "run" entry.value;
+            }) ordered
+          );
+
         cgroup = lib.concatStringsSep "\n\n" (lib.mapAttrsToList (_: cgroupBlock) cfg.cgroups);
 
         rlimit =
@@ -799,13 +826,6 @@ in
 
         environment =
           if cfg.environment == { } then "" else (mkBlock "environment" null cfg.environment [ ]) + "\n";
-
-        # TODO: split these out into their own files, while preserving order, and add rlimits option
-        run = lib.concatStringsSep "\n\n" (
-          map (mkServiceLikeBlock "run") (
-            lib.sortProperties (lib.concatMap (v: lib.optional v.enable v) (lib.attrValues config.finit.run))
-          )
-        );
 
         tty = lib.concatStringsSep "\n\n" (
           lib.filter (s: s != "") (
@@ -828,9 +848,6 @@ in
 
             # ttys
             ${tty}
-
-            # sequential one-shot commands
-            ${run}
           '';
         };
       in
@@ -838,6 +855,7 @@ in
         serviceTree
         taskTree
         sysvTree
+        runTree
         configFile
       ];
   };
