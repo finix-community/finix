@@ -328,14 +328,11 @@ in
       notify = "pid";
       command = "${cfg.package}/bin/sshd -D -f /etc/ssh/sshd_config";
       cgroup.name = "user";
+
+      reload-triggers = [
+        config.environment.etc."ssh/sshd_config".source
+      ];
     };
-
-    # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/sshd.conf".text = lib.mkAfter ''
-
-      # reload trigger
-      # ${config.environment.etc."ssh/sshd_config".source}
-    '';
 
     environment.etc."ssh/sshd_config".source = configFile;
 
