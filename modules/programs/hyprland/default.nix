@@ -11,7 +11,7 @@ let
     [Desktop Entry]
     Name=Hyprland
     Comment=An intelligent dynamic tiling Wayland compositor
-    Exec=${pkgs.dbus}/bin/dbus-run-session -- ${lib.getExe cfg.package}
+    Exec=${pkgs.dbus}/bin/dbus-run-session -- ${cfg.package}/bin/start-hyprland
     Type=Application
     DesktopNames=Hyprland
     Keywords=tiling;wayland;compositor;
