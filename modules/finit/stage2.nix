@@ -246,13 +246,6 @@ let
           '';
         };
 
-        command = lib.mkOption {
-          type = program;
-          description = ''
-            The command to execute.
-          '';
-        };
-
         exec-start-pre = lib.mkOption {
           type = lib.types.nullOr program;
           default = null;
@@ -533,6 +526,26 @@ let
         "reload-triggers" # rendered as a leading comment by mkConfigFile, not a key
         "nohup" # has no key of its own, becomes reload-signal below
         "priority" # nix-only, used for lib.sortProperties on `run`
+
+        # deprecated aliases, see the mkRenamedOptionModule calls above
+        "caps"
+        "cleanup"
+        "conflict"
+        "env"
+        "kill"
+        "manual"
+        "pid"
+        "post"
+        "pre"
+        "ready"
+        "reload"
+        "remain"
+        "restart"
+        "restart_sec"
+        "rlimits"
+        "runlevels"
+        "stop"
+        "supplementary_groups"
       ]
       (svc: {
         reload-signal = if svc.nohup or false then "none" else null;
@@ -620,6 +633,9 @@ in
       default = [ ];
       description = ''
         Packages added to the `finit` PATH environment variable.
+
+        A default is provided by this repository, which assigning to this option
+        extends. Use `lib.mkForce` to replace it.
       '';
     };
 
