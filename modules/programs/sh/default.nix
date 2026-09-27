@@ -34,11 +34,11 @@ in
       file = lib.mkOption {
         type = lib.types.nullOr lib.types.str;
         default = null;
-        examples = [
-          "fish/config.fish"
-          "bashrc"
-          "zshrc"
-        ];
+        example = lib.literalExpression ''
+          fish/config.fish
+          bashrc
+          zshrc
+        '';
 
         description = ''
           Path to the shell configuration file relative to /etc.
