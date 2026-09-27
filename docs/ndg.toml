@@ -1,0 +1,69 @@
+footer_text = 'Generated with <a href="https://ndg.feel-co.org">ndg</a> &middot; <a href="https://github.com/finix-community/finix">finix repository</a> &middot; <a href="https://github.com/finix-community/community-modules">community modules</a>'
+jobs = 4
+
+# Enable features
+highlight_code = true
+generate_anchors = true
+
+# Code block handling
+# tab_style = "normalize"  # converts tabs to spaces
+# syntax_queries_path = "queries" # expects '<lang>/{highlights,injections,locals}.scm'
+
+# Custom assets
+# stylesheet_paths = ["custom.css"]
+# script_paths = ["analytics.js"]
+
+# Git integration
+revision = "main"
+
+[markdown]
+extensions = ["math-dollars", "math-code", "math-latex"]
+
+[sidebar]
+number_special_files = true
+numbered = true
+ordering = "custom"
+
+[[sidebar.matches]]
+new_title = "Introduction"
+path = "index.md"
+position = 0
+
+[[sidebar.matches]]
+new_title = "Comparing finix and NixOS"
+path = "finix-vs-nixos.md"
+position = 1
+
+[[sidebar.matches]]
+new_title = "Frequenty Asked Questions"
+path = "FAQ.md"
+position = 2
+
+[[sidebar.matches]]
+new_title = "Installation"
+path = "installation.md"
+position = 3
+
+[[sidebar.matches]]
+new_title = "Configuration"
+path = "configuring.md"
+position = 4
+
+# Search configuration
+# [search]
+# enable = true
+# max_heading_level = 3
+
+# SEO metadata
+[meta.opengraph]
+"og:title" = "finix"
+"og:description" = "finix - a nix-based operating system"
+
+[meta.tags]
+description = "finix - a nix-based operating system"
+keywords = "documentation,nix,finix"
+
+[[meta.favicon]]
+href = "@logo@"
+dest = "finix-logo.svg"
+type = "image/svg+xml"
