@@ -290,6 +290,10 @@ in
       # https://github.com/NixOS/nix/blob/81884c36a381737a438ddc5decb658446074d064/misc/systemd/nix-daemon.service.in#L12-L13
       cgroup.settings."pids.max" = 1048576;
       rlimit.nofile = 1048576;
+
+      reload-triggers = [
+        config.environment.etc."nix/nix.conf".source
+      ];
     };
 
     environment.systemPackages = [
@@ -337,12 +341,5 @@ in
         "kvm"
       ];
     };
-
-    # TODO: add finit.services.restartTriggers option
-    environment.etc."finit.d/nix-daemon.conf".text = lib.mkAfter ''
-
-      # standard nixos trick to force a restart when something has changed
-      # ${config.environment.etc."nix/nix.conf".source}
-    '';
   };
 }

@@ -397,6 +397,16 @@ let
             will be restarted indefinitely regardless of the `restart-max` limit.
           '';
         };
+
+        reload-triggers = lib.mkOption {
+          type = with lib.types; listOf (either str path);
+          default = [ ];
+          description = ''
+            An arbitrary list of items such as derivations. If any item in the list
+            changes between reconfigurations, the service will be reloaded or restarted
+            if reloads are not supported.
+          '';
+        };
       };
 
       config =
@@ -702,6 +712,9 @@ let
   mkConfigFile =
     svcType: svc:
     lib.optionalString (svc.rlimit or { } != { }) "${rlimitStr svc.rlimit}\n\n"
+    + lib.optionalString (
+      svc.reload-triggers or [ ] != [ ]
+    ) "# reload-triggers = ${lib.concatStringsSep ", " svc.reload-triggers}\n\n"
     + (serviceStr svcType svc);
 
   serviceStr =
