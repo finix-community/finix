@@ -7,6 +7,18 @@
 let
   cfg = config.finit;
   format = pkgs.formats.keyValue { };
+  finitFmt = import ./format.nix { inherit lib pkgs; };
+  inherit (finitFmt)
+    program
+    bfScalar
+    mkBlock
+    mkTitle
+    mkRawEntries
+    execOptsBase
+    runOpts
+    ttyOpts
+    ;
+  baseOpts = finitFmt.mkBaseOpts "234";
 
   # finix-setup plugin for early boot initialization
   finix-setup = pkgs.callPackage ../../pkgs/finix-setup {
@@ -18,20 +30,6 @@ let
       )
     );
   };
-
-  pathOrStr = with lib.types; coercedTo path (x: "${x}") str;
-  program =
-    lib.types.coercedTo (
-      lib.types.package
-      // {
-        # require mainProgram for this conversion
-        check = v: v.type or null == "derivation" && v ? meta.mainProgram;
-      }
-    ) lib.getExe pathOrStr
-    // {
-      description = "main program, path or command";
-      descriptionClass = "conjunction";
-    };
 
   rlimitsType =
     let
@@ -90,17 +88,6 @@ let
       };
     };
 
-  runOpts = {
-    options.priority = lib.mkOption {
-      type = lib.types.int;
-      default = 1000;
-      description = ''
-        Order of this `run` command in relation to the others. The semantics are the same as
-        with `lib.mkOrder`. Smaller values have a greater priority.
-      '';
-    };
-  };
-
   # oneshotOpts: options specific to oneshot stanzas (task, run) - not services
   oneshotOpts = {
     imports = [
@@ -121,85 +108,34 @@ let
     };
   };
 
-  # baseOpts: options shared by ALL stanza types (service, task, run, tty, sysv)
-  baseOpts = {
-    imports = [
-      (lib.mkRenamedOptionModule [ "runlevels" ] [ "runlevel" ])
-    ];
+  # cgroupOpt: the one per-stanza field baseOpts has here but not in the initrd variant (stage1)
+  cgroupOpt.options.cgroup = {
+    name = lib.mkOption {
+      type = lib.types.str;
+      default = "system";
+      description = ''
+        The name of the cgroup to place this process under.
+      '';
+    };
 
-    options = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
-        default = true;
-        description = ''
-          Whether to enable this stanza.
-        '';
-      };
+    delegate = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        For services that need to create their own child `cgroups` (container runtimes like `docker`, `podman`, `systemd-nspawn`, `lxc`, etc...).
 
-      extraConfig = lib.mkOption {
-        type = lib.types.separatedString " ";
-        default = "";
-        example = "";
-        description = ''
-          A place for `finit` configuration options which have not been added to the `nix` module yet.
-        '';
-      };
+        See [upstream documentation](https://finit-project.github.io/config/cgroups/#cgroup-delegation) for details.
+      '';
+    };
 
-      conditions = lib.mkOption {
-        type = with lib.types; coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr);
-        apply = lib.unique;
-        default = [ ];
-        example = "pid/syslog";
-        description = ''
-          See [upstream documentation](https://finit-project.github.io/conditions/) for details.
-        '';
-      };
+    settings = lib.mkOption {
+      type = format.type;
+      default = { };
+      description = ''
+        The cgroup settings to apply to this process.
 
-      description = lib.mkOption {
-        type = with lib.types; nullOr str;
-        default = null;
-        description = ''
-          A human-readable description of this service, displayed by `initctl`.
-        '';
-      };
-
-      runlevel = lib.mkOption {
-        type = lib.types.str; # TODO: string  matching 0-9S
-        default = "234";
-        description = ''
-          See [upstream documentation](https://finit-project.github.io/runlevels/) for details.
-        '';
-      };
-
-      cgroup = {
-        name = lib.mkOption {
-          type = lib.types.str;
-          default = "system";
-          description = ''
-            The name of the cgroup to place this process under.
-          '';
-        };
-
-        delegate = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
-          description = ''
-            For services that need to create their own child `cgroups` (container runtimes like `docker`, `podman`, `systemd-nspawn`, `lxc`, etc...).
-
-            See [upstream documentation](https://finit-project.github.io/config/cgroups/#cgroup-delegation) for details.
-          '';
-        };
-
-        settings = lib.mkOption {
-          type = format.type;
-          default = { };
-          description = ''
-            The cgroup settings to apply to this process.
-
-            See [kernel documentation](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html) for additional details.
-          '';
-        };
-      };
+        See [kernel documentation](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html) for additional details.
+      '';
     };
   };
 
@@ -221,22 +157,6 @@ let
       ];
 
       options = {
-        name = lib.mkOption {
-          type = lib.types.str; # TODO: limit name, no : allowed, only valid chars
-          readOnly = true;
-          description = ''
-            The name of this stanza, derived from the attribute name.
-          '';
-        };
-
-        id = lib.mkOption {
-          type = with lib.types; nullOr str;
-          readOnly = true;
-          description = ''
-            The instance identifier, derived from the attribute name if it contains an `@` character.
-          '';
-        };
-
         user = lib.mkOption {
           type = with lib.types; nullOr str;
           default = null;
@@ -305,18 +225,6 @@ let
             the case when running in the foreground.
 
             See [upstream documentation](https://finit-project.github.io/config/logging/) for additional details.
-          '';
-        };
-
-        tty = lib.mkOption {
-          type = with lib.types; nullOr nonEmptyStr;
-          default = null;
-          example = "/dev/tty1";
-          description = ''
-            Give this stanza a controlling terminal on the given device, connecting its `stdin`, `stdout`, and
-            `stderr` to the TTY. May be a device node like `/dev/ttyS0` or the special keyword `@console`.
-
-            See [upstream documentation](https://finit-project.github.io/config/tty/) for additional details.
           '';
         };
 
@@ -560,104 +468,6 @@ let
       };
     };
 
-  # tty [LVLS] <COND> DEV [BAUD] [noclear] [nowait] [nologin] [TERM]
-  # tty [LVLS] <COND> CMD <ARGS> [noclear] [nowait]
-  # TODO: assertions that make sure options make sense together
-  ttyOpts =
-    { name, config, ... }:
-    {
-      options = {
-        id = lib.mkOption {
-          type = with lib.types; nullOr nonEmptyStr;
-          default = null;
-          description = ''
-            Explicit instance ID for the TTY. If not set, finit auto-derives it from the device name
-            (e.g., `tty1` becomes `:1`, `ttyS0` becomes `:S0`).
-          '';
-        };
-
-        noclear = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
-          description = ''
-            Disables clearing the TTY after each session. Clearing the TTY when a user logs out is usually preferable.
-          '';
-        };
-
-        nowait = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
-          description = ''
-            Disables the press `Enter to activate console` message before actually starting the `getty` program.
-          '';
-        };
-
-        nologin = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
-          description = ''
-            Disables `getty` and `/bin/login`, and gives the user a `root` (login) shell on the given TTY `device`
-            immediately. Needless to say, this is a rather insecure option, but can be very useful for developer
-            builds, during board bringup, or similar.
-          '';
-        };
-
-        rescue = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
-          description = ''
-            Start `sulogin` instead of a regular shell, requiring the root password. Useful for rescue/single-user mode.
-          '';
-        };
-
-        notty = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
-          description = ''
-            No device node mode. This is insecure and intended only for board bringup or testing scenarios.
-          '';
-        };
-
-        command = lib.mkOption {
-          type = lib.types.nullOr program;
-          default = null;
-          description = ''
-            Specify an external `getty`, like `agetty` or the BusyBox `getty`.
-          '';
-        };
-
-        device = lib.mkOption {
-          type = with lib.types; nullOr nonEmptyStr;
-          default = null;
-          description = ''
-            Embedded systems may want to enable automatic `device` by supplying the special `@console` device. This
-            works regardless weather the system uses `ttyS0`, `ttyAMA0`, `ttyMXC0`, or anything else. `finit` figures
-            it out by querying sysfs: `/sys/class/tty/console/active`.
-          '';
-        };
-
-        baud = lib.mkOption {
-          type = with lib.types; nullOr nonEmptyStr;
-          default = null;
-          description = ''
-            Baud rate for serial TTYs.
-          '';
-        };
-
-        term = lib.mkOption {
-          type = with lib.types; nullOr nonEmptyStr;
-          default = null;
-          description = ''
-            The `TERM` environment variable value for the TTY.
-          '';
-        };
-      };
-
-      config = {
-        device = lib.mkIf (config.command == null) (lib.mkDefault name);
-      };
-    };
-
   rlimitOpts = {
     imports = [
       (lib.mkRenamedOptionModule [ "rlimits" ] [ "rlimit" ])
@@ -676,113 +486,81 @@ let
     };
   };
 
-  logToStr = v: if v == true then "log" else "log:${v}";
-  cgroupToStr =
-    cgroup:
-    let
-      mkValueString =
-        value:
-        if lib.isString value then
-          "'" + (lib.removeSuffix "'" (lib.removePrefix "'" value)) + "'"
-        else
-          toString value;
+  cgroupBlock =
+    cg:
+    mkBlock "cgroup" cg.name (
+      cg.settings // lib.optionalAttrs (cg.delegate or false) { delegate = true; }
+    ) [ ];
 
-      options =
-        lib.optional cgroup.delegate "delegate"
-        ++ lib.mapAttrsToList (k: v: "${k}:${mkValueString v}") cgroup.settings;
-    in
-    "cgroup.${cgroup.name}"
-    + lib.optionalString (options != [ ]) ",${lib.concatStringsSep "," options}";
+  logBlock =
+    log:
+    if log == false then
+      null
+    else
+      mkBlock "log" null (if log == true then { } else { file = log; }) [ ];
 
-  rlimitStr =
-    let
-      rlimitToStr =
-        k: v:
+  rlimitBlock =
+    r:
+    if r == { } then
+      null
+    else
+      mkBlock "rlimit" null (lib.concatMapAttrs (
+        n: v:
         if lib.isAttrs v then
-          (
-            lib.optionalString (v.hard != null) "rlimit hard ${k} ${toString v.hard}"
-            + lib.optionalString (v.hard != null && v.soft != null) "\n"
-            + lib.optionalString (v.soft != null) "rlimit soft ${k} ${toString v.soft}"
-          )
+          lib.optionalAttrs (v.soft != null) { "soft.${n}" = v.soft; }
+          // lib.optionalAttrs (v.hard != null) { "hard.${n}" = v.hard; }
         else
-          "rlimit ${k} ${toString v}";
+          { ${n} = v; }
+      ) r) [ ];
+
+  # Keys every stanza submodule may carry that are Nix-only: identity used for
+  # the title, structural bits rendered as their own (sub-)block, or values
+  # that get transformed rather than forwarded verbatim. A fixed submodule
+  # composition (services vs. tasks vs. ttys, ...) already only has the keys
+  # relevant to it, so one blacklist covers every stanza type and a missing
+  # key here is just a no-op for `removeAttrs`.
+  rawEntries =
+    mkRawEntries
+      [
+        "name"
+        "id"
+        "enable"
+        "settings"
+        "cgroup"
+        "rlimit"
+        "environment" # folded into `envfile` at config-time, see execOpts.config
+        "path" # folded into `environment.PATH` above, same place
+        "reload-triggers" # rendered as a leading comment by mkConfigFile, not a key
+        "nohup" # has no key of its own, becomes reload-signal below
+        "priority" # nix-only, used for lib.sortProperties on `run`
+      ]
+      (svc: {
+        reload-signal = if svc.nohup or false then "none" else null;
+      });
+
+  mkServiceLikeBlock =
+    svcType: svc:
+    let
+      log = logBlock svc.log;
     in
-    values: lib.concatMapAttrsStringSep "\n" rlimitToStr values;
+    mkBlock svcType (mkTitle svc.name svc.id) (rawEntries svc) (
+      [ (cgroupBlock svc.cgroup) ] ++ lib.optional (log != null) log
+    );
+
+  # title = the `finit.ttys` attribute name, since `ttyOpts` has no identity of its own.
+  mkTtyBlock =
+    name: svc: mkBlock "tty" (mkTitle name svc.id) (rawEntries svc) [ (cgroupBlock svc.cgroup) ];
 
   mkConfigFile =
     svcType: svc:
-    lib.optionalString (svc.rlimit or { } != { }) "${rlimitStr svc.rlimit}\n\n"
+    let
+      rlimit = rlimitBlock svc.rlimit;
+    in
+    lib.optionalString (rlimit != null) "${rlimit}\n\n"
     + lib.optionalString (
-      svc.reload-triggers or [ ] != [ ]
+      svc.reload-triggers != [ ]
     ) "# reload-triggers = ${lib.concatStringsSep ", " svc.reload-triggers}\n\n"
-    + (serviceStr svcType svc);
-
-  serviceStr =
-    svcType: svc:
-    lib.concatStringsSep " " (
-      (lib.singleton svcType)
-      ++ (lib.singleton "[${svc.runlevel}]")
-      ++
-
-        (lib.optional (svc.name or null != null) "name:${svc.name}")
-      ++ (lib.optional (svc.id or null != null) ":${svc.id}")
-      ++ (lib.optional (svc.cgroup.name or null != null || svc.cgroup.settings or { } != { }) (
-        cgroupToStr svc.cgroup
-      ))
-      ++ (lib.optional (svc.restart-max or false != false) "restart:${toString svc.restart-max}")
-      ++ (lib.optional (svc.restart-sec or null != null) "restart_sec:${toString svc.restart-sec}")
-      ++ (lib.optional (svc.respawn or false) "respawn")
-      ++ (lib.optional (svc.user or null != null) (
-        "@${svc.user}"
-        + lib.optionalString (svc.group != null) ":${svc.group}"
-        + lib.optionalString (
-          svc.extra-groups or [ ] != [ ]
-        ) ",${lib.concatStringsSep "," svc.extra-groups}"
-      ))
-      # `!` only means "no SIGHUP" for service/sysv; on run/task it means "do not
-      # block bootstrap". `nohup` is declared in serviceOpts, so it never reaches those.
-      ++ (lib.optional (svc.conditions or [ ] != [ ] || svc.nohup or false == true)
-        "<${lib.optionalString (svc.nohup or false) "!"}${lib.concatStringsSep "," svc.conditions}>"
-      )
-      ++ (lib.optional (svc.manual-start or false) "manual:yes")
-      ++ (lib.optional (svc.remain-after-exit or false) "remain:yes")
-      ++ (lib.optional (svc.stop-timeout or null != null) "kill:${toString svc.stop-timeout}")
-      ++ (lib.optional (svc.capabilities or [ ] != [ ]) (
-        "caps:${lib.concatStringsSep "," svc.capabilities}"
-      ))
-      ++ (lib.optional (svc.conflicts or [ ] != [ ]) (
-        "conflict:${lib.concatStringsSep "," svc.conflicts}"
-      ))
-      ++ (lib.optional (svc.pidfile or null != null) "pid:${svc.pidfile}")
-      ++ (lib.optional (svc.type or null != null) "type:${svc.type}")
-      ++ (lib.optional (svc.notify or null != null) "notify:${svc.notify}")
-      ++ (lib.optional (svc.envfile or null != null) "env:${svc.envfile}")
-      ++ (lib.optional (svc.log or false != false) (logToStr svc.log))
-      ++ (lib.optional (svc.tty or null != null) "tty:${svc.tty}")
-      ++ (lib.optional (svc.exec-reload or null != null) "reload:${svc.exec-reload}")
-      ++ (lib.optional (svc.exec-stop or null != null) "stop:${svc.exec-stop}")
-      ++ (lib.optional (svc.exec-start-pre or null != null) "pre:${svc.exec-start-pre}")
-      ++ (lib.optional (svc.exec-stop-post or null != null) "post:${svc.exec-stop-post}")
-      ++ (lib.optional (svc.exec-start-ready or null != null) "ready:${svc.exec-start-ready}")
-      ++ (lib.optional (svc.exec-cleanup or null != null) "cleanup:${svc.exec-cleanup}")
-      ++ (lib.optional (svc.oncrash or null != null) "oncrash:${svc.oncrash}")
-      ++ (lib.optional (svc.extraConfig or "" != "") svc.extraConfig)
-      ++ (lib.optional (svc.command != null) svc.command)
-      ++
-
-        # tty specific options
-        (lib.optional (svc.device or null != null) svc.device)
-      ++ (lib.optional (svc.baud or null != null) svc.baud)
-      ++ (lib.optional (svc.noclear or false) "noclear")
-      ++ (lib.optional (svc.nowait or false) "nowait")
-      ++ (lib.optional (svc.nologin or false) "nologin")
-      ++ (lib.optional (svc.rescue or false) "rescue")
-      ++ (lib.optional (svc.notty or false) "notty")
-      ++ (lib.optional (svc.term or null != null) svc.term)
-      ++
-
-        (lib.optional (svc.description != null) "-- ${svc.description}")
-    );
+    + mkServiceLikeBlock svcType svc;
 in
 {
   options.finit = {
@@ -878,6 +656,8 @@ in
         with lib.types;
         attrsOf (submodule [
           baseOpts
+          cgroupOpt
+          execOptsBase
           execOpts
           serviceOpts
           rlimitOpts
@@ -896,6 +676,8 @@ in
         with lib.types;
         attrsOf (submodule [
           baseOpts
+          cgroupOpt
+          execOptsBase
           execOpts
           oneshotOpts
           rlimitOpts
@@ -913,6 +695,8 @@ in
         with lib.types;
         attrsOf (submodule [
           baseOpts
+          cgroupOpt
+          execOptsBase
           execOpts
           oneshotOpts
           runOpts
@@ -931,6 +715,7 @@ in
         with lib.types;
         attrsOf (submodule [
           baseOpts
+          cgroupOpt
           ttyOpts
         ]);
       default = { };
@@ -946,6 +731,8 @@ in
         with lib.types;
         attrsOf (submodule [
           baseOpts
+          cgroupOpt
+          execOptsBase
           execOpts
           serviceOpts
           rlimitOpts
@@ -986,43 +773,49 @@ in
           value.text = mkConfigFile "sysv" sysv;
         }) (lib.filterAttrs (_: sysv: sysv.enable) cfg.sysv);
 
-        cgroup = lib.concatMapAttrsStringSep "\n" (
-          _: cgroupOpts:
-          "cgroup ${cgroupOpts.name} ${
-            lib.concatMapAttrsStringSep "," (k: v: "${k}:${toString v}") cgroupOpts.settings
-          }"
-        ) cfg.cgroups;
+        cgroup = lib.concatStringsSep "\n\n" (lib.mapAttrsToList (_: cgroupBlock) cfg.cgroups);
+
+        rlimit =
+          let
+            b = rlimitBlock cfg.rlimits;
+          in
+          if b == null then "" else b;
+
+        environment =
+          if cfg.environment == { } then "" else (mkBlock "environment" null cfg.environment [ ]) + "\n";
 
         # TODO: split these out into their own files, while preserving order, and add rlimits option
-        run = lib.concatMapStringsSep "\n" (serviceStr "run") (
-          lib.sortProperties (lib.concatMap (v: lib.optional v.enable v) (lib.attrValues config.finit.run))
+        run = lib.concatStringsSep "\n\n" (
+          map (mkServiceLikeBlock "run") (
+            lib.sortProperties (lib.concatMap (v: lib.optional v.enable v) (lib.attrValues config.finit.run))
+          )
         );
 
-        tty = lib.concatStringsSep "\n" (
-          lib.concatMap (v: lib.optional v.enable (serviceStr "tty" v)) (lib.attrValues config.finit.ttys)
+        tty = lib.concatStringsSep "\n\n" (
+          lib.filter (s: s != "") (
+            lib.mapAttrsToList (name: v: if v.enable then mkTtyBlock name v else "") config.finit.ttys
+          )
         );
 
         configFile = {
           "finit.conf".mode = "direct-symlink";
-          "finit.conf".text = lib.mkMerge [
-            (lib.mkBefore (lib.generators.toKeyValue { } cfg.environment))
-            ''
-              readiness ${cfg.readiness}
-              runlevel ${toString cfg.runlevel}
+          "finit.conf".text = ''
+            ${environment}
+            readiness = ${bfScalar cfg.readiness}
+            runlevel  = ${toString cfg.runlevel}
 
-              # cgroups
-              ${cgroup}
+            # cgroups
+            ${cgroup}
 
-              # rlimits
-              ${rlimitStr cfg.rlimits}
+            # rlimits
+            ${rlimit}
 
-              # ttys
-              ${tty}
+            # ttys
+            ${tty}
 
-              # sequential one-shot commands
-              ${run}
-            ''
-          ];
+            # sequential one-shot commands
+            ${run}
+          '';
         };
       in
       lib.mkMerge [
