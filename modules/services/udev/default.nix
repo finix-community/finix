@@ -257,11 +257,9 @@ in
       in
       {
         "udevadm@1" = defaults // {
-          description = "";
           command = "-${cfg.package}/bin/udevadm settle -t 0";
         };
         "udevadm@2" = defaults // {
-          description = "";
           command = "-${cfg.package}/bin/udevadm control --reload";
         };
         "udevadm@3" = defaults // {

@@ -27,13 +27,13 @@ let
   bfValue =
     v: if lib.isList v then "{ " + lib.concatMapStringsSep ", " bfScalar v + " }" else bfScalar v;
 
-  # `null`/`[ ]`/`false` means "not set" and gets dropped, so callers can just
-  # forward every option value and let unset bool flags default away.
+  # `null`/`""`/`[ ]`/`false` means "not set" and gets dropped, so callers can just
+  # forward every option value and let unset flags default away.
   bfLines =
     entries:
     lib.filter (l: l != null) (
       lib.mapAttrsToList (
-        k: v: if v == null || v == [ ] || v == false then null else "    ${k} = ${bfValue v}"
+        k: v: if v == null || v == "" || v == [ ] || v == false then null else "    ${k} = ${bfValue v}"
       ) entries
     );
 

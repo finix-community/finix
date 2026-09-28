@@ -271,12 +271,13 @@ let
         };
 
         restart-max = lib.mkOption {
-          type = lib.types.ints.between (-1) 255;
-          default = 10;
+          type = with lib.types; nullOr (ints.between (-1) 255);
+          default = null;
           description = ''
             The number of times `finit` tries to restart a crashing service. When
             this limit is reached the service is marked crashed and must be restarted
-            manually with `initctl restart NAME`.
+            manually with `initctl restart NAME`. When `null`, finit's built-in
+            default of 10 applies.
           '';
         };
 
