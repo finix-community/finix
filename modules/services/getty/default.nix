@@ -53,6 +53,15 @@ in
         The list of tty devices on which to start a login prompt.
       '';
     };
+
+    conditions = lib.mkOption {
+      type = with lib.types; listOf str;
+      default = [ ];
+      example = "service/elogind/ready";
+      description = ''
+        Conditions to wait for before starting a login prompt.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -69,6 +78,7 @@ in
       {
         nowait = true;
       }
+      // lib.optionalAttrs (cfg.conditions != [ ]) { inherit (cfg) conditions; }
       // lib.optionalAttrs (cfg.package != null) {
         command = "${lib.getExe cfg.package} ${lib.escapeShellArgs cfg.extraArgs} ${device}";
       }

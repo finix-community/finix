@@ -325,7 +325,11 @@ let
             else
               null;
 
-          environment.PATH = lib.mkIf (config.path != [ ]) (lib.makeBinPath config.path);
+          # a stanza with its own `path` extends the global one, it does not
+          # replace it: `finit.path` is what every other stanza sees
+          environment.PATH = lib.mkIf (config.path != [ ]) (
+            lib.makeBinPath (cfg.path ++ config.path)
+          );
           envfile = lib.mkIf (config.environment != { }) (
             format.generate "${config.name}.env" config.environment
           );
