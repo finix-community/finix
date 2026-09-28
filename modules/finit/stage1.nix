@@ -8,7 +8,14 @@ let
   cfg = config.boot.initrd;
   finitOpts = import ./opts.nix { inherit lib pkgs; };
   finitFmt = import ./format.nix { inherit lib; };
-  inherit (finitFmt) mkBlock mkTitle mkEntries checkStanza svcSchema ttySchema;
+  inherit (finitFmt)
+    mkBlock
+    mkTitle
+    mkEntries
+    checkStanza
+    svcSchema
+    ttySchema
+    ;
   inherit (finitOpts)
     mkBaseOpts
     execOptsBase
@@ -139,11 +146,13 @@ in
   config = {
     # a key finit v5 does not know takes the whole .conf file down at boot so a typo in `settings` should stop the evaluation here instead
     assertions =
-      lib.concatMap (what: lib.concatMap (s: checkStanza s.path svcSchema s.value) (named what cfg.finit.${what})) [
-        "services"
-        "tasks"
-        "run"
-      ]
+      lib.concatMap
+        (what: lib.concatMap (s: checkStanza s.path svcSchema s.value) (named what cfg.finit.${what}))
+        [
+          "services"
+          "tasks"
+          "run"
+        ]
       ++ lib.concatMap (s: checkStanza s.path ttySchema s.value) (named "ttys" cfg.finit.ttys);
 
     boot.initrd.contents =
@@ -151,16 +160,14 @@ in
         # one .conf per service and task, a `foo@` one is a %i template
         stanzaFiles =
           type: stanzas:
-          map (
-            entry: {
-              target =
-                if entry.value.id == "%i" then
-                  "/etc/finit.d/available/${entry.name}.conf"
-                else
-                  "/etc/finit.d/${entry.name}.conf";
-              source = pkgs.writeText "${entry.name}.conf" (mkStanza type entry.value);
-            }
-          ) (lib.mapAttrsToList lib.nameValuePair (lib.filterAttrs (_: s: s.enable) stanzas));
+          map (entry: {
+            target =
+              if entry.value.id == "%i" then
+                "/etc/finit.d/available/${entry.name}.conf"
+              else
+                "/etc/finit.d/${entry.name}.conf";
+            source = pkgs.writeText "${entry.name}.conf" (mkStanza type entry.value);
+          }) (lib.mapAttrsToList lib.nameValuePair (lib.filterAttrs (_: s: s.enable) stanzas));
 
         # `run` stanzas share finit.conf, they run in the order they are read
         run = lib.concatStringsSep "\n\n" (

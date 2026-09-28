@@ -1,6 +1,19 @@
 { lib, pkgs }:
 let
-  inherit (lib.types) bool coercedTo either enum float int ints listOf nonEmptyStr nullOr path str;
+  inherit (lib.types)
+    bool
+    coercedTo
+    either
+    enum
+    float
+    int
+    ints
+    listOf
+    nonEmptyStr
+    nullOr
+    path
+    str
+    ;
 
   format = pkgs.formats.keyValue { };
 
@@ -29,10 +42,14 @@ let
     float
   ];
 
-  settingsType = lib.types.attrsOf (nullOr (lib.types.oneOf [
-    scalar
-    (listOf scalar)
-  ]));
+  settingsType = lib.types.attrsOf (
+    nullOr (
+      lib.types.oneOf [
+        scalar
+        (listOf scalar)
+      ]
+    )
+  );
 
   doc = "See [upstream documentation](https://finit-project.github.io/config/service-opts/) for details.";
 
@@ -52,16 +69,16 @@ let
     keys:
     { config, ... }:
     let
-      mk = entry:
-        {
-          inherit (entry) type;
-          default = entry.default or null;
-          defaultText =
-            entry.defaultText or (lib.literalExpression (if entry ? default then toString entry.default else "null"));
-          apply = entry.apply or (value: value);
-          example = entry.example or null;
-          description = entry.desc or doc;
-        };
+      mk = entry: {
+        inherit (entry) type;
+        default = entry.default or null;
+        defaultText =
+          entry.defaultText
+            or (lib.literalExpression (if entry ? default then toString entry.default else "null"));
+        apply = entry.apply or (value: value);
+        example = entry.example or null;
+        description = entry.desc or doc;
+      };
     in
     {
       options = lib.mapAttrs' (name: entry: lib.nameValuePair name (lib.mkOption (mk entry))) keys;
@@ -99,8 +116,14 @@ let
       '';
     };
 
-    user = { type = nullOr str; desc = "The user this service is executed as."; };
-    group = { type = nullOr str; desc = "The group this service is executed as."; };
+    user = {
+      type = nullOr str;
+      desc = "The user this service is executed as.";
+    };
+    group = {
+      type = nullOr str;
+      desc = "The group this service is executed as.";
+    };
 
     "extra-groups" = {
       type = listOf str;
@@ -144,8 +167,12 @@ let
       '';
     };
 
-    pidfile = { type = nullOr str; };
-    type = { type = nullOr (enum [ "forking" ]); };
+    pidfile = {
+      type = nullOr str;
+    };
+    type = {
+      type = nullOr (enum [ "forking" ]);
+    };
 
     respawn = {
       type = bool;
@@ -193,10 +220,26 @@ let
       '';
     };
 
-    "exec-start-pre" = { type = nullOr program; default = null; desc = "A script which will be called before the service is started."; };
-    "exec-start-ready" = { type = nullOr program; default = null; desc = "A script which will be called when the service is ready."; };
-    "exec-stop" = { type = nullOr program; default = null; desc = "Some services may require alternate methods to be stopped."; };
-    "exec-stop-post" = { type = nullOr program; default = null; desc = "A script which will be called after the service has stopped."; };
+    "exec-start-pre" = {
+      type = nullOr program;
+      default = null;
+      desc = "A script which will be called before the service is started.";
+    };
+    "exec-start-ready" = {
+      type = nullOr program;
+      default = null;
+      desc = "A script which will be called when the service is ready.";
+    };
+    "exec-stop" = {
+      type = nullOr program;
+      default = null;
+      desc = "Some services may require alternate methods to be stopped.";
+    };
+    "exec-stop-post" = {
+      type = nullOr program;
+      default = null;
+      desc = "A script which will be called after the service has stopped.";
+    };
     "exec-reload" = {
       type = nullOr program;
       default = null;
@@ -209,12 +252,22 @@ let
         `exec-reload` to `kill -HUP $MAINPID`.
       '';
     };
-    "exec-cleanup" = { type = nullOr program; default = null; desc = "A script which will be called when the service is removed."; };
+    "exec-cleanup" = {
+      type = nullOr program;
+      default = null;
+      desc = "A script which will be called when the service is removed.";
+    };
   };
 
   # the initramfs gets a subset: no envfile, no log, no cgroups, no lifecycle scripts
   initrdKeys = {
-    inherit (svcKeys) description "if" tty respawn "restart-max";
+    inherit (svcKeys)
+      description
+      "if"
+      tty
+      respawn
+      "restart-max"
+      ;
   };
 
   # readiness, service and sysv stanzas only
@@ -260,40 +313,38 @@ let
     };
 
   # options of every stanza type: the freeform hatch, the switch to render at all, and the two keys a tty takes as well
-  mkBaseOpts =
-    defaultRunlevel:
-    {
-      imports = [
-        (lib.mkRenamedOptionModule [ "runlevels" ] [ "runlevel" ])
-        (mkKeys {
-          runlevel = {
-            type = str; # TODO: string matching 0-9S
-            default = defaultRunlevel;
-            desc = "See [upstream documentation](https://finit-project.github.io/runlevels/) for details.";
-          };
-
-          conditions = {
-            type = coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr);
-            apply = lib.unique;
-            default = [ ];
-            example = "pid/syslog";
-            desc = "See [upstream documentation](https://finit-project.github.io/conditions/) for details.";
-          };
-        })
-      ];
-
-      options = {
-        enable = lib.mkOption {
-          type = bool;
-          default = true;
-          description = ''
-            Whether to enable this stanza.
-          '';
+  mkBaseOpts = defaultRunlevel: {
+    imports = [
+      (lib.mkRenamedOptionModule [ "runlevels" ] [ "runlevel" ])
+      (mkKeys {
+        runlevel = {
+          type = str; # TODO: string matching 0-9S
+          default = defaultRunlevel;
+          desc = "See [upstream documentation](https://finit-project.github.io/runlevels/) for details.";
         };
 
-        settings = settingsOpt;
+        conditions = {
+          type = coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr);
+          apply = lib.unique;
+          default = [ ];
+          example = "pid/syslog";
+          desc = "See [upstream documentation](https://finit-project.github.io/conditions/) for details.";
+        };
+      })
+    ];
+
+    options = {
+      enable = lib.mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Whether to enable this stanza.
+        '';
       };
+
+      settings = settingsOpt;
     };
+  };
 
   # name/id/command: what the block is, and where it comes from
   execOptsBase = {
@@ -402,9 +453,7 @@ let
 
         # a stanza with its own `path` extends the global one
         # it does not replace it: `finit.path` is what every other stanza sees
-        environment.PATH = lib.mkIf (config.path != [ ]) (
-          lib.makeBinPath (globalPath ++ config.path)
-        );
+        environment.PATH = lib.mkIf (config.path != [ ]) (lib.makeBinPath (globalPath ++ config.path));
 
         envfile = lib.mkIf (config.environment != { }) (
           format.generate "${config.name}.env" config.environment
@@ -518,9 +567,7 @@ let
       # a device opens the built-in getty which a rescue/board-bringup shell has no use for
       # finit ignores notty and rescue when a device is set
       config = {
-        device = lib.mkIf (
-          config.command == null && !config.notty && !config.rescue
-        ) (lib.mkDefault name);
+        device = lib.mkIf (config.command == null && !config.notty && !config.rescue) (lib.mkDefault name);
       };
     };
 

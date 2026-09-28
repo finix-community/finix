@@ -211,9 +211,7 @@ let
     in
     lib.optional (unknown != [ ]) {
       assertion = false;
-      message = "${path} would be written with keys finit v5 does not accept: ${
-        lib.concatStringsSep ", " unknown
-      }";
+      message = "${path} would be written with keys finit v5 does not accept: ${lib.concatStringsSep ", " unknown}";
     };
 
   checkRlimit =
@@ -223,9 +221,7 @@ let
     in
     lib.optional (unknown != [ ]) {
       assertion = false;
-      message = "${path} has resource limits finit v5 does not accept: ${
-        lib.concatStringsSep ", " unknown
-      }";
+      message = "${path} has resource limits finit v5 does not accept: ${lib.concatStringsSep ", " unknown}";
     };
 in
 {

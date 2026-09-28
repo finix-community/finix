@@ -93,13 +93,12 @@ let
       value = svc;
     }) stanzas;
 
-  stanzas =
-    lib.concatMap (what: named what cfg.${what}) [
-      "services"
-      "tasks"
-      "run"
-      "sysv"
-    ];
+  stanzas = lib.concatMap (what: named what cfg.${what}) [
+    "services"
+    "tasks"
+    "run"
+    "sysv"
+  ];
 in
 {
   options.finit = {
@@ -308,33 +307,36 @@ in
           type: prefix: stanzas:
           lib.mapAttrs' (
             name: svc:
-            lib.nameValuePair (
-              # a `foo@` stanza is a %i template instantiated from foo@bar.conf
-              "finit.d/${if svc.id == "%i" then "available/" else ""}${prefix}${name}.conf"
-            ) {
-              mode = "direct-symlink";
-              text = mkStanza type svc;
-            }
+            lib.nameValuePair
+              (
+                # a `foo@` stanza is a %i template instantiated from foo@bar.conf
+                "finit.d/${if svc.id == "%i" then "available/" else ""}${prefix}${name}.conf"
+              )
+              {
+                mode = "direct-symlink";
+                text = mkStanza type svc;
+              }
           ) (lib.filterAttrs (_: s: s.enable) stanzas);
 
         # the index is the ordering: `run` blocks run in read order, and digits sort ahead of the service and task names
         pad = i: lib.strings.replicate (3 - lib.stringLength i) "0" + i;
         runs = stanzaFiles "run" "" (
-          lib.listToAttrs (lib.imap0 (
-            i: entry:
-            {
-              name = "${pad (toString i)}-run-${entry.name}";
-              value = entry.value;
-            }
-          ) (lib.sortProperties (
-            lib.mapAttrsToList (
-              name: run: {
-                inherit name;
-                value = run;
-                inherit (run) priority;
-              }
-            ) (lib.filterAttrs (_: run: run.enable) cfg.run)
-          )))
+          lib.listToAttrs (
+            lib.imap0
+              (i: entry: {
+                name = "${pad (toString i)}-run-${entry.name}";
+                value = entry.value;
+              })
+              (
+                lib.sortProperties (
+                  lib.mapAttrsToList (name: run: {
+                    inherit name;
+                    value = run;
+                    inherit (run) priority;
+                  }) (lib.filterAttrs (_: run: run.enable) cfg.run)
+                )
+              )
+          )
         );
 
         cgroup = lib.concatStringsSep "\n\n" (lib.mapAttrsToList (_: cgroupBlock) cfg.cgroups);
@@ -350,7 +352,9 @@ in
         configFile = {
           "finit.conf".mode = "direct-symlink";
           "finit.conf".text = ''
-            ${lib.optionalString (cfg.environment != { }) ((mkBlock "environment" null cfg.environment [ ]) + "\n")}
+            ${lib.optionalString (cfg.environment != { }) (
+              (mkBlock "environment" null cfg.environment [ ]) + "\n"
+            )}
             readiness = ${bfScalar cfg.readiness}
             runlevel  = ${toString cfg.runlevel}
 
