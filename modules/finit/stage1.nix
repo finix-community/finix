@@ -52,9 +52,9 @@ let
       };
     };
 
-  mkServiceLikeBlock = svcType: svc: mkBlock svcType (mkTitle svc.name svc.id) (mkEntries svc) [ ];
+  mkStanza = type: svc: mkBlock type (mkTitle svc.name svc.id) (mkEntries svc) [ ];
 
-  mkTtyBlock = name: svc: mkBlock "tty" name (mkEntries svc) [ ];
+  mkTtyStanza = name: svc: mkBlock "tty" (mkTitle name svc.id) (mkEntries svc) [ ];
 in
 {
   options.boot.initrd.finit = {
@@ -131,38 +131,43 @@ in
   config = {
     boot.initrd.contents =
       let
-        serviceTree = lib.mapAttrsToList (name: service: {
-          target =
-            if service.id != "%i" then "/etc/finit.d/${name}.conf" else "/etc/finit.d/available/${name}.conf";
-          source = pkgs.writeText "${name}.conf" (mkServiceLikeBlock "service" service);
-        }) (lib.filterAttrs (_: service: service.enable) cfg.finit.services);
+        # one .conf per service and task, a `foo@` one is a %i template
+        stanzaFiles =
+          type: stanzas:
+          map (
+            entry: {
+              target =
+                if entry.value.id == "%i" then
+                  "/etc/finit.d/available/${entry.name}.conf"
+                else
+                  "/etc/finit.d/${entry.name}.conf";
+              source = pkgs.writeText "${entry.name}.conf" (mkStanza type entry.value);
+            }
+          ) (lib.mapAttrsToList lib.nameValuePair (lib.filterAttrs (_: s: s.enable) stanzas));
 
-        taskTree = lib.mapAttrsToList (name: task: {
-          target =
-            if task.id != "%i" then "/etc/finit.d/${name}.conf" else "/etc/finit.d/available/${name}.conf";
-          source = pkgs.writeText "${name}.conf" (mkServiceLikeBlock "task" task);
-        }) (lib.filterAttrs (_: task: task.enable) cfg.finit.tasks);
-
+        # `run` stanzas share finit.conf, they run in the order they are read
         run = lib.concatStringsSep "\n\n" (
-          map (mkServiceLikeBlock "run") (
+          map (mkStanza "run") (
             lib.sortProperties (lib.concatMap (v: lib.optional v.enable v) (lib.attrValues cfg.finit.run))
           )
         );
 
         tty = lib.concatStringsSep "\n\n" (
           lib.filter (s: s != "") (
-            lib.mapAttrsToList (name: v: if v.enable then mkTtyBlock name v else "") cfg.finit.ttys
+            lib.mapAttrsToList (name: v: if v.enable then mkTtyStanza name v else "") cfg.finit.ttys
           )
         );
 
-        mkScriptFile =
-          _: svc:
+        # a `script` stanza needs the generated script itself in the initramfs
+        scriptFile =
+          svc:
           lib.optional (svc.enable && svc.script != "") {
             source = svc.command;
           };
 
         scriptFiles = lib.concatLists (
-          lib.mapAttrsToList mkScriptFile cfg.finit.tasks ++ lib.mapAttrsToList mkScriptFile cfg.finit.run
+          lib.mapAttrsToList (_: scriptFile) cfg.finit.tasks
+          ++ lib.mapAttrsToList (_: scriptFile) cfg.finit.run
         );
       in
       [
@@ -184,8 +189,8 @@ in
           '';
         }
       ]
-      ++ serviceTree
-      ++ taskTree
+      ++ stanzaFiles "service" cfg.finit.services
+      ++ stanzaFiles "task" cfg.finit.tasks
       ++ scriptFiles;
   };
 }
