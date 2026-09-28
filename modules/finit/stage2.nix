@@ -8,7 +8,17 @@ let
   cfg = config.finit;
   finitOpts = import ./opts.nix { inherit lib pkgs; };
   finitFmt = import ./format.nix { inherit lib; };
-  inherit (finitFmt) bfScalar mkBlock mkTitle mkEntries;
+  inherit (finitFmt)
+    bfScalar
+    mkBlock
+    mkTitle
+    mkEntries
+    rlimitEntries
+    checkStanza
+    checkRlimit
+    svcSchema
+    ttySchema
+    ;
   inherit (finitOpts)
     mkBaseOpts
     mkExecOpts
@@ -52,17 +62,10 @@ let
 
   rlimitBlock =
     r:
-    if r == { } then
-      null
-    else
-      mkBlock "rlimit" null (lib.concatMapAttrs (
-        n: v:
-        if lib.isAttrs v then
-          lib.optionalAttrs (v.soft != null) { "soft.${n}" = v.soft; }
-          // lib.optionalAttrs (v.hard != null) { "hard.${n}" = v.hard; }
-        else
-          { ${n} = v; }
-      ) r) [ ];
+    let
+      entries = rlimitEntries r;
+    in
+    if entries == { } then null else mkBlock "rlimit" null entries [ ];
 
   # a whole .conf file: reload-triggers as a comment then the block itself
   mkStanza =
@@ -82,6 +85,21 @@ let
 
   # title = the `finit.ttys` attribute name, since `ttyOpts` has no identity of its own.
   mkTtyStanza = name: svc: mkBlock "tty" (mkTitle name svc.id) (mkEntries svc) [ ];
+
+  named =
+    what: stanzas:
+    lib.mapAttrsToList (name: svc: {
+      path = "finit.${what}.${name}";
+      value = svc;
+    }) stanzas;
+
+  stanzas =
+    lib.concatMap (what: named what cfg.${what}) [
+      "services"
+      "tasks"
+      "run"
+      "sysv"
+    ];
 in
 {
   options.finit = {
@@ -272,6 +290,13 @@ in
   };
 
   config = {
+    # a key finit v5 does not know takes the whole .conf file down at boot so a typo in `settings` should stop the evaluation here instead
+    assertions =
+      lib.concatMap (s: checkStanza s.path svcSchema s.value) stanzas
+      ++ lib.concatMap (s: checkStanza s.path ttySchema s.value) (named "ttys" cfg.ttys)
+      ++ (if cfg.rlimits != { } then checkRlimit "finit.rlimits" cfg.rlimits else [ ])
+      ++ lib.concatMap (s: checkRlimit s.path (s.value.rlimit or { })) stanzas;
+
     environment.etc =
       let
         # NOTE: entries under /etc/finit.d are marked as direct-symlink to avoid service reloads on every finix activation
