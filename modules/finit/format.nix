@@ -310,8 +310,12 @@ let
         };
       };
 
+      # a device opens the built-in getty, which a rescue/board-bringup shell has no use for:
+      # finit ignores notty and rescue when a device is set
       config = {
-        device = lib.mkIf (config.command == null) (lib.mkDefault name);
+        device = lib.mkIf (
+          config.command == null && !config.notty && !config.rescue
+        ) (lib.mkDefault name);
       };
     };
 in
