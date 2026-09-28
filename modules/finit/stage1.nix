@@ -61,8 +61,7 @@ let
           "pid"
           "s6"
         ];
-        default = config.finit.readiness;
-        defaultText = lib.literalExpression "config.finit.readiness";
+        default = "none";
         description = ''
           See [upstream documentation](https://finit-project.github.io/config/service-sync/) for details.
         '';
