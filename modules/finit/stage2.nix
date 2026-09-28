@@ -505,9 +505,12 @@ let
     svcType: svc:
     let
       log = logBlock svc.log;
+      rlimit = rlimitBlock svc.rlimit;
     in
     mkBlock svcType (mkTitle svc.name svc.id) (mkEntries svc) (
-      [ (cgroupBlock svc.cgroup) ] ++ lib.optional (log != null) log
+      [ (cgroupBlock svc.cgroup) ]
+      ++ lib.optional (log != null) log
+      ++ lib.optional (rlimit != null) rlimit
     );
 
   # title = the `finit.ttys` attribute name, since `ttyOpts` has no identity of its own.
@@ -515,11 +518,7 @@ let
 
   mkConfigFile =
     svcType: svc:
-    let
-      rlimit = rlimitBlock svc.rlimit;
-    in
-    lib.optionalString (rlimit != null) "${rlimit}\n\n"
-    + lib.optionalString (
+    lib.optionalString (
       svc.reload-triggers != [ ]
     ) "# reload-triggers = ${lib.concatStringsSep ", " svc.reload-triggers}\n\n"
     + mkServiceLikeBlock svcType svc;
@@ -738,7 +737,7 @@ in
           value.text = mkConfigFile "sysv" sysv;
         }) (lib.filterAttrs (_: sysv: sysv.enable) cfg.sysv);
 
-        # one file each, so a `run` can have a file scoped `rlimit {}`.
+        # one file each, so `run` stanzas can be reloaded one at a time.
         # The index is the ordering: `run` blocks run in read order, and digits sort ahead of the service and task names.
         runTree =
           let
