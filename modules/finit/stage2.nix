@@ -64,27 +64,24 @@ let
           { ${n} = v; }
       ) r) [ ];
 
-  mkServiceLikeBlock =
-    svcType: svc:
+  # a whole .conf file: reload-triggers as a comment then the block itself
+  mkStanza =
+    type: svc:
     let
       log = logBlock svc.log;
       rlimit = rlimitBlock svc.rlimit;
     in
-    mkBlock svcType (mkTitle svc.name svc.id) (mkEntries svc) (
+    lib.optionalString (
+      svc.reload-triggers != [ ]
+    ) "# reload-triggers = ${lib.concatStringsSep ", " svc.reload-triggers}\n\n"
+    + mkBlock type (mkTitle svc.name svc.id) (mkEntries svc) (
       [ (cgroupBlock svc.cgroup) ]
       ++ lib.optional (log != null) log
       ++ lib.optional (rlimit != null) rlimit
     );
 
   # title = the `finit.ttys` attribute name, since `ttyOpts` has no identity of its own.
-  mkTtyBlock = name: svc: mkBlock "tty" (mkTitle name svc.id) (mkEntries svc) [ ];
-
-  mkConfigFile =
-    svcType: svc:
-    lib.optionalString (
-      svc.reload-triggers != [ ]
-    ) "# reload-triggers = ${lib.concatStringsSep ", " svc.reload-triggers}\n\n"
-    + mkServiceLikeBlock svcType svc;
+  mkTtyStanza = name: svc: mkBlock "tty" (mkTitle name svc.id) (mkEntries svc) [ ];
 in
 {
   options.finit = {
@@ -279,74 +276,56 @@ in
       let
         # NOTE: entries under /etc/finit.d are marked as direct-symlink to avoid service reloads on every finix activation
 
-        serviceTree = lib.mapAttrs' (name: service: {
-          name = if service.id != "%i" then "finit.d/${name}.conf" else "finit.d/available/${name}.conf";
+        # one .conf per stanza so stanzas reload one at a time.
+        # NOTE: this walks the stanza attrset and touches `enable` and `id` only,
+        # forcing a whole stanza would drag in `reload-triggers`, which reads etc back.
+        stanzaFiles =
+          type: prefix: stanzas:
+          lib.mapAttrs' (
+            name: svc:
+            lib.nameValuePair (
+              # a `foo@` stanza is a %i template instantiated from foo@bar.conf
+              "finit.d/${if svc.id == "%i" then "available/" else ""}${prefix}${name}.conf"
+            ) {
+              mode = "direct-symlink";
+              text = mkStanza type svc;
+            }
+          ) (lib.filterAttrs (_: s: s.enable) stanzas);
 
-          value.mode = "direct-symlink";
-          value.text = mkConfigFile "service" service;
-        }) (lib.filterAttrs (_: service: service.enable) cfg.services);
-
-        taskTree = lib.mapAttrs' (name: task: {
-          name = if task.id != "%i" then "finit.d/${name}.conf" else "finit.d/available/${name}.conf";
-
-          value.mode = "direct-symlink";
-          value.text = mkConfigFile "task" task;
-        }) (lib.filterAttrs (_: task: task.enable) cfg.tasks);
-
-        sysvTree = lib.mapAttrs' (name: sysv: {
-          name = if sysv.id != "%i" then "finit.d/${name}.conf" else "finit.d/available/${name}.conf";
-
-          value.mode = "direct-symlink";
-          value.text = mkConfigFile "sysv" sysv;
-        }) (lib.filterAttrs (_: sysv: sysv.enable) cfg.sysv);
-
-        # one file each, so `run` stanzas can be reloaded one at a time.
-        # The index is the ordering: `run` blocks run in read order, and digits sort ahead of the service and task names.
-        runTree =
-          let
-            pad = i: lib.strings.replicate (3 - lib.stringLength i) "0" + i;
-            ordered = lib.sortProperties (
-              lib.mapAttrsToList (name: run: {
+        # the index is the ordering: `run` blocks run in read order, and digits sort ahead of the service and task names
+        pad = i: lib.strings.replicate (3 - lib.stringLength i) "0" + i;
+        runs = stanzaFiles "run" "" (
+          lib.listToAttrs (lib.imap0 (
+            i: entry:
+            {
+              name = "${pad (toString i)}-run-${entry.name}";
+              value = entry.value;
+            }
+          ) (lib.sortProperties (
+            lib.mapAttrsToList (
+              name: run: {
                 inherit name;
                 value = run;
                 inherit (run) priority;
-              }) (lib.filterAttrs (_: run: run.enable) cfg.run)
-            );
-          in
-          lib.listToAttrs (
-            lib.imap0 (i: entry: {
-              name =
-                if entry.value.id != "%i" then
-                  "finit.d/${pad (toString i)}-run-${entry.name}.conf"
-                else
-                  "finit.d/available/${pad (toString i)}-run-${entry.name}.conf";
-
-              value.mode = "direct-symlink";
-              value.text = mkConfigFile "run" entry.value;
-            }) ordered
-          );
+              }
+            ) (lib.filterAttrs (_: run: run.enable) cfg.run)
+          )))
+        );
 
         cgroup = lib.concatStringsSep "\n\n" (lib.mapAttrsToList (_: cgroupBlock) cfg.cgroups);
 
-        rlimit =
-          let
-            b = rlimitBlock cfg.rlimits;
-          in
-          if b == null then "" else b;
-
-        environment =
-          if cfg.environment == { } then "" else (mkBlock "environment" null cfg.environment [ ]) + "\n";
+        rlimit = rlimitBlock cfg.rlimits;
 
         tty = lib.concatStringsSep "\n\n" (
           lib.filter (s: s != "") (
-            lib.mapAttrsToList (name: v: if v.enable then mkTtyBlock name v else "") config.finit.ttys
+            lib.mapAttrsToList (name: v: if v.enable then mkTtyStanza name v else "") cfg.ttys
           )
         );
 
         configFile = {
           "finit.conf".mode = "direct-symlink";
           "finit.conf".text = ''
-            ${environment}
+            ${lib.optionalString (cfg.environment != { }) ((mkBlock "environment" null cfg.environment [ ]) + "\n")}
             readiness = ${bfScalar cfg.readiness}
             runlevel  = ${toString cfg.runlevel}
 
@@ -354,7 +333,7 @@ in
             ${cgroup}
 
             # rlimits
-            ${rlimit}
+            ${if rlimit == null then "" else rlimit}
 
             # ttys
             ${tty}
@@ -362,10 +341,10 @@ in
         };
       in
       lib.mkMerge [
-        serviceTree
-        taskTree
-        sysvTree
-        runTree
+        (stanzaFiles "service" "" cfg.services)
+        (stanzaFiles "task" "" cfg.tasks)
+        (stanzaFiles "sysv" "" cfg.sysv)
+        runs
         configFile
       ];
   };
