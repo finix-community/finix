@@ -10,7 +10,7 @@ let
   inherit (finitFmt)
     mkBlock
     mkTitle
-    mkRawEntries
+    mkEntries
     execOptsBase
     runOpts
     ttyOpts
@@ -90,24 +90,9 @@ let
     };
   };
 
-  # Nix-only keys on a stanza submodule: identity used for the title, or a
-  # value that's transformed into something else (`script` becomes `command`
-  # via its own `config`). A fixed submodule composition (services vs. tasks
-  # vs. ttys, ...) already only has the keys relevant to it, so one blacklist
-  # covers every stanza type and a missing key here is a no-op for `removeAttrs`.
-  rawEntries = mkRawEntries [
-    "name"
-    "id"
-    "enable"
-    "settings"
-    "priority" # nix-only, used for lib.sortProperties on `run`
-    "script" # folded into `command` at config-time, see scriptOpts.config
-  ] (_: { });
+  mkServiceLikeBlock = svcType: svc: mkBlock svcType (mkTitle svc.name svc.id) (mkEntries svc) [ ];
 
-  mkServiceLikeBlock = svcType: svc: mkBlock svcType (mkTitle svc.name svc.id) (rawEntries svc) [ ];
-
-  # title = the ttys attribute name btw
-  mkTtyBlock = name: svc: mkBlock "tty" name (rawEntries svc) [ ];
+  mkTtyBlock = name: svc: mkBlock "tty" name (mkEntries svc) [ ];
 in
 {
   options.boot.initrd.finit = {

@@ -51,9 +51,48 @@ let
 
   mkTitle = name: id: if id == null then name else "${name}:${id}";
 
-  mkRawEntries =
-    exclude: extra: svc:
-    removeAttrs svc exclude // extra svc // svc.settings;
+  # Stanza keys that are not finit settings
+  # Nix-side identity, what becomes its own (sub-)block or is folded away and the deprecated spellings
+  nixOnlyKeys = [
+    "enable"
+    "name"
+    "id"
+    "settings"
+    "cgroup"
+    "rlimit"
+    "environment"
+    "path"
+    "script"
+    "nohup"
+    "priority"
+    "reload-triggers"
+
+    # deprecated aliases, see the mkRenamedOptionModule calls
+    "caps"
+    "cleanup"
+    "conflict"
+    "env"
+    "kill"
+    "manual"
+    "pid"
+    "post"
+    "pre"
+    "ready"
+    "reload"
+    "remain"
+    "restart"
+    "restart_sec"
+    "rlimits"
+    "runlevels"
+    "stop"
+    "supplementary_groups"
+  ];
+
+  mkEntries =
+    svc:
+    removeAttrs svc nixOnlyKeys
+    // lib.optionalAttrs (svc.nohup or false) { "reload-signal" = "none"; }
+    // svc.settings;
 
   # options shared by ALL stanza types (service, task, run, tty).
   # `defaultRunlevel` is the one thing that differs between variants: "234" in the main module, "S" in the initrd one.
@@ -286,7 +325,7 @@ in
     bfIndent
     mkBlock
     mkTitle
-    mkRawEntries
+    mkEntries
     mkBaseOpts
     execOptsBase
     runOpts

@@ -13,7 +13,7 @@ let
     bfScalar
     mkBlock
     mkTitle
-    mkRawEntries
+    mkEntries
     execOptsBase
     runOpts
     ttyOpts
@@ -506,63 +506,18 @@ let
           { ${n} = v; }
       ) r) [ ];
 
-  # Keys every stanza submodule may carry that are Nix-only: identity used for
-  # the title, structural bits rendered as their own (sub-)block, or values
-  # that get transformed rather than forwarded verbatim. A fixed submodule
-  # composition (services vs. tasks vs. ttys, ...) already only has the keys
-  # relevant to it, so one blacklist covers every stanza type and a missing
-  # key here is just a no-op for `removeAttrs`.
-  rawEntries =
-    mkRawEntries
-      [
-        "name"
-        "id"
-        "enable"
-        "settings"
-        "cgroup"
-        "rlimit"
-        "environment" # folded into `envfile` at config-time, see execOpts.config
-        "path" # folded into `environment.PATH` above, same place
-        "reload-triggers" # rendered as a leading comment by mkConfigFile, not a key
-        "nohup" # has no key of its own, becomes reload-signal below
-        "priority" # nix-only, used for lib.sortProperties on `run`
-
-        # deprecated aliases, see the mkRenamedOptionModule calls above
-        "caps"
-        "cleanup"
-        "conflict"
-        "env"
-        "kill"
-        "manual"
-        "pid"
-        "post"
-        "pre"
-        "ready"
-        "reload"
-        "remain"
-        "restart"
-        "restart_sec"
-        "rlimits"
-        "runlevels"
-        "stop"
-        "supplementary_groups"
-      ]
-      (svc: {
-        reload-signal = if svc.nohup or false then "none" else null;
-      });
-
   mkServiceLikeBlock =
     svcType: svc:
     let
       log = logBlock svc.log;
     in
-    mkBlock svcType (mkTitle svc.name svc.id) (rawEntries svc) (
+    mkBlock svcType (mkTitle svc.name svc.id) (mkEntries svc) (
       [ (cgroupBlock svc.cgroup) ] ++ lib.optional (log != null) log
     );
 
   # title = the `finit.ttys` attribute name, since `ttyOpts` has no identity of its own.
   mkTtyBlock =
-    name: svc: mkBlock "tty" (mkTitle name svc.id) (rawEntries svc) [ (cgroupBlock svc.cgroup) ];
+    name: svc: mkBlock "tty" (mkTitle name svc.id) (mkEntries svc) [ (cgroupBlock svc.cgroup) ];
 
   mkConfigFile =
     svcType: svc:
