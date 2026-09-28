@@ -516,8 +516,7 @@ let
     );
 
   # title = the `finit.ttys` attribute name, since `ttyOpts` has no identity of its own.
-  mkTtyBlock =
-    name: svc: mkBlock "tty" (mkTitle name svc.id) (mkEntries svc) [ (cgroupBlock svc.cgroup) ];
+  mkTtyBlock = name: svc: mkBlock "tty" (mkTitle name svc.id) (mkEntries svc) [ ];
 
   mkConfigFile =
     svcType: svc:
@@ -687,7 +686,6 @@ in
         with lib.types;
         attrsOf (submodule [
           baseOpts
-          cgroupOpt
           ttyOpts
         ]);
       default = { };

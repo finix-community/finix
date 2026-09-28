@@ -123,6 +123,29 @@ let
         '';
       };
 
+      conditions = lib.mkOption {
+        type = with lib.types; coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr);
+        apply = lib.unique;
+        default = [ ];
+        example = "pid/syslog";
+        description = ''
+          See [upstream documentation](https://finit-project.github.io/conditions/) for details.
+        '';
+      };
+
+      runlevel = lib.mkOption {
+        type = lib.types.str; # TODO: string matching 0-9S
+        default = defaultRunlevel;
+        description = ''
+          See [upstream documentation](https://finit-project.github.io/runlevels/) for details.
+        '';
+      };
+    };
+  };
+
+  # what every executable stanza shares: identity, what to run, and the two keys a tty block has no room for
+  execOptsBase = {
+    options = {
       # quoted, "if" is a Nix keyword: set as e.g. finit.services.foo."if" = ...
       "if" = lib.mkOption {
         type = with lib.types; nullOr nonEmptyStr;
@@ -137,16 +160,6 @@ let
         '';
       };
 
-      conditions = lib.mkOption {
-        type = with lib.types; coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr);
-        apply = lib.unique;
-        default = [ ];
-        example = "pid/syslog";
-        description = ''
-          See [upstream documentation](https://finit-project.github.io/conditions/) for details.
-        '';
-      };
-
       description = lib.mkOption {
         type = with lib.types; nullOr str;
         default = null;
@@ -155,20 +168,6 @@ let
         '';
       };
 
-      runlevel = lib.mkOption {
-        type = lib.types.str; # TODO: string matching 0-9S
-        default = defaultRunlevel;
-        description = ''
-          See [upstream documentation](https://finit-project.github.io/runlevels/) for details.
-        '';
-      };
-    };
-  };
-
-  # name/id/command/tty: identity and the two bits every executable stanza shares.
-  # `config` (deriving name/id from the attribute name) stays per-file since stage2 additionally supports the `%i` template-instance form.
-  execOptsBase = {
-    options = {
       name = lib.mkOption {
         type = lib.types.str; # TODO: limit name, no : allowed, only valid chars
         readOnly = true;

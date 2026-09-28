@@ -67,7 +67,6 @@ in
     finit.ttys = lib.genAttrs cfg.ttys (
       device:
       {
-        description = "getty on ${device}";
         nowait = true;
       }
       // lib.optionalAttrs (cfg.package != null) {
