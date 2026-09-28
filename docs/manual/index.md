@@ -5,7 +5,7 @@
   <a href="https://discord.gg/nVe5Zkaypg"><img src="https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
 </p>
 
-`finix` is an experimental GNU/Linux distribution built around the `nix` package manager. It uses [`finit`](https://github.com/finit-project/finit) instead of `systemd` as its init system and service supervisor. By default, it seeks to be:
+`finix` is an experimental Linux distribution built around the `nix` package manager. It uses [`finit`](https://github.com/finit-project/finit) instead of `systemd` as its init system and service supervisor. By default, it seeks to be:
 
 - minimal
 - unopinionated
