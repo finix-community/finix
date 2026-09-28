@@ -60,6 +60,7 @@ let
     "settings"
     "cgroup"
     "rlimit"
+    "log" # a block, never a scalar
     "environment"
     "path"
     "script"
