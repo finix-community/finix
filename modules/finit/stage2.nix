@@ -391,9 +391,6 @@ let
         exec-reload = lib.mkOption {
           type = lib.types.nullOr program;
           default = null;
-          apply =
-            value:
-            if value != null then "'" + (lib.removeSuffix "'" (lib.removePrefix "'" value)) + "'" else null;
           example = "kill -HUP $MAINPID";
           description = ''
             Some services do not support `SIGHUP` but may have other ways to update the configuration of a running daemon. When
@@ -410,9 +407,6 @@ let
         exec-stop = lib.mkOption {
           type = lib.types.nullOr program;
           default = null;
-          apply =
-            value:
-            if value != null then "'" + (lib.removeSuffix "'" (lib.removePrefix "'" value)) + "'" else null;
           description = ''
             Some services may require alternate methods to be stopped. If `exec-stop` is defined it is preferred over `SIGTERM`. Similar
             to `exec-reload`, `finit` sets `$MAINPID`.
