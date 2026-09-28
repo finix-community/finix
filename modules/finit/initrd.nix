@@ -97,7 +97,6 @@ in
 
     finit.ttys.rescue = {
       runlevel = "1";
-      device = "@console";
       conditions = "run/switch-root/failure";
       rescue = true;
     };

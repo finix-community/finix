@@ -251,31 +251,28 @@ in
           conditions = "service/udevd/ready";
           log = true;
           cgroup.name = "init";
-          extraConfig = "nowarn";
 
           priority = 1;
         };
       in
       {
         "udevadm@1" = defaults // {
-          description = "";
-          command = "${cfg.package}/bin/udevadm settle -t 0";
+          command = "-${cfg.package}/bin/udevadm settle -t 0";
         };
         "udevadm@2" = defaults // {
-          description = "";
-          command = "${cfg.package}/bin/udevadm control --reload";
+          command = "-${cfg.package}/bin/udevadm control --reload";
         };
         "udevadm@3" = defaults // {
           description = "requesting device events";
-          command = "${cfg.package}/bin/udevadm trigger -c add -t devices";
+          command = "-${cfg.package}/bin/udevadm trigger -c add -t devices";
         };
         "udevadm@4" = defaults // {
           description = "requesting subsystem events";
-          command = "${cfg.package}/bin/udevadm trigger -c add -t subsystems";
+          command = "-${cfg.package}/bin/udevadm trigger -c add -t subsystems";
         };
         "udevadm@5" = defaults // {
           description = "waiting for udev to finish";
-          command = "${cfg.package}/bin/udevadm settle -t 30";
+          command = "-${cfg.package}/bin/udevadm settle -t 30";
         };
       };
 

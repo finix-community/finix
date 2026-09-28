@@ -6,7 +6,35 @@
 }:
 let
   cfg = config.finit;
-  format = pkgs.formats.keyValue { };
+  finitOpts = import ./opts.nix { inherit lib pkgs; };
+  finitFmt = import ./format.nix { inherit lib; };
+  inherit (finitFmt)
+    bfScalar
+    mkBlock
+    mkTitle
+    mkEntries
+    rlimitEntries
+    checkStanza
+    checkRlimit
+    svcSchema
+    ttySchema
+    ;
+  inherit (finitOpts)
+    mkBaseOpts
+    mkExecOpts
+    mkServiceOpts
+    execOptsBase
+    oneshotOpts
+    rlimitOpts
+    rlimitsType
+    cgroupOpts
+    cgroupOpt
+    runOpts
+    ttyOpts
+    ;
+  baseOpts = mkBaseOpts "234";
+  execOpts = mkExecOpts { globalPath = cfg.path; };
+  serviceOpts = mkServiceOpts { readiness = cfg.readiness; };
 
   # finix-setup plugin for early boot initialization
   finix-setup = pkgs.callPackage ../../pkgs/finix-setup {
@@ -19,770 +47,58 @@ let
     );
   };
 
-  pathOrStr = with lib.types; coercedTo path (x: "${x}") str;
-  program =
-    lib.types.coercedTo (
-      lib.types.package
-      // {
-        # require mainProgram for this conversion
-        check = v: v.type or null == "derivation" && v ? meta.mainProgram;
-      }
-    ) lib.getExe pathOrStr
-    // {
-      description = "main program, path or command";
-      descriptionClass = "conjunction";
-    };
+  cgroupBlock =
+    cg:
+    mkBlock "cgroup" cg.name (
+      cg.settings // lib.optionalAttrs (cg.delegate or false) { delegate = true; }
+    ) [ ];
 
-  rlimitsType =
+  logBlock =
+    log:
+    if log == false then
+      null
+    else
+      mkBlock "log" null (if log == true then { } else { file = log; }) [ ];
+
+  rlimitBlock =
+    r:
     let
-      complexType = lib.types.submodule {
-        options = {
-          soft = lib.mkOption {
-            type = lib.types.nullOr (lib.types.either (lib.types.enum [ "unlimited" ]) lib.types.int);
-            default = null;
-            description = ''
-              The value that the kernel enforces for this resource.
-            '';
-          };
-
-          hard = lib.mkOption {
-            type = lib.types.nullOr (lib.types.either (lib.types.enum [ "unlimited" ]) lib.types.int);
-            default = null;
-            description = ''
-              The ceiling for the soft limit.
-            '';
-          };
-        };
-      };
+      entries = rlimitEntries r;
     in
-    lib.types.attrsOf (
-      lib.types.oneOf [
-        (lib.types.enum [ "unlimited" ])
-        lib.types.int
-        complexType
-      ]
-    );
-
-  cgroupOpts =
-    { name, ... }:
-    {
-      options = {
-        name = lib.mkOption {
-          type = lib.types.str; # TODO: add constraints based on finit
-          default = name;
-          description = ''
-            The name of the cgroup to create.
-          '';
-        };
-
-        settings = lib.mkOption {
-          type = format.type;
-          default = { };
-          example = {
-            "cpu.weight" = 100;
-          };
-          description = ''
-            Settings to apply to this cgroup.
-
-            See [kernel documentation](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html) for additional details.
-          '';
-        };
-      };
-    };
-
-  runOpts = {
-    options.priority = lib.mkOption {
-      type = lib.types.int;
-      default = 1000;
-      description = ''
-        Order of this `run` command in relation to the others. The semantics are the same as
-        with `lib.mkOrder`. Smaller values have a greater priority.
-      '';
-    };
-  };
-
-  # oneshotOpts: options specific to oneshot stanzas (task, run) - not services
-  oneshotOpts = {
-    imports = [
-      (lib.mkRenamedOptionModule [ "remain" ] [ "remain-after-exit" ])
-    ];
-
-    options.remain-after-exit = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      description = ''
-        By default, a `run` or `task` will re-run each time its runlevel is
-        entered, and its `exec-stop-post` script does not run on completion.
-
-        With `remain-after-exit`, the task runs once and does not re-run on runlevel.
-        The `exec-stop-post` script will run if the task is explicitly stopped or when
-        the task leaves its valid runlevels.
-      '';
-    };
-  };
-
-  # baseOpts: options shared by ALL stanza types (service, task, run, tty, sysv)
-  baseOpts = {
-    imports = [
-      (lib.mkRenamedOptionModule [ "runlevels" ] [ "runlevel" ])
-    ];
-
-    options = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
-        default = true;
-        description = ''
-          Whether to enable this stanza.
-        '';
-      };
-
-      extraConfig = lib.mkOption {
-        type = lib.types.separatedString " ";
-        default = "";
-        example = "";
-        description = ''
-          A place for `finit` configuration options which have not been added to the `nix` module yet.
-        '';
-      };
-
-      conditions = lib.mkOption {
-        type = with lib.types; coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr);
-        apply = lib.unique;
-        default = [ ];
-        example = "pid/syslog";
-        description = ''
-          See [upstream documentation](https://finit-project.github.io/conditions/) for details.
-        '';
-      };
-
-      description = lib.mkOption {
-        type = with lib.types; nullOr str;
-        default = null;
-        description = ''
-          A human-readable description of this service, displayed by `initctl`.
-        '';
-      };
-
-      runlevel = lib.mkOption {
-        type = lib.types.str; # TODO: string  matching 0-9S
-        default = "234";
-        description = ''
-          See [upstream documentation](https://finit-project.github.io/runlevels/) for details.
-        '';
-      };
-
-      cgroup = {
-        name = lib.mkOption {
-          type = lib.types.str;
-          default = "system";
-          description = ''
-            The name of the cgroup to place this process under.
-          '';
-        };
-
-        delegate = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
-          description = ''
-            For services that need to create their own child `cgroups` (container runtimes like `docker`, `podman`, `systemd-nspawn`, `lxc`, etc...).
-
-            See [upstream documentation](https://finit-project.github.io/config/cgroups/#cgroup-delegation) for details.
-          '';
-        };
-
-        settings = lib.mkOption {
-          type = format.type;
-          default = { };
-          description = ''
-            The cgroup settings to apply to this process.
-
-            See [kernel documentation](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html) for additional details.
-          '';
-        };
-      };
-    };
-  };
-
-  # execOpts: options shared by executable stanzas (service, task, run, sysv) but NOT tty
-  execOpts =
-    { config, name, ... }:
-    {
-      imports = [
-        (lib.mkRenamedOptionModule [ "caps" ] [ "capabilities" ])
-        (lib.mkRenamedOptionModule [ "cleanup" ] [ "exec-cleanup" ])
-        (lib.mkRenamedOptionModule [ "conflict" ] [ "conflicts" ])
-        (lib.mkRenamedOptionModule [ "env" ] [ "envfile" ])
-        (lib.mkRenamedOptionModule [ "manual" ] [ "manual-start" ])
-        (lib.mkRenamedOptionModule [ "post" ] [ "exec-stop-post" ])
-        (lib.mkRenamedOptionModule [ "pre" ] [ "exec-start-pre" ])
-        (lib.mkRenamedOptionModule [ "restart" ] [ "restart-max" ])
-        (lib.mkRenamedOptionModule [ "restart_sec" ] [ "restart-sec" ])
-        (lib.mkRenamedOptionModule [ "supplementary_groups" ] [ "extra-groups" ])
-      ];
-
-      options = {
-        name = lib.mkOption {
-          type = lib.types.str; # TODO: limit name, no : allowed, only valid chars
-          readOnly = true;
-          description = ''
-            The name of this stanza, derived from the attribute name.
-          '';
-        };
-
-        id = lib.mkOption {
-          type = with lib.types; nullOr str;
-          readOnly = true;
-          description = ''
-            The instance identifier, derived from the attribute name if it contains an `@` character.
-          '';
-        };
-
-        user = lib.mkOption {
-          type = with lib.types; nullOr str;
-          default = null;
-          description = ''
-            The user this service should be executed as.
-          '';
-        };
-
-        group = lib.mkOption {
-          type = with lib.types; nullOr str;
-          default = null;
-          description = ''
-            The group this service should be executed as.
-          '';
-        };
-
-        extra-groups = lib.mkOption {
-          type = with lib.types; listOf str;
-          default = [ ];
-          description = ''
-            Explicitly specify supplementary groups, in addition to reading group membership from {file}`/etc/group`.
-          '';
-        };
-
-        capabilities = lib.mkOption {
-          type = with lib.types; coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr);
-          apply = lib.unique;
-          default = [ ];
-          example = [ "^cap_net_bind_service" ];
-          description = ''
-            Allow services to run with minimal required privileges instead of running as `root`.
-          '';
-        };
-
-        path = lib.mkOption {
-          type = with lib.types; listOf (either package str);
-          default = [ ];
-          description = ''
-            Packages added to the `PATH` environment variable of this service.
-          '';
-        };
-
-        envfile = lib.mkOption {
-          type = with lib.types; nullOr (either str path);
-          default = null;
-          description = "either a path or a path prefixed with a '-' to indicate a missing file is fine.";
-        };
-
-        environment = lib.mkOption {
-          type = format.type;
-          default = { };
-          example = {
-            TZ = "CET";
-          };
-          description = ''
-            Environment variables passed to this service.
-          '';
-        };
-
-        log = lib.mkOption {
-          type = with lib.types; either bool nonEmptyStr;
-          default = false;
-          description = ''
-            Redirect `stderr` and `stdout` of the application to a file or `syslog` using the native `logit`
-            tool. This is useful for programs that do not support `syslog` on their own, which is sometimes
-            the case when running in the foreground.
-
-            See [upstream documentation](https://finit-project.github.io/config/logging/) for additional details.
-          '';
-        };
-
-        tty = lib.mkOption {
-          type = with lib.types; nullOr nonEmptyStr;
-          default = null;
-          example = "/dev/tty1";
-          description = ''
-            Give this stanza a controlling terminal on the given device, connecting its `stdin`, `stdout`, and
-            `stderr` to the TTY. May be a device node like `/dev/ttyS0` or the special keyword `@console`.
-
-            See [upstream documentation](https://finit-project.github.io/config/tty/) for additional details.
-          '';
-        };
-
-        manual-start = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
-          description = ''
-            If a service should not be automatically started, it can be configured as
-            manual. The service can then be started at any time by running `initctl start <service>`.
-          '';
-        };
-
-        conflicts = lib.mkOption {
-          type = with lib.types; coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr);
-          apply = lib.unique;
-          default = [ ];
-          description = ''
-            If you have conflicting services and want to prevent them from starting.
-          '';
-        };
-
-        command = lib.mkOption {
-          type = program;
-          description = ''
-            The command to execute.
-          '';
-        };
-
-        exec-start-pre = lib.mkOption {
-          type = lib.types.nullOr program;
-          default = null;
-          description = ''
-            A script which will be called before the service is started.
-          '';
-        };
-
-        exec-stop-post = lib.mkOption {
-          type = lib.types.nullOr program;
-          default = null;
-          description = ''
-            A script which will be called after the service has stopped.
-          '';
-        };
-
-        exec-cleanup = lib.mkOption {
-          type = lib.types.nullOr program;
-          default = null;
-          description = ''
-            A script which will be called when the service is removed.
-          '';
-        };
-
-        restart-max = lib.mkOption {
-          type = lib.types.ints.between (-1) 255;
-          default = 10;
-          description = ''
-            The number of times `finit` tries to restart a crashing service. When
-            this limit is reached the service is marked crashed and must be restarted
-            manually with `initctl restart NAME`.
-          '';
-        };
-
-        restart-sec = lib.mkOption {
-          type = with lib.types; nullOr ints.unsigned;
-          default = null;
-          description = ''
-            The number of seconds before Finit tries to restart a crashing service, default: `2`
-            seconds for the first five retries, then back-off to `5` seconds. The maximum of this
-            configured value and the above (`2` and `5`) will be used.
-          '';
-        };
-
-        respawn = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
-          description = ''
-            Enable endless restarts without counting toward the retry limit. When set, the service
-            will be restarted indefinitely regardless of the `restart-max` limit.
-          '';
-        };
-
-        reload-triggers = lib.mkOption {
-          type = with lib.types; listOf (either str path);
-          default = [ ];
-          description = ''
-            An arbitrary list of items such as derivations. If any item in the list
-            changes between reconfigurations, the service will be reloaded or restarted
-            if reloads are not supported.
-          '';
-        };
-      };
-
-      config =
-        let
-          value = lib.splitString "@" name;
-        in
-        {
-          name = lib.head value;
-          id =
-            if lib.hasSuffix "@" name then
-              "%i"
-            else if lib.hasInfix "@" name then
-              lib.elemAt value 1
-            else
-              null;
-
-          environment.PATH = lib.mkIf (config.path != [ ]) (lib.makeBinPath config.path);
-          envfile = lib.mkIf (config.environment != { }) (
-            format.generate "${config.name}.env" config.environment
-          );
-        };
-    };
-
-  # serviceOpts: options specific to service and sysv stanzas only
-  serviceOpts =
-    { config, ... }:
-    {
-      imports = [
-        (lib.mkRenamedOptionModule [ "kill" ] [ "stop-timeout" ])
-        (lib.mkRenamedOptionModule [ "pid" ] [ "pidfile" ])
-        (lib.mkRenamedOptionModule [ "ready" ] [ "exec-start-ready" ])
-        (lib.mkRenamedOptionModule [ "reload" ] [ "exec-reload" ])
-        (lib.mkRenamedOptionModule [ "stop" ] [ "exec-stop" ])
-      ];
-
-      options = {
-        nohup = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
-          description = ''
-            Set when the service does *not* handle `SIGHUP`. `finit` then stops and
-            starts it on reconfiguration instead of reloading it in place.
-
-            See [upstream documentation](https://finit-project.github.io/conditions/) for details.
-          '';
-        };
-
-        pidfile = lib.mkOption {
-          type = with lib.types; nullOr str;
-          default = null;
-          description = ''
-            See [upstream documentation](https://finit-project.github.io/config/services/) for details.
-          '';
-        };
-
-        type = lib.mkOption {
-          type = with lib.types; nullOr (enum [ "forking" ]);
-          default = null;
-          description = ''
-            Service type. Set to `"forking"` for traditional daemons that fork
-            to the background and use PID files for process tracking.
-          '';
-        };
-
-        notify = lib.mkOption {
-          type =
-            with lib.types;
-            nullOr (enum [
-              "pid"
-              "systemd"
-              "s6"
-              "none"
-            ]);
-          default = cfg.readiness;
-          defaultText = lib.literalExpression "config.finit.readiness";
-          description = ''
-            See [upstream documentation](https://finit-project.github.io/config/service-sync/) for details.
-          '';
-        };
-
-        exec-reload = lib.mkOption {
-          type = lib.types.nullOr program;
-          default = null;
-          apply =
-            value:
-            if value != null then "'" + (lib.removeSuffix "'" (lib.removePrefix "'" value)) + "'" else null;
-          example = "kill -HUP $MAINPID";
-          description = ''
-            Some services do not support `SIGHUP` but may have other ways to update the configuration of a running daemon. When
-            `exec-reload` is defined it is preferred over `SIGHUP`. Like `systemd`, `finit` sets ``$MAINPID` as a convenience to scripts,
-            which in effect also allow setting `exec-reload` to `kill -HUP $MAINPID`.
-
-            ::: {.note}
-            `exec-reload` is called as PID 1, without any timeout! Meaning, it is up to you to ensure the script is not blocking for
-            seconds at a time or never terminates.
-            :::
-          '';
-        };
-
-        exec-stop = lib.mkOption {
-          type = lib.types.nullOr program;
-          default = null;
-          apply =
-            value:
-            if value != null then "'" + (lib.removeSuffix "'" (lib.removePrefix "'" value)) + "'" else null;
-          description = ''
-            Some services may require alternate methods to be stopped. If `exec-stop` is defined it is preferred over `SIGTERM`. Similar
-            to `exec-reload`, `finit` sets `$MAINPID`.
-
-            ::: {.note}
-            `exec-stop` is called as PID 1, without any timeout! Meaning, it is up to you to ensure the script is not blocking for
-            seconds at a time or never terminates.
-            :::
-          '';
-        };
-
-        stop-timeout = lib.mkOption {
-          type = with lib.types; nullOr (ints.between 1 300);
-          default = null;
-          defaultText = "3";
-          description = ''
-            The delay in seconds between `finit` sending a `SIGTERM` and a `SIGKILL`.
-          '';
-        };
-
-        exec-start-ready = lib.mkOption {
-          type = lib.types.nullOr program;
-          default = null;
-          description = ''
-            A script which will be called when the service is ready.
-          '';
-        };
-
-        oncrash = lib.mkOption {
-          type =
-            with lib.types;
-            nullOr (enum [
-              "reboot"
-              "script"
-            ]);
-          default = null;
-          description = ''
-            - `reboot` - when all retries have failed, and the service has crashed, if this option is set the system is rebooted.
-            - `script` - similarly, but instead of rebooting, call the `exec-stop-post` script if set.
-          '';
-        };
-      };
-
-      config = {
-        nohup = lib.mkDefault (config.notify == "s6");
-      };
-    };
-
-  # tty [LVLS] <COND> DEV [BAUD] [noclear] [nowait] [nologin] [TERM]
-  # tty [LVLS] <COND> CMD <ARGS> [noclear] [nowait]
-  # TODO: assertions that make sure options make sense together
-  ttyOpts =
-    { name, config, ... }:
-    {
-      options = {
-        id = lib.mkOption {
-          type = with lib.types; nullOr nonEmptyStr;
-          default = null;
-          description = ''
-            Explicit instance ID for the TTY. If not set, finit auto-derives it from the device name
-            (e.g., `tty1` becomes `:1`, `ttyS0` becomes `:S0`).
-          '';
-        };
-
-        noclear = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
-          description = ''
-            Disables clearing the TTY after each session. Clearing the TTY when a user logs out is usually preferable.
-          '';
-        };
-
-        nowait = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
-          description = ''
-            Disables the press `Enter to activate console` message before actually starting the `getty` program.
-          '';
-        };
-
-        nologin = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
-          description = ''
-            Disables `getty` and `/bin/login`, and gives the user a `root` (login) shell on the given TTY `device`
-            immediately. Needless to say, this is a rather insecure option, but can be very useful for developer
-            builds, during board bringup, or similar.
-          '';
-        };
-
-        rescue = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
-          description = ''
-            Start `sulogin` instead of a regular shell, requiring the root password. Useful for rescue/single-user mode.
-          '';
-        };
-
-        notty = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
-          description = ''
-            No device node mode. This is insecure and intended only for board bringup or testing scenarios.
-          '';
-        };
-
-        command = lib.mkOption {
-          type = lib.types.nullOr program;
-          default = null;
-          description = ''
-            Specify an external `getty`, like `agetty` or the BusyBox `getty`.
-          '';
-        };
-
-        device = lib.mkOption {
-          type = with lib.types; nullOr nonEmptyStr;
-          default = null;
-          description = ''
-            Embedded systems may want to enable automatic `device` by supplying the special `@console` device. This
-            works regardless weather the system uses `ttyS0`, `ttyAMA0`, `ttyMXC0`, or anything else. `finit` figures
-            it out by querying sysfs: `/sys/class/tty/console/active`.
-          '';
-        };
-
-        baud = lib.mkOption {
-          type = with lib.types; nullOr nonEmptyStr;
-          default = null;
-          description = ''
-            Baud rate for serial TTYs.
-          '';
-        };
-
-        term = lib.mkOption {
-          type = with lib.types; nullOr nonEmptyStr;
-          default = null;
-          description = ''
-            The `TERM` environment variable value for the TTY.
-          '';
-        };
-      };
-
-      config = {
-        device = lib.mkIf (config.command == null) (lib.mkDefault name);
-      };
-    };
-
-  rlimitOpts = {
-    imports = [
-      (lib.mkRenamedOptionModule [ "rlimits" ] [ "rlimit" ])
-    ];
-
-    options = {
-      rlimit = lib.mkOption {
-        type = rlimitsType;
-        default = { };
-        description = ''
-          An attribute set of resource limits that will be apply by `finit`.
-
-          See [upstream documentation](https://finit-project.github.io/config/runlevels/#resource-limits) for additional details.
-        '';
-      };
-    };
-  };
-
-  logToStr = v: if v == true then "log" else "log:${v}";
-  cgroupToStr =
-    cgroup:
+    if entries == { } then null else mkBlock "rlimit" null entries [ ];
+
+  # a whole .conf file: reload-triggers as a comment then the block itself
+  mkStanza =
+    type: svc:
     let
-      mkValueString =
-        value:
-        if lib.isString value then
-          "'" + (lib.removeSuffix "'" (lib.removePrefix "'" value)) + "'"
-        else
-          toString value;
-
-      options =
-        lib.optional cgroup.delegate "delegate"
-        ++ lib.mapAttrsToList (k: v: "${k}:${mkValueString v}") cgroup.settings;
+      log = logBlock svc.log;
+      rlimit = rlimitBlock svc.rlimit;
     in
-    "cgroup.${cgroup.name}"
-    + lib.optionalString (options != [ ]) ",${lib.concatStringsSep "," options}";
-
-  rlimitStr =
-    let
-      rlimitToStr =
-        k: v:
-        if lib.isAttrs v then
-          (
-            lib.optionalString (v.hard != null) "rlimit hard ${k} ${toString v.hard}"
-            + lib.optionalString (v.hard != null && v.soft != null) "\n"
-            + lib.optionalString (v.soft != null) "rlimit soft ${k} ${toString v.soft}"
-          )
-        else
-          "rlimit ${k} ${toString v}";
-    in
-    values: lib.concatMapAttrsStringSep "\n" rlimitToStr values;
-
-  mkConfigFile =
-    svcType: svc:
-    lib.optionalString (svc.rlimit or { } != { }) "${rlimitStr svc.rlimit}\n\n"
-    + lib.optionalString (
-      svc.reload-triggers or [ ] != [ ]
+    lib.optionalString (
+      svc.reload-triggers != [ ]
     ) "# reload-triggers = ${lib.concatStringsSep ", " svc.reload-triggers}\n\n"
-    + (serviceStr svcType svc);
-
-  serviceStr =
-    svcType: svc:
-    lib.concatStringsSep " " (
-      (lib.singleton svcType)
-      ++ (lib.singleton "[${svc.runlevel}]")
-      ++
-
-        (lib.optional (svc.name or null != null) "name:${svc.name}")
-      ++ (lib.optional (svc.id or null != null) ":${svc.id}")
-      ++ (lib.optional (svc.cgroup.name or null != null || svc.cgroup.settings or { } != { }) (
-        cgroupToStr svc.cgroup
-      ))
-      ++ (lib.optional (svc.restart-max or false != false) "restart:${toString svc.restart-max}")
-      ++ (lib.optional (svc.restart-sec or null != null) "restart_sec:${toString svc.restart-sec}")
-      ++ (lib.optional (svc.respawn or false) "respawn")
-      ++ (lib.optional (svc.user or null != null) (
-        "@${svc.user}"
-        + lib.optionalString (svc.group != null) ":${svc.group}"
-        + lib.optionalString (
-          svc.extra-groups or [ ] != [ ]
-        ) ",${lib.concatStringsSep "," svc.extra-groups}"
-      ))
-      # `!` only means "no SIGHUP" for service/sysv; on run/task it means "do not
-      # block bootstrap". `nohup` is declared in serviceOpts, so it never reaches those.
-      ++ (lib.optional (svc.conditions or [ ] != [ ] || svc.nohup or false == true)
-        "<${lib.optionalString (svc.nohup or false) "!"}${lib.concatStringsSep "," svc.conditions}>"
-      )
-      ++ (lib.optional (svc.manual-start or false) "manual:yes")
-      ++ (lib.optional (svc.remain-after-exit or false) "remain:yes")
-      ++ (lib.optional (svc.stop-timeout or null != null) "kill:${toString svc.stop-timeout}")
-      ++ (lib.optional (svc.capabilities or [ ] != [ ]) (
-        "caps:${lib.concatStringsSep "," svc.capabilities}"
-      ))
-      ++ (lib.optional (svc.conflicts or [ ] != [ ]) (
-        "conflict:${lib.concatStringsSep "," svc.conflicts}"
-      ))
-      ++ (lib.optional (svc.pidfile or null != null) "pid:${svc.pidfile}")
-      ++ (lib.optional (svc.type or null != null) "type:${svc.type}")
-      ++ (lib.optional (svc.notify or null != null) "notify:${svc.notify}")
-      ++ (lib.optional (svc.envfile or null != null) "env:${svc.envfile}")
-      ++ (lib.optional (svc.log or false != false) (logToStr svc.log))
-      ++ (lib.optional (svc.tty or null != null) "tty:${svc.tty}")
-      ++ (lib.optional (svc.exec-reload or null != null) "reload:${svc.exec-reload}")
-      ++ (lib.optional (svc.exec-stop or null != null) "stop:${svc.exec-stop}")
-      ++ (lib.optional (svc.exec-start-pre or null != null) "pre:${svc.exec-start-pre}")
-      ++ (lib.optional (svc.exec-stop-post or null != null) "post:${svc.exec-stop-post}")
-      ++ (lib.optional (svc.exec-start-ready or null != null) "ready:${svc.exec-start-ready}")
-      ++ (lib.optional (svc.exec-cleanup or null != null) "cleanup:${svc.exec-cleanup}")
-      ++ (lib.optional (svc.oncrash or null != null) "oncrash:${svc.oncrash}")
-      ++ (lib.optional (svc.extraConfig or "" != "") svc.extraConfig)
-      ++ (lib.optional (svc.command != null) svc.command)
-      ++
-
-        # tty specific options
-        (lib.optional (svc.device or null != null) svc.device)
-      ++ (lib.optional (svc.baud or null != null) svc.baud)
-      ++ (lib.optional (svc.noclear or false) "noclear")
-      ++ (lib.optional (svc.nowait or false) "nowait")
-      ++ (lib.optional (svc.nologin or false) "nologin")
-      ++ (lib.optional (svc.rescue or false) "rescue")
-      ++ (lib.optional (svc.notty or false) "notty")
-      ++ (lib.optional (svc.term or null != null) svc.term)
-      ++
-
-        (lib.optional (svc.description != null) "-- ${svc.description}")
+    + mkBlock type (mkTitle svc.name svc.id) (mkEntries svc) (
+      [ (cgroupBlock svc.cgroup) ]
+      ++ lib.optional (log != null) log
+      ++ lib.optional (rlimit != null) rlimit
     );
+
+  # title = the `finit.ttys` attribute name, since `ttyOpts` has no identity of its own.
+  mkTtyStanza = name: svc: mkBlock "tty" (mkTitle name svc.id) (mkEntries svc) [ ];
+
+  named =
+    what: stanzas:
+    lib.mapAttrsToList (name: svc: {
+      path = "finit.${what}.${name}";
+      value = svc;
+    }) stanzas;
+
+  stanzas = lib.concatMap (what: named what cfg.${what}) [
+    "services"
+    "tasks"
+    "run"
+    "sysv"
+  ];
 in
 {
   options.finit = {
@@ -842,6 +158,9 @@ in
       default = [ ];
       description = ''
         Packages added to the `finit` PATH environment variable.
+
+        A default is provided by this repository, which assigning to this option
+        extends. Use `lib.mkForce` to replace it.
       '';
     };
 
@@ -878,6 +197,8 @@ in
         with lib.types;
         attrsOf (submodule [
           baseOpts
+          cgroupOpt
+          execOptsBase
           execOpts
           serviceOpts
           rlimitOpts
@@ -896,6 +217,8 @@ in
         with lib.types;
         attrsOf (submodule [
           baseOpts
+          cgroupOpt
+          execOptsBase
           execOpts
           oneshotOpts
           rlimitOpts
@@ -913,8 +236,11 @@ in
         with lib.types;
         attrsOf (submodule [
           baseOpts
+          cgroupOpt
+          execOptsBase
           execOpts
           oneshotOpts
+          rlimitOpts
           runOpts
         ]);
       default = { };
@@ -946,6 +272,8 @@ in
         with lib.types;
         attrsOf (submodule [
           baseOpts
+          cgroupOpt
+          execOptsBase
           execOpts
           serviceOpts
           rlimitOpts
@@ -961,74 +289,91 @@ in
   };
 
   config = {
+    # a key finit v5 does not know takes the whole .conf file down at boot so a typo in `settings` should stop the evaluation here instead
+    assertions =
+      lib.concatMap (s: checkStanza s.path svcSchema s.value) stanzas
+      ++ lib.concatMap (s: checkStanza s.path ttySchema s.value) (named "ttys" cfg.ttys)
+      ++ (if cfg.rlimits != { } then checkRlimit "finit.rlimits" cfg.rlimits else [ ])
+      ++ lib.concatMap (s: checkRlimit s.path (s.value.rlimit or { })) stanzas;
+
     environment.etc =
       let
         # NOTE: entries under /etc/finit.d are marked as direct-symlink to avoid service reloads on every finix activation
 
-        serviceTree = lib.mapAttrs' (name: service: {
-          name = if service.id != "%i" then "finit.d/${name}.conf" else "finit.d/available/${name}.conf";
+        # one .conf per stanza so stanzas reload one at a time.
+        # NOTE: this walks the stanza attrset and touches `enable` and `id` only,
+        # forcing a whole stanza would drag in `reload-triggers`, which reads etc back.
+        stanzaFiles =
+          type: prefix: stanzas:
+          lib.mapAttrs' (
+            name: svc:
+            lib.nameValuePair
+              (
+                # a `foo@` stanza is a %i template instantiated from foo@bar.conf
+                "finit.d/${if svc.id == "%i" then "available/" else ""}${prefix}${name}.conf"
+              )
+              {
+                mode = "direct-symlink";
+                text = mkStanza type svc;
+              }
+          ) (lib.filterAttrs (_: s: s.enable) stanzas);
 
-          value.mode = "direct-symlink";
-          value.text = mkConfigFile "service" service;
-        }) (lib.filterAttrs (_: service: service.enable) cfg.services);
-
-        taskTree = lib.mapAttrs' (name: task: {
-          name = if task.id != "%i" then "finit.d/${name}.conf" else "finit.d/available/${name}.conf";
-
-          value.mode = "direct-symlink";
-          value.text = mkConfigFile "task" task;
-        }) (lib.filterAttrs (_: task: task.enable) cfg.tasks);
-
-        sysvTree = lib.mapAttrs' (name: sysv: {
-          name = if sysv.id != "%i" then "finit.d/${name}.conf" else "finit.d/available/${name}.conf";
-
-          value.mode = "direct-symlink";
-          value.text = mkConfigFile "sysv" sysv;
-        }) (lib.filterAttrs (_: sysv: sysv.enable) cfg.sysv);
-
-        cgroup = lib.concatMapAttrsStringSep "\n" (
-          _: cgroupOpts:
-          "cgroup ${cgroupOpts.name} ${
-            lib.concatMapAttrsStringSep "," (k: v: "${k}:${toString v}") cgroupOpts.settings
-          }"
-        ) cfg.cgroups;
-
-        # TODO: split these out into their own files, while preserving order, and add rlimits option
-        run = lib.concatMapStringsSep "\n" (serviceStr "run") (
-          lib.sortProperties (lib.concatMap (v: lib.optional v.enable v) (lib.attrValues config.finit.run))
+        # the index is the ordering: `run` blocks run in read order, and digits sort ahead of the service and task names
+        pad = i: lib.strings.replicate (3 - lib.stringLength i) "0" + i;
+        runs = stanzaFiles "run" "" (
+          lib.listToAttrs (
+            lib.imap0
+              (i: entry: {
+                name = "${pad (toString i)}-run-${entry.name}";
+                value = entry.value;
+              })
+              (
+                lib.sortProperties (
+                  lib.mapAttrsToList (name: run: {
+                    inherit name;
+                    value = run;
+                    inherit (run) priority;
+                  }) (lib.filterAttrs (_: run: run.enable) cfg.run)
+                )
+              )
+          )
         );
 
-        tty = lib.concatStringsSep "\n" (
-          lib.concatMap (v: lib.optional v.enable (serviceStr "tty" v)) (lib.attrValues config.finit.ttys)
+        cgroup = lib.concatStringsSep "\n\n" (lib.mapAttrsToList (_: cgroupBlock) cfg.cgroups);
+
+        rlimit = rlimitBlock cfg.rlimits;
+
+        tty = lib.concatStringsSep "\n\n" (
+          lib.filter (s: s != "") (
+            lib.mapAttrsToList (name: v: if v.enable then mkTtyStanza name v else "") cfg.ttys
+          )
         );
 
         configFile = {
           "finit.conf".mode = "direct-symlink";
-          "finit.conf".text = lib.mkMerge [
-            (lib.mkBefore (lib.generators.toKeyValue { } cfg.environment))
-            ''
-              readiness ${cfg.readiness}
-              runlevel ${toString cfg.runlevel}
+          "finit.conf".text = ''
+            ${lib.optionalString (cfg.environment != { }) (
+              (mkBlock "environment" null cfg.environment [ ]) + "\n"
+            )}
+            readiness = ${bfScalar cfg.readiness}
+            runlevel  = ${toString cfg.runlevel}
 
-              # cgroups
-              ${cgroup}
+            # cgroups
+            ${cgroup}
 
-              # rlimits
-              ${rlimitStr cfg.rlimits}
+            # rlimits
+            ${if rlimit == null then "" else rlimit}
 
-              # ttys
-              ${tty}
-
-              # sequential one-shot commands
-              ${run}
-            ''
-          ];
+            # ttys
+            ${tty}
+          '';
         };
       in
       lib.mkMerge [
-        serviceTree
-        taskTree
-        sysvTree
+        (stanzaFiles "service" "" cfg.services)
+        (stanzaFiles "task" "" cfg.tasks)
+        (stanzaFiles "sysv" "" cfg.sysv)
+        runs
         configFile
       ];
   };

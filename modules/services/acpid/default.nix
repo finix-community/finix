@@ -64,8 +64,7 @@ in
       command = "${pkgs.acpid}/bin/acpid --foreground --netlink";
       log = true;
 
-      # TODO: add "if" to finit.services
-      extraConfig = "if:<!int/container>";
+      "if" = "!int/container";
     };
   };
 }

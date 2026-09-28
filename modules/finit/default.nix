@@ -29,24 +29,28 @@ in
       }
     ];
 
-    # TODO: decide a reasonable default here... user can override if needed
+    # PATH of `finit` itself, inherited by every stanza it runs.
+    # Stanzas that need more set their own `path`.
+    # Normal priority, so modules assigning `finit.path` extend it rather than replace it.
     finit.path = [
+      cfg.package # initctl
+
+      # required by finit on shutdown: remount / ro, swapoff /etc/fstab
+      pkgs.util-linux
+      # for finit log rotation
+      pkgs.gzip
+
+      # used by the stanzas generated here, e.g. printf in the mount-* tasks
       config.programs.coreutils.package
       pkgs.findutils
       pkgs.gnugrep
       pkgs.gnused
-      cfg.package
-
-      # required by finit on shutdown
-      pkgs.util-linux.mount
-
-      # for finit log rotation
-      pkgs.gzip
     ];
 
-    finit.environment = lib.mkIf (cfg.path != [ ]) {
-      PATH = lib.makeBinPath cfg.path;
-    };
+    # only the key, so overriding PATH does not conflict with i18n and time
+    finit.environment.PATH = lib.mkIf (cfg.path != [ ]) (
+      lib.mkDefault (lib.makeBinPath (lib.unique cfg.path))
+    );
 
     environment.systemPackages = [
       cfg.package
