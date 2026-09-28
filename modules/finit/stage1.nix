@@ -6,24 +6,28 @@
 }:
 let
   cfg = config.boot.initrd;
-  finitFmt = import ./format.nix { inherit lib pkgs; };
-  inherit (finitFmt)
-    mkBlock
-    mkTitle
-    mkEntries
+  finitOpts = import ./opts.nix { inherit lib pkgs; };
+  finitFmt = import ./format.nix { inherit lib; };
+  inherit (finitFmt) mkBlock mkTitle mkEntries;
+  inherit (finitOpts)
+    mkBaseOpts
     execOptsBase
+    mkInitrdExecOpts
+    mkServiceOpts
     runOpts
     ttyOpts
     ;
-  baseOpts = finitFmt.mkBaseOpts "S";
-  execOpts =
-    { name, ... }:
-    {
-      config = {
-        name = lib.head (lib.splitString "@" name);
-        id = if lib.hasInfix "@" name then lib.elemAt (lib.splitString "@" name) 1 else null;
-      };
-    };
+  baseOpts = mkBaseOpts "S";
+  execOpts = mkInitrdExecOpts;
+  serviceOpts = mkServiceOpts {
+    readiness = "none";
+    nohup = false;
+    notify = [
+      "none"
+      "pid"
+      "s6"
+    ];
+  };
 
   # scriptOpts: `script` convenience option for task and run stanzas only
   scriptOpts =
@@ -47,47 +51,6 @@ let
         );
       };
     };
-
-  # serviceOpts: options specific to service stanzas only
-  serviceOpts = {
-    imports = [
-      (lib.mkRenamedOptionModule [ "restart" ] [ "restart-max" ])
-    ];
-
-    options = {
-      notify = lib.mkOption {
-        type = lib.types.enum [
-          "none"
-          "pid"
-          "s6"
-        ];
-        default = "none";
-        description = ''
-          See [upstream documentation](https://finit-project.github.io/config/service-sync/) for details.
-        '';
-      };
-
-      restart-max = lib.mkOption {
-        type = with lib.types; nullOr (ints.between (-1) 255);
-        default = null;
-        description = ''
-          The number of times `finit` tries to restart a crashing service. When
-          this limit is reached the service is marked crashed and must be restarted
-          manually with `initctl restart NAME`. When `null`, finit's built-in
-          default applies.
-        '';
-      };
-
-      respawn = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = ''
-          Enable endless restarts without counting toward the retry limit. When set, the service
-          will be restarted indefinitely regardless of the `restart-max` limit.
-        '';
-      };
-    };
-  };
 
   mkServiceLikeBlock = svcType: svc: mkBlock svcType (mkTitle svc.name svc.id) (mkEntries svc) [ ];
 
