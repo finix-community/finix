@@ -89,6 +89,7 @@
 <li><a href="FAQ.html">3. Frequenty Asked Questions</a></li>
 <li><a href="installation.html">4. Installation</a></li>
 <li><a href="configuring.html">5. Configuration</a></li>
+<li><a href="writing-finix-modules.html">6. Writing modules for finix</a></li>
 <li><a href="search.html">Search</a></li>
 
               </ul>
@@ -100,18 +101,135 @@
             <div class="sidebar-section-content">
               <ul class="toc-list">
                 <li><a href="#configuring">Configuring</a>
-</li>
+<ul><li><a href="#core-system-components">Core system components</a>
+<ul><li><a href="#bootloaders">Bootloaders</a>
+<li><a href="#filesystems">Filesystems</a>
+<li><a href="#device-managers">Device managers</a>
+<li><a href="#the-getty-program">The getty program</a>
+<li><a href="#shells">Shells</a>
+<li><a href="#networking">Networking</a>
+<li><a href="#system-time">System time</a>
+</ul><li><a href="#user-sessions">User sessions</a>
+<ul><li><a href="#session-managers">Session managers</a>
+<li><a href="#setting-environment-variables">Setting environment variables</a>
+</ul><li><a href="#graphical-environments">Graphical environments</a>
+<ul><li><a href="#login-managers">Login managers</a>
+<li><a href="#wayland-compositors">Wayland compositors</a>
+<li><a href="#xorg">Xorg</a>
+<li><a href="#desktop-environments">Desktop environments</a>
+<li><a href="#audio">Audio</a>
+</ul><li><a href="#server-software">Server software</a>
+<ul><li><a href="#databases">Databases</a>
+<li><a href="#docker">Docker</a>
+<li><a href="#schedulers">Schedulers</a>
+</li></ul></li></ul></li>
               </ul>
             </div>
           </details>
         </nav>
 
         <main class="content"><html><head></head><body><h1 id="configuring">Configuring</h1>
-<p>Because <code>finix</code> comes with so little options enabled by default, it is recommended to import and enable one or more profiles for your system, which contain recipes for building a fully usable <code>finix</code> system for a variety of use cases.</p>
+<p>This page serves as a high level overview for configuring a <code>finix</code> system.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This page is a stub. If you have something you would like to contribute, feel free to open a PR and add any documentation for configuring services, programs, or low level system components.</p>
 </div>
+<h2 id="core-system-components">Core system components</h2>
+<h3 id="bootloaders">Bootloaders</h3>
+<p>TODO</p>
+<p><code>limine</code></p>
+<h3 id="filesystems">Filesystems</h3>
+<p>TODO</p>
+<h3 id="device-managers">Device managers</h3>
+<p><code>finix</code> currently ships four userspace device managers, which are the programs responsible for handling kernel events as well as populating the <code>/dev</code> directory with input devices, storage devices, rendering devices, and more. None are enabled by default. The following is a list of device managers supported by <code>finix</code> and the level of hardware compatibility a user can expect from each one.</p>
+<h4 id="eudev"><code>eudev</code></h4>
+<p><a href="https://github.com/eudev-project/eudev"><code>eudev</code></a> is a fork of <code>systemd</code> with the aim of isolating the device manager from the rest of <code>systemd</code>. It has the broadest compatibility with any given hardware, given the ubiquity of <code>systemd-udev</code> in the Linux ecosystem. It is capable of reading <code>udev</code> style device rules and requires no tinkering to reach feature parity with <code>systemd-udev</code>. Any prewritten <code>udev</code> rules installed by <code>nix</code> packages will work without issue.</p>
+<p>This service is imported by default. To enable it, add the following line to your system configuration:</p>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">udev</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">enable</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">true</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
+<p>Some software packages may ship prewritten <code>udev</code> rules as a runtime dependency. To add these udev rules to <code>/etc/udev/rules.d</code>, add the following line to your configuration:</p>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">udev</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">packages</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">libtmp</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">out</span>&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
+<h4 id="gardendevd"><code>gardendevd</code></h4>
+<p><a href="https://codeberg.org/Gardenhouse/gardendevd"><code>gardendevd</code></a> is a device manager designed to be a lightweight replacement to <code>systemd-udev</code>. It is able to read and parse <code>udev</code> style device rules to populate device nodes. It optionally runs on top of <code>mdevd</code>, another lightweight userspace device manager, but it is runable as a standalone daemon. Some programs may require recompilation with <a href="https://codeberg.org/Gardenhouse/libudev-garden"><code>libudev-garden</code></a>, a fork of <code>libudev-zero</code> and a substitution to the ubiquitus <code>libudev</code> written to be used with <code>gardendevd</code>. Issues have been reported regarding the reliability of services written to be tighly integrated with <code>systemd-udev</code> -- particularly <code>gvfs</code> and <code>udisks2</code>. It is possible that users will need to write custom <code>udev</code> rules to support any uncommon hardware not covered by the stock rules shipped by <code>gardendevd</code>.</p>
+<p>This service is imported by default. To enable it, add the following line to your system configuration:</p>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">gardendevd</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">enable</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">true</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
+<p>Optionally, you may also enable <code>mdevd</code> to run above <code>gardendevd</code>.</p>
+<p>Software packages that ship <code>udev</code> rules can be installed and read by <code>gardendevd</code> with the following:</p>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">udev</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">packages</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">libtmp</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">out</span>&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
+<p><code>services.udev</code> does not need to be enabled for this option to work.</p>
+<h4 id="keventd"><code>keventd</code></h4>
+<p><a href="https://troglobit.com/projects/finit/"><code>keventd</code></a> is the device manager bundled with <code>finit</code> since version 5 and up. It is capable as a lightweight replacement to <code>systemd-udev</code> in tandem with <code>libudev-zero</code>, as it is able to read <code>udev</code> style rules. It is not as feature complete as <code>gardendevd</code> at the time of writing, and some programs and services will need to be recompiled with <code>libudev-zero</code> in place of <code>libudev</code> in order for them to function properly with <code>keventd</code>. Issues have been reported regarding the reliability of services that are tighly integrated with <code>systemd-udev</code> -- notably <code>gvfs</code> and <code>udisks2</code>, and it is possible that end users will need to write custom <code>udev</code> rules to support any uncommon hardware not covered by the stock rules shipped by <code>keventd</code>.</p>
+<p>This service is imported by default. To enable it, add the following line to your system configuration:</p>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">keventd</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">enable</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">true</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
+<p>Software packages that ship <code>udev</code> rules can be installed and read by <code>keventd</code> with the following:</p>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">udev</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">packages</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">libtmp</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">out</span>&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
+<p><code>services.udev</code> does not need to be enabled for this option to apply.</p>
+<h4 id="mdevd"><code>mdevd</code></h4>
+<p><a href="https://skarnet.org/software/mdevd/"><code>mdevd</code></a> is a lightweight device manager from the Skarnet/s6 family of Linux system utilities. It is designed to be a drop in replacement to the <code>mdev</code> device manager included in the BusyBox software suite. It is by far the leanest of the other three services listed, and it has the narrowest hardware compatibility. It is ideal for systems with limited resources or those with little need for broad hardware support beyond standard input and storage devices. Programs and services dealing with low level input, notably <code>pipewire</code> and most graphical environments, will require recompilation with <code>libudev-zero</code> in order to function properly. <code>gvfs</code> and <code>udisks2</code> will not work with this device manager. If any additional hardware support is desired, a user will need to write custom rules utilising <code>mdevd</code> syntax, which is wholly unique to <code>udev</code> syntax. Examples for what these rules look like may be found <a href="https://git.lin.moe/aports/lin/mdev-helper/mdev.conf.html">here</a>.</p>
+<p>This service is imported by default. To enable it, add the following line to your system configuration:</p>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">mdevd</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">enable</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">true</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
+<p>You may supply additional device rules with the following options:</p>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">mdevd</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">coldplugRules</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">''</span><span style="color:rgb(152,195,121);">''</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(171,178,191);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">mdevd</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">hotplugRules</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">''</span><span style="color:rgb(152,195,121);">''</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
+<p>It is generally advised when running this device manager to set the value of <code>services.mdevd.nlgroups = 4</code> in order to rebroadcast kernel events to <code>libudev-zero</code>.</p>
+<h3 id="the-getty-program">The <code>getty</code> program</h3>
+<p><code>getty</code> is a program that manages login terminals. <code>finit</code> ships with a built in <code>getty</code> implementation which is used by default when the <code>getty</code> service is enabled.</p>
+<p>This service is not imported by default. To import and enable it, add the following to your system configuration:</p>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(232,102,113);">config</span><span style="color:rgb(132,139,152);">,</span>&nbsp;<span style="color:rgb(232,102,113);">modules</span><span style="color:rgb(132,139,152);">,</span>&nbsp;<span style="color:rgb(232,102,113);">...</span>&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">:</span><br><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">getty</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">enable</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">true</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><br></code></pre>
+<p>You may also switch your preferred <code>getty</code> implementation using the option <code>services.getty.package</code>, like so:</p>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">getty</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">package</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">util-linux</span>&nbsp;<span style="color:rgb(171,178,191);">//</span>&nbsp;<span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(86,182,194);">mainProgram</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">agetty</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span>&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
+<h3 id="shells">Shells</h3>
+<p>TODO</p>
+<h3 id="networking">Networking</h3>
+<p>TODO</p>
+<h3 id="system-time">System time</h3>
+<p>TODO</p>
+<p>timezone setup, ntp daemon setup</p>
+<h2 id="user-sessions">User sessions</h2>
+<p>This section contains information regarding user session management.</p>
+<h3 id="session-managers">Session managers</h3>
+<p>TODO</p>
+<p><code>sessiond</code>, <code>seatd</code>, <code>elogind</code></p>
+<h3 id="setting-environment-variables">Setting environment variables</h3>
+<p><code>security.pam.environment</code> method and <code>environment.variables</code> method of setting env vars</p>
+<h2 id="graphical-environments">Graphical environments</h2>
+<p>This section contains information relating setting up and using graphical environments.</p>
+<h3 id="login-managers">Login managers</h3>
+<p>TODO</p>
+<h3 id="wayland-compositors">Wayland compositors</h3>
+<p>TODO</p>
+<ul>
+<li><code>labwc</code></li>
+<li><code>niri</code></li>
+<li><code>hyprland</code></li>
+<li><code>sway</code></li>
+</ul>
+<p>etc.</p>
+<h3 id="xorg">Xorg</h3>
+<p>TODO</p>
+<ul>
+<li><code>vxwm</code></li>
+<li><code>openbox</code></li>
+</ul>
+<p>etc.</p>
+<h3 id="desktop-environments">Desktop environments</h3>
+<p>TODO</p>
+<ul>
+<li><code>lxqt</code></li>
+<li><code>cosmic-de</code></li>
+</ul>
+<p>etc.</p>
+<h3 id="audio">Audio</h3>
+<p>TODO</p>
+<p><code>pipewire</code> mostly</p>
+<h2 id="server-software">Server software</h2>
+<h3 id="databases">Databases</h3>
+<p>TODO</p>
+<p>postgresql, mariadb</p>
+<h3 id="docker">Docker</h3>
+<p>TODO</p>
+<p>no rootless support</p>
+<h3 id="schedulers">Schedulers</h3>
+<p>TODO</p>
+<p><code>providers.scheduler</code></p>
 </body></html></main>
       </div>
 
@@ -120,7 +238,28 @@
           <h3>On this page</h3>
           <ul class="page-toc-list">
             <li><a href="#configuring">Configuring</a>
-</li>
+<ul><li><a href="#core-system-components">Core system components</a>
+<ul><li><a href="#bootloaders">Bootloaders</a>
+<li><a href="#filesystems">Filesystems</a>
+<li><a href="#device-managers">Device managers</a>
+<li><a href="#the-getty-program">The getty program</a>
+<li><a href="#shells">Shells</a>
+<li><a href="#networking">Networking</a>
+<li><a href="#system-time">System time</a>
+</ul><li><a href="#user-sessions">User sessions</a>
+<ul><li><a href="#session-managers">Session managers</a>
+<li><a href="#setting-environment-variables">Setting environment variables</a>
+</ul><li><a href="#graphical-environments">Graphical environments</a>
+<ul><li><a href="#login-managers">Login managers</a>
+<li><a href="#wayland-compositors">Wayland compositors</a>
+<li><a href="#xorg">Xorg</a>
+<li><a href="#desktop-environments">Desktop environments</a>
+<li><a href="#audio">Audio</a>
+</ul><li><a href="#server-software">Server software</a>
+<ul><li><a href="#databases">Databases</a>
+<li><a href="#docker">Docker</a>
+<li><a href="#schedulers">Schedulers</a>
+</li></ul></li></ul></li>
           </ul>
         </nav>
       </aside>

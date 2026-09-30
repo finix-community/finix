@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>finix - Search</title>
+    <title>Writing modules for finix</title>
     <meta name="description" content="finix - a nix-based operating system" />
     <meta name="keywords" content="documentation,nix,finix" /> <meta property="og:description" content="finix - a nix-based operating system" />
     <meta property="og:title" content="finix" />
@@ -24,12 +24,14 @@
     </script>
     <link rel="stylesheet" href="assets/style.css" />
     <script defer src="assets/main.js"></script>
+    
     <script>
       window.searchNamespace = window.searchNamespace || {};
       window.searchNamespace.rootPath = "";
     </script>
     <script defer src="assets/search-core.js"></script>
     <script defer src="assets/search.js"></script>
+    
   </head>
   <body>
     <div class="container">
@@ -38,8 +40,8 @@
           <h1 class="site-title">
             <a href="index.html">finix</a>
           </h1>
-        </div>
-        <nav class="header-nav" aria-label="Primary">
+
+          <nav class="header-nav" aria-label="Primary">
   <ul>
     <li >
       <a href="options.html">Options</a>
@@ -50,22 +52,13 @@
   </ul>
 </nav>
 
-        <div class="search-container js-only">
-          <input
-            type="search"
-            id="search-input"
-            placeholder="Search..."
-            aria-label="Search"
-            autocomplete="off"
-          />
-          <div
-            id="search-results"
-            class="search-results"
-            role="region"
-            aria-live="polite"
-            aria-label="Search results"
-          ></div>
         </div>
+        
+        <div class="search-container js-only">
+          <input type="text" id="search-input" placeholder="Search..." aria-label="Search" autocomplete="off" />
+          <div id="search-results" class="search-results"></div>
+        </div>
+        
       </header>
 
       <div class="layout">
@@ -107,49 +100,32 @@
             <summary>Contents</summary>
             <div class="sidebar-section-content">
               <ul class="toc-list">
-                
+                <li><a href="#writing-modules-for-finix">Writing modules for finix</a>
+<ul><li><a href="#providers">providers</a>
+</li></ul></li>
               </ul>
             </div>
           </details>
         </nav>
 
-        <main class="content">
-          <h1>Search</h1>
-          <div class="search-page">
-            <noscript>
-              <p class="noscript-message">
-                Search requires JavaScript. Use the document navigation links instead.
-              </p>
-            </noscript>
-            <div class="search-form js-only">
-              <input
-                type="search"
-                id="search-page-input"
-                placeholder="Search..."
-                aria-label="Search"
-                autocomplete="off"
-                autofocus
-              />
-            </div>
-            <div class="search-keyboard-hints js-only" role="note" aria-label="Keyboard shortcuts">
-              <span class="hint-item"><kbd>/</kbd> to focus search</span>
-              <span class="hint-item"><kbd>↑</kbd> <kbd>↓</kbd> to navigate</span>
-              <span class="hint-item"><kbd>Enter</kbd> to select</span>
-              <span class="hint-item"><kbd>Esc</kbd> to leave search</span>
-            </div>
-            <div
-              id="search-page-results"
-              class="search-page-results js-only"
-              role="region"
-              aria-live="polite"
-              aria-label="Search results"
-            ></div>
-          </div>
-          <div class="footnotes-container">
-            <!-- Footnotes will be appended here -->
-          </div>
-        </main>
+        <main class="content"><html><head></head><body><h1 id="writing-modules-for-finix">Writing modules for <code>finix</code></h1>
+<p>TODO</p>
+<p>This page goes over useful tools you can use when writing modules for <code>finix</code>.</p>
+<h2 id="providers"><code>providers</code></h2>
+<p>TODO</p>
+</body></html></main>
       </div>
+
+      <aside class="page-toc">
+        <nav class="page-toc-nav">
+          <h3>On this page</h3>
+          <ul class="page-toc-list">
+            <li><a href="#writing-modules-for-finix">Writing modules for finix</a>
+<ul><li><a href="#providers">providers</a>
+</li></ul></li>
+          </ul>
+        </nav>
+      </aside>
 
       <footer>
   <p>Generated with <a href="https://ndg.feel-co.org">ndg</a> &middot; <a href="https://github.com/finix-community/finix">finix repository</a> &middot; <a href="https://github.com/finix-community/community-modules">community modules</a></p>
