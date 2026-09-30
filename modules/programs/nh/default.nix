@@ -238,7 +238,7 @@ in
             )
             && cfg.settings.NH_FILE != null
           );
-        message = "NH_FILE and may FLAKE option can not be set at the same time, they are opposite components";
+        message = "NH_FILE and FLAKE options are mutually exclusive";
       }
       {
         assertion =
