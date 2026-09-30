@@ -11,7 +11,7 @@
       user = true;
     };
 
-    services.snooze.tasks = lib.mapAttrs (
+    programs.snooze.tasks = lib.mapAttrs (
       _: task:
       let
         presets = {
