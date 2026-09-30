@@ -1,3 +1,37 @@
+<div class="option" id="option-programs.micro.enable">
+  <h3 class="option-name">
+    <a href="#option-programs.micro.enable" class="option-anchor">programs.micro.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://micro-editor.github.io">micro</a>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/micro" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/micro&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-programs.micro.package">
+  <h3 class="option-name">
+    <a href="#option-programs.micro.package" class="option-anchor">programs.micro.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>micro</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">micro</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/micro" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/micro&gt;</a></code></dd>
+  </dl>
+</div>
 <div class="option" id="option-programs.micro.defaultEditor">
   <h3 class="option-name">
     <a href="#option-programs.micro.defaultEditor" class="option-anchor">programs.micro.defaultEditor</a>
@@ -1747,36 +1781,6 @@ configuration. Card-specific drivers that need explicit configuration
 </body></html></dd>
     <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">from</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">60000</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">to</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">61000</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
 </body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/firewall" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/firewall&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-providers.firewall.allowedUDPPortRanges._.from">
-  <h3 class="option-name">
-    <a href="#option-providers.firewall.allowedUDPPortRanges._.from" class="option-anchor">providers.firewall.allowedUDPPortRanges.*.from</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The first port of the range, inclusive.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>16 bit unsigned integer; between 0 and 65535 (both inclusive)</code></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/firewall" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/firewall&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-providers.firewall.allowedUDPPortRanges._.to">
-  <h3 class="option-name">
-    <a href="#option-providers.firewall.allowedUDPPortRanges._.to" class="option-anchor">providers.firewall.allowedUDPPortRanges.*.to</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The last port of the range, inclusive.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>16 bit unsigned integer; between 0 and 65535 (both inclusive)</code></dd>
   </dl>
   <dl class="option-details option-sources">
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/firewall" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/firewall&gt;</a></code></dd>

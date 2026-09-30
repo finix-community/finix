@@ -1,3 +1,37 @@
+<div class="option" id="option-services.incus.package">
+  <h3 class="option-name">
+    <a href="#option-services.incus.package" class="option-anchor">services.incus.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>incus</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">incus-lts</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/incus" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/incus&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.incus.debug">
+  <h3 class="option-name">
+    <a href="#option-services.incus.debug" class="option-anchor">services.incus.debug</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/incus" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/incus&gt;</a></code></dd>
+  </dl>
+</div>
 <div class="option" id="option-services.iwd.enable">
   <h3 class="option-name">
     <a href="#option-services.iwd.enable" class="option-anchor">services.iwd.enable</a>
@@ -1859,44 +1893,6 @@ and
   <dl class="option-details">
     <dt>Type</dt><dd class="option-value"><code>list of absolute path</code></dd>
     <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/openssh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/openssh&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.openssh.settings.KbdInteractiveAuthentication">
-  <h3 class="option-name">
-    <a href="#option-services.openssh.settings.KbdInteractiveAuthentication" class="option-anchor">services.openssh.settings.KbdInteractiveAuthentication</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Specifies whether keyboard-interactive authentication is allowed.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">config</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">openssh</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">settings</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">PasswordAuthentication</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/openssh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/openssh&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.openssh.settings.KexAlgorithms">
-  <h3 class="option-name">
-    <a href="#option-services.openssh.settings.KexAlgorithms" class="option-anchor">services.openssh.settings.KexAlgorithms</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Allowed key exchange algorithms</p>
-<p>Uses the lower bound recommended in both
-&lt;<a href="https://stribika.github.io/2015/01/04/secure-secure-shell.html">https://stribika.github.io/2015/01/04/secure-secure-shell.html</a>&gt;
-and
-&lt;<a href="https://infosec.mozilla.org/guidelines/openssh#modern-openssh-67">https://infosec.mozilla.org/guidelines/openssh#modern-openssh-67</a>&gt;</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">sntrup761x25519-sha512@openssh.com</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">curve25519-sha256</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">curve25519-sha256@libssh.org</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">diffie-hellman-group-exchange-sha256</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
 </body></html></dd>
   </dl>
   <dl class="option-details option-sources">

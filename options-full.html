@@ -3719,6 +3719,36 @@
   
   <li>
     <details class="toc-category">
+      <summary title="programs.ash">
+        <span>programs.ash</span>
+        <span class="toc-count">2</span>
+      </summary>
+      <ul>
+        
+
+        
+        <li>
+          <a href='#option-programs.ash.enable' title="programs.ash.enable">
+            enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs.ash.package' title="programs.ash.package">
+            package
+            
+            
+          </a>
+        </li>
+        
+      </ul>
+    </details>
+  </li>
+  
+  <li>
+    <details class="toc-category">
       <summary title="programs.bash">
         <span>programs.bash</span>
         <span class="toc-count">2</span>
@@ -18766,13 +18796,47 @@ accidentally on a wrong machine.</p>
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/nixpkgs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/nixpkgs&gt;</a></code></dd>
   </dl>
 </div>
+<div class="option" id="option-programs.ash.enable">
+  <h3 class="option-name">
+    <a href="#option-programs.ash.enable" class="option-anchor">programs.ash.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://busybox.net/">ash</a> as a system shell.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/ash" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/ash&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-programs.ash.package">
+  <h3 class="option-name">
+    <a href="#option-programs.ash.package" class="option-anchor">programs.ash.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>ash</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">busybox</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/ash" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/ash&gt;</a></code></dd>
+  </dl>
+</div>
 <div class="option" id="option-programs.bash.enable">
   <h3 class="option-name">
     <a href="#option-programs.bash.enable" class="option-anchor">programs.bash.enable</a>
     <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
     <span class="copy-feedback">Link copied!</span>
   </h3>
-  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://www.gnu.org/software/bash/">bash</a>.</p>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://www.gnu.org/software/bash/">bash</a> as a system shell.</p>
 </body></html></div>
   <dl class="option-details">
     <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
@@ -19359,7 +19423,7 @@ for additional details.</p>
     <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
     <span class="copy-feedback">Link copied!</span>
   </h3>
-  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://fishshell.com/">fish</a>.</p>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://fishshell.com/">fish</a> as a system shell.</p>
 </body></html></div>
   <dl class="option-details">
     <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
