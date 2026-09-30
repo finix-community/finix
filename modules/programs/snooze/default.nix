@@ -47,7 +47,7 @@ in
       type = lib.types.bool;
       default = false;
       description = ''
-        Whether to enable snooze as a system service.
+        Whether to enable `snooze`.
       '';
     };
 
@@ -61,6 +61,10 @@ in
     };
 
     tasks = lib.mkOption {
+      description = ''
+        Options for a `snooze` instance.
+        See [snooze(1)](https://man.voidlinux.org/snooze.1) for additional details.
+      '';
       type = lib.types.attrsOf (
         lib.types.submodule (
           { config, name, ... }:
@@ -117,27 +121,18 @@ in
                 '';
               };
 
-              schedule = lib.mkOption {
-                type = lib.types.submodule {
-                  options = {
-                    day = mkScheduleOption "*" "day of month (1..31)";
-                    weekday = mkScheduleOption "*" "weekday (0..7, sunday is 0 and 7)";
-                    month = mkScheduleOption "*" "month (1..12)";
-                    hour = mkScheduleOption "0" "hour (0..23)";
-                    minute = mkScheduleOption "0" "minute (0..59)";
-                    second = mkScheduleOption "0" "second (0..59)";
-                    day_of_year = mkScheduleOption "*" "day of year (1..366)";
-                    week_of_year = mkScheduleOption "*" "week of year (1..53)";
-                  };
-                };
-                default = { };
-                description = ''
-                  An attribute set that reflects `snooze`.
-
-                  See [snooze(1)](https://man.voidlinux.org/snooze.1) for additional details.
-                '';
+              schedule = {
+                day = mkScheduleOption "*" "day of month (1..31)";
+                weekday = mkScheduleOption "*" "weekday (0..7, sunday is 0 and 7)";
+                month = mkScheduleOption "*" "month (1..12)";
+                hour = mkScheduleOption "0" "hour (0..23)";
+                minute = mkScheduleOption "0" "minute (0..59)";
+                second = mkScheduleOption "0" "second (0..59)";
+                day_of_year = mkScheduleOption "*" "day of year (1..366)";
+                week_of_year = mkScheduleOption "*" "week of year (1..53)";
               };
             };
+
             config.timeFile = lib.mkDefault (
               if config.user != null then
                 "/var/cache/snooze/${config.user}_${name}"
@@ -200,7 +195,7 @@ in
       ];
 
       # To allow for running it as a user.
-      # The folder has open permissions. Each user needs to touch it's own timefile with `umask 077`.
+      # The folder has open permissions. Each user needs to touch it's own timeFile with `umask 077`.
       finit.tmpfiles.rules = [
         "d /var/cache/snooze 0777"
       ];
