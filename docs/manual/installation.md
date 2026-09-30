@@ -25,7 +25,7 @@ An internet connection is required to complete this installation.
 
 If you are looking to convert a pre-existing NixOS installation, it is highly recommended that you create a separate root partition for `finix` to work under.
 
-# Process
+## Process
 
 The installation process takes place entirely within a terminal, so go ahead and open one if you have not already. Type in `sudo -i` into your command prompt, as most if not all commands going forward require root level access.
 
@@ -49,7 +49,7 @@ hardware.firmware = [ pkgs.linux-firmware ];
 
 Run `mkdir -p /mnt/etc/finix` to create a `finix` directory under `/mnt/etc`, and `cd` into it. The next few steps will differ if you plan to configure `finix` with a flake-based or channel-based workflow, so go ahead and skip to the appropriate section.
 
-## Configuring Flakes
+### Configuring Flakes
 
 The `finix-community/examples` repository contains starter configuration files you can obtain with the following commands:
 
@@ -69,7 +69,7 @@ Edit your `flake.nix` to the following:
 nixosConfigurations.finixos -> nixosConfigurations.<desired profile name>
 ```
 
-## Configuring Channels
+### Configuring Channels
 
 The `finix-community/examples` repository contains starter configuration files you can copy to use as a base for your configuration. To acquire them, run the following command:
 
@@ -87,7 +87,7 @@ nix-channel --add https://github.com/finix-community/finix/archive/refs/heads/ma
 nix-channel --update
 ```
 
-## Making Needed Changes
+### Making Needed Changes
 
 Copy the contents of your edited `/mnt/etc/nixos/hardware-configuration.nix` into the hardware configuration file you cloned from the examples repository.
 
@@ -101,7 +101,7 @@ mkpasswd -m sha-512 '<password>'
 
 where `<password>` is your desired password. Trying to do `nixos-enter 'passwd'` after installation will result in `command passwd not found`, so your user account will be left without a password upon rebooting. This is a known [issue](https://github.com/finix-community/finix/issues/274) with the install process. Once you complete installation, you will want to delete this password hash if you reset your password using `passwd`. While it is *generally* safe to store password hashes like this, it is recommended to incorporate a secrets manager like [`sops`](https://github.com/getsops/sops) into your configuration to manage passwords instead. Instructions on how to do so are beyond the scope of this guide. Feel free to check out [aanderse's configuration](https://github.com/aanderse/finix-config) for an example implementation.
 
-## Installing
+### Installing
 
 Now that everything has been configured, we can run the necessary commands to begin installing.
 
