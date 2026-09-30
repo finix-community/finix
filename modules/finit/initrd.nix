@@ -8,6 +8,47 @@ let
   cfg = config.boot.initrd;
 
   grantAccess = cfg.emergencyAccess == true || lib.isString cfg.emergencyAccess;
+
+  fsPackages = lib.unique (
+    lib.flatten (
+      lib.concatMap (v: lib.optional v.enable v.packages or [ ]) (
+        lib.attrValues config.boot.initrd.supportedFilesystems
+      )
+    )
+  );
+
+  path = pkgs.buildEnv {
+    name = "initrd-path";
+    paths = [
+      pkgs.busybox
+      pkgs.kmod
+      (lib.hiPrio pkgs.util-linux.mount)
+      pkgs.bash
+      config.finit.package
+    ]
+    ++ lib.optionals config.services.mdevd.enable [
+      config.services.mdevd.package
+      pkgs.execline
+      pkgs.util-linux
+    ]
+    ++ lib.optionals config.services.gardendevd.enable [
+      config.services.gardendevd.package
+      pkgs.util-linux
+    ]
+    ++ lib.optionals config.services.udev.enable [ config.services.udev.package ]
+    ++ lib.optionals config.services.mdev.enable [ pkgs.util-linux ]
+    ++ fsPackages;
+    pathsToLink = [
+      "/bin"
+    ];
+
+    ignoreCollisions = true;
+
+    postBuild = ''
+      # Remove wrapped binaries, they shouldn't be accessible via PATH.
+      find $out/bin -maxdepth 1 -name ".*-wrapped" -type l -delete
+    '';
+  };
 in
 {
   options.boot.initrd = {
