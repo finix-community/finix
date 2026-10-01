@@ -59,7 +59,7 @@ in
     };
 
     settings = lib.mkOption {
-      type = format.type;
+      inherit (format) type;
       default = { };
       description = ''
         `postgresql` configuration. See [upstream documentation](https://www.postgresql.org/docs/current/config-setting.html#CONFIG-SETTING-CONFIGURATION-FILE)
@@ -173,7 +173,7 @@ in
 
     users.users.${cfg.user} = {
       name = cfg.user;
-      group = cfg.group;
+      inherit (cfg) group;
       home = cfg.dataDir;
       uid = config.ids.uids.postgres;
     };
