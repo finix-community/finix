@@ -164,7 +164,7 @@ in
 
     users.users = lib.optionalAttrs (cfg.user == "radarr") {
       radarr = {
-        group = cfg.group;
+        inherit (cfg) group;
         home = cfg.dataDir;
         uid = config.ids.uids.radarr;
       };

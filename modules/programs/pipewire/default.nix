@@ -135,7 +135,7 @@ in
     };
 
     settings = lib.mkOption {
-      type = format.type;
+      inherit (format) type;
       default = { };
       example = {
         "context.properties" = {
@@ -181,7 +181,7 @@ in
       };
 
       settings = lib.mkOption {
-        type = format.type;
+        inherit (format) type;
         default = { };
         example = {
           "jack.properties" = {
@@ -199,7 +199,7 @@ in
 
     client = {
       settings = lib.mkOption {
-        type = format.type;
+        inherit (format) type;
         default = { };
         example = {
           "stream.properties" = {
@@ -217,7 +217,7 @@ in
 
     pulse = {
       settings = lib.mkOption {
-        type = format.type;
+        inherit (format) type;
         default = { };
         example = {
           "pulse.rules" = [

@@ -41,7 +41,7 @@ let
   # <cachedir> part. fontconfig still works but is a little slower in
   # looking things up.
   makeCacheConf =
-    { }:
+    _:
     let
       makeCache =
         fontconfig:

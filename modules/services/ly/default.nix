@@ -48,7 +48,7 @@ in
     };
 
     settings = lib.mkOption {
-      type = format.type;
+      inherit (format) type;
       defaultText = lib.literalExpression "See description.";
       description = ''
         `ly` configuration. See [upstream example](https://github.com/fairyglade/ly/blob/master/res/config.ini)
