@@ -88,6 +88,21 @@ in
               type = with types; nullOr str;
               default = null;
             };
+            dlopen = lib.mkOption {
+              type =
+                with types;
+                nullOr (enum [
+                  "required"
+                  "recommended"
+                  "suggested"
+                ]);
+              default = null;
+              example = "recommended";
+              description = ''
+                Also copy the libraries this entry `dlopen()`s at runtime, as
+                declared in its `.note.dlopen` ELF notes.
+              '';
+            };
           };
         });
       description = ''
@@ -134,7 +149,21 @@ in
       name = "initrd-" + config.boot.kernelPackages.kernel.name or "kernel";
       inherit (cfg) compressor compressorArgs prepend;
       contents = map (
-        { source, target }@pair: if target != null then pair else { inherit source; }
+        {
+          source,
+          target,
+          dlopen,
+        }:
+        {
+          inherit source;
+        }
+        // lib.optionalAttrs (target != null) { inherit target; }
+        // lib.optionalAttrs (dlopen != null) {
+          dlopen = {
+            usePriority = dlopen;
+            features = [ ];
+          };
+        }
       ) cfg.contents;
     };
 
