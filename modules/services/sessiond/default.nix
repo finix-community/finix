@@ -80,18 +80,5 @@ in
             LOG_LEVEL = lib.mkDefault "info";
           };
     };
-
-    # XDG_SESSION_ID is commonly used by polkit agents to retrieve
-    # current session id without calling polkit methods and risking
-    # getting stuck in the GIO main loop, this is a problem as polkit
-    # interacts with sessiond through ConsoleKit interface where
-    # sessions are identified by D-Bus object paths, while XDG_SESSION_ID
-    # contains only the raw session ID. As a result, polkit agents may end
-    # up comparing a ConsoleKit session object path against a raw session
-    # ID and fail to match the current session.
-    security.pam.environment.XDG_SESSION_ID = lib.mkForce {
-      default = null;
-      override = null;
-    };
   };
 }
