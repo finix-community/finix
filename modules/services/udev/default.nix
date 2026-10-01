@@ -212,6 +212,13 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = lib.versionAtLeast cfg.package.version "3.2.15";
+        message = "eudev has to be version >= 3.2.15";
+      }
+    ];
+
     # services.udev.packages = [ extraUdevRules extraHwdbFile ];
     services.udev.path = [
       config.programs.coreutils.package
