@@ -21,6 +21,7 @@ let
 in
 {
   imports = [
+    ./facter
     ./console.nix
     ./graphics.nix
     ./i2c.nix
