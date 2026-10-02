@@ -142,7 +142,7 @@ let
       };
     };
 
-  # scriptOpts: `script` convenience option for task and run stanzas only
+  # scriptOpts: `script` convenience option, for every stanza type but tty
   scriptOpts =
     { name, config, ... }:
     {
@@ -345,6 +345,7 @@ in
           baseOpts
           execOpts
           serviceOpts
+          scriptOpts
         ]);
       default = { };
       description = ''

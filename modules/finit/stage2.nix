@@ -101,6 +101,29 @@ let
     };
   };
 
+  # scriptOpts: `script` convenience option, for every stanza type but tty
+  scriptOpts =
+    { name, config, ... }:
+    {
+      options.script = lib.mkOption {
+        type = lib.types.lines;
+        default = "";
+        description = ''
+          Shell commands executed as the main process.
+        '';
+      };
+
+      config = lib.mkIf (config.script != "") {
+        command = lib.mkForce (
+          pkgs.writeScript (lib.replaceStrings [ "@" ] [ "_" ] name) ''
+            #!/bin/sh
+            set -eu
+            ${config.script}
+          ''
+        );
+      };
+    };
+
   # oneshotOpts: options specific to oneshot stanzas (task, run) - not services
   oneshotOpts = {
     imports = [
@@ -879,6 +902,7 @@ in
           execOpts
           serviceOpts
           rlimitOpts
+          scriptOpts
         ]);
       default = { };
       description = ''
@@ -897,6 +921,7 @@ in
           execOpts
           oneshotOpts
           rlimitOpts
+          scriptOpts
         ]);
       default = { };
       description = ''
@@ -914,6 +939,7 @@ in
           execOpts
           oneshotOpts
           runOpts
+          scriptOpts
         ]);
       default = { };
       description = ''
@@ -947,6 +973,7 @@ in
           execOpts
           serviceOpts
           rlimitOpts
+          scriptOpts
         ]);
       default = { };
       description = ''
