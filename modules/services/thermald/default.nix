@@ -59,7 +59,7 @@ in
       conditions = "service/syslogd/ready";
       command = "${lib.getExe cfg.package} " + lib.escapeShellArgs cfg.extraArgs;
       log = true;
-      nohup = true;
+      reload-signal = "none";
     };
   };
 }

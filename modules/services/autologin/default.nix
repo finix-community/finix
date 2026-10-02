@@ -88,7 +88,7 @@ in
       ++ lib.optionals config.services.elogind.enable [ "service/elogind/ready" ]
       ++ lib.optionals config.services.seatd.enable [ "service/seatd/ready" ];
       log = true;
-      nohup = true;
+      reload-signal = "none";
       cgroup.name = "user";
       tty = lib.mkForce "/dev/tty1";
     };

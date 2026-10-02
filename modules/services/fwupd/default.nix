@@ -92,7 +92,7 @@ in
         "${cfg.package}/libexec/fwupd/fwupd --no-timestamp" + lib.optionalString cfg.debug " --verbose";
       conditions = "service/polkit/ready";
       log = true;
-      nohup = true;
+      reload-signal = "none";
       environment = lib.optionalAttrs (config.programs.limine.secureBoot.enable or false) {
         FWUPD_EFIAPPDIR = "${cfg.package}/libexec/fwupd/efi";
       };

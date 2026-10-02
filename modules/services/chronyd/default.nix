@@ -94,7 +94,7 @@ in
       description = "chrony ntp daemon";
       conditions = "service/syslogd/ready";
       command = "${cfg.package}/bin/chronyd " + lib.escapeShellArgs cfg.extraArgs;
-      nohup = true;
+      reload-signal = "none";
       notify = lib.mkIf notifySupport "s6";
 
       "if" = "!int/container";

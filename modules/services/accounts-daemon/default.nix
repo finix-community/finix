@@ -45,7 +45,7 @@ in
       description = "accounts service";
       conditions = "service/dbus/ready";
       command = "${cfg.package}/libexec/accounts-daemon" + lib.optionalString cfg.debug " --debug";
-      nohup = true;
+      reload-signal = "none";
       log = true;
       environment = {
         GVFS_DISABLE_FUSE = 1;

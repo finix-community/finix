@@ -236,7 +236,7 @@ in
       notify = "s6";
       pidfile = "udevd";
       log = true;
-      nohup = true;
+      reload-signal = "none";
       cgroup.name = "system";
     };
 

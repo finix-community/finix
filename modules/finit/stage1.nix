@@ -185,6 +185,19 @@ let
         '';
       };
 
+      reload-signal = lib.mkOption {
+        type = with lib.types; nullOr str;
+        default = null;
+        example = "none";
+        description = ''
+          Signal `finit` sends to reload the service, or `"none"` when the
+          service does not handle `SIGHUP` and must be stopped and started on
+          reconfiguration instead.
+
+          See [upstream documentation](https://finit-project.github.io/config/services/) for details.
+        '';
+      };
+
       restart-max = lib.mkOption {
         type = with lib.types; nullOr (ints.between (-1) 255);
         default = null;
@@ -232,7 +245,11 @@ let
       ++ lib.optional (svc.restart-max or null != null) "restart:${toString svc.restart-max}"
       ++ lib.optional (svc.notify or null != null) "notify:${svc.notify}"
       ++ lib.optional (svc.envfile or null != null) "env:${svc.envfile}"
-      ++ lib.optional (svc.conditions or [ ] != [ ]) "<${lib.concatStringsSep "," svc.conditions}>"
+      ++ lib.optional (svc.conditions or [ ] != [ ] || svc.reload-signal or null == "none") (
+        "<${
+          lib.optionalString (svc.reload-signal or null == "none") "!"
+        }${lib.concatStringsSep "," svc.conditions}>"
+      )
       ++ lib.optional (svc.tty or null != null) "tty:${svc.tty}"
       ++ lib.optional (svc."if" or null != null) (
         "if:" + (if lib.hasInfix "/" svc."if" then "<${svc."if"}>" else svc."if")

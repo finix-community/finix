@@ -72,7 +72,7 @@ in
       description = "fingerprint authentication daemon";
       command = "${cfg.package}/libexec/fprintd --no-timeout";
       conditions = "service/polkit/ready";
-      nohup = true;
+      reload-signal = "none";
       log = true;
 
       # TODO: now we're hijacking `env` and no one else can use it...

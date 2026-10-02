@@ -96,7 +96,7 @@ in
       command = "${lib.getExe cfg.package} --config ${configFile}";
       capabilities = [ "^cap_net_bind_service" ];
       log = true;
-      nohup = true;
+      reload-signal = "none";
     };
 
     users.users = lib.mkIf (cfg.user == "blocky") {

@@ -108,7 +108,7 @@ in
       ];
       command = lib.getExe cfg.package;
       stop-timeout = lib.mkDefault 10;
-      nohup = true;
+      reload-signal = "none";
       log = true;
 
       environment = cfg.settings;

@@ -76,7 +76,7 @@ in
       description = "jellyfin media server";
       conditions = "service/syslogd/ready";
       command = "${lib.getExe cfg.package} --datadir ${cfg.dataDir} --configdir ${cfg.dataDir}/config --cachedir /var/cache/jellyfin --logdir /var/log/jellyfin";
-      nohup = true;
+      reload-signal = "none";
     };
 
     finit.tmpfiles.rules = [

@@ -466,14 +466,26 @@ let
       ];
 
       options = {
+        reload-signal = lib.mkOption {
+          type = with lib.types; nullOr str;
+          default = null;
+          example = "none";
+          description = ''
+            Signal `finit` sends to reload the service, or `"none"` when the
+            service does not handle `SIGHUP` and must be stopped and started on
+            reconfiguration instead.
+
+            See [upstream documentation](https://finit-project.github.io/config/services/) for details.
+          '';
+        };
+
+        # compat for the pre-v5 spelling
         nohup = lib.mkOption {
           type = lib.types.bool;
           default = false;
           description = ''
-            Set when the service does *not* handle `SIGHUP`. `finit` then stops and
-            starts it on reconfiguration instead of reloading it in place.
-
-            See [upstream documentation](https://finit-project.github.io/conditions/) for details.
+            Set when the service does *not* handle `SIGHUP`. Sets
+            `reload-signal = "none"`.
           '';
         };
 
@@ -578,9 +590,12 @@ let
         };
       };
 
-      config = {
-        nohup = lib.mkDefault (config.notify == "s6");
-      };
+      config.reload-signal = lib.mkMerge [
+        (lib.mkIf config.nohup "none")
+
+        # s6 readiness is not re-asserted on SIGHUP
+        (lib.mkIf (config.notify == "s6") (lib.mkDefault "none"))
+      ];
     };
 
   rlimitOpts = {
@@ -665,9 +680,12 @@ let
         ) ",${lib.concatStringsSep "," svc.extra-groups}"
       ))
       # `!` only means "no SIGHUP" for service/sysv; on run/task it means "do not
-      # block bootstrap". `nohup` is declared in serviceOpts, so it never reaches those.
-      ++ (lib.optional (svc.conditions or [ ] != [ ] || svc.nohup or false == true)
-        "<${lib.optionalString (svc.nohup or false) "!"}${lib.concatStringsSep "," svc.conditions}>"
+      # block bootstrap". `reload-signal` is declared in serviceOpts, so it never
+      # reaches those. Only `none` survives a legacy line, cf. `conf.c`.
+      ++ (lib.optional (svc.conditions or [ ] != [ ] || svc.reload-signal or null == "none")
+        "<${
+          lib.optionalString (svc.reload-signal or null == "none") "!"
+        }${lib.concatStringsSep "," svc.conditions}>"
       )
       ++ (lib.optional (svc.manual-start or false) "manual:yes")
       ++ (lib.optional (svc.remain-after-exit or false) "remain:yes")

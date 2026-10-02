@@ -145,7 +145,7 @@ in
       command = "${cfg.package}/bin/dropbear -F " + lib.escapeShellArgs cfg.extraArgs;
       cgroup.name = "user";
       log = true;
-      nohup = true;
+      reload-signal = "none";
 
       # TODO: dropbear doesn't use PAM so we need to keep these variables in sync with security.pam.environment!
       # NOTE: dropbear will only respect PATH and LD_LIBRARY_PATH

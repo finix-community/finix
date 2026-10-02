@@ -283,7 +283,7 @@ in
       description = "nix daemon";
       conditions = "service/syslogd/ready";
       command = "${cfg.package}/bin/nix-daemon --daemon";
-      nohup = true;
+      reload-signal = "none";
 
       environment.CURL_CA_BUNDLE = config.security.pki.caBundle;
 

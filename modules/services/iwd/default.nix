@@ -72,7 +72,7 @@ in
       description = "wireless service";
       conditions = "service/syslogd/ready";
       command = "${cfg.package}/libexec/iwd" + lib.optionalString cfg.debug " -d";
-      nohup = true;
+      reload-signal = "none";
       log = true;
 
       path = lib.optionals config.programs.resolvconf.enable [

@@ -157,7 +157,7 @@ in
         "net/route/default"
       ];
       command = "${lib.getExe cfg.package} -nobrowser -data=${cfg.dataDir}";
-      nohup = true;
+      reload-signal = "none";
       log = true;
       environment = toEnvVars cfg.settings;
     };
