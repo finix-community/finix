@@ -65,14 +65,18 @@ in
     };
 
     finit.ttys = lib.genAttrs cfg.ttys (
-      device:
+      tty:
       {
-        description = "getty on ${device}";
         nowait = true;
       }
-      // lib.optionalAttrs (cfg.package != null) {
-        command = "${lib.getExe cfg.package} ${lib.escapeShellArgs cfg.extraArgs} ${device}";
-      }
+      // (
+        if cfg.package != null then
+          # external getty; it is handed the tty as its last argument
+          { command = "${lib.getExe cfg.package} ${lib.escapeShellArgs cfg.extraArgs} ${tty}"; }
+        else
+          # finit's built-in getty
+          { device = "/dev/${tty}"; }
+      )
     );
   };
 }
