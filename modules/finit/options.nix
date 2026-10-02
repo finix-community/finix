@@ -101,6 +101,11 @@ let
     };
   };
 
+  # initrd stanzas default to the bootstrap runlevel S
+  initrdDefaults = {
+    config.runlevel = lib.mkDefault "S";
+  };
+
   # oneshotOpts: options specific to oneshot stanzas (task, run) - not services
   oneshotOpts = {
     imports = [
@@ -381,12 +386,13 @@ let
         };
 
         restart-max = lib.mkOption {
-          type = lib.types.ints.between (-1) 255;
-          default = 10;
+          type = with lib.types; nullOr (ints.between (-1) 255);
+          default = null;
           description = ''
             The number of times `finit` tries to restart a crashing service. When
             this limit is reached the service is marked crashed and must be restarted
-            manually with `initctl restart NAME`.
+            manually with `initctl restart NAME`. When `null`, finit's built-in
+            default applies.
           '';
         };
 
@@ -671,7 +677,7 @@ let
         (lib.optional (svc.name or null != null) "name:${svc.name}")
       ++ (lib.optional (svc.id or null != null) ":${svc.id}")
       ++ (lib.optional (svc.cgroup or null != null) (cgroupToStr svc.cgroup))
-      ++ (lib.optional (svc.restart-max or false != false) "restart:${toString svc.restart-max}")
+      ++ (lib.optional (svc.restart-max or null != null) "restart:${toString svc.restart-max}")
       ++ (lib.optional (svc.restart-sec or null != null) "restart_sec:${toString svc.restart-sec}")
       ++ (lib.optional (svc.respawn or false) "respawn")
       ++ (lib.optional (svc.user or null != null) (
@@ -900,31 +906,196 @@ in
     };
   };
 
+  options.boot.initrd.finit = {
+    services = lib.mkOption {
+      type =
+        with lib.types;
+        attrsOf (submodule [
+          baseOpts
+          execOpts
+          serviceOpts
+          rlimitOpts
+          initrdDefaults
+        ]);
+      default = { };
+      description = ''
+        An attribute set of services, or daemons, to be monitored and automatically
+        restarted if they exit prematurely.
+
+        See [upstream documentation](https://finit-project.github.io/config/services/) for additional details.
+      '';
+    };
+
+    tasks = lib.mkOption {
+      type =
+        with lib.types;
+        attrsOf (submodule [
+          baseOpts
+          execOpts
+          oneshotOpts
+          rlimitOpts
+          initrdDefaults
+        ]);
+      default = { };
+      description = ''
+        An attribute set of one-shot commands to be executed by `finit`.
+
+        See [upstream documentation](https://finit-project.github.io/config/task-and-run/) for additional details.
+      '';
+    };
+
+    run = lib.mkOption {
+      type =
+        with lib.types;
+        attrsOf (submodule [
+          baseOpts
+          execOpts
+          oneshotOpts
+          runOpts
+          rlimitOpts
+          initrdDefaults
+        ]);
+      default = { };
+      description = ''
+        An attribute set of one-shot commands to run in sequence when entering a runlevel. `run` commands
+        are guaranteed to be completed before running the next command. Useful when serialization is required.
+
+        See [upstream documentation](https://finit-project.github.io/config/task-and-run/) for additional details.
+      '';
+    };
+
+    ttys = lib.mkOption {
+      type =
+        with lib.types;
+        attrsOf (submodule [
+          ./tty.nix
+          initrdDefaults
+        ]);
+      default = { };
+      description = ''
+        An attribute set of TTYs that `finit` should manage.
+
+        See [upstream documentation](https://finit-project.github.io/config/tty/) for additional details.
+      '';
+    };
+
+    sysv = lib.mkOption {
+      type =
+        with lib.types;
+        attrsOf (submodule [
+          baseOpts
+          execOpts
+          serviceOpts
+          rlimitOpts
+          initrdDefaults
+        ]);
+      default = { };
+      description = ''
+        An attribute set of SysV init scripts to be managed by `finit`. These are
+        legacy init scripts that are called with `start`, `stop`, and `restart` arguments.
+
+        See [upstream documentation](https://finit-project.github.io/config/sysv/) for additional details.
+      '';
+    };
+  };
+
   config = {
+    boot.initrd.contents =
+      let
+        serviceTree = lib.mapAttrsToList (name: svc: {
+          target =
+            if svc.id != "%i" then "/etc/finit.d/${name}.conf" else "/etc/finit.d/available/${name}.conf";
+          source = pkgs.writeText "${name}.conf" (mkConfigFile "service" svc);
+        }) (lib.filterAttrs (_: svc: svc.enable) config.boot.initrd.finit.services);
+
+        taskTree = lib.mapAttrsToList (name: svc: {
+          target =
+            if svc.id != "%i" then "/etc/finit.d/${name}.conf" else "/etc/finit.d/available/${name}.conf";
+          source = pkgs.writeText "${name}.conf" (mkConfigFile "task" svc);
+        }) (lib.filterAttrs (_: svc: svc.enable) config.boot.initrd.finit.tasks);
+
+        sysvTree = lib.mapAttrsToList (name: svc: {
+          target =
+            if svc.id != "%i" then "/etc/finit.d/${name}.conf" else "/etc/finit.d/available/${name}.conf";
+          source = pkgs.writeText "${name}.conf" (mkConfigFile "sysv" svc);
+        }) (lib.filterAttrs (_: svc: svc.enable) config.boot.initrd.finit.sysv);
+
+        run = lib.concatMapStringsSep "\n" (serviceStr "run") (
+          lib.sortProperties (
+            lib.concatMap (v: lib.optional v.enable v) (lib.attrValues config.boot.initrd.finit.run)
+          )
+        );
+
+        tty = lib.concatStringsSep "\n" (
+          lib.concatMap (v: lib.optional v.enable (serviceStr "tty" v)) (
+            lib.attrValues config.boot.initrd.finit.ttys
+          )
+        );
+
+        # ship generated scripts and envfiles into the initramfs
+        scriptFiles =
+          lib.concatMap
+            (
+              svc:
+              lib.optional (svc.script or "" != "") { source = svc.command; }
+              ++ lib.optional (svc.environment != { }) { source = svc.envfile; }
+            )
+            (
+              lib.filter (svc: svc.enable) (
+                lib.attrValues config.boot.initrd.finit.services
+                ++ lib.attrValues config.boot.initrd.finit.tasks
+                ++ lib.attrValues config.boot.initrd.finit.run
+                ++ lib.attrValues config.boot.initrd.finit.sysv
+              )
+            );
+        configFile = lib.singleton {
+          target = "/etc/finit.conf";
+          source = pkgs.writeText "finit.conf" ''
+            PATH=/bin:/sbin:/usr/bin:/usr/local/bin
+
+            readiness none
+            runlevel 1
+
+            # ttys
+            ${tty}
+
+            # sequential one-shot commands
+            ${run}
+          '';
+        };
+      in
+      lib.mkMerge [
+        configFile
+        serviceTree
+        taskTree
+        sysvTree
+        scriptFiles
+      ];
+
     environment.etc =
       let
         # NOTE: entries under /etc/finit.d are marked as direct-symlink to avoid service reloads on every finix activation
 
-        serviceTree = lib.mapAttrs' (name: service: {
-          name = if service.id != "%i" then "finit.d/${name}.conf" else "finit.d/available/${name}.conf";
+        serviceTree = lib.mapAttrs' (name: svc: {
+          name = if svc.id != "%i" then "finit.d/${name}.conf" else "finit.d/available/${name}.conf";
 
           value.mode = "direct-symlink";
-          value.text = mkConfigFile "service" service;
-        }) (lib.filterAttrs (_: service: service.enable) cfg.services);
+          value.text = mkConfigFile "service" svc;
+        }) (lib.filterAttrs (_: svc: svc.enable) config.finit.services);
 
-        taskTree = lib.mapAttrs' (name: task: {
-          name = if task.id != "%i" then "finit.d/${name}.conf" else "finit.d/available/${name}.conf";
-
-          value.mode = "direct-symlink";
-          value.text = mkConfigFile "task" task;
-        }) (lib.filterAttrs (_: task: task.enable) cfg.tasks);
-
-        sysvTree = lib.mapAttrs' (name: sysv: {
-          name = if sysv.id != "%i" then "finit.d/${name}.conf" else "finit.d/available/${name}.conf";
+        taskTree = lib.mapAttrs' (name: svc: {
+          name = if svc.id != "%i" then "finit.d/${name}.conf" else "finit.d/available/${name}.conf";
 
           value.mode = "direct-symlink";
-          value.text = mkConfigFile "sysv" sysv;
-        }) (lib.filterAttrs (_: sysv: sysv.enable) cfg.sysv);
+          value.text = mkConfigFile "task" svc;
+        }) (lib.filterAttrs (_: svc: svc.enable) config.finit.tasks);
+
+        sysvTree = lib.mapAttrs' (name: svc: {
+          name = if svc.id != "%i" then "finit.d/${name}.conf" else "finit.d/available/${name}.conf";
+
+          value.mode = "direct-symlink";
+          value.text = mkConfigFile "sysv" svc;
+        }) (lib.filterAttrs (_: svc: svc.enable) config.finit.sysv);
 
         cgroup = lib.concatMapAttrsStringSep "\n" (
           _: cgroupOpts:
@@ -966,10 +1137,10 @@ in
         };
       in
       lib.mkMerge [
+        configFile
         serviceTree
         taskTree
         sysvTree
-        configFile
       ];
   };
 }
