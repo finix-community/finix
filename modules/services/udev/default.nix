@@ -249,7 +249,6 @@ in
           conditions = "service/udevd/ready";
           log = true;
           cgroup.name = "init";
-          extraConfig = "nowarn";
 
           priority = 1;
         };
