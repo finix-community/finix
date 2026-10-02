@@ -57,7 +57,13 @@ in
     system.activation.scripts.users = ''
       mkdir -p /etc
 
-      ${pkgs.userborn}/bin/userborn ${configFile}
+      # userborn logs using the sd-daemon priority-prefix convention
+      # (e.g. "<6>Created group foo"), meant for systemd-journald to pick up. 
+      # finix has none, so route it into syslog instead: logger's
+      # --prio-prefix understands this exact format and turns it into a syslog priority, so the message doesn't just get dropped
+      ${pkgs.userborn}/bin/userborn ${configFile} 2>&1 \
+        | ${pkgs.util-linux}/bin/logger --prio-prefix -t userborn
+      _localstatus=''${PIPESTATUS[0]}
     '';
 
     finit.tmpfiles.rules = [
