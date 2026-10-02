@@ -792,20 +792,18 @@ in
       defaultText = lib.literalExpression "pkgs.finit";
       apply =
         package:
-        (package.override (
-          {
+        let
+          args = lib.intersectAttrs (lib.functionArgs package.override) {
             plymouthSupport = config.programs.plymouth.enable;
             plymouth = config.programs.plymouth.package;
-          }
-          //
-            lib.optionalAttrs (config.services.keventd.enable && package.override.__functionArgs ? udevSupport)
-              {
-                udevSupport = true;
-              }
-        )).overrideAttrs
-          (o: {
-            configureFlags = o.configureFlags ++ [ "--with-plugin-path=${finix-setup}/lib/finit/plugins" ];
-          });
+            udevSupport = config.services.keventd.enable;
+          };
+        in
+        (package.override args).overrideAttrs (o: {
+          configureFlags = o.configureFlags or [ ] ++ [
+            "--with-plugin-path=${finix-setup}/lib/finit/plugins"
+          ];
+        });
       description = ''
         The package to use for `finit`.
 
