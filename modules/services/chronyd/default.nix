@@ -97,8 +97,7 @@ in
       nohup = true;
       notify = lib.mkIf notifySupport "s6";
 
-      # TODO: add "if" to finit.services
-      extraConfig = "if:<!int/container>";
+      "if" = "!int/container";
     };
 
     finit.tmpfiles.rules = [

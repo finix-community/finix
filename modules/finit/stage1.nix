@@ -37,12 +37,15 @@ let
         '';
       };
 
-      extraConfig = lib.mkOption {
-        type = lib.types.separatedString " ";
-        default = "";
-        example = "";
+      "if" = lib.mkOption {
+        type = with lib.types; nullOr nonEmptyStr;
+        default = null;
+        example = "!int/container";
         description = ''
-          A place for `finit` configuration options which have not been added to the `nix` module yet.
+          Only register this stanza when the given condition is asserted, or
+          when the named service exists. Prefix with `!` to invert.
+
+          See [upstream documentation](https://finit-project.github.io/config/services/) for details.
         '';
       };
 
@@ -231,7 +234,9 @@ let
       ++ lib.optional (svc.envfile or null != null) "env:${svc.envfile}"
       ++ lib.optional (svc.conditions or [ ] != [ ]) "<${lib.concatStringsSep "," svc.conditions}>"
       ++ lib.optional (svc.tty or null != null) "tty:${svc.tty}"
-      ++ lib.optional (svc.extraConfig or "" != "") svc.extraConfig
+      ++ lib.optional (svc."if" or null != null) (
+        "if:" + (if lib.hasInfix "/" svc."if" then "<${svc."if"}>" else svc."if")
+      )
       ++ lib.optional (svc.command or null != null) svc.command
       ++
 

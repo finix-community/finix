@@ -136,12 +136,15 @@ let
         '';
       };
 
-      extraConfig = lib.mkOption {
-        type = lib.types.separatedString " ";
-        default = "";
-        example = "";
+      "if" = lib.mkOption {
+        type = with lib.types; nullOr nonEmptyStr;
+        default = null;
+        example = "!int/container";
         description = ''
-          A place for `finit` configuration options which have not been added to the `nix` module yet.
+          Only register this stanza when the given condition is asserted, or
+          when the named service exists. Prefix with `!` to invert.
+
+          See [upstream documentation](https://finit-project.github.io/config/services/) for details.
         '';
       };
 
@@ -688,7 +691,9 @@ let
       ++ (lib.optional (svc.exec-start-ready or null != null) "ready:${svc.exec-start-ready}")
       ++ (lib.optional (svc.exec-cleanup or null != null) "cleanup:${svc.exec-cleanup}")
       ++ (lib.optional (svc.oncrash or null != null) "oncrash:${svc.oncrash}")
-      ++ (lib.optional (svc.extraConfig or "" != "") svc.extraConfig)
+      ++ lib.optional (svc."if" or null != null) (
+        "if:" + (if lib.hasInfix "/" svc."if" then "<${svc."if"}>" else svc."if")
+      )
       ++ (lib.optional (svc.command != null) svc.command)
       ++
 
