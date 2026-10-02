@@ -6,6 +6,7 @@
 }:
 let
   cfg = config.boot.initrd;
+  format = pkgs.formats.keyValue { };
 
   pathOrStr = with lib.types; coercedTo path (x: "${x}") str;
   program =
@@ -75,7 +76,7 @@ let
 
   # execOpts: options shared by executable stanzas (service, task, run) but NOT tty
   execOpts =
-    { name, ... }:
+    { name, config, ... }:
     {
       options = {
         name = lib.mkOption {
@@ -101,6 +102,23 @@ let
           '';
         };
 
+        envfile = lib.mkOption {
+          type = with lib.types; nullOr (either str path);
+          default = null;
+          description = "either a path or a path prefixed with a '-' to indicate a missing file is fine.";
+        };
+
+        environment = lib.mkOption {
+          type = format.type;
+          default = { };
+          example = {
+            TZ = "CET";
+          };
+          description = ''
+            Environment variables passed to this service.
+          '';
+        };
+
         tty = lib.mkOption {
           type = with lib.types; nullOr nonEmptyStr;
           default = null;
@@ -117,6 +135,10 @@ let
       config = {
         name = lib.head (lib.splitString "@" name);
         id = if lib.hasInfix "@" name then lib.elemAt (lib.splitString "@" name) 1 else null;
+
+        envfile = lib.mkIf (config.environment != { }) (
+          format.generate "${config.name}.env" config.environment
+        );
       };
     };
 
@@ -294,6 +316,7 @@ let
       ++ lib.optional (svc.respawn or false) "respawn"
       ++ lib.optional (svc.restart-max or null != null) "restart:${toString svc.restart-max}"
       ++ lib.optional (svc.notify or null != null) "notify:${svc.notify}"
+      ++ lib.optional (svc.envfile or null != null) "env:${svc.envfile}"
       ++ lib.optional (svc.conditions or [ ] != [ ]) "<${lib.concatStringsSep "," svc.conditions}>"
       ++ lib.optional (svc.tty or null != null) "tty:${svc.tty}"
       ++ lib.optional (svc.extraConfig or "" != "") svc.extraConfig
@@ -405,15 +428,19 @@ in
           lib.concatMap (v: lib.optional v.enable (serviceStr "tty" v)) (lib.attrValues cfg.finit.ttys)
         );
 
-        mkScriptFile =
-          _: svc:
-          lib.optional (svc.enable && svc.script != "") {
-            source = svc.command;
-          };
-
-        scriptFiles = lib.concatLists (
-          lib.mapAttrsToList mkScriptFile cfg.finit.tasks ++ lib.mapAttrsToList mkScriptFile cfg.finit.run
-        );
+        # ship generated scripts and envfiles into the initramfs
+        scriptFiles =
+          lib.concatMap
+            (
+              svc:
+              lib.optional (svc.script or "" != "") { source = svc.command; }
+              ++ lib.optional (svc.environment != { }) { source = svc.envfile; }
+            )
+            (
+              lib.filter (svc: svc.enable) (
+                lib.attrValues cfg.finit.services ++ lib.attrValues cfg.finit.tasks ++ lib.attrValues cfg.finit.run
+              )
+            );
       in
       [
         {
