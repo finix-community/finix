@@ -95,6 +95,14 @@ let
           '';
         };
 
+        script = lib.mkOption {
+          type = lib.types.lines;
+          default = "";
+          description = ''
+            Shell commands executed as the main process.
+          '';
+        };
+
         command = lib.mkOption {
           type = program;
           description = ''
@@ -138,31 +146,18 @@ let
         name = lib.head (lib.splitString "@" name);
         id = if lib.hasInfix "@" name then lib.elemAt (lib.splitString "@" name) 1 else null;
 
+        command = lib.mkIf (config.script != "") (
+          lib.mkForce (
+            pkgs.writeScript (lib.replaceStrings [ "@" ] [ "_" ] name) ''
+              #!/bin/sh
+              set -eu
+              ${config.script}
+            ''
+          )
+        );
+
         envfile = lib.mkIf (config.environment != { }) (
           format.generate "${config.name}.env" config.environment
-        );
-      };
-    };
-
-  # scriptOpts: `script` convenience option for task and run stanzas only
-  scriptOpts =
-    { name, config, ... }:
-    {
-      options.script = lib.mkOption {
-        type = lib.types.lines;
-        default = "";
-        description = ''
-          Shell commands executed as the main process.
-        '';
-      };
-
-      config = lib.mkIf (config.script != "") {
-        command = lib.mkForce (
-          pkgs.writeScript (lib.replaceStrings [ "@" ] [ "_" ] name) ''
-            #!/bin/sh
-            set -eu
-            ${config.script}
-          ''
         );
       };
     };
@@ -278,7 +273,6 @@ in
         attrsOf (submodule [
           baseOpts
           execOpts
-          scriptOpts
         ]);
       default = { };
       description = ''
@@ -295,7 +289,6 @@ in
           baseOpts
           execOpts
           runOpts
-          scriptOpts
         ]);
       default = { };
       description = ''

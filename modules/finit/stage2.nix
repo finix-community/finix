@@ -340,6 +340,14 @@ let
           '';
         };
 
+        script = lib.mkOption {
+          type = lib.types.lines;
+          default = "";
+          description = ''
+            Shell commands executed as the main process.
+          '';
+        };
+
         command = lib.mkOption {
           type = program;
           description = ''
@@ -424,6 +432,16 @@ let
               lib.elemAt value 1
             else
               null;
+
+          command = lib.mkIf (config.script != "") (
+            lib.mkForce (
+              pkgs.writeScript (lib.replaceStrings [ "@" ] [ "_" ] name) ''
+                #!/bin/sh
+                set -eu
+                ${config.script}
+              ''
+            )
+          );
 
           environment.PATH = lib.mkIf (config.path != [ ]) (lib.makeBinPath config.path);
           envfile = lib.mkIf (config.environment != { }) (
