@@ -44,9 +44,9 @@ in
     };
 
     conditions = lib.mkOption {
-      type = with lib.types; coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr);
-      apply = lib.unique;
-      default = [ ];
+      type = with lib.types; nullOr (coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr));
+      apply = v: if v == null then null else lib.unique v;
+      default = null;
       example = "service/elogind/ready";
       description = ''
         See [upstream documentation](https://finit-project.github.io/conditions/) for details.

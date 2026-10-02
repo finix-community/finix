@@ -154,9 +154,9 @@ let
       };
 
       conditions = lib.mkOption {
-        type = with lib.types; coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr);
-        apply = lib.unique;
-        default = [ ];
+        type = with lib.types; nullOr (coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr));
+        apply = v: if v == null then null else lib.unique v;
+        default = null;
         example = "pid/syslog";
         description = ''
           See [upstream documentation](https://finit-project.github.io/conditions/) for details.
@@ -260,17 +260,17 @@ let
         };
 
         extra-groups = lib.mkOption {
-          type = with lib.types; listOf str;
-          default = [ ];
+          type = with lib.types; nullOr (listOf str);
+          default = null;
           description = ''
             Explicitly specify supplementary groups, in addition to reading group membership from {file}`/etc/group`.
           '';
         };
 
         capabilities = lib.mkOption {
-          type = with lib.types; coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr);
-          apply = lib.unique;
-          default = [ ];
+          type = with lib.types; nullOr (coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr));
+          apply = v: if v == null then null else lib.unique v;
+          default = null;
           example = [ "^cap_net_bind_service" ];
           description = ''
             Allow services to run with minimal required privileges instead of running as `root`.
@@ -338,9 +338,9 @@ let
         };
 
         conflicts = lib.mkOption {
-          type = with lib.types; coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr);
-          apply = lib.unique;
-          default = [ ];
+          type = with lib.types; nullOr (coercedTo nonEmptyStr lib.singleton (listOf nonEmptyStr));
+          apply = v: if v == null then null else lib.unique v;
+          default = null;
           description = ''
             If you have conflicting services and want to prevent them from starting.
           '';
@@ -620,6 +620,7 @@ let
     };
   };
 
+  nonEmpty = v: v != null && v != [ ];
   logToStr = v: if v == true then "log" else "log:${v}";
   cgroupToStr =
     cgroup:
@@ -683,25 +684,25 @@ let
       ++ (lib.optional (svc.user or null != null) (
         "@${svc.user}"
         + lib.optionalString (svc.group != null) ":${svc.group}"
-        + lib.optionalString (
-          svc.extra-groups or [ ] != [ ]
-        ) ",${lib.concatStringsSep "," svc.extra-groups}"
+        + lib.optionalString (nonEmpty (
+          svc.extra-groups or null
+        )) ",${lib.concatStringsSep "," svc.extra-groups}"
       ))
       # `!` only means "no SIGHUP" for service/sysv; on run/task it means "do not
       # block bootstrap". `reload-signal` is declared in serviceOpts, so it never
       # reaches those. Only `none` survives a legacy line, cf. `conf.c`.
-      ++ (lib.optional (svc.conditions or [ ] != [ ] || svc.reload-signal or null == "none")
-        "<${
-          lib.optionalString (svc.reload-signal or null == "none") "!"
-        }${lib.concatStringsSep "," svc.conditions}>"
+      ++ (lib.optional (nonEmpty (svc.conditions or null) || svc.reload-signal or null == "none")
+        "<${lib.optionalString (svc.reload-signal or null == "none") "!"}${
+          lib.concatStringsSep "," (lib.optionals (nonEmpty (svc.conditions or null)) svc.conditions)
+        }>"
       )
       ++ (lib.optional (svc.manual-start or false) "manual:yes")
       ++ (lib.optional (svc.remain-after-exit or false) "remain:yes")
       ++ (lib.optional (svc.stop-timeout or null != null) "kill:${toString svc.stop-timeout}")
-      ++ (lib.optional (svc.capabilities or [ ] != [ ]) (
+      ++ (lib.optional (nonEmpty (svc.capabilities or null)) (
         "caps:${lib.concatStringsSep "," svc.capabilities}"
       ))
-      ++ (lib.optional (svc.conflicts or [ ] != [ ]) (
+      ++ (lib.optional (nonEmpty (svc.conflicts or null)) (
         "conflict:${lib.concatStringsSep "," svc.conflicts}"
       ))
       ++ (lib.optional (svc.pidfile or null != null) "pid:${svc.pidfile}")
