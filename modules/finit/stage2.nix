@@ -282,7 +282,9 @@ let
         envfile = lib.mkOption {
           type = with lib.types; nullOr (either str path);
           default = null;
-          description = "either a path or a path prefixed with a '-' to indicate a missing file is fine.";
+          description = ''
+            Either a path or a path prefixed with a '-' to indicate a missing file is fine.
+          '';
         };
 
         environment = lib.mkOption {
