@@ -89,7 +89,7 @@ in
       ++ lib.optionals config.services.seatd.enable [ "service/seatd/ready" ];
       log = true;
       reload-signal = "none";
-      cgroup.name = "user";
+      cgroup.user = { };
       tty = lib.mkForce "/dev/tty1";
     };
   };

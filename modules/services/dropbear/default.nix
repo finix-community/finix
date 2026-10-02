@@ -143,7 +143,7 @@ in
         "task/dropbear-keygen/success"
       ];
       command = "${cfg.package}/bin/dropbear -F " + lib.escapeShellArgs cfg.extraArgs;
-      cgroup.name = "user";
+      cgroup.user = { };
       log = true;
       reload-signal = "none";
 

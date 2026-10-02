@@ -57,7 +57,7 @@ in
       conditions = "service/syslogd/ready";
       reload-signal = "none";
 
-      cgroup.settings = {
+      cgroup.system = {
         "memory.max" = "50M";
         "pids.max" = 10;
       };

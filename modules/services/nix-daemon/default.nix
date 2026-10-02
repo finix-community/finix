@@ -288,7 +288,7 @@ in
       environment.CURL_CA_BUNDLE = config.security.pki.caBundle;
 
       # https://github.com/NixOS/nix/blob/81884c36a381737a438ddc5decb658446074d064/misc/systemd/nix-daemon.service.in#L12-L13
-      cgroup.settings."pids.max" = 1048576;
+      cgroup.system."pids.max" = 1048576;
       rlimit.nofile = 1048576;
 
       reload-triggers = [

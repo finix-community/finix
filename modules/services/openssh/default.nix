@@ -327,7 +327,7 @@ in
       ];
       notify = "pid";
       command = "${cfg.package}/bin/sshd -D -f /etc/ssh/sshd_config";
-      cgroup.name = "user";
+      cgroup.user = { };
 
       reload-triggers = [
         config.environment.etc."ssh/sshd_config".source

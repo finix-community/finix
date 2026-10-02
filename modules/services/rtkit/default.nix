@@ -74,7 +74,7 @@ in
       conditions = "service/polkit/ready";
       reload-signal = "none";
 
-      cgroup.name = "root";
+      cgroup.root = { };
     };
 
     users.users.rtkit = {

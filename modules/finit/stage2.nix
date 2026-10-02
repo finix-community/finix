@@ -174,34 +174,32 @@ let
         '';
       };
 
-      cgroup = {
-        name = lib.mkOption {
-          type = lib.types.str;
-          default = "system";
-          description = ''
-            The name of the cgroup to place this process under.
-          '';
+      cgroup = lib.mkOption {
+        type =
+          with lib.types;
+          nullOr (
+            attrsOf (
+              attrsOf (oneOf [
+                bool
+                int
+                str
+              ])
+            )
+          );
+        default = null;
+        example = {
+          system.delegate = true;
         };
+        description = ''
+          The cgroup to place this process under, keyed by the name of a
+          top-level cgroup. `delegate` hands the subtree over to the service
+          itself, for container runtimes like `docker`, `podman`,
+          `systemd-nspawn` or `lxc`; every other key names a `cgroup` file.
 
-        delegate = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
-          description = ''
-            For services that need to create their own child `cgroups` (container runtimes like `docker`, `podman`, `systemd-nspawn`, `lxc`, etc...).
-
-            See [upstream documentation](https://finit-project.github.io/config/cgroups/#cgroup-delegation) for details.
-          '';
-        };
-
-        settings = lib.mkOption {
-          type = format.type;
-          default = { };
-          description = ''
-            The cgroup settings to apply to this process.
-
-            See [kernel documentation](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html) for additional details.
-          '';
-        };
+          See [upstream documentation](https://finit-project.github.io/config/cgroups/#cgroup-delegation)
+          and [kernel documentation](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html)
+          for additional details.
+        '';
       };
     };
   };
@@ -627,12 +625,18 @@ let
         else
           toString value;
 
-      options =
-        lib.optional cgroup.delegate "delegate"
-        ++ lib.mapAttrsToList (k: v: "${k}:${mkValueString v}") cgroup.settings;
+      # `delegate` is a bare token, every other key is `name:value`
+      mkOption =
+        k: v: if k == "delegate" then lib.optional v "delegate" else [ "${k}:${mkValueString v}" ];
+
+      render =
+        name: settings:
+        let
+          options = lib.concatLists (lib.mapAttrsToList mkOption settings);
+        in
+        "cgroup.${name}" + lib.optionalString (options != [ ]) ",${lib.concatStringsSep "," options}";
     in
-    "cgroup.${cgroup.name}"
-    + lib.optionalString (options != [ ]) ",${lib.concatStringsSep "," options}";
+    lib.concatStringsSep " " (lib.mapAttrsToList render cgroup);
 
   rlimitStr =
     let
@@ -666,9 +670,7 @@ let
 
         (lib.optional (svc.name or null != null) "name:${svc.name}")
       ++ (lib.optional (svc.id or null != null) ":${svc.id}")
-      ++ (lib.optional (svc.cgroup.name or null != null || svc.cgroup.settings or { } != { }) (
-        cgroupToStr svc.cgroup
-      ))
+      ++ (lib.optional (svc.cgroup or null != null) (cgroupToStr svc.cgroup))
       ++ (lib.optional (svc.restart-max or false != false) "restart:${toString svc.restart-max}")
       ++ (lib.optional (svc.restart-sec or null != null) "restart_sec:${toString svc.restart-sec}")
       ++ (lib.optional (svc.respawn or false) "respawn")

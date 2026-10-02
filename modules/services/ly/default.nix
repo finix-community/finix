@@ -135,7 +135,7 @@ in
       ++ lib.optionals config.services.seatd.enable [ "service/seatd/ready" ];
       command = "${pkgs.util-linux}/bin/agetty -nil ${cfg.package}/bin/ly tty${toString cfg.tty}";
       reload-signal = "none";
-      cgroup.name = "user";
+      cgroup.user = { };
     };
   };
 }

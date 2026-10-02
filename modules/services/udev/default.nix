@@ -237,7 +237,7 @@ in
       pidfile = "udevd";
       log = true;
       reload-signal = "none";
-      cgroup.name = "system";
+      cgroup.system = { };
     };
 
     # Wait for udevd to start, then trigger coldplug events and module loading.
@@ -248,7 +248,7 @@ in
           runlevel = "S";
           conditions = "service/udevd/ready";
           log = true;
-          cgroup.name = "init";
+          cgroup.init = { };
 
           priority = 1;
         };

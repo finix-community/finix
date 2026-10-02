@@ -193,7 +193,7 @@ in
         + lib.optionalString (cfg.nlgroups != null) " -O ${toString cfg.nlgroups}"
         + lib.optionalString cfg.debug " -v 3";
       runlevel = "S12345789";
-      cgroup.name = "init";
+      cgroup.init = { };
       notify = "s6";
       log = true;
 
@@ -210,7 +210,7 @@ in
       command = "${cfg.package}/bin/mdevd-coldplug" + lib.optionalString cfg.debug " -v 3";
       runlevel = "S";
       conditions = "service/mdevd/ready";
-      cgroup.name = "init";
+      cgroup.init = { };
       log = true;
     };
 
