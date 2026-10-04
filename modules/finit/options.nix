@@ -92,7 +92,7 @@ let
 
   runOpts = {
     options.priority = lib.mkOption {
-      type = lib.types.int;
+      type = lib.types.ints.between 0 9999;
       default = 1000;
       description = ''
         Order of this `run` command in relation to the others. The semantics are the same as
@@ -1021,17 +1021,19 @@ in
           source = pkgs.writeText "${name}.conf" (mkConfigFile "sysv" svc);
         }) (lib.filterAttrs (_: svc: svc.enable) config.boot.initrd.finit.sysv);
 
-        run = lib.concatMapStringsSep "\n" (serviceStr "run") (
-          lib.sortProperties (
-            lib.concatMap (v: lib.optional v.enable v) (lib.attrValues config.boot.initrd.finit.run)
-          )
-        );
+        runTree = lib.mapAttrsToList (name: svc: {
+          target =
+            if svc.id != "%i" then
+              "/etc/finit.d/${lib.fixedWidthNumber 4 svc.priority}-${name}.conf"
+            else
+              "/etc/finit.d/available/${lib.fixedWidthNumber 4 svc.priority}-${name}.conf";
+          source = pkgs.writeText "${name}.conf" (mkConfigFile "run" svc);
+        }) (lib.filterAttrs (_: svc: svc.enable) config.boot.initrd.finit.run);
 
-        tty = lib.concatStringsSep "\n" (
-          lib.concatMap (v: lib.optional v.enable (serviceStr "tty" v)) (
-            lib.attrValues config.boot.initrd.finit.ttys
-          )
-        );
+        ttyTree = lib.mapAttrsToList (name: svc: {
+          target = "/etc/finit.d/${name}.conf";
+          source = pkgs.writeText "${name}.conf" (mkConfigFile "tty" svc);
+        }) (lib.filterAttrs (_: svc: svc.enable) config.boot.initrd.finit.ttys);
 
         # ship generated scripts and envfiles into the initramfs
         scriptFiles =
@@ -1056,12 +1058,6 @@ in
 
             readiness none
             runlevel 1
-
-            # ttys
-            ${tty}
-
-            # sequential one-shot commands
-            ${run}
           '';
         };
       in
@@ -1069,6 +1065,8 @@ in
         configFile
         serviceTree
         taskTree
+        runTree
+        ttyTree
         sysvTree
         scriptFiles
       ];
@@ -1105,14 +1103,23 @@ in
           }"
         ) cfg.cgroups;
 
-        # TODO: split these out into their own files, while preserving order, and add rlimits option
-        run = lib.concatMapStringsSep "\n" (serviceStr "run") (
-          lib.sortProperties (lib.concatMap (v: lib.optional v.enable v) (lib.attrValues config.finit.run))
-        );
+        runTree = lib.mapAttrs' (name: svc: {
+          name =
+            if svc.id != "%i" then
+              "finit.d/${lib.fixedWidthNumber 4 svc.priority}-${name}.conf"
+            else
+              "finit.d/available/${lib.fixedWidthNumber 4 svc.priority}-${name}.conf";
 
-        tty = lib.concatStringsSep "\n" (
-          lib.concatMap (v: lib.optional v.enable (serviceStr "tty" v)) (lib.attrValues config.finit.ttys)
-        );
+          value.mode = "direct-symlink";
+          value.text = mkConfigFile "run" svc;
+        }) (lib.filterAttrs (_: svc: svc.enable) config.finit.run);
+
+        ttyTree = lib.mapAttrs' (name: svc: {
+          name = "finit.d/${name}.conf";
+
+          value.mode = "direct-symlink";
+          value.text = mkConfigFile "tty" svc;
+        }) (lib.filterAttrs (_: svc: svc.enable) config.finit.ttys);
 
         configFile = {
           "finit.conf".mode = "direct-symlink";
@@ -1127,12 +1134,6 @@ in
 
               # rlimits
               ${rlimitStr cfg.rlimits}
-
-              # ttys
-              ${tty}
-
-              # sequential one-shot commands
-              ${run}
             ''
           ];
         };
@@ -1141,6 +1142,8 @@ in
         configFile
         serviceTree
         taskTree
+        runTree
+        ttyTree
         sysvTree
       ];
   };
