@@ -5,37 +5,37 @@
   ...
 }:
 let
-  cfg = config.programs.bash;
+  cfg = config.programs.zsh;
 
-  bashAliases = builtins.concatStringsSep "\n" (
+  zshAliases = builtins.concatStringsSep "\n" (
     lib.mapAttrsToList (k: v: "alias -- ${k}=${lib.escapeShellArg v}") (
       lib.filterAttrs (k: v: v != null) cfg.shellAliases
     )
   );
 in
 {
-  options.programs.bash = {
+  options.programs.zsh = {
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
       description = ''
-        Whether to enable [bash](${pkgs.bash.meta.homepage}) as a system shell.
+        Whether to enable [zsh](${pkgs.zsh.meta.homepage}) as a system shell.
       '';
     };
 
     package = lib.mkOption {
       type = lib.types.shellPackage;
-      default = pkgs.bashInteractive;
-      defaultText = lib.literalExpression "pkgs.bashInteractive";
+      default = pkgs.zsh;
+      defaultText = lib.literalExpression "pkgs.zsh";
       description = ''
-        The package to use for `bash`.
+        The package to use for `zsh`.
       '';
     };
 
     shellAliases = lib.mkOption {
       default = { };
       description = ''
-        Set of aliases for bash shell.
+        Set of aliases for zsh shell.
       '';
       type = with lib.types; attrsOf (nullOr (either str path));
     };
@@ -43,7 +43,7 @@ in
     shellInit = lib.mkOption {
       default = "";
       description = ''
-        Shell script code called during bash shell initialisation.
+        Shell script code called during zsh shell initialisation.
       '';
       type = lib.types.lines;
     };
@@ -51,7 +51,7 @@ in
     loginShellInit = lib.mkOption {
       default = "";
       description = ''
-        Shell script code called during login bash shell initialisation.
+        Shell script code called during login zsh shell initialisation.
       '';
       type = lib.types.lines;
     };
@@ -59,7 +59,7 @@ in
     interactiveShellInit = lib.mkOption {
       default = "";
       description = ''
-        Shell script code called during interactive bash shell initialisation.
+        Shell script code called during interactive zsh shell initialisation.
       '';
       type = lib.types.lines;
     };
@@ -68,21 +68,15 @@ in
       default = ''
         # Provide a nice prompt if the terminal supports it.
         if [ "$TERM" != "dumb" ] || [ -n "$INSIDE_EMACS" ]; then
-          PROMPT_COLOR="1;31m"
-          ((UID)) && PROMPT_COLOR="1;32m"
-          if [ -n "$INSIDE_EMACS" ]; then
-            # Emacs term mode doesn't support xterm title escape sequence (\e]0;)
-            PS1="\n\[\033[$PROMPT_COLOR\][\u@\h:\w]\\$\[\033[0m\] "
+          if (( UID )); then
+            PS1='%F{green}%n@%m:%~%F{-}%#%f '
           else
-            PS1="\n\[\033[$PROMPT_COLOR\][\[\e]0;\u@\h: \w\a\]\u@\h:\w]\\$\[\033[0m\] "
-          fi
-          if test "$TERM" = "xterm"; then
-            PS1="\[\033]2;\h:\u:\w\007\]$PS1"
+            PS1='%F{red}%n@%m:%~%F{-}%#%f '
           fi
         fi
       '';
       description = ''
-        Shell script code used to initialise the bash prompt.
+        Shell script code used to initialise the zsh prompt.
       '';
       type = lib.types.lines;
     };
@@ -90,7 +84,7 @@ in
     promptPluginInit = lib.mkOption {
       default = "";
       description = ''
-        Shell script code used to initialise bash prompt plugins.
+        Shell script code used to initialise zsh prompt plugins.
       '';
       type = lib.types.lines;
       internal = true;
@@ -101,7 +95,7 @@ in
         printf '\e]0;\a'
       '';
       description = ''
-        Shell script code called during login bash shell logout.
+        Shell script code called during login zsh shell logout.
       '';
       type = lib.types.lines;
     };
@@ -109,7 +103,7 @@ in
     extraConfig = lib.mkOption {
       type = lib.types.lines;
       default = "";
-      description = "Extra shell code appended to {file}`/etc/bashrc`.";
+      description = "Extra shell code appended to {file}`/etc/zshrc`.";
     };
   };
 
@@ -120,33 +114,42 @@ in
       "${cfg.package}${cfg.package.shellPath}"
     ];
 
-    environment.etc."profile.d/bash.sh".text = ''
-      if [ -r /etc/profile.d/session-vars.sh ]; then
-        . /etc/profile.d/session-vars.sh
+    environment.etc.zshenv.text = ''
+      # /etc/zshenv: system-wide, read by every zsh (even non-interactive).
+
+      if [ -n "''${__FINIX_ZSHENV_SOURCED:-}" ]; then return; fi
+      __FINIX_ZSHENV_SOURCED=1
+
+      # zsh does not read /etc/profile, so pull in the POSIX drop-ins here.
+      if [ -r /etc/profile ]; then
+        . /etc/profile
       fi
 
       ${cfg.shellInit}
-      ${cfg.loginShellInit}
 
-      if [ -n "''${BASH_VERSION:-}" ] && [ -r /etc/bashrc ]; then
-        . /etc/bashrc
+      if test -f /etc/zshenv.local; then
+        . /etc/zshenv.local
       fi
     '';
 
-    # NOTE: bash in nixpkgs is compiled with `SYS_BASHRC="/etc/bashrc"` which means:
+    environment.etc.zprofile.text = ''
+      # /etc/zprofile: read by login shells only.
+
+      ${cfg.loginShellInit}
+
+      if test -f /etc/zprofile.local; then
+        . /etc/zprofile.local
+      fi
+    '';
+
+    # NOTE: zsh in nixpkgs is compiled with `SYS_ZSHRC="/etc/zshrc"` which means:
     # - interactive non-login shells source this automatically
-    # - login shells get it via the profile.d drop-in above
-    environment.etc.bashrc.text = ''
-      # /etc/bashrc: system-wide configuration for interactive bash shells.
+    # - interactive login shells source it as well, after /etc/zprofile
+    environment.etc.zshrc.text = ''
+      # /etc/zshrc: system-wide configuration for interactive zsh shells.
 
       # We are not always an interactive shell.
-      if [ -n "$PS1" ]; then
-        # Check the window size after every command.
-        shopt -s checkwinsize
-
-        # Disable hashing (i.e. caching) of command lookups.
-        set +h
-
+      if [[ -o interactive ]]; then
         eval "$(${pkgs.coreutils}/bin/dircolors -b)"
 
         alias ls='ls --color=auto'
@@ -154,7 +157,7 @@ in
         ${cfg.promptInit}
         ${cfg.promptPluginInit}
 
-        ${bashAliases}
+        ${zshAliases}
 
         ${cfg.interactiveShellInit}
       fi
@@ -162,14 +165,14 @@ in
       ${cfg.extraConfig}
     '';
 
-    environment.etc.bash_logout.text = ''
-      # /etc/bash_logout: DO NOT EDIT -- this file has been generated automatically.
+    environment.etc.zsh_logout.text = ''
+      # /etc/zsh_logout: DO NOT EDIT -- this file has been generated automatically.
 
       ${cfg.logout}
 
       # Read system-wide modifications.
-      if test -f /etc/bash_logout.local; then
-          . /etc/bash_logout.local
+      if test -f /etc/zsh_logout.local; then
+          . /etc/zsh_logout.local
       fi
     '';
   };
