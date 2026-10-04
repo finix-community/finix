@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  options,
   ...
 }:
 
@@ -177,20 +178,9 @@ in
         '';
       };
 
-      # TODO: share this type with options.providers.scheduler.tasks.*.interval
       interval = lib.mkOption {
-        type = lib.types.str;
+        inherit (options.providers.scheduler.interval) type description example;
         default = "weekly";
-        description = ''
-          The interval at which this task should run its specified {option}`command`. Accepts either a
-          standard {manpage}`crontab(5)` expression or one of: `hourly`, `daily`, `weekly`, `monthly`, or `yearly`.
-
-          If a standard {manpage}`crontab(5)` expression is provided this value will be passed directly
-          to the `scheduler` implementation and execute exactly as specified.
-
-          If one of the special values, `hourly`, `daily`, `monthly`, `weekly`, or `yearly`, is provided then the
-          underlying `scheduler` implementation will use its features to decide when best to run.
-        '';
       };
 
       # TODO: implement persistent and randomized delays in scheduler provider
@@ -202,19 +192,21 @@ in
       inherit (cfg) group;
     };
 
-    services.docker.extraArgs = [
-      "--config-file=/etc/docker/daemon.json"
-    ]
-    ++ lib.optionals cfg.debug [
-      "--debug"
-    ];
+    services.docker.extraArgs =
+      [
+        "--config-file=/etc/docker/daemon.json"
+      ]
+      ++ lib.optionals cfg.debug [
+        "--debug"
+      ];
 
-    services.docker.extraPackages = [
-      config.services.nftables.package or pkgs.nftables
-    ]
-    ++ lib.optionals (
-      cfg.settings.storage-driver == "zfs"
-    ) config.boot.supportedFilesystems.zfs.packages;
+    services.docker.extraPackages =
+      [
+        config.services.nftables.package or pkgs.nftables
+      ]
+      ++ lib.optionals (
+        cfg.settings.storage-driver == "zfs"
+      ) config.boot.supportedFilesystems.zfs.packages;
 
     boot.kernelModules = [
       "bridge"
@@ -248,8 +240,7 @@ in
       exec-reload = "${pkgs.procps}/bin/kill -s HUP $MAINPID";
       path = [
         pkgs.kmod
-      ]
-      ++ cfg.extraPackages;
+      ] ++ cfg.extraPackages;
       log = true;
     };
 
