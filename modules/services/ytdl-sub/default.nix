@@ -146,7 +146,8 @@ in
   config = lib.mkIf cfg.enable {
     services.ytdl-sub.extraArgs = [
       "--config=${configFile}"
-    ] ++ lib.optionals cfg.debug [ "--log-level=debug" ];
+    ]
+    ++ lib.optionals cfg.debug [ "--log-level=debug" ];
 
     finit.tmpfiles.rules =
       lib.optionals (cfg.settings.configuration.persist_logs.logs_directory == "/var/log/ytdl-sub") [
