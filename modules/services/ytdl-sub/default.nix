@@ -65,20 +65,22 @@ in
       '';
     };
 
-    # TODO: share this type with options.providers.scheduler.tasks.*.interval
     interval = lib.mkOption {
-      type = lib.types.str;
-      default = "daily";
+      type = lib.types.enum [
+        "minutely"
+        "hourly"
+        "daily"
+        "monthly"
+        "weekly"
+      ];
       description = ''
-        The interval at which this task should run its specified {option}`command`. Accepts either a
-        standard {manpage}`crontab(5)` expression or one of: `hourly`, `daily`, `weekly`, `monthly`, or `yearly`.
+        The interval at which this task should run.
 
-        If a standard {manpage}`crontab(5)` expression is provided this value will be passed directly
-        to the `scheduler` implementation and execute exactly as specified.
-
-        If one of the special values, `hourly`, `daily`, `monthly`, `weekly`, or `yearly`, is provided then the
-        underlying `scheduler` implementation will use its features to decide when best to run.
+        The underlying {option}`providers.scheduler` implementation uses its scheduling features
+        to choose an appropriate time to run within that interval.
       '';
+
+      default = "daily";
     };
 
     extraArgs = lib.mkOption {
@@ -173,6 +175,9 @@ in
     providers.scheduler.tasks = {
       ytdl-sub = {
         inherit (cfg) interval user;
+        persistent = true;
+        randomDelay = true;
+
         command = "${lib.getExe cfg.package} ${lib.escapeShellArgs cfg.extraArgs} sub ${format.generate "subscriptions.yaml" cfg.subscriptions}";
       };
     };
