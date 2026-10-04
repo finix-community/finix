@@ -38,7 +38,6 @@ in
               ]
             )
           );
-
           options = {
             NH_FLAKE = lib.mkOption {
               type = lib.types.nullOr lib.types.str;
@@ -57,7 +56,7 @@ in
                 `NH_FLAKE` can point to either a folder containing a flake, or to an outside repository containing the flake.
               '';
             };
-            NH_OS_FLAKE = lib.mOption "settings.NH_OS_FLAKE" {
+            NH_OS_FLAKE = lib.mkOption {
               type = lib.types.nullOr lib.types.str;
               default = null;
               description = ''
@@ -65,14 +64,14 @@ in
               '';
               example = "github://aanderse/finix-config";
             };
-            NH_HOME_FLAKE = lib.mkDefaultOption "settings.NH_HOME_FLAKE" {
+            NH_HOME_FLAKE = lib.mkOption {
               type = lib.types.nullOr lib.types.str;
               default = null;
               description = ''
                 Command-specific flake references for home commands respectively. If present it takes precedence over NH_FLAKE.
               '';
             };
-            NH_DARWIN_FLAKE = lib.mkDefaultOption "settings.NH_DARWIN_FLAKE" {
+            NH_DARWIN_FLAKE = lib.mkOption {
               type = lib.types.nullOr lib.types.str;
               default = null;
               description = ''
@@ -131,14 +130,14 @@ in
               '';
             };
           };
-          default = { };
-          description = ''
-            Settings passed to nh as environment variables.
-
-            See [the documentation](https://github.com/nix-community/nh/tree/master/docs#environment-variables) (or `man 1 nh`) for a complete list of
-            available environment variables.
-          '';
         };
+        default = { };
+        description = ''
+          Settings passed to nh as environment variables.
+
+          See [the documentation](https://github.com/nix-community/nh/tree/master/docs#environment-variables) (or `man 1 nh`) for a complete list of
+          available environment variables.
+        '';
       };
 
       clean = {
