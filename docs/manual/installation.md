@@ -1,8 +1,8 @@
 # Installation
 
-This guide contains instructions for installing `finix` from the standard NixOS installation environment and tools, which is currently the recommended way of installing `finix` in lieu of a standalone installation environment.
+This guide contains instructions for installing finix from the standard NixOS installation environment and tools, which is currently the recommended way of installing finix in lieu of a standalone installation environment.
 
-`finix` can be installed and configured using any of channels, pinned inputs, or flakes.
+finix can be installed and configured using any of channels, pinned inputs, or flakes.
 
 ## Acknowledgements
 
@@ -11,7 +11,6 @@ This guide is adapted from the excellent installation guides / configuration [ex
 ## General Notes
 
 - While this guide should be generally applicable to most systems, it is recommended to review the hardware in your system to make sure you install all needed drivers for networking or audio so you do not need to reboot into the NixOS live environment.
-- The NixOS iso **must** be run under UEFI. There is a known issue with legacy booting which prevents the `limine` bootloader from being detected.
 - Some users have reported errors from `efibootmgr` after running the `nixos-install` command. If the returned error code is 8, this can be ignored. It's caused by `efibootmgr` attempting to add non-existent boot entries to `limine`, which fails with return code 8. Existing boot entries are added without issue.
 - If you run into any issues while following these instructions, feel free to open an issue on GitHub or join our [Discord](https://discord.gg/nVe5Zkaypg) server to reach out.
 
@@ -23,13 +22,13 @@ An internet connection is required to complete this installation.
 
 2GB of RAM and 32GB of available storage are recommended at minimum.
 
-If you are looking to convert a pre-existing NixOS installation, it is highly recommended that you create a separate root partition for `finix` to work under.
+If you are looking to convert a pre-existing NixOS installation, it is highly recommended that you create a separate root partition for finix to work under.
 
 ## Process
 
 The installation process takes place entirely within a terminal, so go ahead and open one if you have not already. Type in `sudo -i` into your command prompt, as most if not all commands going forward require root level access.
 
-Follow the instructions from [this guide](https://nixos.wiki/wiki/NixOS_Installation_Guide) up until the "Create NixOS config" section. This is the point where the NixOS and `finix` installation procedures diverge.
+Follow the instructions from [this guide](https://nixos.wiki/wiki/NixOS_Installation_Guide) up until the "Create NixOS config" section. This is the point where the NixOS and finix installation procedures diverge.
 
 Once you have mounted all of your drives, run the command `mkdir -p /mnt/etc/nixos` to create the directory we will work in, and run `cd /mnt/etc/nixos` to enter it.
 
@@ -41,13 +40,20 @@ nixos-generate-config --root /mnt --show-hardware-configuration > ./hardware-con
 
 Open the generated file with your editor and delete the `imports = [ ... ];` statement at the beginning, keeping all of the `boot` options for kernel modules, and removing every option below the `fileSystems` and `swapDevices` options. If you need an example for what this file will look like after the specified modifications, see this [example](https://github.com/finix-community/examples/installations/channels/hardware-configuration.nix). Do NOT copy this file directly, as the listed filesystem configuration will fail to evaluate.
 
+If you would like to enable automatic updates to CPU microcode, add or keep the following options at the bottom of your hardware config:
+
+```nix
+hardware.cpu.amd.updateMicrocode = true; # for amd CPUs
+hardware.cpu.intel.updateMicrocode = true; # for amd CPUs
+```
+
 It is generally recommended to add the following line to `hardware-configuration.nix` to ensure you have the necessary firmware you need for your system.
 
 ```nix
 hardware.firmware = [ pkgs.linux-firmware ];
 ```
 
-Run `mkdir -p /mnt/etc/finix` to create a `finix` directory under `/mnt/etc`, and `cd` into it. The next few steps will differ if you plan to configure `finix` with a flake-based or channel-based workflow, so go ahead and skip to the appropriate section.
+Run `mkdir -p /mnt/etc/finix` to create a finix directory under `/mnt/etc`, and `cd` into it. The next few steps will differ if you plan to configure finix with a flake-based or channel-based workflow, so go ahead and skip to the appropriate section.
 
 ### Configuring Flakes
 
@@ -91,15 +97,17 @@ nix-channel --update
 
 Copy the contents of your edited `/mnt/etc/nixos/hardware-configuration.nix` into the hardware configuration file you cloned from the examples repository.
 
-You can now edit `configuration.nix` to your liking. There are a few preset options for network setup, preferred editors, and sudo/doas. Refer to our [options search](https://finix-community.github.io/finix/options.html) for a comprehensive list. You will need to add any wanted modules into the top level `imports` statement in order for them to be included at evaluation time.
+You can now edit `configuration.nix` to your liking. The default configuration comes preset with options for network setup, preferred editors, and sudo/doas. Refer to our [options search](https://finix-community.github.io/finix/options.html) for a comprehensive list of configuration modules, or our [configuration guide](https://finix-community.github.io/finix/finix-vs-nixos.html) for a more simplified overview of common options. You will need to add any wanted modules into the top level `imports` statement in order for them to be included at evaluation time.
 
-Lastly for configuration, customize the `user.user.<USERNAME>` entry to match your preferences. `<USERNAME>` should be changed to your username, `password` is a `sha-512` hash of your password. This can be generated with:
+It is generally recommended to add the `mkpasswd` package into your packages list, if it is not there already. Ommitting this will prevent you from being able to set up a password with `nixos-enter 'passwd'` for your root and user account without manually specifying a password hash for your configured user.
+
+Lastly for configuration, customize the `user.user.<USERNAME>` entry to match your preferences. `<USERNAME>` should be changed to your username, and `password` is a `sha-512` hash of your password. This can be generated with:
 
 ```bash
 mkpasswd -m sha-512 '<password>'
 ```
 
-where `<password>` is your desired password. Trying to do `nixos-enter 'passwd'` after installation will result in `command passwd not found`, so your user account will be left without a password upon rebooting. This is a known [issue](https://github.com/finix-community/finix/issues/274) with the install process. Once you complete installation, you will want to delete this password hash if you reset your password using `passwd`. While it is *generally* safe to store password hashes like this, it is recommended to incorporate a secrets manager like [`sops`](https://github.com/getsops/sops) into your configuration to manage passwords instead. Instructions on how to do so are beyond the scope of this guide. Feel free to check out [aanderse's configuration](https://github.com/aanderse/finix-config) for an example implementation.
+where `<password>` is your desired password. Once you complete installation, you will want to delete this password hash if you reset your password using `passwd`. While it is *generally* safe to store password hashes like this, it is recommended to incorporate a secrets manager like [`sops`](https://github.com/getsops/sops) into your configuration to manage passwords instead. Instructions on how to do so are beyond the scope of this guide. Feel free to check out [aanderse's configuration](https://github.com/aanderse/finix-config) for an example implementation.
 
 ### Installing
 
@@ -117,7 +125,7 @@ sudo nixos-install --root /mnt --flake /path/to/flake/directory#<desired profile
 nixos-install --root /mnt --file /mnt/etc/finix/system.nix --channel /nix/var/nix/profiles/per-user/root/channels
 ```
 
-Once installation has completed, reboot your system and remove the flash drive with the NixOS live environment. Welcome to `finix`!
+Once installation has completed, reboot your system and remove the flash drive with the NixOS live environment. Welcome to finix!
 
 ## Post installation notes
 
@@ -130,4 +138,4 @@ cp /etc/finix ~/.config/finix
 sudo chown username:users ~/.config/finix -r
 ```
 
-For more information on configuring your system, consult [Configuring](./configuring.md).
+For more information on configuring your system, see [Configuring](./configuring.md).
