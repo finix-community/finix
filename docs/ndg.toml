@@ -1,19 +1,9 @@
 footer_text = 'Generated with <a href="https://ndg.feel-co.org">ndg</a> &middot; <a href="https://github.com/finix-community/finix">finix repository</a> &middot; <a href="https://github.com/finix-community/community-modules">community modules</a>'
 jobs = 4
 
-# Enable features
 highlight_code = true
 generate_anchors = true
 
-# Code block handling
-# tab_style = "normalize"  # converts tabs to spaces
-# syntax_queries_path = "queries" # expects '<lang>/{highlights,injections,locals}.scm'
-
-# Custom assets
-# stylesheet_paths = ["custom.css"]
-# script_paths = ["analytics.js"]
-
-# Git integration
 revision = "main"
 
 [markdown]
@@ -48,11 +38,6 @@ position = 3
 new_title = "Configuration"
 path = "configuring.md"
 position = 4
-
-# Search configuration
-# [search]
-# enable = true
-# max_heading_level = 3
 
 # SEO metadata
 [meta.opengraph]
