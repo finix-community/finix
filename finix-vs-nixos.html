@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Comparison of finix and NixOS</title>
+    <title>Comparing finix and NixOS</title>
     <meta name="description" content="finix - a nix-based operating system" />
     <meta name="keywords" content="documentation,nix,finix" /> <meta property="og:description" content="finix - a nix-based operating system" />
     <meta property="og:title" content="finix" />
@@ -100,11 +100,11 @@
             <summary>Contents</summary>
             <div class="sidebar-section-content">
               <ul class="toc-list">
-                <li><a href="#comparison-of-finix-and-nixos">Comparison of finix and NixOS</a>
+                <li><a href="#comparing-finix-and-nixos">Comparing finix and NixOS</a>
 <ul><li><a href="#init-system">Init system</a>
 <li><a href="#modules">Modules</a>
 <ul><li><a href="#default-imports">Default imports</a>
-</ul><li><a href="#providers-namespace">providers namespace</a>
+</ul><li><a href="#providers">providers</a>
 <li><a href="#hackability">Hackability</a>
 </li></ul></li>
               </ul>
@@ -112,27 +112,30 @@
           </details>
         </nav>
 
-        <main class="content"><html><head></head><body><h1 id="comparison-of-finix-and-nixos">Comparison of <code>finix</code> and NixOS</h1>
-<p>On the surface, <code>finix</code> and NixOS present a lot of similarities: <code>finix</code> utilizes the module system of <code>nix</code> in a very similar fashion to NixOS. It has identical syntax for enabling programs and services as NixOS. However, there are several key differences that distinguishes <code>finix</code> from NixOS.</p>
+        <main class="content"><html><head></head><body><h1 id="comparing-finix-and-nixos">Comparing finix and NixOS</h1>
+<p>This page serves as a high level overview for the differences between finix and NixOS, and it is primarily targeted towards current NixOS users or those who are already familiar with the NixOS ecosystem.</p>
 <h2 id="init-system">Init system</h2>
-<p>As mentioned in the introduction, <code>finix</code> utilizes <a href="https://github.com/finit-project/finit"><code>finit</code></a> as its primary init system and service supervisor in place of <code>systemd</code>. Explaining the full breadth of <code>finit's</code> features is outside the scope of this document, but there are a few advantages of using <code>finit</code> over <code>systemd</code> as PID 1.</p>
-<ol>
-<li>Great balance of capability and ambition. <code>finit</code> does not want nor attempt to do everything that <code>systemd</code> does; however, the capabilities it does have make <code>finit</code> a viable <code>systemd</code> alternative fit for a leaner Linux distribution that prefers to decouple features from the init system and delegate them to other programs.</li>
-<li>No complex <code>switch-to-configuration</code> logic. <code>finit</code> automatically handles the starting and stopping of services without needing a complicated set of <code>switch-to-configuration</code> logic to handle the amount of equivalent <code>systemd</code> services needed to ensure a clean switch.</li>
-</ol>
-<p>Defining a service in <code>finit</code> is similar to defining a <code>systemd</code> unit under NixOS.</p>
+<p>Finix utilizes <a href="https://github.com/finit-project/finit">Finit</a> as its primary init system and service supervisor as a simple but capable alternative to systemd. It is primarily designed for use in small or embedded Linux systems, but it is fully capable on desktop and server devices with finix. Explaining Finit's full feature set is outside the scope of this document, but here are a few of the highlights:</p>
+<ul>
+<li>Simple but powerful condition system for handing dependencies</li>
+<li>Built-in getty</li>
+<li>Small tmpfiles implementation</li>
+<li>Readiness notification with support for systemd's <code>sd_notify()</code></li>
+</ul>
+<p>Finit does not attempt nor want to implement the same level of functionality that systemd offers, but it implements <em>just enough</em> systemd-like functionality to allow most modern day Linux software to work with little to no issue without requiring much configuration. A benefit to using Finit for a nix based system is that it handles starting and stopping services exceptionally well without the need for complicated <code>switch-to-configuration</code> logic to handle the amount of equivalent <code>systemd</code> services needed to ensure a clean generation switch.</p>
+<p>In finix, defining a service with Finit is similar to defining a systemd unit under NixOS.</p>
 <pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(232,102,113);">config</span><span style="color:rgb(132,139,152);">,</span>&nbsp;<span style="color:rgb(232,102,113);">pkgs</span><span style="color:rgb(132,139,152);">,</span>&nbsp;<span style="color:rgb(232,102,113);">lib</span><span style="color:rgb(132,139,152);">,</span>&nbsp;<span style="color:rgb(232,102,113);">...</span>&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">:</span><br><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">finit</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">network-manager</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">description</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">network&nbsp;manager&nbsp;service</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">conditions</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">service/dbus/ready</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">command</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(232,102,113);">${</span><span style="color:rgb(171,178,191);">cfg</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">package</span><span style="color:rgb(232,102,113);">}</span><span style="color:rgb(152,195,121);">/bin/NetworkManager&nbsp;-n</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><br></code></pre>
-<p>A significant difference between <code>finit</code> and <code>systemd</code> is a lack of user-level service management, at least for the current packaged version of <code>finit</code> (v5.0-rc1 at the time of writing). However, there is a module set under <a href="https://github.com/finix-community/community-modules"><code>community-modules</code></a> that allows users to define and enable user-level services utilizing the <code>dinit</code> service supervisor, which may serve as a substitution for this functionality. See <a href="./configuring.html">Configuration</a> for more details.</p>
+<p>Finit does not yet have support for user-level service management, but progress towards this feature is being worked on and is scheduled for the next major version of Finit.</p>
 <h2 id="modules">Modules</h2>
-<p>At a baseline, NixOS and all of its modules are automatically imported into the global configuration attribute set by default. A benefit to this approach is that the end user does not need to manually maintain a list of imports for modules they would like to enable, but it comes at a significant cost to evaluation times. <code>finix</code> opts for a set of minimal defaults, shifting the responsibility over to the end user to maintain their own import list, or to configure and enable one of the available profiles.</p>
-<p>Here is an example of what that looks like in practice.</p>
-<p>Say a user would like to enable the service module for <code>chrony</code>, a network time synchronization daemon. Under NixOS, it would be as simple as adding this line to your <code>configuration.nix</code>:</p>
+<p>By default, NixOS and all of its modules are automatically imported into the global configuration attribute set. A benefit to this approach is that users do not need to maintain a list of module imports, but this comes at a significant cost to evaluation times. Finix opts for a minimal set of defaults, requiring the end user to either maintain their own import list or to configure and enable a configuration profile. As a result, finix evaluation times are much faster in comparison to similarly configured NixOS systems.</p>
+<p>Finix exposes modules not imported by default through the <code>modules</code> parameter. It is the equivalent to NixOS's builtin <code>modulesPath</code> attribute. Here is a functional example to illustrate the difference between enabling and configuring a NixOS module compared to a finix module.</p>
+<p>Say a user would like to enable the service module for <code>chrony</code>, a network time synchronization daemon. Under NixOS, it would be as simple as adding this line to the system configuration:</p>
 <pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(232,102,113);">config</span><span style="color:rgb(132,139,152);">,</span>&nbsp;<span style="color:rgb(232,102,113);">...</span>&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">:</span><br><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;...</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">chrony</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">enable</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">true</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;...</span><br><span style="color:rgb(132,139,152);">}</span><br></code></pre>
-<p>If a user wanted to do the same on <code>finix</code>, they would first need to add an <code>imports</code> statement, along with an extra function input at the top of their configuration file. Like so:</p>
+<p>If a user wanted to do the same on finix, they would need to add the <code>modules</code> input and explicitly import the module they need into scope. Like so:</p>
 <pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(232,102,113);">modules</span><span style="color:rgb(132,139,152);">,</span>&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;finix&nbsp;equivalent&nbsp;of&nbsp;nixos&nbsp;modulesPath</span><br>&nbsp;&nbsp;<span style="color:rgb(232,102,113);">config</span><span style="color:rgb(132,139,152);">,</span>&nbsp;<br>&nbsp;&nbsp;<span style="color:rgb(232,102,113);">...</span><br><span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">:</span><br><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">imports</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(171,178,191);">modules</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">chrony</span>&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">chrony</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">enable</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">true</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><br></code></pre>
-<p>There are many modules in <code>finix</code> that have been renamed from their NixOS counterparts -- be sure to check the <a href="https://finix-community.github.io/finix/options.html">options search</a> for a comprehensive list.</p>
+<p>There are many modules in finix that have been renamed from their NixOS counterparts. Finix does not introduce any additional subcategories for program or service modules beyond the initial <code>programs.*</code> or <code>services.*</code>, and some software has been switched from the <code>programs</code> attribute set to <code>services</code> (and vice versa) due to how they are configured for finix. PipeWire is a notable example, as its configuration lives under <code>programs.pipewire</code> instead of <code>services.pipewire</code>. Consult the <a href="https://finix-community.github.io/finix/options.html">options search</a> for a comprehensive list of all available configuration modules for finix.</p>
 <h3 id="default-imports">Default imports</h3>
-<p>The following is a list of default program and service modules that are available in the global configuration without requiring a manual import.</p>
+<p>The following is a list of default program and service modules that are available in the global scope without requiring a manual import.</p>
 <h4 id="modules-programs"><code>modules/programs</code></h4>
 <pre><code>coreutils
 modprobe
@@ -151,28 +154,29 @@ seatd
 sessiond
 udev
 </code></pre>
-<h2 id="providers-namespace"><code>providers</code> namespace</h2>
-<p>This section will only be a brief introduction into the <code>providers</code> abstraction, which is a simple implementation of an idea proposed by <a href="https://github.com/ibizaman">@ibizaman</a> for decoupling modules.</p>
-<p>The <code>providers</code> abstraction is a simple but powerful tool to allow different modules to reference each other without directly importing them. It also allows for generic implementations of different services that provide similar functionality.</p>
-<p>As an example, the <code>providers.scheduler</code> abstraction provides a generic interface for three variations of the <code>cron</code> scheduling service:</p>
+<h2 id="providers"><code>providers</code></h2>
+<p>This section is a brief introduction into the <code>providers</code> abstraction, a simple implementation of an idea proposed by <a href="https://github.com/ibizaman">@ibizaman</a> for decoupling modules.</p>
+<p>The <code>providers</code> abstraction is a simple but powerful tool to allow modules to reference each other without directly interfacing with them. It accomplishes this by <em>providing</em> generic interfaces for services or programs that implement similar functionality.</p>
+<p>As an example, the <code>providers.scheduler</code> abstraction provides a generic interface for three scheduling services:</p>
 <ul>
 <li><code>cron</code></li>
 <li><code>anacron</code></li>
 <li><code>fcron</code></li>
 </ul>
-<p>If a module author requires a scheduled task to be written, they can define one using the generic <code>providers.scheduler</code> without needing to import any of these services modules.</p>
+<p>If a module needs to configure a scheduled task, they can do so using the <code>providers.scheduler.tasks</code> option without needing to directly reference any specific scheduler.</p>
 <pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">providers</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">scheduler</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">tasks</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">logrotate</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">interval</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">daily</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">command</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(232,102,113);">${</span><span style="color:rgb(171,178,191);">cfg</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">package</span><span style="color:rgb(232,102,113);">}</span><span style="color:rgb(152,195,121);">/bin/logrotate&nbsp;</span><span style="color:rgb(232,102,113);">${</span><span style="color:rgb(171,178,191);">configFile</span><span style="color:rgb(232,102,113);">}</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
-<p>On evaluation, the scheduler provider will execute logic that generates a corresponding <code>cron</code> configuration file for each of the three previously mentioned scheduler implementations, provided that a user has a scheduler enabled with the following:</p>
+<p>On evaluation, the scheduler provider will execute logic that generates a configuration file for each of the three mentioned schedulers, provided that a user has a scheduler service enabled with the following:</p>
 <pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(232,102,113);">modules</span><span style="color:rgb(132,139,152);">,</span>&nbsp;<span style="color:rgb(232,102,113);">config</span><span style="color:rgb(132,139,152);">,</span>&nbsp;<span style="color:rgb(232,102,113);">...</span>&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">:</span><br><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">imports</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(171,178,191);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">anacron</span>&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">anacron</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">enable</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">true</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><br></code></pre>
-<p>In summary, instead of a module directly asking for <code>cron</code> specifically, it can simply ask for a scheduler, and whichever scheduler the user has enabled in their configuration will be what is used to execute the scheduled task. Currently, there are provider abstractions for privilege escalation (<code>providers.privileges</code>), firewalls (<code>providers.firewall</code>), bootloaders (<code>providers.bootloader</code>), and resume-and-suspend functionality (<code>providers.resume-and-suspend</code>). See the providers section of <a href="./configuring.html">Configuring</a> for more details.</p>
+<p>If a user does not have a scheduler service enabled, any scheduled task defined with <code>providers.scheduler.tasks</code> will simply be ignored.</p>
+<p>Currently, there are provider abstractions for privilege escalation (<code>providers.privileges</code>), firewalls (<code>providers.firewall</code>), bootloaders (<code>providers.bootloader</code>), and resume-and-suspend functionality (<code>providers.resume-and-suspend</code>). See the providers section of <a href="./configuring.html">Configuring</a> for more details.</p>
 <h2 id="hackability">Hackability</h2>
-<p><code>finix</code> features a far leaner module set than NixOS -- partly due to its age, and also because <code>finix</code> chooses to ship modules that are as unopinionated and decoupled from one another as possible. Because of this, <code>finix</code> is an excellent way for users and developers to experiment with far more aspects of their system then they would be able to with NixOS without worrying about breaking an unrelated module. Many <code>finix</code> users have been able to successfully experiment with <code>finix</code> and yield the following results:</p>
+<p>Finix features a far leaner module set than NixOS, which is partially due to its age in comparison to NixOS. However, the modules that do exist are written to be as unopinionated and decoupled from one another as possible. Because of this, finix is an excellent way for users and developers to experiment with far more aspects of their system then they would be able to with NixOS without worrying about unexpected breakage. Many finix users have been able to successfully experiment with finix with the following results:</p>
 <ul>
 <li>sub 1 second boot times</li>
 <li>running a fully <code>musl-libc</code> based desktop</li>
 <li>systems with no stage 1</li>
 <li>systems with no stage 2</li>
-<li>installing <code>finix</code> onto <a href="https://github.com/murdoa/finix-rk3506">embedded boards</a></li>
+<li>installing finix onto <a href="https://github.com/murdoa/finix-rk3506">embedded boards</a></li>
 </ul>
 </body></html></main>
       </div>
@@ -181,11 +185,11 @@ udev
         <nav class="page-toc-nav">
           <h3>On this page</h3>
           <ul class="page-toc-list">
-            <li><a href="#comparison-of-finix-and-nixos">Comparison of finix and NixOS</a>
+            <li><a href="#comparing-finix-and-nixos">Comparing finix and NixOS</a>
 <ul><li><a href="#init-system">Init system</a>
 <li><a href="#modules">Modules</a>
 <ul><li><a href="#default-imports">Default imports</a>
-</ul><li><a href="#providers-namespace">providers namespace</a>
+</ul><li><a href="#providers">providers</a>
 <li><a href="#hackability">Hackability</a>
 </li></ul></li>
           </ul>
