@@ -202,21 +202,19 @@ in
       inherit (cfg) group;
     };
 
-    services.docker.extraArgs =
-      [
-        "--config-file=/etc/docker/daemon.json"
-      ]
-      ++ lib.optionals cfg.debug [
-        "--debug"
-      ];
+    services.docker.extraArgs = [
+      "--config-file=/etc/docker/daemon.json"
+    ]
+    ++ lib.optionals cfg.debug [
+      "--debug"
+    ];
 
-    services.docker.extraPackages =
-      [
-        config.services.nftables.package or pkgs.nftables
-      ]
-      ++ lib.optionals (
-        cfg.settings.storage-driver == "zfs"
-      ) config.boot.supportedFilesystems.zfs.packages;
+    services.docker.extraPackages = [
+      config.services.nftables.package or pkgs.nftables
+    ]
+    ++ lib.optionals (
+      cfg.settings.storage-driver == "zfs"
+    ) config.boot.supportedFilesystems.zfs.packages;
 
     boot.kernelModules = [
       "bridge"
@@ -250,7 +248,8 @@ in
       exec-reload = "${pkgs.procps}/bin/kill -s HUP $MAINPID";
       path = [
         pkgs.kmod
-      ] ++ cfg.extraPackages;
+      ]
+      ++ cfg.extraPackages;
       log = true;
     };
 
