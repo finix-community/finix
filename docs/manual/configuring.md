@@ -1,6 +1,6 @@
 # Configuring
 
-This page serves as a high level overview for configuring a finix system. For an exhaustive list of configuration options, see the [options search](https://finix-community.github.io/finix/options.html).
+This page serves as a high level overview for configuring a finix system. As such, not all configuration options are covered for each section going over specific modules. For an exhaustive list of configuration options, see the [options search](https://finix-community.github.io/finix/options.html).
 
 > [!NOTE]
 > This page is a stub. If you have something you would like to contribute, feel free to open a PR and add any documentation for configuring services, programs, or low level system components.
@@ -27,6 +27,7 @@ This program is not imported by default. To enable it, add the following to your
 { config, modules, ... }:
 {
   imports = [ modules.limine ];
+
   programs.limine.enable = true;
 }
 ```
@@ -235,6 +236,7 @@ This service is not imported by default. To import and enable it, add the follow
 { config, modules, ... }:
 {
   imports = [ modules.getty ];
+
   services.getty.enable = true;
 }
 ```
@@ -279,19 +281,106 @@ Any one of these shells listed above may be imported and enabled with the follow
 
 If a user does not have any shell package specified under `user.defaultUserShell`, `pkgs.bashInteractive` will be used as the default login shell for any users created with `isNormalUser = true`.
 
-### Networking
+### Network management
 
-hostname, hostId, hosts
+#### Configuring hostname, hostId, and `/etc/hosts`
 
-just the basics to start
+Configuring network options such as the system hostname, hostId, and `/etc/hosts` can be done with the following: 
 
-- ifupdown-ng
+```nix
+networking.hostname = "finixbox";
+networking.hostId = "4e98920d";
+networking.hosts = {
+  "127.0.0.1" = [ "foo.bar.baz" ];
+  "192.168.0.2" = [ "fileserver.local" "nameserver.local" ];
+};
+```
+
+#### ifupdown-ng
+
+Finix provides a module for [ifupdown-ng](https://github.com/ifupdown-ng/ifupdown-ng), a network device manager that is largely compatible with Debian's ifupdown, BusyBox's ifupdown, and Cumulus Networks' ifupdown2.
+
+To import and enable this program, add the following to your system configuration: 
+
+```nix
+{ modules, ... }:
+{
+  imports = [
+    modules.ifupdown-ng
+  ];
+
+  programs.ifupdown-ng.enable = true;
+}
+```
+
+**Configuring**
+
+Ifupdown-ng can be configured to manage any network interface on your machine. It can assign static IP addresses, specify default gateways, specify network interface dependency chains, and declare any desired executors. Finix exposes the following options to handle these use cases, all under the `programs.ifupdown-ng.*` attribute set: 
+
+- `auto` - Designate interfaces to be automatically configured by the system.
+- `extraArgs` - Extra command line arguments to pass to ifupdown-ng -- see [ifupdown-ng(8)](https://manpages.debian.org/testing/ifupdown-ng/ifup-ng.8) for details.
+- `iface.<name>.address` - Specify the ipv4 or ipv6 that `iface.<name>` should use.
+- `iface.<name>.gateway` - Configure the gateway address that `iface.<name>` should use.
+- `iface.<name>.requires` - Specify any network interfaces that must be brought up before `iface.<name>`.
+- `iface.<name>.use` - Specifies which [executor](https://manpages.debian.org/unstable/ifupdown-ng/interfaces.5#EXECUTORS) to use.
+
+Finix also exposes a generic `settings` attribute to allow for custom configurations outside of these options. See [upstream documentation](https://manpages.debian.org/unstable/ifupdown-ng/ifupdown-ng.conf.5) for more details.
+
+An example interface configuration may consist of the following: 
+
+```nix
+programs.ifupdown-ng.iface = {
+  eth0 = {
+    address = [ "203.0.113.2/24" "2001:db8::2/64" ];
+    gateway = "203.0.113.1";
+    use = "dhcp";
+  };
+  br0 = {
+    address = "10.0.0.1/24";
+  };
+};
+```
+
+#### Network daemons
+
+Finix offers three network management daemons:
+
 - NetworkManager
 - iwd
 - dhcpcd
-- nftables
 
-TODO
+NetworkManager is confirmed to work with eudev and gardendevd. If you are using seatd instead of elogind, your user will need to be a part of the `networkmanager` group in order to configure network interfaces as a normal user. Iwd and dhcpcd are both device manager agnostic and do not require any specific session manager to function. 
+
+To import and enable any of these services, add the following to your configuration:
+
+```nix
+{ modules, ... }: 
+{
+  imports = [
+    modules.networkmanager 
+    modules.iwd 
+    modules.dhcpcd 
+  ];
+
+  services.<network daemon>.enable = true;
+}
+```
+
+NetworkManager and dhcpcd will conflict if both are enabled at the same time. However, iwd and dhcpcd may be enabled at the same time with zero negative side effects.
+
+**Configuring NetworkManager**
+
+NetworkManager configuration settings may be added by using the `settings` attribute. See [upstream documentation](https://man.archlinux.org/man/NetworkManager.conf.5) for details.
+
+**Configuring iwd**
+
+Iwd configuration settings may be added by using the `settings` attribute. See [upstream documentation](https://man.archlinux.org/man/iwd.config.5) for details.
+
+**Configuring dhcpcd**
+
+#### Firewalls
+
+Currently, finix only ships nftables as a firewall implementation. 
 
 ### System time
 
