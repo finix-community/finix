@@ -332,7 +332,9 @@ let
         };
 
         log = lib.mkOption {
-          type = with lib.types; nullOr (coercedTo bool (_: { }) (attrsOf format.type));
+          # `log = true` is the pre-v5 spelling of an empty block; `false` must
+          # coerce to null, or it would read back as "enabled with defaults"
+          type = with lib.types; coercedTo bool (v: if v then { } else null) (nullOr (attrsOf format.type));
           default = null;
           example = {
             file = "/dev/console";
