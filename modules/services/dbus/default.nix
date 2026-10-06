@@ -129,7 +129,7 @@ in
       cgroup.system = { };
       log = mkIf cfg.debug { };
 
-      exec-start-pre = pkgs.writeShellScript "dbus-pre.sh" "${cfg.package}/bin/dbus-uuidgen --ensure";
+      exec-start-pre = "${cfg.package}/bin/dbus-uuidgen --ensure";
       environment = {
         DBUS_VERBOSE = lib.mkIf cfg.debug 1;
       };

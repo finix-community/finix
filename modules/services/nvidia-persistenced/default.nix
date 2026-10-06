@@ -93,7 +93,7 @@ in
       command = "${lib.getExe cfg.package} " + lib.escapeShellArgs cfg.extraArgs;
       type = "forking";
       pidfile = "${runtimeDir}/nvidia-persistenced.pid";
-      exec-stop-post = pkgs.writeShellScript "nvidia-persistenced-post.sh" "${lib.getExe pkgs.findutils} ${runtimeDir} -mindepth 1 -delete";
+      exec-stop-post = "${lib.getExe pkgs.findutils} ${runtimeDir} -mindepth 1 -delete";
       restart-max = -1;
     };
 
