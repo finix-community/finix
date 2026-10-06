@@ -26,7 +26,13 @@ in
     };
     package = lib.mkOption {
       type = types.package;
-      default = pkgs.cosmic-session;
+      default = pkgs.cosmic-session.override (
+        lib.optionalAttrs (!config.services.elogind.enable) {
+          withLogind = false;
+          withSystemd = false;
+          withAutostart = true;
+        }
+      );
       defaultText = lib.literalExpression "pkgs.cosmic-session";
       description = ''
         The package to use for `cosmic-session`.
