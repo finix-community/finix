@@ -28,6 +28,15 @@ in
       }
     ];
 
+    finit.settings = lib.mkMerge [
+      {
+        inherit (cfg) readiness runlevel;
+      }
+      (lib.mkIf (cfg.environment != { }) { environment = cfg.environment; })
+      (lib.mkIf (cfg.cgroups != { }) { cgroup = cfg.cgroups; })
+      (lib.mkIf (cfg.rlimits != { }) { rlimit = cfg.rlimits; })
+    ];
+
     # TODO: decide a reasonable default here... user can override if needed
     finit.path = [
       config.programs.coreutils.package

@@ -6,7 +6,19 @@
 }:
 let
   cfg = config.finit;
-  format = pkgs.formats.keyValue { };
+
+  format = import ./format.nix { inherit pkgs lib; } {
+    sections = [
+      "cgroup"
+      "run"
+      "service"
+      "sysv"
+      "task"
+      "tty"
+    ];
+  };
+
+  keyValue = pkgs.formats.keyValue { };
 
   # finix-setup plugin for early boot initialization
   finix-setup = pkgs.callPackage ../../pkgs/finix-setup {
@@ -71,33 +83,6 @@ let
     else
       { ${k} = v; }
   );
-
-  cgroupOpts =
-    { name, ... }:
-    {
-      options = {
-        name = lib.mkOption {
-          type = lib.types.str; # TODO: add constraints based on finit
-          default = name;
-          description = ''
-            The name of the cgroup to create.
-          '';
-        };
-
-        settings = lib.mkOption {
-          type = format.type;
-          default = { };
-          example = {
-            "cpu.weight" = 100;
-          };
-          description = ''
-            Settings to apply to this cgroup.
-
-            See [kernel documentation](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html) for additional details.
-          '';
-        };
-      };
-    };
 
   runOpts = {
     options.priority = lib.mkOption {
@@ -303,7 +288,7 @@ let
         };
 
         environment = lib.mkOption {
-          type = format.type;
+          type = keyValue.type;
           default = { };
           example = {
             TZ = "CET";
@@ -461,7 +446,7 @@ let
 
           environment.PATH = lib.mkIf (config.path != [ ]) (lib.makeBinPath config.path);
           envfile = lib.mkIf (config.environment != { }) (
-            format.generate "${config.name}.env" config.environment
+            keyValue.generate "${config.name}.env" config.environment
           );
         };
     };
@@ -815,12 +800,26 @@ in
     };
 
     cgroups = lib.mkOption {
-      type = with lib.types; attrsOf (submodule [ cgroupOpts ]);
+      type =
+        with lib.types;
+        attrsOf (
+          attrsOf (oneOf [
+            bool
+            int
+            str
+          ])
+        );
       default = { };
+      example = {
+        system."cpu.weight" = 9800;
+      };
       description = ''
-        An attribute set of cgroups (v2) that will be created by `finit`.
+        An attribute set of cgroups (v2) that will be created by `finit`, keyed
+        by the name of the cgroup. Each key names a `cgroup` file.
 
-        See [upstream documentation](https://finit-project.github.io/config/cgroups/) for additional details.
+        See [upstream documentation](https://finit-project.github.io/config/cgroups/)
+        and [kernel documentation](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html)
+        for additional details.
       '';
     };
 
@@ -832,6 +831,14 @@ in
         An attribute set of resource limits that will be apply by `finit`.
 
         See [upstream documentation](https://finit-project.github.io/config/runlevels/#resource-limits) for additional details.
+      '';
+    };
+
+    settings = lib.mkOption {
+      type = format.type;
+      default = { };
+      description = ''
+        Freeform top-level `finit.conf` settings.
       '';
     };
 
@@ -918,6 +925,14 @@ in
   };
 
   options.boot.initrd.finit = {
+    settings = lib.mkOption {
+      type = format.type;
+      default = { };
+      description = ''
+        Freeform top-level `finit.conf` settings for the initramfs.
+      '';
+    };
+
     services = lib.mkOption {
       type =
         with lib.types;
@@ -1063,12 +1078,7 @@ in
             );
         configFile = lib.singleton {
           target = "/etc/finit.conf";
-          source = pkgs.writeText "finit.conf" ''
-            PATH=/bin:/sbin:/usr/bin:/usr/local/bin
-
-            readiness none
-            runlevel 1
-          '';
+          source = format.generate "finit.conf" config.boot.initrd.finit.settings;
         };
       in
       lib.mkMerge [
@@ -1106,13 +1116,6 @@ in
           value.text = mkConfigFile "sysv" svc;
         }) (lib.filterAttrs (_: svc: svc.enable) config.finit.sysv);
 
-        cgroup = lib.concatMapAttrsStringSep "\n" (
-          _: cgroupOpts:
-          "cgroup ${cgroupOpts.name} ${
-            lib.concatMapAttrsStringSep "," (k: v: "${k}:${toString v}") cgroupOpts.settings
-          }"
-        ) cfg.cgroups;
-
         runTree = lib.mapAttrs' (name: svc: {
           name =
             if svc.id != "%i" then
@@ -1133,19 +1136,7 @@ in
 
         configFile = {
           "finit.conf".mode = "direct-symlink";
-          "finit.conf".text = lib.mkMerge [
-            (lib.mkBefore (lib.generators.toKeyValue { } cfg.environment))
-            ''
-              readiness ${cfg.readiness}
-              runlevel ${toString cfg.runlevel}
-
-              # cgroups
-              ${cgroup}
-
-              # rlimits
-              ${rlimitStr cfg.rlimits}
-            ''
-          ];
+          "finit.conf".source = format.generate "finit.conf" cfg.settings;
         };
       in
       lib.mkMerge [

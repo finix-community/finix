@@ -31,6 +31,12 @@ in
     # finit's own binary in the initramfs PATH
     path = [ config.finit.package ];
 
+    finit.settings = {
+      runlevel = 1;
+      readiness = "none";
+      environment.PATH = "/bin:/sbin:/usr/bin:/usr/local/bin";
+    };
+
     finit.run.setup-stdio = {
       priority = 100;
       script = ''
