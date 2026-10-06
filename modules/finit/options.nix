@@ -84,6 +84,41 @@ let
       { ${k} = v; }
   );
 
+  # finix extension options for stanzas
+  extensions = [
+    "enable"
+    "script"
+    "environment"
+    "path"
+    "reload-triggers"
+    "name"
+    "id"
+    "priority"
+
+    # compat from custom finix file format prior to finit version 5
+    "caps"
+    "cleanup"
+    "conflict"
+    "env"
+    "kill"
+    "manual"
+    "nohup"
+    "pid"
+    "post"
+    "pre"
+    "ready"
+    "reload"
+    "remain"
+    "restart"
+    "restart_sec"
+    "rlimits"
+    "runlevels"
+    "stop"
+    "supplementary_groups"
+  ];
+
+  stanzaTitle = name: svc: if svc.id != null && svc.id != "%i" then "${svc.name}:${svc.id}" else name;
+
   runOpts = {
     options.priority = lib.mkOption {
       type = lib.types.ints.between 0 9999;
@@ -280,7 +315,7 @@ let
         };
 
         envfile = lib.mkOption {
-          type = with lib.types; nullOr (either str path);
+          type = with lib.types; nullOr (coercedTo path toString str);
           default = null;
           description = ''
             Either a path or a path prefixed with a '-' to indicate a missing file is fine.
@@ -299,8 +334,11 @@ let
         };
 
         log = lib.mkOption {
-          type = with lib.types; either bool nonEmptyStr;
-          default = false;
+          type = with lib.types; nullOr (coercedTo bool (_: { }) (attrsOf format.type));
+          default = null;
+          example = {
+            file = "/dev/console";
+          };
           description = ''
             Redirect `stderr` and `stdout` of the application to a file or `syslog` using the native `logit`
             tool. This is useful for programs that do not support `syslog` on their own, which is sometimes
@@ -615,122 +653,6 @@ let
     };
   };
 
-  nonEmpty = v: v != null && v != [ ];
-  logToStr = v: if v == true then "log" else "log:${v}";
-  cgroupToStr =
-    cgroup:
-    let
-      mkValueString =
-        value:
-        if lib.isString value then
-          "'" + (lib.removeSuffix "'" (lib.removePrefix "'" value)) + "'"
-        else
-          toString value;
-
-      # `delegate` is a bare token, every other key is `name:value`
-      mkOption =
-        k: v: if k == "delegate" then lib.optional v "delegate" else [ "${k}:${mkValueString v}" ];
-
-      render =
-        name: settings:
-        let
-          options = lib.concatLists (lib.mapAttrsToList mkOption settings);
-        in
-        "cgroup.${name}" + lib.optionalString (options != [ ]) ",${lib.concatStringsSep "," options}";
-    in
-    lib.concatStringsSep " " (lib.mapAttrsToList render cgroup);
-
-  rlimitStr =
-    let
-      rlimitToStr =
-        k: v:
-        let
-          parts = lib.splitString "." k;
-        in
-        if lib.length parts == 2 then
-          "rlimit ${lib.head parts} ${lib.elemAt parts 1} ${toString v}"
-        else
-          "rlimit ${k} ${toString v}";
-    in
-    values: lib.concatMapAttrsStringSep "\n" rlimitToStr values;
-
-  mkConfigFile =
-    svcType: svc:
-    lib.optionalString (svc.rlimit or { } != { }) "${rlimitStr svc.rlimit}\n\n"
-    + lib.optionalString (
-      svc.reload-triggers or [ ] != [ ]
-    ) "# reload-triggers = ${lib.concatStringsSep ", " svc.reload-triggers}\n\n"
-    + (serviceStr svcType svc);
-
-  serviceStr =
-    svcType: svc:
-    lib.concatStringsSep " " (
-      (lib.singleton svcType)
-      ++ (lib.singleton "[${svc.runlevel}]")
-      ++
-
-        (lib.optional (svc.name or null != null) "name:${svc.name}")
-      ++ (lib.optional (svc.id or null != null) ":${svc.id}")
-      ++ (lib.optional (svc.cgroup or null != null) (cgroupToStr svc.cgroup))
-      ++ (lib.optional (svc.restart-max or null != null) "restart:${toString svc.restart-max}")
-      ++ (lib.optional (svc.restart-sec or null != null) "restart_sec:${toString svc.restart-sec}")
-      ++ (lib.optional (svc.respawn or false) "respawn")
-      ++ (lib.optional (svc.user or null != null) (
-        "@${svc.user}"
-        + lib.optionalString (svc.group != null) ":${svc.group}"
-        + lib.optionalString (nonEmpty (
-          svc.extra-groups or null
-        )) ",${lib.concatStringsSep "," svc.extra-groups}"
-      ))
-      # `!` only means "no SIGHUP" for service/sysv; on run/task it means "do not
-      # block bootstrap". `reload-signal` is declared in serviceOpts, so it never
-      # reaches those. Only `none` survives a legacy line, cf. `conf.c`.
-      ++ (lib.optional (nonEmpty (svc.conditions or null) || svc.reload-signal or null == "none")
-        "<${lib.optionalString (svc.reload-signal or null == "none") "!"}${
-          lib.concatStringsSep "," (lib.optionals (nonEmpty (svc.conditions or null)) svc.conditions)
-        }>"
-      )
-      ++ (lib.optional (svc.manual-start or false) "manual:yes")
-      ++ (lib.optional (svc.remain-after-exit or false) "remain:yes")
-      ++ (lib.optional (svc.stop-timeout or null != null) "kill:${toString svc.stop-timeout}")
-      ++ (lib.optional (nonEmpty (svc.capabilities or null)) (
-        "caps:${lib.concatStringsSep "," svc.capabilities}"
-      ))
-      ++ (lib.optional (nonEmpty (svc.conflicts or null)) (
-        "conflict:${lib.concatStringsSep "," svc.conflicts}"
-      ))
-      ++ (lib.optional (svc.pidfile or null != null) "pid:${svc.pidfile}")
-      ++ (lib.optional (svc.type or null != null) "type:${svc.type}")
-      ++ (lib.optional (svc.notify or null != null) "notify:${svc.notify}")
-      ++ (lib.optional (svc.envfile or null != null) "env:${svc.envfile}")
-      ++ (lib.optional (svc.log or false != false) (logToStr svc.log))
-      ++ (lib.optional (svc.tty or null != null) "tty:${svc.tty}")
-      ++ (lib.optional (svc.exec-reload or null != null) "reload:${svc.exec-reload}")
-      ++ (lib.optional (svc.exec-stop or null != null) "stop:${svc.exec-stop}")
-      ++ (lib.optional (svc.exec-start-pre or null != null) "pre:${svc.exec-start-pre}")
-      ++ (lib.optional (svc.exec-stop-post or null != null) "post:${svc.exec-stop-post}")
-      ++ (lib.optional (svc.exec-start-ready or null != null) "ready:${svc.exec-start-ready}")
-      ++ (lib.optional (svc.exec-cleanup or null != null) "cleanup:${svc.exec-cleanup}")
-      ++ (lib.optional (svc.oncrash or null != null) "oncrash:${svc.oncrash}")
-      ++ lib.optional (svc."if" or null != null) (
-        "if:" + (if lib.hasInfix "/" svc."if" then "<${svc."if"}>" else svc."if")
-      )
-      ++ (lib.optional (svc.command != null) svc.command)
-      ++
-
-        # tty specific options
-        (lib.optional (svc.device or null != null) svc.device)
-      ++ (lib.optional (svc.baud or null != null) svc.baud)
-      ++ (lib.optional (svc.noclear or false) "noclear")
-      ++ (lib.optional (svc.nowait or false) "nowait")
-      ++ (lib.optional (svc.nologin or false) "nologin")
-      ++ (lib.optional (svc.rescue or false) "rescue")
-      ++ (lib.optional (svc.notty or false) "notty")
-      ++ (lib.optional (svc.term or null != null) svc.term)
-      ++
-
-        (lib.optional (svc.description or null != null) "-- ${svc.description}")
-    );
 in
 {
   options.finit = {
@@ -1031,20 +953,18 @@ in
         serviceTree = lib.mapAttrsToList (name: svc: {
           target =
             if svc.id != "%i" then "/etc/finit.d/${name}.conf" else "/etc/finit.d/available/${name}.conf";
-          source = pkgs.writeText "${name}.conf" (mkConfigFile "service" svc);
+          source = format.generate "${name}.conf" {
+            service.${stanzaTitle name svc} = lib.removeAttrs svc extensions;
+          };
         }) (lib.filterAttrs (_: svc: svc.enable) config.boot.initrd.finit.services);
 
         taskTree = lib.mapAttrsToList (name: svc: {
           target =
             if svc.id != "%i" then "/etc/finit.d/${name}.conf" else "/etc/finit.d/available/${name}.conf";
-          source = pkgs.writeText "${name}.conf" (mkConfigFile "task" svc);
+          source = format.generate "${name}.conf" {
+            task.${stanzaTitle name svc} = lib.removeAttrs svc extensions;
+          };
         }) (lib.filterAttrs (_: svc: svc.enable) config.boot.initrd.finit.tasks);
-
-        sysvTree = lib.mapAttrsToList (name: svc: {
-          target =
-            if svc.id != "%i" then "/etc/finit.d/${name}.conf" else "/etc/finit.d/available/${name}.conf";
-          source = pkgs.writeText "${name}.conf" (mkConfigFile "sysv" svc);
-        }) (lib.filterAttrs (_: svc: svc.enable) config.boot.initrd.finit.sysv);
 
         runTree = lib.mapAttrsToList (name: svc: {
           target =
@@ -1052,13 +972,26 @@ in
               "/etc/finit.d/${lib.fixedWidthNumber 4 svc.priority}-${name}.conf"
             else
               "/etc/finit.d/available/${lib.fixedWidthNumber 4 svc.priority}-${name}.conf";
-          source = pkgs.writeText "${name}.conf" (mkConfigFile "run" svc);
+          source = format.generate "${name}.conf" {
+            run.${stanzaTitle name svc} = lib.removeAttrs svc extensions;
+          };
         }) (lib.filterAttrs (_: svc: svc.enable) config.boot.initrd.finit.run);
 
         ttyTree = lib.mapAttrsToList (name: svc: {
-          target = "/etc/finit.d/${name}.conf";
-          source = pkgs.writeText "${name}.conf" (mkConfigFile "tty" svc);
+          target =
+            if svc.id != "%i" then "/etc/finit.d/${name}.conf" else "/etc/finit.d/available/${name}.conf";
+          source = format.generate "${name}.conf" {
+            tty.${stanzaTitle name svc} = lib.removeAttrs svc extensions;
+          };
         }) (lib.filterAttrs (_: svc: svc.enable) config.boot.initrd.finit.ttys);
+
+        sysvTree = lib.mapAttrsToList (name: svc: {
+          target =
+            if svc.id != "%i" then "/etc/finit.d/${name}.conf" else "/etc/finit.d/available/${name}.conf";
+          source = format.generate "${name}.conf" {
+            sysv.${stanzaTitle name svc} = lib.removeAttrs svc extensions;
+          };
+        }) (lib.filterAttrs (_: svc: svc.enable) config.boot.initrd.finit.sysv);
 
         # ship generated scripts and envfiles into the initramfs
         scriptFiles =
@@ -1094,27 +1027,38 @@ in
     environment.etc =
       let
         # NOTE: entries under /etc/finit.d are marked as direct-symlink to avoid service reloads on every finix activation
+        configFile = {
+          "finit.conf".mode = "direct-symlink";
+          "finit.conf".source = format.generate "finit.conf" config.finit.settings;
+        };
 
         serviceTree = lib.mapAttrs' (name: svc: {
           name = if svc.id != "%i" then "finit.d/${name}.conf" else "finit.d/available/${name}.conf";
 
           value.mode = "direct-symlink";
-          value.text = mkConfigFile "service" svc;
+          value.source = format.generate "${name}.conf" (
+            {
+              service.${stanzaTitle name svc} = lib.removeAttrs svc extensions;
+            }
+            // lib.optionalAttrs (svc.reload-triggers != [ ]) {
+              "# reload-triggers" = lib.concatStringsSep ", " svc.reload-triggers;
+            }
+          );
         }) (lib.filterAttrs (_: svc: svc.enable) config.finit.services);
 
         taskTree = lib.mapAttrs' (name: svc: {
           name = if svc.id != "%i" then "finit.d/${name}.conf" else "finit.d/available/${name}.conf";
 
           value.mode = "direct-symlink";
-          value.text = mkConfigFile "task" svc;
+          value.source = format.generate "${name}.conf" (
+            {
+              task.${stanzaTitle name svc} = lib.removeAttrs svc extensions;
+            }
+            // lib.optionalAttrs (svc.reload-triggers != [ ]) {
+              "# reload-triggers" = lib.concatStringsSep ", " svc.reload-triggers;
+            }
+          );
         }) (lib.filterAttrs (_: svc: svc.enable) config.finit.tasks);
-
-        sysvTree = lib.mapAttrs' (name: svc: {
-          name = if svc.id != "%i" then "finit.d/${name}.conf" else "finit.d/available/${name}.conf";
-
-          value.mode = "direct-symlink";
-          value.text = mkConfigFile "sysv" svc;
-        }) (lib.filterAttrs (_: svc: svc.enable) config.finit.sysv);
 
         runTree = lib.mapAttrs' (name: svc: {
           name =
@@ -1124,20 +1068,43 @@ in
               "finit.d/available/${lib.fixedWidthNumber 4 svc.priority}-${name}.conf";
 
           value.mode = "direct-symlink";
-          value.text = mkConfigFile "run" svc;
+          value.source = format.generate "${name}.conf" (
+            {
+              run.${stanzaTitle name svc} = lib.removeAttrs svc extensions;
+            }
+            // lib.optionalAttrs (svc.reload-triggers != [ ]) {
+              "# reload-triggers" = lib.concatStringsSep ", " svc.reload-triggers;
+            }
+          );
         }) (lib.filterAttrs (_: svc: svc.enable) config.finit.run);
 
         ttyTree = lib.mapAttrs' (name: svc: {
-          name = "finit.d/${name}.conf";
+          name = if svc.id != "%i" then "finit.d/${name}.conf" else "finit.d/available/${name}.conf";
 
           value.mode = "direct-symlink";
-          value.text = mkConfigFile "tty" svc;
+          value.source = format.generate "${name}.conf" (
+            {
+              tty.${stanzaTitle name svc} = lib.removeAttrs svc extensions;
+            }
+            // lib.optionalAttrs (svc.reload-triggers != [ ]) {
+              "# reload-triggers" = lib.concatStringsSep ", " svc.reload-triggers;
+            }
+          );
         }) (lib.filterAttrs (_: svc: svc.enable) config.finit.ttys);
 
-        configFile = {
-          "finit.conf".mode = "direct-symlink";
-          "finit.conf".source = format.generate "finit.conf" cfg.settings;
-        };
+        sysvTree = lib.mapAttrs' (name: svc: {
+          name = if svc.id != "%i" then "finit.d/${name}.conf" else "finit.d/available/${name}.conf";
+
+          value.mode = "direct-symlink";
+          value.source = format.generate "${name}.conf" (
+            {
+              sysv.${stanzaTitle name svc} = lib.removeAttrs svc extensions;
+            }
+            // lib.optionalAttrs (svc.reload-triggers != [ ]) {
+              "# reload-triggers" = lib.concatStringsSep ", " svc.reload-triggers;
+            }
+          );
+        }) (lib.filterAttrs (_: svc: svc.enable) config.finit.sysv);
       in
       lib.mkMerge [
         configFile

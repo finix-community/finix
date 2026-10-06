@@ -3,6 +3,7 @@
 #
 # https://finit-project.github.io/config/tty/
 {
+  name,
   lib,
   ...
 }:
@@ -27,6 +28,7 @@ in
   ];
 
   options = {
+    # finix extensions
     enable = lib.mkOption {
       type = lib.types.bool;
       default = true;
@@ -35,6 +37,33 @@ in
       '';
     };
 
+    name = lib.mkOption {
+      type = lib.types.str;
+      readOnly = true;
+      description = ''
+        The name of this stanza, derived from the attribute name.
+      '';
+    };
+
+    id = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      readOnly = true;
+      description = ''
+        The instance identifier, derived from the attribute name if it contains an `@` character.
+      '';
+    };
+
+    reload-triggers = lib.mkOption {
+      type = with lib.types; listOf (either str path);
+      default = [ ];
+      description = ''
+        An arbitrary list of items such as derivations. If any item in the list
+        changes between reconfigurations, the service will be reloaded or restarted
+        if reloads are not supported.
+      '';
+    };
+
+    # finit `tty_opts` keys
     runlevel = lib.mkOption {
       type = lib.types.strMatching "!?[0-9Ss]+";
       default = "234";
@@ -73,7 +102,7 @@ in
     };
 
     baud = lib.mkOption {
-      type = with lib.types; nullOr nonEmptyStr;
+      type = with lib.types; nullOr int;
       default = null;
       description = ''
         Baud rate for serial TTYs.
@@ -130,4 +159,19 @@ in
       '';
     };
   };
+
+  config =
+    let
+      parts = lib.splitString "@" name;
+    in
+    {
+      name = lib.head parts;
+      id =
+        if lib.hasSuffix "@" name then
+          "%i"
+        else if lib.hasInfix "@" name then
+          lib.elemAt parts 1
+        else
+          null;
+    };
 }
