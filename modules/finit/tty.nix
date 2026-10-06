@@ -65,8 +65,8 @@ in
 
     # finit `tty_opts` keys
     runlevel = lib.mkOption {
-      type = lib.types.strMatching "!?[0-9Ss]+";
-      default = "234";
+      type = with lib.types; nullOr (strMatching "!?[0-9Ss]+");
+      default = null;
       description = ''
         See [upstream documentation](https://finit-project.github.io/runlevels/) for details.
       '';
@@ -118,24 +118,24 @@ in
     };
 
     noclear = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
+      type = with lib.types; nullOr bool;
+      default = null;
       description = ''
         Disables clearing the TTY after each session. Clearing the TTY when a user logs out is usually preferable.
       '';
     };
 
     nowait = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
+      type = with lib.types; nullOr bool;
+      default = null;
       description = ''
         Disables the press `Enter to activate console` message before actually starting the `getty` program.
       '';
     };
 
     nologin = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
+      type = with lib.types; nullOr bool;
+      default = null;
       description = ''
         Disables `getty` and `/bin/login`, and gives the user a `root` (login) shell on the given TTY `device`
         immediately. Needless to say, this is a rather insecure option, but can be very useful for developer
@@ -144,16 +144,16 @@ in
     };
 
     notty = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
+      type = with lib.types; nullOr bool;
+      default = null;
       description = ''
         No device node mode. This is insecure and intended only for board bringup or testing scenarios.
       '';
     };
 
     rescue = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
+      type = with lib.types; nullOr bool;
+      default = null;
       description = ''
         Start `sulogin` instead of a regular shell, requiring the root password. Useful for rescue/single-user mode.
       '';

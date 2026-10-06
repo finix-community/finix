@@ -5,8 +5,6 @@
   ...
 }:
 let
-  cfg = config.finit;
-
   format = import ./format.nix { inherit pkgs lib; } {
     sections = [
       "cgroup"
@@ -142,8 +140,8 @@ let
     ];
 
     options.remain-after-exit = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
+      type = with lib.types; nullOr bool;
+      default = null;
       description = ''
         By default, a `run` or `task` will re-run each time its runlevel is
         entered, and its `exec-stop-post` script does not run on completion.
@@ -201,8 +199,8 @@ let
       };
 
       runlevel = lib.mkOption {
-        type = lib.types.str; # TODO: string  matching 0-9S
-        default = "234";
+        type = with lib.types; nullOr (strMatching "!?[0-9Ss]+");
+        default = null;
         description = ''
           See [upstream documentation](https://finit-project.github.io/runlevels/) for details.
         '';
@@ -361,8 +359,8 @@ let
         };
 
         manual-start = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
+          type = with lib.types; nullOr bool;
+          default = null;
           description = ''
             If a service should not be automatically started, it can be configured as
             manual. The service can then be started at any time by running `initctl start <service>`.
@@ -439,8 +437,8 @@ let
         };
 
         respawn = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
+          type = with lib.types; nullOr bool;
+          default = null;
           description = ''
             Enable endless restarts without counting toward the retry limit. When set, the service
             will be restarted indefinitely regardless of the `restart-max` limit.
@@ -551,9 +549,10 @@ let
               "s6"
               "none"
             ]);
-          default = cfg.readiness;
-          defaultText = lib.literalExpression "config.finit.readiness";
+          default = null;
           description = ''
+            When null the stanza inherits `finit.readiness`, cf. `service.c`.
+
             See [upstream documentation](https://finit-project.github.io/config/service-sync/) for details.
           '';
         };
@@ -641,9 +640,9 @@ let
 
     options = {
       rlimit = lib.mkOption {
-        type = rlimitsType;
-        apply = rlimitAttrs;
-        default = { };
+        type = with lib.types; nullOr rlimitsType;
+        apply = v: if v == null then null else rlimitAttrs v;
+        default = null;
         description = ''
           An attribute set of resource limits that will be apply by `finit`.
 
