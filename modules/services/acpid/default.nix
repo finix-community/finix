@@ -62,7 +62,7 @@ in
       description = "acpi daemon";
       conditions = "service/syslogd/ready";
       command = "${pkgs.acpid}/bin/acpid --foreground --netlink";
-      log = true;
+      log = { };
 
       "if" = "!int/container";
     };

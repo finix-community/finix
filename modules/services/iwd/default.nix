@@ -73,7 +73,7 @@ in
       conditions = "service/syslogd/ready";
       command = "${cfg.package}/libexec/iwd" + lib.optionalString cfg.debug " -d";
       reload-signal = "none";
-      log = true;
+      log = { };
 
       path = lib.optionals config.programs.resolvconf.enable [
         config.programs.resolvconf.package

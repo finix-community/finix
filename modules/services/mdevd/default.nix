@@ -195,7 +195,7 @@ in
       runlevel = "S12345789";
       cgroup.init = { };
       notify = "s6";
-      log = true;
+      log = { };
 
       # TODO: now we're hijacking `env` and no one else can use it...
       path = [
@@ -211,7 +211,7 @@ in
       runlevel = "S";
       conditions = "service/mdevd/ready";
       cgroup.init = { };
-      log = true;
+      log = { };
     };
 
     # TODO: share between udev and mdevd

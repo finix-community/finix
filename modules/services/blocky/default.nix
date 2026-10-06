@@ -95,7 +95,7 @@ in
       ];
       command = "${lib.getExe cfg.package} --config ${configFile}";
       capabilities = [ "^cap_net_bind_service" ];
-      log = true;
+      log = { };
       reload-signal = "none";
     };
 

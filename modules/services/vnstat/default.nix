@@ -144,7 +144,7 @@ in
       command = "${pkgs.vnstat}/bin/vnstatd " + lib.escapeShellArgs cfg.extraArgs;
 
       # when running in the foreground debug logs go to stdout
-      log = lib.mkDefault cfg.debug;
+      log = lib.mkIf cfg.debug (lib.mkDefault { });
 
       reload-triggers = [
         config.environment.etc."vnstat.conf".source

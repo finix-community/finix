@@ -118,7 +118,7 @@ in
       inherit (cfg) user group;
 
       description = "mariadb database init";
-      log = true;
+      log = { };
 
       command = pkgs.writeShellApplication {
         name = "mariadb-init.sh";
@@ -146,7 +146,7 @@ in
       ];
       command = "${cfg.package}/bin/mysqld --defaults-file=/etc/my.cnf ${mysqldOptions}";
       notify = "systemd";
-      log = true;
+      log = { };
     };
 
     environment.systemPackages = [

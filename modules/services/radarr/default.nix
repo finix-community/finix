@@ -158,7 +158,7 @@ in
       ];
       command = "${lib.getExe cfg.package} -nobrowser -data=${cfg.dataDir}";
       reload-signal = "none";
-      log = true;
+      log = { };
       environment = toEnvVars cfg.settings;
     };
 

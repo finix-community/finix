@@ -46,7 +46,7 @@ in
       conditions = "service/dbus/ready";
       command = "${cfg.package}/libexec/accounts-daemon" + lib.optionalString cfg.debug " --debug";
       reload-signal = "none";
-      log = true;
+      log = { };
       environment = {
         GVFS_DISABLE_FUSE = 1;
         GIO_USE_VFS = "local";

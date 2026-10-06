@@ -250,7 +250,7 @@ in
         pkgs.kmod
       ]
       ++ cfg.extraPackages;
-      log = true;
+      log = { };
     };
 
     providers.scheduler.tasks = lib.optionalAttrs cfg.prune.enable {

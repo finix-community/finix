@@ -73,7 +73,7 @@ in
       command = "${cfg.package}/libexec/fprintd --no-timeout";
       conditions = "service/polkit/ready";
       reload-signal = "none";
-      log = true;
+      log = { };
 
       # TODO: now we're hijacking `env` and no one else can use it...
       environment = {

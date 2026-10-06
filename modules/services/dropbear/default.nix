@@ -121,7 +121,7 @@ in
 
     finit.tasks.dropbear-keygen = {
       description = "generate ssh host keys";
-      log = true;
+      log = { };
       command =
         let
           script = lib.concatMapStringsSep "\n" (key: ''
@@ -144,7 +144,7 @@ in
       ];
       command = "${cfg.package}/bin/dropbear -F " + lib.escapeShellArgs cfg.extraArgs;
       cgroup.user = { };
-      log = true;
+      log = { };
       reload-signal = "none";
 
       # TODO: dropbear doesn't use PAM so we need to keep these variables in sync with security.pam.environment!

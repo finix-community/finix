@@ -156,7 +156,7 @@ in
       runlevel = "S12345789";
       cgroup.init = { };
       notify = "s6";
-      log = true;
+      log = { };
     };
 
     finit.run =
@@ -164,7 +164,7 @@ in
         defaults = {
           runlevel = "S";
           conditions = "service/gardendevd/ready";
-          log = true;
+          log = { };
           cgroup.init = { };
 
           priority = 1;

@@ -143,7 +143,7 @@ in
       command = "${cfg.package}/bin/keyd";
       conditions = "service/syslogd/ready";
       exec-reload = "${cfg.package}/bin/keyd reload";
-      log = true;
+      log = { };
       environment = lib.optionalAttrs cfg.debug { KEYD_DEBUG = 2; };
 
       reload-triggers = lib.mapAttrsToList (

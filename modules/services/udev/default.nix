@@ -235,7 +235,7 @@ in
       command = "${cfg.package}/bin/udevd --ready-notify=%n" + lib.optionalString cfg.debug " -D";
       notify = "s6";
       pidfile = "udevd";
-      log = true;
+      log = { };
       reload-signal = "none";
       cgroup.system = { };
     };
@@ -247,7 +247,7 @@ in
         defaults = {
           runlevel = "S";
           conditions = "service/udevd/ready";
-          log = true;
+          log = { };
           cgroup.init = { };
 
           priority = 1;

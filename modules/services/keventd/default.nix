@@ -104,7 +104,7 @@ in
       runlevel = "S12345789";
       cgroup.init = { };
       notify = "pid";
-      log = true;
+      log = { };
 
       reload-triggers = [
         config.environment.etc."udev/rules.d".source

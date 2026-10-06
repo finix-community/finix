@@ -56,7 +56,7 @@ in
         "service/syslogd/ready"
         "task/modprobe/success"
       ];
-      log = true;
+      log = { };
       command = pkgs.writeShellScript "zram-swap" ''
         set -eu
         export PATH=${

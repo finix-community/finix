@@ -109,7 +109,7 @@ in
       command = lib.getExe cfg.package;
       stop-timeout = lib.mkDefault 10;
       reload-signal = "none";
-      log = true;
+      log = { };
 
       environment = cfg.settings;
       path = [ pkgs.unixtools.ping ];

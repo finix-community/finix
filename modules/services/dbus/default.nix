@@ -127,7 +127,7 @@ in
       command = "${cfg.package}/bin/dbus-daemon --nofork --system --syslog-only";
       notify = "systemd";
       cgroup.system = { };
-      log = mkIf cfg.debug true;
+      log = mkIf cfg.debug { };
 
       exec-start-pre = pkgs.writeShellScript "dbus-pre.sh" "${cfg.package}/bin/dbus-uuidgen --ensure";
       environment = {
