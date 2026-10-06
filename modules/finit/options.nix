@@ -625,12 +625,7 @@ let
         };
       };
 
-      config.reload-signal = lib.mkMerge [
-        (lib.mkIf config.nohup "none")
-
-        # s6 readiness is not re-asserted on SIGHUP
-        (lib.mkIf (config.notify == "s6") (lib.mkDefault "none"))
-      ];
+      config.reload-signal = lib.mkIf config.nohup "none";
     };
 
   rlimitOpts = {
