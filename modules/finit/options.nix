@@ -63,6 +63,15 @@ let
       ]
     );
 
+  rlimitAttrs = lib.concatMapAttrs (
+    k: v:
+    if lib.isAttrs v then
+      lib.optionalAttrs (v.soft != null) { "soft.${k}" = v.soft; }
+      // lib.optionalAttrs (v.hard != null) { "hard.${k}" = v.hard; }
+    else
+      { ${k} = v; }
+  );
+
   cgroupOpts =
     { name, ... }:
     {
@@ -610,6 +619,7 @@ let
     options = {
       rlimit = lib.mkOption {
         type = rlimitsType;
+        apply = rlimitAttrs;
         default = { };
         description = ''
           An attribute set of resource limits that will be apply by `finit`.
@@ -649,12 +659,11 @@ let
     let
       rlimitToStr =
         k: v:
-        if lib.isAttrs v then
-          (
-            lib.optionalString (v.hard != null) "rlimit hard ${k} ${toString v.hard}"
-            + lib.optionalString (v.hard != null && v.soft != null) "\n"
-            + lib.optionalString (v.soft != null) "rlimit soft ${k} ${toString v.soft}"
-          )
+        let
+          parts = lib.splitString "." k;
+        in
+        if lib.length parts == 2 then
+          "rlimit ${lib.head parts} ${lib.elemAt parts 1} ${toString v}"
         else
           "rlimit ${k} ${toString v}";
     in
@@ -817,6 +826,7 @@ in
 
     rlimits = lib.mkOption {
       type = rlimitsType;
+      apply = rlimitAttrs;
       default = { };
       description = ''
         An attribute set of resource limits that will be apply by `finit`.
