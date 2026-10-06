@@ -26,19 +26,27 @@ in
   ];
 
   options.programs.cosmic-greeter = {
-    enable = lib.mkEnableOption "COSMIC greeter";
+    enable = lib.mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Whether to enable [cosmic-greeter](${pkgs.cosmic-greeter.meta.homepage}).
+      '';
+    };
 
     package = lib.mkOption {
       type = types.package;
-      default = pkgs.cosmic-greeter.override {
-        udev = udevApi;
-        libinput = pkgs.libinput.override (
-          lib.optionalAttrs (udevApi != null) {
+      default = pkgs.cosmic-greeter.override (
+        lib.optionalAttrs (udevApi != null) {
+          withLogind = config.services.elogind.enable;
+          withSystemd = false;
+          udev = udevApi;
+          libinput = pkgs.libinput.override {
             udev = udevApi;
             wacomSupport = false;
-          }
-        );
-      };
+          };
+        }
+      );
       defaultText = lib.literalExpression "pkgs.cosmic-greeter";
       description = ''
         The package to use for `cosmic-greeter`.
