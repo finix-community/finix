@@ -155,6 +155,8 @@ let
 
   # baseOpts: options shared by ALL stanza types (service, task, run, sysv)
   baseOpts = {
+    freeformType = format.type;
+
     imports = [
       (lib.mkRenamedOptionModule [ "runlevels" ] [ "runlevel" ])
     ];
