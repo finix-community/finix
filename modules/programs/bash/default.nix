@@ -69,7 +69,9 @@ in
           fi
         fi
 
-        eval "$(${pkgs.coreutils}/bin/dircolors -b)"
+        ${lib.optionalString (config.programs.coreutils.package == pkgs.coreutils) ''
+          eval "$(${lib.getExe' config.programs.coreutils.package "dircolors"} -b)"
+        ''}
 
         alias ls='ls --color=auto'
       fi
