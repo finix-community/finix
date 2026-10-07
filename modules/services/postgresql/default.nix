@@ -145,6 +145,7 @@ in
         "net/lo/up"
       ];
       stop-timeout = 120;
+      runtime-dir = "postgresql";
       reload-triggers = [
         config.environment.etc."postgresql/${cfg.package.psqlSchema}/postgresql.conf".source
         config.environment.etc."postgresql/${cfg.package.psqlSchema}/pg_hba.conf".source
@@ -159,13 +160,12 @@ in
       '';
     };
 
-    finit.tmpfiles.rules = [
-      "d /run/postgresql - ${cfg.user} ${cfg.group}"
-    ]
-    ++ lib.optionals (cfg.dataDir == "/var/lib/postgresql/${cfg.package.psqlSchema}") [
-      "d /var/lib/postgresql 0750 ${cfg.user} ${cfg.group}"
-      "d /var/lib/postgresql/${cfg.package.psqlSchema} 0750 ${cfg.user} ${cfg.group}"
-    ];
+    finit.tmpfiles.rules =
+      lib.optionals (cfg.dataDir == "/var/lib/postgresql/${cfg.package.psqlSchema}")
+        [
+          "d /var/lib/postgresql 0750 ${cfg.user} ${cfg.group}"
+          "d /var/lib/postgresql/${cfg.package.psqlSchema} 0750 ${cfg.user} ${cfg.group}"
+        ];
 
     users.users.${cfg.user} = {
       name = cfg.user;

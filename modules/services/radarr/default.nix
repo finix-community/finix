@@ -144,10 +144,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    finit.tmpfiles.rules = lib.optionals (cfg.dataDir == "/var/lib/radarr") [
-      "d ${cfg.dataDir} 0700 ${cfg.user} ${cfg.group}"
-    ];
-
     finit.services.radarr = {
       inherit (cfg) user group;
 
@@ -160,6 +156,10 @@ in
       reload-signal = "none";
       log = { };
       environment = toEnvVars cfg.settings;
+    }
+    // lib.optionalAttrs (cfg.dataDir == "/var/lib/radarr") {
+      state-dir = "radarr";
+      state-dir-mode = "0700";
     };
 
     users.users = lib.optionalAttrs (cfg.user == "radarr") {

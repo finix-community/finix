@@ -93,14 +93,11 @@ in
       conditions = "service/polkit/ready";
       log = { };
       reload-signal = "none";
+      state-dir = "fwupd";
+      cache-dir = "fwupd";
       environment = lib.optionalAttrs (config.programs.limine.secureBoot.enable or false) {
         FWUPD_EFIAPPDIR = "${cfg.package}/libexec/fwupd/efi";
       };
     };
-
-    finit.tmpfiles.rules = [
-      "/var/lib/fwupd"
-      "/var/cache/fwupd"
-    ];
   };
 }

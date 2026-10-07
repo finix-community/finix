@@ -64,16 +64,14 @@ in
 
     services.dbus.packages = [ cfg.package ];
 
-    finit.tmpfiles.rules = [
-      "d /var/lib/iwd 0700"
-    ];
-
     finit.services.iwd = {
       description = "wireless service";
       conditions = "service/syslogd/ready";
       command = "${cfg.package}/libexec/iwd" + lib.optionalString cfg.debug " -d";
       reload-signal = "none";
       log = { };
+      state-dir = "iwd";
+      state-dir-mode = "0700";
 
       path = lib.optionals config.programs.resolvconf.enable [
         config.programs.resolvconf.package
