@@ -447,6 +447,146 @@ let
           '';
         };
 
+        runtime-dir = lib.mkOption {
+          type = with lib.types; nullOr nonEmptyStr;
+          default = null;
+          example = "myservice";
+          description = ''
+            A directory name, resolved under `/run`, created before the service starts and owned by
+            its `user` and `group`. Absolute paths and `..` are refused. The resolved path is
+            exported to the process environment as `$RUNTIME_DIRECTORY`.
+
+            Removed again when the service stops, after any `exec-stop-post` script has run, unless
+            `runtime-dir-preserve` says otherwise.
+
+            See [upstream documentation](https://finit-project.github.io/config/service-opts/) for additional details.
+          '';
+        };
+
+        runtime-dir-mode = lib.mkOption {
+          type = with lib.types; nullOr (strMatching "0[0-7]{3,4}");
+          default = null;
+          example = "0700";
+          description = ''
+            The mode of `runtime-dir`, locked down again on every start, default: `0755`. Modes are
+            octal, with the leading zero.
+          '';
+        };
+
+        runtime-dir-preserve = lib.mkOption {
+          type =
+            with lib.types;
+            nullOr (
+              either bool (enum [
+                "restart"
+              ])
+            );
+          default = null;
+          example = "restart";
+          description = ''
+            Whether `runtime-dir` survives the service stopping, the same values as `systemd`'s
+            `RuntimeDirectoryPreserve=`, default: `false`.
+
+            - `false` - removed when the service stops
+            - `"restart"` - kept across restarts, removed on a real stop
+            - `true` - never removed
+          '';
+        };
+
+        state-dir = lib.mkOption {
+          type = with lib.types; nullOr nonEmptyStr;
+          default = null;
+          example = "myservice";
+          description = ''
+            A directory name, resolved under `/var/lib`, created before the service starts and owned
+            by its `user` and `group`. Absolute paths and `..` are refused. The resolved path is
+            exported to the process environment as `$STATE_DIRECTORY`.
+
+            See [upstream documentation](https://finit-project.github.io/config/service-opts/) for additional details.
+          '';
+        };
+
+        state-dir-mode = lib.mkOption {
+          type = with lib.types; nullOr (strMatching "0[0-7]{3,4}");
+          default = null;
+          example = "0700";
+          description = ''
+            The mode of `state-dir`, locked down again on every start, default: `0755`. Modes are
+            octal, with the leading zero.
+          '';
+        };
+
+        cache-dir = lib.mkOption {
+          type = with lib.types; nullOr nonEmptyStr;
+          default = null;
+          example = "myservice";
+          description = ''
+            A directory name, resolved under `/var/cache`, created before the service starts and
+            owned by its `user` and `group`. Absolute paths and `..` are refused. The resolved path
+            is exported to the process environment as `$CACHE_DIRECTORY`.
+
+            See [upstream documentation](https://finit-project.github.io/config/service-opts/) for additional details.
+          '';
+        };
+
+        cache-dir-mode = lib.mkOption {
+          type = with lib.types; nullOr (strMatching "0[0-7]{3,4}");
+          default = null;
+          example = "0700";
+          description = ''
+            The mode of `cache-dir`, locked down again on every start, default: `0755`. Modes are
+            octal, with the leading zero.
+          '';
+        };
+
+        logs-dir = lib.mkOption {
+          type = with lib.types; nullOr nonEmptyStr;
+          default = null;
+          example = "myservice";
+          description = ''
+            A directory name, resolved under `/var/log`, created before the service starts and owned
+            by its `user` and `group`. Absolute paths and `..` are refused. The resolved path is
+            exported to the process environment as `$LOGS_DIRECTORY`.
+
+            See [upstream documentation](https://finit-project.github.io/config/service-opts/) for additional details.
+          '';
+        };
+
+        logs-dir-mode = lib.mkOption {
+          type = with lib.types; nullOr (strMatching "0[0-7]{3,4}");
+          default = null;
+          example = "0700";
+          description = ''
+            The mode of `logs-dir`, locked down again on every start, default: `0755`. Modes are
+            octal, with the leading zero.
+          '';
+        };
+
+        config-dir = lib.mkOption {
+          type = with lib.types; nullOr nonEmptyStr;
+          default = null;
+          example = "myservice";
+          description = ''
+            A directory name, resolved under `/etc`, created before the service starts. Absolute
+            paths and `..` are refused. The resolved path is exported to the process environment as
+            `$CONFIGURATION_DIRECTORY`.
+
+            As in `systemd`, `config-dir` is the odd one out: it is created but never chowned.
+
+            See [upstream documentation](https://finit-project.github.io/config/service-opts/) for additional details.
+          '';
+        };
+
+        config-dir-mode = lib.mkOption {
+          type = with lib.types; nullOr (strMatching "0[0-7]{3,4}");
+          default = null;
+          example = "0700";
+          description = ''
+            The mode of `config-dir`, locked down again on every start, default: `0755`. Modes are
+            octal, with the leading zero.
+          '';
+        };
+
         reload-triggers = lib.mkOption {
           type = with lib.types; listOf (either str path);
           default = [ ];
