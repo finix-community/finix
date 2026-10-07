@@ -35,6 +35,10 @@ let
   providerModules = builtins.map (value: ./providers/${value}) (
     builtins.attrNames (builtins.removeAttrs (builtins.readDir ./providers) [ "README.md" ])
   );
+
+  profileModules = builtins.map (value: ./profiles/${value}) (
+    builtins.attrNames (builtins.removeAttrs (builtins.readDir ./profiles) [ "README.md" ])
+  );
 in
 {
   default = {
@@ -74,7 +78,8 @@ in
       ./users
       ./xdg
     ]
-    ++ providerModules;
+    ++ providerModules
+    ++ profileModules;
   };
 }
 // programModules
