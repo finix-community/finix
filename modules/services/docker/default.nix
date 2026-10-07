@@ -259,12 +259,6 @@ in
 
         command = "${lib.getExe pkgs.docker} system prune --force ${toString cfg.prune.extraArgs}";
       };
-
-      docker-prune-all-volumes = lib.mkIf cfg.prune.allVolumes.enable {
-        inherit (cfg.prune) interval;
-
-        command = "${lib.getExe pkgs.docker} volume prune --force --all ${toString cfg.prune.allVolumes.extraArgs}";
-      };
     };
   };
 }
