@@ -1,4 +1,5 @@
 {
+  modules,
   config,
   pkgs,
   lib,
@@ -10,6 +11,7 @@ in
 {
   imports = [
     ./providers.resume-and-suspend.nix
+    modules.sessiond-power
   ];
 
   options.programs.zzz = {
@@ -34,17 +36,38 @@ in
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [ cfg.package ];
 
-    services.sessiond.settings = lib.mkIf config.services.sessiond.enable {
-      power = {
-        hibernate = lib.mkDefault [
-          "${config.programs.zzz.package}/bin/zzz"
-          "-Z"
-        ];
-        suspend = [
-          "${config.programs.zzz.package}/bin/zzz"
-          "-z"
-        ];
-      };
+    services.sessiond.settings =
+      lib.mkIf
+        (
+          config.services.sessiond.enable
+          && lib.versionOlder (lib.getVersion config.services.sessiond.package) "0.3.0"
+        )
+        {
+          power = {
+            hibernate = lib.mkDefault [
+              (lib.getExe config.programs.zzz.package)
+              "-Z"
+            ];
+            suspend = [
+              (lib.getExe config.programs.zzz.package)
+              "-z"
+            ];
+          };
+        };
+
+    services.sessiond-power.settings = lib.mkIf config.services.sessiond-power.enable {
+      hibernate = lib.mkDefault [
+        (lib.getExe config.programs.zzz.package)
+        "-Z"
+      ];
+      suspend = [
+        (lib.getExe config.programs.zzz.package)
+        "-z"
+      ];
+      hybrid-sleep = [
+        (lib.getExe config.programs.zzz.package)
+        "-H"
+      ];
     };
 
     # this module supplies an implementation for `providers.resumeAndSuspend`
