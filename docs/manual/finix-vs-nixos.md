@@ -10,8 +10,9 @@ Finix utilizes [Finit](https://github.com/finit-project/finit) as its primary in
 - Built-in getty
 - Small tmpfiles implementation
 - Readiness notification with support for systemd's `sd_notify()`
+- Cgroup v2 support
 
-Finit does not attempt nor want to implement the same level of functionality that systemd offers, but it implements *just enough* systemd-like functionality to allow most modern day Linux software to work with little to no issue without requiring much configuration. A benefit to using Finit for a nix based system is that it handles starting and stopping services exceptionally well without the need for complicated `switch-to-configuration` logic to handle the amount of equivalent `systemd` services needed to ensure a clean generation switch.
+Finit does not attempt nor want to implement the same level of functionality that systemd offers, but it implements *just enough* systemd-like functionality to allow most modern day Linux software to work with little to no issue without requiring much configuration. A benefit to using Finit for a nix based system is that it eliminates the need for complicated `switch-to-configuration` logic in order to ensure a clean generation switch.
 
 In finix, defining a service with Finit is similar to defining a systemd unit under NixOS.
 
@@ -30,9 +31,9 @@ Finit does not yet have support for user-level service management, but progress 
 
 ## Modules
 
-By default, NixOS and all of its modules are automatically imported into the global configuration attribute set. A benefit to this approach is that users do not need to maintain a list of module imports, but this comes at a significant cost to evaluation times. Finix opts for a minimal set of defaults, requiring the end user to either maintain their own import list or to configure and enable a configuration profile. As a result, finix evaluation times are much faster in comparison to similarly configured NixOS systems. 
+By default, NixOS and all of its modules are automatically imported into the global configuration attribute set. A benefit to this approach is that users do not need to maintain a list of module imports, but this comes at a significant cost to evaluation times. Finix opts for a minimal set of defaults, requiring the end user to either maintain their own import list or to configure and enable a configuration profile. As a result, finix evaluation times are much faster in comparison to similarly configured NixOS systems.
 
-Finix exposes modules not imported by default through the `modules` parameter. It is the equivalent to NixOS's builtin `modulesPath` attribute. Here is a functional example to illustrate the difference between enabling and configuring a NixOS module compared to a finix module. 
+Finix exposes modules not imported by default through the `modules` parameter. It is the equivalent to NixOS's builtin `modulesPath` attribute. Here is a functional example to illustrate the difference between enabling and configuring a NixOS module compared to a finix module.
 
 Say a user would like to enable the service module for `chrony`, a network time synchronization daemon. Under NixOS, it would be as simple as adding this line to the system configuration:
 
@@ -89,7 +90,7 @@ sessiond
 udev
 ```
 
-## `providers` 
+## `providers`
 
 This section is a brief introduction into the `providers` abstraction, a simple implementation of an idea proposed by [@ibizaman](https://github.com/ibizaman) for decoupling modules.
 
@@ -101,7 +102,7 @@ As an example, the `providers.scheduler` abstraction provides a generic interfac
 - `anacron`
 - `fcron`
 
-If a module needs to configure a scheduled task, they can do so using the `providers.scheduler.tasks` option without needing to directly reference any specific scheduler.  
+If a module needs to configure a scheduled task, they can do so using the `providers.scheduler.tasks` option without needing to directly reference any specific scheduler.
 
 ```nix
 providers.scheduler.tasks = {

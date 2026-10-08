@@ -1,11 +1,23 @@
 # Configuring
 
-This page serves as a high level overview for configuring a finix system.
+This page serves as a high level overview for configuring a finix system. It intentionally avoids exhaustive coverage of any specified module's configuration options for the sake of brevity, serving more as a quick reference guide. For a full list of configuration options, see the [options search](https://finix-community.github.io/finix/options.html).
 
 > [!NOTE]
 > This page is a stub. If you have something you would like to contribute, feel free to open a PR and add any documentation for configuring services, programs, or low level system components.
 
+## General notes
+
+- Most services and programs have a boolean option to enable debug logging, commonly under `programs.*.debug` or `services.*.debug`.
+
 ## Core system components
+
+### Init system and service manager
+
+TODO
+
+### Hardware options
+
+TODO
 
 ### Bootloaders
 
@@ -19,6 +31,7 @@ This program is not imported by default. To enable it, add the following to your
 { config, modules, ... }:
 {
   imports = [ modules.limine ];
+
   programs.limine.enable = true;
 }
 ```
@@ -54,7 +67,7 @@ You can obtain the UUID for the desired disk partition with `lsblk -f`. If the n
 
 **Configuring secure boot**
 
-To enable limine's secure boot support, enable the configuration option. 
+To enable limine's secure boot support, enable the configuration option.
 
 ```nix
 programs.limine.secureBoot.enable = true;
@@ -62,7 +75,7 @@ programs.limine.secureBoot.enable = true;
 
 Enabling this option will still require pre-generated secure boot keys. The limine module has configuration options under the `secureBoot` option set you can use to automate this process:
 
-- `autoEnrollKeys.enable`: Enrolls automatically generated secure boot keys. 
+- `autoEnrollKeys.enable`: Enrolls automatically generated secure boot keys.
 - `autoEnrollKeys.extraArgs`: Extra arguments to pass to the `sbctl` executable. Defaults to `--microsoft` and `--firmware-builtin` to automatically add secure boot keys signed by Microsoft and builtin device firmware.
 - `autoGenerateKeys`: Enable generating keys automatically when none exist during bootloader installation.
 
@@ -80,7 +93,7 @@ See the options search for a full list of limine's configuration options.
 
 #### Custom boot script
 
-Finix exposes `boot.loader.script`, an option for adding a custom script for installing any bootloader not shipped by finix. See the module for [efistubmgr](https://github.com/FixeQD/efistubmgr) in [community-modules](https://github.com/finix-community/community-modules/blob/main/modules/programs/efistubmgr/default.nix) for a reference implementation.
+Finix exposes `boot.loader.script` for installing any bootloader not shipped by finix. See the module for [efistubmgr](https://github.com/FixeQD/efistubmgr) in [community-modules](https://github.com/finix-community/community-modules/blob/main/modules/programs/efistubmgr/default.nix) for a reference implementation.
 
 ### Filesystems
 
@@ -102,11 +115,11 @@ Finix's filesystem configuration syntax is nearly the same as NixOS. The followi
 - xfs
 - zfs
 
-Support for each filesystem configuration is automatically enabled in both the initial ramdisk and a live system when the `fsType` option is specified. 
+Support for each filesystem configuration is automatically enabled in both the initial ramdisk and a live system when the `fsType` option is specified.
 
 #### Note about encrypted LUKS volumes
 
-Finix does not support the `boot.initrd.luks.devices` option set as of yet, so you will need to manually add entries for the encrypted volume and its respective mapped name in `/dev/mapper`. Here is an example configuration:
+Finix does not ship the `boot.initrd.luks.devices` option set, so you will need to manually add entries for the encrypted volume and its respective mapped name in `/dev/mapper`. Here is an example configuration:
 
 ```nix
 fileSystems."/" = {
@@ -123,7 +136,7 @@ fileSystems."crypted" = {
 ```
 
 > [!NOTE]
-> There is a reported [issue](https://github.com/finix-community/finix/issues/216) preventing `cryptsetup` from opening the declared device if a user has no declared `options` attribute. As a workaround, set it to `[ "--debug"]` to enable debug logging. This will clutter your console output in the initial ram disk but it will allow `cryptsetup` to open the correct device. 
+> There is a reported [issue](https://github.com/finix-community/finix/issues/216) preventing `cryptsetup` from opening the declared device if a user has no `options` attribute. As a workaround, set it to `[ "--debug"]` to enable debug logging. This will clutter your console output in the initial ram disk but it will allow `cryptsetup` to open the correct device.
 
 If you have a swap partition encrypted with LUKS, you will need to declare it as a LUKS device and add the appropriate mapping to the list of `swapDevices`. Here is an example configuration:
 
@@ -142,13 +155,13 @@ swapDevices = [
 
 ### Device managers
 
-Finix currently ships four userspace device managers, which are the programs responsible for handling kernel events as well as populating the `/dev` directory with input devices, storage devices, rendering devices, and more. None are enabled by default. The following is a list of device managers supported by finix and the level of hardware compatibility a user can expect from each one.
+Finix currently ships four userspace device managers, which are programs responsible for handling kernel events as well as populating the `/dev` directory with input devices, storage devices, rendering devices, and more. None are enabled by default. The following is a list of device managers supported by finix and the level of hardware compatibility a user can expect from each one.
 
 #### eudev
 
 [eudev](https://github.com/eudev-project/eudev) is a fork of systemd with the aim of isolating the device manager from the rest of systemd. It has the broadest compatibility with any given hardware, given the ubiquity of systemd-udev in the Linux ecosystem. It is capable of reading udev-style device rules and requires no tinkering to reach feature parity with systemd-udev. Any prewritten udev rules installed by Nix packages will work without issue.
 
-This service is imported by default. To enable it, add the following line to your system configuration:  
+This service is imported by default. To enable it, add the following line to your system configuration:
 
 ```nix
 services.udev.enable = true;
@@ -162,15 +175,15 @@ services.udev.packages = [ pkgs.libtmp.out ];
 
 #### gardendevd
 
-[gardendevd](https://codeberg.org/Gardenhouse/gardendevd) is a device manager designed to be a lightweight replacement to systemd-udev. It is able to read and parse udev-style device rules to populate device nodes. It optionally runs on top of mdevd, another more lightweight device manager, but it is runable as a standalone daemon. Some programs may require recompilation with [libudev-garden](https://codeberg.org/Gardenhouse/libudev-garden), a fork of libudev-zero written to be used with gardendevd. Issues have been reported regarding the reliability of services written to be tighly integrated with systemd-udev -- particularly gvfs and udisks2. It is possible that users will need to write custom udev rules to support any uncommon hardware not covered by the stock rules shipped by gardendevd.
+[gardendevd](https://codeberg.org/Gardenhouse/gardendevd) is a device manager designed to be a lightweight replacement to systemd-udev. It is able to read and parse udev-style device rules to populate device nodes. It optionally runs on top of mdevd, another lightweight device manager, but it is runable as a standalone daemon. Some programs may require recompilation with [libudev-garden](https://codeberg.org/Gardenhouse/libudev-garden), a fork of libudev-zero written to be used with gardendevd. Issues have been reported regarding the reliability of services written to be tighly integrated with systemd-udev -- particularly gvfs and udisks2. It is possible that users will need to write custom udev rules to support any uncommon hardware not covered by the stock rules shipped by gardendevd.
 
-This service is imported by default. To enable it, add the following line to your system configuration:  
+This service is imported by default. To enable it, add the following line to your system configuration:
 
 ```nix
 services.gardendevd.enable = true;
 ```
 
-Optionally, you may also enable mdevd to run under gardendevd.  
+Optionally, you may also enable mdevd to run under gardendevd.
 
 Software packages that ship udev rules can be installed and read by gardendevd with the following:
 
@@ -184,7 +197,7 @@ services.udev.packages = [ pkgs.libtmp.out ];
 
 [keventd](https://troglobit.com/projects/finit/) is the device manager bundled with finit since version 5 and up. It is capable as a lightweight replacement to systemd-udev in tandem with libudev-zero, as it is able to read udev style rules. It is not as feature complete as gardendevd at the time of writing, and some programs and services will need to be recompiled with libudev-zero in place of libudev in order for them to function properly with keventd. Issues have been reported regarding the reliability of services that are tighly integrated with systemd-udev -- notably gvfs and udisks2, and it is possible that end users will need to write custom udev rules to support any uncommon hardware not covered by the stock rules shipped by keventd.
 
-This service is imported by default. To enable it, add the following line to your system configuration:  
+This service is imported by default. To enable it, add the following line to your system configuration:
 
 ```nix
 services.keventd.enable = true;
@@ -202,7 +215,7 @@ services.udev.packages = [ pkgs.libtmp.out ];
 
 [mdevd](https://skarnet.org/software/mdevd/) is a lightweight device manager from the Skarnet/s6 family of Linux system utilities. It is designed to be a drop in replacement to the mdev device manager included in the BusyBox software suite. It is by far the leanest of the other three services listed, and it has the narrowest hardware compatibility. It is ideal for systems with limited resources or those with little need for broad hardware support beyond standard input and storage devices. Programs and services dealing with low level input, notably pipewire and most graphical environments, will require recompilation with libudev-zero in order to function properly. gvfs and udisks2 will not work with this device manager. If any additional hardware support is desired, a user will need to write custom rules utilising mdevd syntax, which is wholly unique to udev syntax. Examples for what these rules look like may be found [here](https://git.lin.moe/aports/lin/mdev-helper/mdev.conf.html).
 
-This service is imported by default. To enable it, add the following line to your system configuration:  
+This service is imported by default. To enable it, add the following line to your system configuration:
 
 ```nix
 services.mdevd.enable = true;
@@ -219,31 +232,214 @@ It is generally advised when running this device manager to set the value of `se
 
 ### getty
 
-getty is a program that manages login terminals. Finit ships with a built in getty implementation which is used by default when the getty service is enabled.
+getty is a program that manages login terminals. Finit ships with a built in getty implementation used by default when getty is enabled.
 
-This service is not imported by default. To import and enable it, add the following to your system configuration:  
+This service is not imported by default. To import and enable it, add the following to your system configuration:
 
 ```nix
 { config, modules, ... }:
 {
   imports = [ modules.getty ];
+
   services.getty.enable = true;
 }
 ```
 
-You may also switch your preferred getty implementation using the option `services.getty.package`, like so:
+You may also switch your preferred getty implementation using `services.getty.package`, like so:
 
 ```nix
 services.getty.package = pkgs.util-linux // { mainProgram = "agetty"; };
 ```
 
+### Localisation
+
+TODO
+
 ### Shells
 
-TODO
+Finix ships configuration modules for three login shells:
 
-### Networking
+- `ash`
+- `bash`
+- `fish`
 
-TODO
+These all live under the `programs.*` module set. Additionally, you may specify a POSIX-compliant shell package to use for `/bin/sh` with `programs.sh.package`. 
+
+Any one of these shells listed above may be imported and enabled with the following option:
+
+```nix
+{ modules, ... }:
+{
+  imports = [
+    modules.ash
+    modules.bash
+    modules.fish
+  ];
+  
+  programs.<your shell>.enable = true;
+}
+```
+
+> [!NOTE]
+> Non POSIX-compliant shells (notably `fish`), or shells with no backwards compatibility with POSIX syntax, will not be able to source environment variables declared in `environment.variables`. See [Setting environment variables](#setting-environment-variables) for more details.
+
+If a user does not have any shell package specified under `user.defaultUserShell`, `pkgs.bashInteractive` will be used as the default login shell for any users created with `isNormalUser = true`.
+
+### Network management
+
+#### Configuring hostname, hostId, and `/etc/hosts`
+
+Configuring network options such as the system hostname, hostId, and `/etc/hosts` can be done with the following: 
+
+```nix
+networking.hostname = "finixbox";
+networking.hostId = "4e98920d";
+networking.hosts = {
+  "127.0.0.1" = [ "foo.bar.baz" ];
+  "192.168.0.2" = [ "fileserver.local" "nameserver.local" ];
+};
+```
+
+#### ifupdown-ng
+
+Finix provides a module for [ifupdown-ng](https://github.com/ifupdown-ng/ifupdown-ng), a network device manager that is largely compatible with Debian's ifupdown, BusyBox's ifupdown, and Cumulus Networks' ifupdown2.
+
+To import and enable this program, add the following to your system configuration: 
+
+```nix
+{ modules, ... }:
+{
+  imports = [
+    modules.ifupdown-ng
+  ];
+
+  programs.ifupdown-ng.enable = true;
+}
+```
+
+**Configuring**
+
+Ifupdown-ng can be configured to manage any network interface on your machine. It can assign static IP addresses, specify default gateways, specify network interface dependency chains, and declare any desired executors. Finix exposes the following options to handle these use cases, all under the `programs.ifupdown-ng.*` attribute set: 
+
+- `auto` - Designate interfaces to be automatically configured by the system.
+- `extraArgs` - Extra command line arguments to pass to ifupdown-ng -- see [ifupdown-ng(8)](https://manpages.debian.org/testing/ifupdown-ng/ifup-ng.8) for details.
+- `iface.<name>.address` - Specify the ipv4 or ipv6 address that `iface.<name>` should use.
+- `iface.<name>.gateway` - Configure the gateway address that `iface.<name>` should use.
+- `iface.<name>.requires` - Specify any network interfaces that must be brought up before `iface.<name>`.
+- `iface.<name>.use` - Specifies which [executor](https://manpages.debian.org/unstable/ifupdown-ng/interfaces.5#EXECUTORS) to use.
+
+Any network interface configured under `iface` will be automatically brought up by a Finit one-shot task on a system rebuild. An example interface configuration may consist of the following: 
+
+```nix
+programs.ifupdown-ng.iface = {
+  eth0 = {
+    address = [ "203.0.113.2/24" "2001:db8::2/64" ];
+    gateway = "203.0.113.1";
+    use = "dhcp";
+  };
+};
+```
+
+> [!CAUTION]
+> Switching device managers will cause the default names for your network interfaces to change, potentially breaking your configuration.
+
+Finix also exposes `settings.*` to allow for custom configuration outside of these predefined options. See [upstream documentation](https://manpages.debian.org/unstable/ifupdown-ng/ifupdown-ng.conf.5) for more details.
+
+#### Network daemons
+
+Finix offers three network management daemons:
+
+- [NetworkManager](https://networkmanager.dev/)
+- [iwd](https://git.kernel.org/pub/scm/network/wireless/iwd.git)
+- [dhcpcd](https://roy.marples.name/projects/dhcpcd)
+
+NetworkManager is confirmed to work with eudev and gardendevd. If you are using seatd instead of elogind, your user will need to be a part of the `networkmanager` group in order to configure network interfaces as a normal user. Iwd and dhcpcd are both device manager agnostic and do not require any specific session manager to function.
+
+To import and enable any of these services, add the following to your configuration:
+
+```nix
+{ modules, ... }: 
+{
+  imports = [
+    modules.networkmanager 
+    modules.iwd 
+    modules.dhcpcd 
+  ];
+
+  services.<network daemon>.enable = true;
+}
+```
+
+NetworkManager and dhcpcd will conflict if both are enabled at the same time. However, iwd and dhcpcd may be enabled at the same time with zero negative side effects.
+
+**Configuring NetworkManager**
+
+NetworkManager configuration settings may be added with the `settings` attribute. See [upstream documentation](https://man.archlinux.org/man/NetworkManager.conf.5) for details.
+
+**Configuring iwd**
+
+Iwd configuration settings may be added by with the `settings` attribute. See [upstream documentation](https://man.archlinux.org/man/iwd.config.5) for details.
+
+**Configuring dhcpcd**
+
+Dhcpcd can be configured with the following options: 
+
+- `debug` - Enable debug logging.
+- `extraArgs` - Additional arguments to pass to dhcpcd.
+- `settings.*` - Dhcpcd configuration settings. Consult the [dhcpcd section](https://finix-community.github.io/finix/options.html#option-services.dhcpcd.enable) in the options search for more details.
+
+#### Firewalls
+
+> [!CAUTION]
+> Finix does not enable any firewall service by default -- it is highly recommended to enable one.
+
+**nftables**
+
+Currently, finix only ships the [nftables](https://netfilter.org/projects/nftables/) firewall implementation. 
+
+To import and enable nftables, add the following to your configuration:
+
+```nix
+{ modules, ... }:
+{
+  imports = [ modules.nftables ];
+
+  services.nftables.enable = true;
+}
+```
+
+The default filter table operates on a default deny policy for incoming connections on all ports initiated by external IP addresses. Incoming and outgoing traffic on connections established by local network interfaces are unaffected. 
+
+Nftables can be configured with the following options: 
+
+- `rejectPackets` - Whether refused packets are rejected rather than dropped.
+- `trustedInterfaces` - Network interfaces to trust unconditionally. All network traffic is accepted on specified interfaces regardless of any ports opened through `providers.firewall`.
+
+Users may also configure custom rule tables with nftables syntax by adding to the `tables` attribute. See the [`nftables.tables` section](https://finix-community.github.io/finix/options.html#option-services.nftables.tables) of the options search for more details.
+
+**`providers.firewall`**
+
+`providers.firewall` is a generic abstraction for firewall implementations shipped by finix that allows module authors (or end users) to open ports on any firewall service without having to directly interface with any of them. If a firewall backend is enabled, rules specified under `providers.firewall` are enabled. Otherwise, they are ignored.
+
+If a user is unfamiliar with a firewall's specific configuration syntax, the firewall provider serves as a user friendly interface to quickly open TCP and UDP ports. Users can specify a list or range of ports to open with the following options:
+
+- `allowedTCPPorts`
+- `allowedTCPPortRanges`
+- `allowedUDPPorts`
+- `allowedUDPPortRanges`
+
+While `allowedTCPPorts` and `allowedUDPPorts` simply take a list of port numbers, ranges take a list of attribute sets containing the `from` and `to` options for inclusively specifying a range of port numbers to open, like so: 
+
+```nix
+providers.firewall.allowedUDPPortRanges = [
+  {
+    from = 60000;
+    to = 61000;
+  }
+];
+```
+
+The firewall provider does not allow specifying a list of trusted network interfaces - these need to be configured under each firewall service.
 
 ### System time
 
@@ -251,9 +447,17 @@ TODO
 
 timezone setup, ntp daemon setup
 
-## User sessions
+### Nix daemon
 
-This section contains information regarding user session management. 
+TODO
+
+### Specialisations
+
+TODO
+
+## User management
+
+This section contains information for general user management.
 
 ### Session managers
 
@@ -267,9 +471,18 @@ TODO
 
 ## Graphical environments
 
-This section contains information relating setting up and using graphical environments.
+This section contains information for setting up and using graphical environments.
+
+### Fonts
+
+TODO
 
 ### Login managers
+
+- greetd
+- regreet
+- ly
+- lemurs
 
 TODO
 
@@ -310,20 +523,49 @@ TODO
 
 ## Server software
 
+### IP banning
+
+sshguard
+
+TODO
+
+### DNS
+
+TODO
+
+### ssh
+
+- dropbear
+- openssh
+
+TODO
+
 ### Databases
 
 TODO
 
 postgresql, mariadb
 
-### Docker
+### Containerization
 
 TODO
 
-no rootless support
+- docker (no rootless support)
+- incus
+
+### Virtualization
+
+- waydroid
+- incus
 
 ### Schedulers
 
 TODO
 
 `providers.scheduler`
+
+## Miscellaneous
+
+### Bluetooth
+
+TODO
