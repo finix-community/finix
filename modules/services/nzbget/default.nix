@@ -160,7 +160,7 @@ in
     users.users = lib.mkIf (cfg.user == "nzbget") {
       nzbget = {
         home = cfg.stateDir;
-        group = cfg.group;
+        inherit (cfg) group;
         uid = config.ids.uids.nzbget;
       };
     };

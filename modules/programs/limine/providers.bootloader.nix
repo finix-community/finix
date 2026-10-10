@@ -27,7 +27,7 @@ let
       efiBootMgrPath = pkgs.efibootmgr;
       liminePath = cfg.package;
       efiMountPoint = config.boot.loader.efi.efiSysMountPoint;
-      fileSystems = config.fileSystems;
+      inherit (config) fileSystems;
       canTouchEfiVariables = config.boot.loader.efi.canTouchEfiVariables;
       efiRemovable = cfg.efiInstallAsRemovable;
       maxGenerations = if cfg.maxGenerations == null then 0 else cfg.maxGenerations;

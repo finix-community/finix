@@ -25,7 +25,7 @@ let
   };
 
   doc = pkgs.nixosOptionsDoc {
-    options = eval.options;
+    inherit (eval) options;
     warningsAreErrors = false;
 
     transformOptions =

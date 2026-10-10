@@ -76,7 +76,7 @@ let
         };
 
         settings = lib.mkOption {
-          type = format.type;
+          inherit (format) type;
           default = { };
           example = {
             "cpu.weight" = 100;
@@ -191,7 +191,7 @@ let
         };
 
         settings = lib.mkOption {
-          type = format.type;
+          inherit (format) type;
           default = { };
           description = ''
             The cgroup settings to apply to this process.
@@ -286,7 +286,7 @@ let
         };
 
         environment = lib.mkOption {
-          type = format.type;
+          inherit (format) type;
           default = { };
           example = {
             TZ = "CET";
@@ -734,12 +734,10 @@ let
       ++ (lib.optional (svc.manual-start or false) "manual:yes")
       ++ (lib.optional (svc.remain-after-exit or false) "remain:yes")
       ++ (lib.optional (svc.stop-timeout or null != null) "kill:${toString svc.stop-timeout}")
-      ++ (lib.optional (svc.capabilities or [ ] != [ ]) (
-        "caps:${lib.concatStringsSep "," svc.capabilities}"
-      ))
-      ++ (lib.optional (svc.conflicts or [ ] != [ ]) (
-        "conflict:${lib.concatStringsSep "," svc.conflicts}"
-      ))
+      ++ (lib.optional (
+        svc.capabilities or [ ] != [ ]
+      ) "caps:${lib.concatStringsSep "," svc.capabilities}")
+      ++ (lib.optional (svc.conflicts or [ ] != [ ]) "conflict:${lib.concatStringsSep "," svc.conflicts}")
       ++ (lib.optional (svc.pidfile or null != null) "pid:${svc.pidfile}")
       ++ (lib.optional (svc.type or null != null) "type:${svc.type}")
       ++ (lib.optional (svc.notify or null != null) "notify:${svc.notify}")

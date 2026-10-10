@@ -133,7 +133,7 @@ in
           start_script = "${vm}/bin/run-${nodeName}-vm";
         }) vms;
         containers = { };
-        vlans = vlans;
+        inherit vlans;
         global_timeout = 3600;
         enable_ssh_backdoor = false;
         test_script = pythonTestScript;
