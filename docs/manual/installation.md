@@ -35,7 +35,7 @@ Once you have mounted all of your drives, run the command `mkdir -p /mnt/etc/nix
 You may now generate your starter `hardware-configuration.nix` file with the following command:
 
 ```bash
-nixos-generate-config --root /mnt --show-hardware-configuration > ./hardware-configuration.nix
+nixos-generate-config --root /mnt --show-hardware-config > ./hardware-configuration.nix
 ```
 
 Open the generated file with your editor and delete the `imports = [ ... ];` statement at the beginning, keeping all of the `boot` options for kernel modules, and removing every option below the `fileSystems` and `swapDevices` options. If you need an example for what this file will look like after the specified modifications, see this [example](https://github.com/finix-community/examples/installations/channels/hardware-configuration.nix). Do NOT copy this file directly, as the listed filesystem configuration will fail to evaluate.
@@ -99,9 +99,9 @@ Copy the contents of your edited `/mnt/etc/nixos/hardware-configuration.nix` int
 
 You can now edit `configuration.nix` to your liking. The default configuration comes preset with options for network setup, preferred editors, and sudo/doas. Refer to our [options search](https://finix-community.github.io/finix/options.html) for a comprehensive list of configuration modules, or our [configuration guide](https://finix-community.github.io/finix/finix-vs-nixos.html) for a more simplified overview of common options. You will need to add any wanted modules into the top level `imports` statement in order for them to be included at evaluation time.
 
-It is generally recommended to add the `mkpasswd` package into your packages list, if it is not there already. Ommitting this will prevent you from being able to set up a password with `nixos-enter 'passwd'` for your root and user account without manually specifying a password hash for your configured user.
+It is generally recommended to add the `shadow` package into your packages list, if it is not there already. Some users have reported not receiving a prompt to set the root password at install time without this package. 
 
-Lastly for configuration, customize the `user.user.<USERNAME>` entry to match your preferences. `<USERNAME>` should be changed to your username, and `password` is a `sha-512` hash of your password. This can be generated with:
+Lastly for configuration, customize the `user.user.<USERNAME>` entry to match your preferences. `<USERNAME>` should be changed to your username, and `password` is a `sha-512` hash of your password if you choose to configure it delaratively instead of using `passwd`. This hash can be generated with:
 
 ```bash
 mkpasswd -m sha-512 '<password>'
@@ -116,8 +116,11 @@ Now that everything has been configured, we can run the necessary commands to be
 **Flake-based install command**
 
 ```bash
-sudo nixos-install --root /mnt --flake /path/to/flake/directory#<desired profile name>
+nixos-install --root /mnt --flake /path/to/flake/directory#<desired profile name>
 ```
+
+> [!NOTE]
+> If you get an error when running `nixos-install` regarding a mismatched hash, run it a second time and it should go through.
 
 **Channel-based install command**
 
