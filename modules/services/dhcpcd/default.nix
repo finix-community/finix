@@ -163,6 +163,10 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+
+    # Rendering this config file is required for other services that use dhcpcd
+    environment.etc."dhcpcd.conf".source = cfg.configFile;
+
     services.dhcpcd.extraArgs = [
       "-B"
       "-f"
