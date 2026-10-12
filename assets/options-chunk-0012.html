@@ -1,3 +1,91 @@
+<div class="option" id="option-services.tzupdate.debug">
+  <h3 class="option-name">
+    <a href="#option-services.tzupdate.debug" class="option-anchor">services.tzupdate.debug</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/tzupdate" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/tzupdate&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.udev.enable">
+  <h3 class="option-name">
+    <a href="#option-services.udev.enable" class="option-anchor">services.udev.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://github.com/eudev-project/eudev">eudev</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/udev" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/udev&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.udev.package">
+  <h3 class="option-name">
+    <a href="#option-services.udev.package" class="option-anchor">services.udev.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>eudev</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">eudev</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/udev" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/udev&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.udev.packages">
+  <h3 class="option-name">
+    <a href="#option-services.udev.packages" class="option-anchor">services.udev.packages</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>List of packages containing <code class="command">udev</code> rules.
+All files found in
+<code class="file-path">«pkg»/etc/udev/rules.d</code>nd
+<code class="file-path">«pkg»/lib/udev/rules.d</code>ill be included.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of absolute path</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/udev" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/udev&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.udev.debug">
+  <h3 class="option-name">
+    <a href="#option-services.udev.debug" class="option-anchor">services.udev.debug</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/udev" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/udev&gt;</a></code></dd>
+  </dl>
+</div>
 <div class="option" id="option-services.udev.path">
   <h3 class="option-name">
     <a href="#option-services.udev.path" class="option-anchor">services.udev.path</a>
@@ -1769,100 +1857,5 @@ an encrypted form that is suitable for the <code>chpasswd -e</code> command.</p>
   </dl>
   <dl class="option-details option-sources">
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/users/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/users/options.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-users.users._name_.shell">
-  <h3 class="option-name">
-    <a href="#option-users.users._name_.shell" class="option-anchor">users.users.&lt;name&gt;.shell</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The path to the user's shell. Can use shell derivations,
-like <code>pkgs.bashInteractive</code>. Don't
-forget to enable your shell in
-<code>programs</code> if necessary,
-like <code>programs.zsh.enable = true;</code>.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>null or package or (absolute path, not containing newlines or colons)</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">shadow</span></code></pre></body></html>
-</body></html></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">bashInteractive</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/users/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/users/options.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-users.users._name_.uid">
-  <h3 class="option-name">
-    <a href="#option-users.users._name_.uid" class="option-anchor">users.users.&lt;name&gt;.uid</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The account UID. If the UID is null, a free UID is picked on
-activation.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>null or signed integer</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/users/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/users/options.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-virtualisation.android.enable">
-  <h3 class="option-name">
-    <a href="#option-virtualisation.android.enable" class="option-anchor">virtualisation.android.enable</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Whether to enable Android container support (Waydroid).</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
-</body></html></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/virtualisation/android.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/virtualisation/android.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-xdg.autostart.enable">
-  <h3 class="option-name">
-    <a href="#option-xdg.autostart.enable" class="option-anchor">xdg.autostart.enable</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Whether to install files to support the
-<a href="https://specifications.freedesktop.org/autostart-spec/latest">XDG Autostart specification</a>.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/nixos/autostart.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/nixos/autostart.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-xdg.icons.enable">
-  <h3 class="option-name">
-    <a href="#option-xdg.icons.enable" class="option-anchor">xdg.icons.enable</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/xdg/icons.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/xdg/icons.nix&gt;</a></code></dd>
   </dl>
 </div>
