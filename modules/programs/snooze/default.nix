@@ -97,12 +97,12 @@ in
                 description = ''
                   Path to the timefile location.
 
-                  If `timeFile` does not exist, it will be assumed outdated enough to ensure earliest execution.
+                  If {option}`timeFile` does not exist, it will be assumed outdated enough to ensure earliest execution.
                 '';
               };
               timeWait = mkDelayOption ''
-                When provided, execution will not start earlier than the mtime of `timeFile` plus `timeWait` seconds.
-                When not provided, snooze will start finding the first matching time starting from the mtime of `timefile`, and taking `slack` into account. 
+                When provided, execution will not start earlier than the mtime of {option}`timeFile` plus {option}`timeWait` seconds.
+                When not provided, snooze will start finding the first matching time starting from the mtime of {option}`timeFile`, and taking {option}`slack` into account. 
               '';
               randDelay = mkDelayOption ''
                 Delay determination of scheduled time randomly up to `randDelay` seconds later.
