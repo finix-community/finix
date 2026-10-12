@@ -63,5 +63,7 @@ in
     finit.tmpfiles.rules = [
       "d /etc/finit.d/enabled 0755"
     ];
+
+    system.switch.inhibitors.finit-format = "libconfuse";
   };
 }
