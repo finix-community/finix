@@ -62,10 +62,9 @@ in
       description = "acpi daemon";
       conditions = "service/syslogd/ready";
       command = "${pkgs.acpid}/bin/acpid --foreground --netlink";
-      log = true;
+      log = { };
 
-      # TODO: add "if" to finit.services
-      extraConfig = "if:<!int/container>";
+      "if" = "!int/container";
     };
   };
 }

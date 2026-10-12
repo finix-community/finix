@@ -45,8 +45,8 @@ in
       description = "backlight adjustment service";
       command = lib.getExe cfg.package;
       conditions = "service/syslogd/ready";
-      log = true;
-      nohup = true;
+      log = { };
+      reload-signal = "none";
     };
   };
 }

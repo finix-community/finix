@@ -54,7 +54,7 @@ in
       command = "${lib.getExe cfg.package} daemon";
       exec-reload = "${lib.getExe cfg.package} daemon reload";
       conditions = "service/dbus/ready";
-      log = true;
+      log = { };
 
       # TODO: now we're hijacking `env` and no one else can use it...
       path = with pkgs; [

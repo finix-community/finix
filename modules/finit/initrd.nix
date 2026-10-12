@@ -31,6 +31,13 @@ in
     # finit's own binary in the initramfs PATH
     path = [ config.finit.package ];
 
+    finit.settings = {
+      runlevel = 1;
+      readiness = "none";
+      environment.PATH = "/bin:/sbin:/usr/bin:/usr/local/bin";
+      modules = config.boot.initrd.kernelModules;
+    };
+
     finit.run.setup-stdio = {
       priority = 100;
       script = ''
@@ -114,13 +121,6 @@ in
         '';
       }
       {
-        target = "/etc/modules-load.d/finix.conf";
-        source = pkgs.writeText "finix.conf" ''
-
-          ${lib.concatStringsSep "\n" config.boot.initrd.kernelModules}
-        '';
-      }
-      {
         target = "/etc/tmpfiles.d/finix.conf";
         source = pkgs.writeText "finix.conf" ''
           d /sysroot
@@ -170,7 +170,6 @@ in
       }
       { source = "${config.finit.package}/libexec"; }
       { source = "${config.finit.package}/lib/finit/plugins/bootmisc.so"; }
-      { source = "${config.finit.package}/lib/finit/plugins/modules-load.so"; }
       { source = "${config.finit.package}/lib/finit/plugins/pidfile.so"; }
       { source = "${config.finit.package}/lib/finit/rescue.conf"; }
       { source = "${config.finit.package}/lib/finit/tmpfiles.d"; }

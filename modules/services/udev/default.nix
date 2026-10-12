@@ -235,9 +235,9 @@ in
       command = "${cfg.package}/bin/udevd --ready-notify=%n" + lib.optionalString cfg.debug " -D";
       notify = "s6";
       pidfile = "udevd";
-      log = true;
-      nohup = true;
-      cgroup.name = "system";
+      log = { };
+      reload-signal = "none";
+      cgroup.system = { };
     };
 
     # Wait for udevd to start, then trigger coldplug events and module loading.
@@ -247,9 +247,8 @@ in
         defaults = {
           runlevel = "S";
           conditions = "service/udevd/ready";
-          log = true;
-          cgroup.name = "init";
-          extraConfig = "nowarn";
+          log = { };
+          cgroup.init = { };
 
           priority = 1;
         };

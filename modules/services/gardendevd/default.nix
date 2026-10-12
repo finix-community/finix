@@ -154,9 +154,9 @@ in
       description = "device event daemon (gardendevd)";
       command = "${cfg.package}/bin/gardendevd -D %n " + lib.escapeShellArgs cfg.extraArgs;
       runlevel = "S12345789";
-      cgroup.name = "init";
+      cgroup.init = { };
       notify = "s6";
-      log = true;
+      log = { };
     };
 
     finit.run =
@@ -164,8 +164,8 @@ in
         defaults = {
           runlevel = "S";
           conditions = "service/gardendevd/ready";
-          log = true;
-          cgroup.name = "init";
+          log = { };
+          cgroup.init = { };
 
           priority = 1;
         };

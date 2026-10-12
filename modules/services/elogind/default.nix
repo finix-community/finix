@@ -78,6 +78,11 @@ in
       // lib.optionalAttrs cfg.debug {
         SYSTEMD_LOG_LEVEL = "debug";
       };
+
+      reload-triggers = [
+        config.environment.etc."elogind/logind.conf.d/00-nixos.conf".source
+        config.environment.etc."elogind/sleep.conf.d/00-nixos.conf".source
+      ];
     };
 
     services.dbus.enable = true;
@@ -92,13 +97,5 @@ in
     environment.etc."elogind/sleep.conf.d/00-nixos.conf".source = format.generate "sleep.conf" {
       inherit (cfg.settings) Sleep;
     };
-
-    # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/elogind.conf".text = lib.mkAfter ''
-
-      # reload trigger
-      # ${config.environment.etc."elogind/logind.conf.d/00-nixos.conf".source}
-      # ${config.environment.etc."elogind/sleep.conf.d/00-nixos.conf".source}
-    '';
   };
 }

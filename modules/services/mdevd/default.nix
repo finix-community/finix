@@ -193,9 +193,9 @@ in
         + lib.optionalString (cfg.nlgroups != null) " -O ${toString cfg.nlgroups}"
         + lib.optionalString cfg.debug " -v 3";
       runlevel = "S12345789";
-      cgroup.name = "init";
+      cgroup.init = { };
       notify = "s6";
-      log = true;
+      log = { };
 
       # TODO: now we're hijacking `env` and no one else can use it...
       path = [
@@ -210,8 +210,8 @@ in
       command = "${cfg.package}/bin/mdevd-coldplug" + lib.optionalString cfg.debug " -v 3";
       runlevel = "S";
       conditions = "service/mdevd/ready";
-      cgroup.name = "init";
-      log = true;
+      cgroup.init = { };
+      log = { };
     };
 
     # TODO: share between udev and mdevd

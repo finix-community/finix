@@ -55,9 +55,9 @@ in
       description = "early oom daemon";
       command = "${cfg.package}/bin/earlyoom --syslog " + lib.escapeShellArgs cfg.extraArgs;
       conditions = "service/syslogd/ready";
-      nohup = true;
+      reload-signal = "none";
 
-      cgroup.settings = {
+      cgroup.system = {
         "memory.max" = "50M";
         "pids.max" = 10;
       };

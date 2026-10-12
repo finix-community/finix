@@ -91,7 +91,6 @@ in
       description = "test driver backdoor shell";
       command = backdoorScript;
       runlevel = "234";
-      log = false;
 
       # the backdoor runs bash which executes commands from hvc0 until EOF, then exits
       restart-max = 0;

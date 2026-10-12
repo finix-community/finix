@@ -179,7 +179,7 @@ in
     finit.tasks.nftables = {
       command = startScript;
       exec-stop-post = stopScript;
-      log = true;
+      log = { };
       remain-after-exit = true;
     };
 
