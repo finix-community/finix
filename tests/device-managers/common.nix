@@ -5,6 +5,9 @@
 }:
 let
   inherit (backend) name serviceName readyCondition coldplugCondition configCheck module disks eventScript;
+  configServiceName = backend.configServiceName or serviceName;
+  configBinary = backend.configBinary or serviceName;
+  reloadCommand = backend.reloadCommand or "initctl reload ${serviceName}";
   diskAt = name: builtins.getAttr name disks.cold;
   coldDiskOrder = builtins.filter (name: name != "gptExt4") disks.order;
   hotDiskOrder = disks.order;
@@ -51,14 +54,18 @@ let
 
       assertions = [
         {
-          assertion = config.services.${serviceName}.enable;
-          message = "device-manager test backend '${name}' must enable ${serviceName}";
+          assertion = config.services.${configServiceName}.enable;
+          message = "device-manager test backend '${name}' must enable ${configServiceName}";
         }
         {
-          assertion =
-            !config.services.udev.enable
-            && !config.services.keventd.enable
-            && !config.services.gardendevd.enable;
+          assertion = lib.all (
+            service: service == configServiceName || !config.services.${service}.enable
+          ) [
+            "mdevd"
+            "udev"
+            "keventd"
+            "gardendevd"
+          ];
           message = "device-manager test must run exactly one device manager";
         }
       ];
@@ -67,12 +74,12 @@ let
   testScript =
     { nodes }:
     let
-      managerPackage = toString nodes.machine.config.services.${serviceName}.package;
+      managerPackage = toString nodes.machine.config.services.${configServiceName}.package;
       diskGid = toString nodes.machine.config.ids.gids.disk;
-       jsonMetadata = set:
-         builtins.replaceStrings [ "null" "true" "false" ] [ "None" "True" "False" ] (
-           builtins.toJSON (builtins.mapAttrs (_: metadata) set)
-         );
+      jsonMetadata = set:
+        builtins.replaceStrings [ "null" "true" "false" ] [ "None" "True" "False" ] (
+          builtins.toJSON (builtins.mapAttrs (_: metadata) set)
+        );
     in
     ''
       import datetime as dt
@@ -83,12 +90,14 @@ let
       ${backend.backendScript}
 
       DISK_GID = ${diskGid}
-      CONFIG_CHECK = ${builtins.toJSON "${managerPackage}/bin/${serviceName} ${configCheck}"}
+      CONFIG_CHECK = ${builtins.toJSON "${managerPackage}/bin/${configBinary} ${configCheck}"}
+      RELOAD_COMMAND = ${builtins.toJSON reloadCommand}
       EVENT_LOG = "/run/device-manager-test/events"
       COLD_DISKS = ${jsonMetadata coldDisks}
       COLD_ORDER = ${builtins.toJSON coldDiskOrder}
       HOT_DISKS = ${jsonMetadata hotDisks}
       HOT_ORDER = ${builtins.toJSON hotDiskOrder}
+      COLDPLUG = True
       TEST_TIMEOUT = dt.timedelta(seconds=30)
 
       def service_status(name):
@@ -121,15 +130,18 @@ let
               backend_add_check,
               TEST_TIMEOUT,
           )
+      COLDPLUG = False
 
       with subtest("device-manager isolation"):
-          for service in ("udevd", "keventd", "gardendevd"):
+          for service in ("mdevd", "udevd", "keventd", "gardendevd"):
+              if service == "${serviceName}":
+                  continue
               machine.succeed(f"test ! -e /run/finit/cond/service/{service}/ready")
           machine.succeed("kill -0 1")
 
       with subtest("reload keeps the daemon alive"):
           before = service_status("${serviceName}")
-          machine.succeed("initctl reload ${serviceName}")
+          machine.succeed(RELOAD_COMMAND)
           machine.wait_until_succeeds(
               "test -e /run/finit/cond/${readyCondition}", timeout=TEST_TIMEOUT
           )

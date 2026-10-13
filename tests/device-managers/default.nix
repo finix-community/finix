@@ -18,4 +18,5 @@ let
 in
 {
   mdevd = runTest ./mdevd.nix;
+  udev = runTest ./udev.nix;
 }
