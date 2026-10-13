@@ -1027,6 +1027,109 @@ manage power actions.</p>
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sessiond" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sessiond&gt;</a></code></dd>
   </dl>
 </div>
+<div class="option" id="option-services.sessiond-hooks.enable">
+  <h3 class="option-name">
+    <a href="#option-services.sessiond-hooks.enable" class="option-anchor">services.sessiond-hooks.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://tangled.org/r0chd.pl/sessiond">sessiond-hooks</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sessiond-hooks" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sessiond-hooks&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.sessiond-hooks.package">
+  <h3 class="option-name">
+    <a href="#option-services.sessiond-hooks.package" class="option-anchor">services.sessiond-hooks.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>sessiond-hooks</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">sessiond-hooks</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sessiond-hooks" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sessiond-hooks&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.sessiond-hooks.debug">
+  <h3 class="option-name">
+    <a href="#option-services.sessiond-hooks.debug" class="option-anchor">services.sessiond-hooks.debug</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sessiond-hooks" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sessiond-hooks&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.sessiond-hooks.hooks">
+  <h3 class="option-name">
+    <a href="#option-services.sessiond-hooks.hooks" class="option-anchor">services.sessiond-hooks.hooks</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Per-user session hooks launched. Each named entry spawns an
+independent <code>sessiond-hooks</code> process.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of (submodule)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">dinit</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">settings</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">on_start</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/nix/store/8cw483652746zpa60n3w9w77pjqc84kv-dinit-0.22.1/bin/dinit&nbsp;--user&nbsp;--services-dir&nbsp;/etc/dinit.d/user</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">restart</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">delay</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">5</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">on</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">Failure</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sessiond-hooks" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sessiond-hooks&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.sessiond-hooks.hooks._name_.enable">
+  <h3 class="option-name">
+    <a href="#option-services.sessiond-hooks.hooks._name_.enable" class="option-anchor">services.sessiond-hooks.hooks.&lt;name&gt;.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sessiond-hooks" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sessiond-hooks&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.sessiond-hooks.hooks._name_.settings">
+  <h3 class="option-name">
+    <a href="#option-services.sessiond-hooks.hooks._name_.settings" class="option-anchor">services.sessiond-hooks.hooks.&lt;name&gt;.settings</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Hook settings serialized to TOML.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>TOML value</code></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sessiond-hooks" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sessiond-hooks&gt;</a></code></dd>
+  </dl>
+</div>
 <div class="option" id="option-services.sessiond-power.enable">
   <h3 class="option-name">
     <a href="#option-services.sessiond-power.enable" class="option-anchor">services.sessiond-power.enable</a>
@@ -1678,108 +1781,5 @@ for additional details.</p>
   </dl>
   <dl class="option-details option-sources">
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/tlp" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/tlp&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.tlp.package">
-  <h3 class="option-name">
-    <a href="#option-services.tlp.package" class="option-anchor">services.tlp.package</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The package to use for <code>tlp</code>.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">tlp</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/tlp" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/tlp&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.tlp.pd.enable">
-  <h3 class="option-name">
-    <a href="#option-services.tlp.pd.enable" class="option-anchor">services.tlp.pd.enable</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://linrunner.de/en/tlp/docs/tlp-linux-advanced-power-management.html">tlp-pd</a> as a system service.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/tlp" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/tlp&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.tlp.pd.package">
-  <h3 class="option-name">
-    <a href="#option-services.tlp.pd.package" class="option-anchor">services.tlp.pd.package</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The package to use for <code>tlp-pd</code>.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">tlp-pd</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/tlp" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/tlp&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.tlp.settings">
-  <h3 class="option-name">
-    <a href="#option-services.tlp.settings" class="option-anchor">services.tlp.settings</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p><code>tlp</code> configuration. See <a href="https://linrunner.de/tlp/settings">upstream documentation</a>
-for additional details.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>attribute set of (atom (null, bool, int, float or string) or a non-empty list of them)</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/tlp" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/tlp&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.tzupdate.enable">
-  <h3 class="option-name">
-    <a href="#option-services.tzupdate.enable" class="option-anchor">services.tzupdate.enable</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://github.com/cdown/tzupdate">tzupdate</a> as a system task.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/tzupdate" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/tzupdate&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.tzupdate.package">
-  <h3 class="option-name">
-    <a href="#option-services.tzupdate.package" class="option-anchor">services.tzupdate.package</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The package to use for <code>tzupdate</code>.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">tzupdate</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/tzupdate" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/tzupdate&gt;</a></code></dd>
   </dl>
 </div>

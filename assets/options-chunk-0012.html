@@ -1,3 +1,106 @@
+<div class="option" id="option-services.tlp.package">
+  <h3 class="option-name">
+    <a href="#option-services.tlp.package" class="option-anchor">services.tlp.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>tlp</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">tlp</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/tlp" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/tlp&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.tlp.pd.enable">
+  <h3 class="option-name">
+    <a href="#option-services.tlp.pd.enable" class="option-anchor">services.tlp.pd.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://linrunner.de/en/tlp/docs/tlp-linux-advanced-power-management.html">tlp-pd</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/tlp" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/tlp&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.tlp.pd.package">
+  <h3 class="option-name">
+    <a href="#option-services.tlp.pd.package" class="option-anchor">services.tlp.pd.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>tlp-pd</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">tlp-pd</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/tlp" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/tlp&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.tlp.settings">
+  <h3 class="option-name">
+    <a href="#option-services.tlp.settings" class="option-anchor">services.tlp.settings</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p><code>tlp</code> configuration. See <a href="https://linrunner.de/tlp/settings">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of (atom (null, bool, int, float or string) or a non-empty list of them)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/tlp" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/tlp&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.tzupdate.enable">
+  <h3 class="option-name">
+    <a href="#option-services.tzupdate.enable" class="option-anchor">services.tzupdate.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://github.com/cdown/tzupdate">tzupdate</a> as a system task.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/tzupdate" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/tzupdate&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.tzupdate.package">
+  <h3 class="option-name">
+    <a href="#option-services.tzupdate.package" class="option-anchor">services.tzupdate.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>tzupdate</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">tzupdate</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/tzupdate" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/tzupdate&gt;</a></code></dd>
+  </dl>
+</div>
 <div class="option" id="option-services.tzupdate.debug">
   <h3 class="option-name">
     <a href="#option-services.tzupdate.debug" class="option-anchor">services.tzupdate.debug</a>
@@ -1737,122 +1840,6 @@ field in <code class="file-path">/etc/passwd</code>.</p>
   <dl class="option-details">
     <dt>Type</dt><dd class="option-value"><code>string</code></dd>
     <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/users/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/users/options.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-users.users._name_.home">
-  <h3 class="option-name">
-    <a href="#option-users.users._name_.home" class="option-anchor">users.users.&lt;name&gt;.home</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The user's home directory.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>absolute path, not containing newlines or colons</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/var/empty</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/users/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/users/options.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-users.users._name_.isNormalUser">
-  <h3 class="option-name">
-    <a href="#option-users.users._name_.isNormalUser" class="option-anchor">users.users.&lt;name&gt;.isNormalUser</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Indicates whether this is an account for a “real” user.
-This automatically sets <code class="nixos-option">group</code> to <code>users</code>,
-<code class="nixos-option">createHome</code> to <code>true</code>,
-<code class="nixos-option">home</code> to <code class="file-path">/home/«username»</code><code class="nixos-option">shell</code> to <a class="option-reference" href="options.html#option-users.defaultUserShell"><code class="nixos-option">users.defaultUserShell</code></a>,
-and <code class="nixos-option">isSystemUser</code> to <code>false</code>.
-Exactly one of <code>isNormalUser</code> and <code>isSystemUser</code> must be true.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/users/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/users/options.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-users.users._name_.isSystemUser">
-  <h3 class="option-name">
-    <a href="#option-users.users._name_.isSystemUser" class="option-anchor">users.users.&lt;name&gt;.isSystemUser</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Indicates if the user is a system user or not. This option
-only has an effect if <code class="nixos-option">uid</code> is
-<code class="nixos-option">null</code>, in which case it determines whether
-the user's UID is allocated in the range for system users
-(below 1000) or in the range for normal users (starting at
-1000).
-Exactly one of <code>isNormalUser</code> and
-<code>isSystemUser</code> must be true.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/users/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/users/options.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-users.users._name_.name">
-  <h3 class="option-name">
-    <a href="#option-users.users._name_.name" class="option-anchor">users.users.&lt;name&gt;.name</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The name of the user account. If undefined, the name of the
-attribute set will be used.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>string, not containing newlines or colons</code></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/users/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/users/options.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-users.users._name_.password">
-  <h3 class="option-name">
-    <a href="#option-users.users._name_.password" class="option-anchor">users.users.&lt;name&gt;.password</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Specifies the hashed password for the user.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/users/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/users/options.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-users.users._name_.passwordFile">
-  <h3 class="option-name">
-    <a href="#option-users.users._name_.passwordFile" class="option-anchor">users.users.&lt;name&gt;.passwordFile</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The full path to a file that contains the hash of the user's
-password. The password file is read on each system activation. The
-file should contain exactly one line, which should be the password in
-an encrypted form that is suitable for the <code>chpasswd -e</code> command.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
 </body></html></dd>
   </dl>
   <dl class="option-details option-sources">
