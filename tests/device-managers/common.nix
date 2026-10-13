@@ -73,6 +73,9 @@ let
     in
     ''
       import json
+      ${builtins.readFile ./disk/helpers.py}
+      ${builtins.readFile ./disk/qemu.py}
+      ${builtins.readFile ./disk/scenarios.py}
 
       DISK_GID = ${toString diskGid}
       CONFIG_CHECK = ${builtins.toJSON "${managerPackage}/bin/${serviceName} ${configCheck}"}
@@ -83,16 +86,13 @@ let
       def service_status(name):
           return json.loads(machine.succeed(f"initctl -j status {name}"))
 
-      def wait_for_link(path, target):
-          machine.succeed(f"test -L {path} && readlink -f {path} | grep -Fx {target}")
-
       def assert_device_metadata(device, target, verify_target=False):
           stat = machine.succeed(f"stat -c '%u:%g:%a' {device}").strip()
           assert stat == f"0:{DISK_GID}:660", f"unexpected {device} metadata: {stat}"
           link_stat = machine.succeed(f"stat -c '%u:%g:%a' {target}").strip()
           assert link_stat == "0:0:777", f"unexpected symlink metadata: {link_stat}"
           if verify_target:
-              wait_for_link(target, device)
+              assert_link(machine, target, device)
 
       machine.start()
       machine.wait_for_console_text("finix - stage 1", timeout=180)
@@ -113,6 +113,7 @@ let
           machine.succeed(CONFIG_CHECK)
 
       with subtest("coldplug creates filesystem-specific disk links"):
+          coldplug_filesystems(machine)
           machine.wait_until_succeeds(
               "test -b /dev/vda && test -L /dev/disk/by-id/vda && "
               "test -L /dev/disk/by-label/finix-ext4 && "
@@ -148,10 +149,7 @@ let
           machine.succeed(CONFIG_CHECK)
 
       with subtest("coldplug processes every QEMU disk event"):
-          for device in ("vda", "vdb", "vdc", "vdd"):
-              machine.wait_until_succeeds(
-                  f"grep -Eq '^add {device} ' {EVENT_LOG}", timeout=30
-              )
+          event_log_contains_all_disks(machine, EVENT_LOG)
 
       with subtest("shutdown"):
           machine.shutdown()
