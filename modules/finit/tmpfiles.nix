@@ -57,13 +57,12 @@ in
       ${lib.concatStringsSep "\n" config.finit.tmpfiles.rules}
     '';
 
-    environment.etc."finit.d/tmpfiles-setup.conf".text = lib.mkAfter ''
-
-      # force a restart on configuration change
-      # ${config.environment.etc."tmpfiles.d/finix.conf".source}
-    '';
-
-    finit.tasks.tmpfiles-setup.command = "${config.finit.package}/libexec/finit/tmpfiles --create";
+    finit.tasks.tmpfiles-setup = {
+      command = "${config.finit.package}/libexec/finit/tmpfiles --create";
+      reload-triggers = [
+        config.environment.etc."tmpfiles.d/finix.conf".source
+      ];
+    };
 
     providers.scheduler.tasks = lib.mkIf cfg.clean.enable {
       tmpfiles-clean = {

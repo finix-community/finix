@@ -40,17 +40,34 @@ in
       '';
     };
 
+    suppressPowerManagementWarning = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to suppress the warning that sessiond 0.3.0 and newer no longer
+        manage power actions.
+      '';
+    };
+
     settings = lib.mkOption {
       type = format.type;
       default = { };
       description = ''
-        `sessiond` configuration. See [upstream documentation](https://tangled.org/r0chd.pl/sessiond/blob/master/docs/CONFIGURATION.md)
+        `sessiond` configuration. See [upstream documentation](https://r0chd.tngl.sh/sessiond/configuration.html)
         for additional details.
       '';
     };
   };
 
   config = lib.mkIf cfg.enable {
+    warnings =
+      lib.optional
+        (!cfg.suppressPowerManagementWarning && lib.versionAtLeast (lib.getVersion cfg.package) "0.3.0")
+        ''
+          sessiond no longer manages power actions as of version 0.3.0.
+          To silence this warning, set services.sessiond.suppressPowerManagementWarning = true or enable sessiond-power
+        '';
+
     environment.systemPackages = [ cfg.package ];
 
     services.dbus.enable = true;
@@ -58,18 +75,12 @@ in
 
     services.polkit.enable = true;
 
-    services.sessiond.settings.power = {
-      reboot = lib.mkDefault [ "/run/current-system/sw/bin/reboot" ];
-      poweroff = lib.mkDefault [ "/run/current-system/sw/bin/poweroff" ];
-      suspend = lib.mkDefault [ "/run/current-system/sw/bin/suspend" ];
-    };
-
     finit.services.sessiond = {
-      description = "daemon for power management";
+      description = "Session management daemon";
       conditions = "service/dbus/ready";
       command = "${lib.getExe' cfg.package "sessiond"} --config ${configFile} --log-target syslog";
       notify = "systemd";
-      cgroup.delegate = true;
+      cgroup.system.delegate = true;
       environment =
         if cfg.debug then
           {

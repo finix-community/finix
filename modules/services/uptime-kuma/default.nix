@@ -108,8 +108,8 @@ in
       ];
       command = lib.getExe cfg.package;
       stop-timeout = lib.mkDefault 10;
-      nohup = true;
-      log = true;
+      reload-signal = "none";
+      log = { };
 
       environment = cfg.settings;
       path = [ pkgs.unixtools.ping ];

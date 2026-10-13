@@ -105,7 +105,7 @@ in
       stop-timeout = 30;
 
       # https://github.com/NixOS/nixpkgs/blob/92e1950ebadc72d89e7da09dd54f815c454cec0e/nixos/modules/virtualisation/incus.nix#L404-L407
-      cgroup.settings."pids.max" = "max";
+      cgroup.system."pids.max" = "max";
       rlimit = {
         memlock = "unlimited";
         nofile = 1048576;

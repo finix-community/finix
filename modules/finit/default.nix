@@ -11,22 +11,30 @@ in
   imports = [
     ./initrd.nix
     ./mount.nix
-    ./stage1.nix
-    ./stage2.nix
+    ./options.nix
     ./tmpfiles.nix
   ];
 
   config = {
     assertions = [
       {
-        assertion = lib.versionAtLeast cfg.package.version "4.16";
-        message = "finit version must be at least 4.16";
+        assertion = lib.versionAtLeast config.finit.package.version "5.0";
+        message = "finit version must be at least 5.0";
       }
 
       {
         assertion = config.finit.ttys != { };
         message = "you have not defined any ttys; consider importing and enabling the getty module";
       }
+    ];
+
+    finit.settings = lib.mkMerge [
+      {
+        inherit (cfg) readiness runlevel;
+      }
+      (lib.mkIf (cfg.environment != { }) { environment = cfg.environment; })
+      (lib.mkIf (cfg.cgroups != { }) { cgroup = cfg.cgroups; })
+      (lib.mkIf (cfg.rlimits != { }) { rlimit = cfg.rlimits; })
     ];
 
     # TODO: decide a reasonable default here... user can override if needed
@@ -55,5 +63,7 @@ in
     finit.tmpfiles.rules = [
       "d /etc/finit.d/enabled 0755"
     ];
+
+    system.switch.inhibitors.finit-format = "libconfuse";
   };
 }

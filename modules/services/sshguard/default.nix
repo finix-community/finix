@@ -102,7 +102,7 @@ in
       ++ lib.optionals (cfg.settings.BACKEND == "nft-sets") [
         "task/nftables/success"
       ];
-      log = true;
+      log = { };
       path = [
         config.programs.coreutils.package
       ]

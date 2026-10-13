@@ -48,13 +48,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = lib.versionAtLeast config.finit.package.version "5.0";
-        message = "finit version must be at least 5.0";
-      }
-    ];
-
     services.keventd.extraArgs = [
       "-c"
       (if cfg.debug then "-d" else "-n")
@@ -109,17 +102,14 @@ in
       description = "device event daemon (keventd)";
       command = "${config.finit.package}/libexec/finit/keventd " + lib.escapeShellArgs cfg.extraArgs;
       runlevel = "S12345789";
-      cgroup.name = "init";
+      cgroup.init = { };
       notify = "pid";
-      log = true;
+      log = { };
+
+      reload-triggers = [
+        config.environment.etc."udev/rules.d".source
+      ];
     };
-
-    # TODO: add finit.services.reloadTriggers option
-    environment.etc."finit.d/keventd.conf".text = lib.mkAfter ''
-
-      # reload trigger
-      # ${config.environment.etc."udev/rules.d".source}
-    '';
 
     # TODO: share between device managers
     system.activation.scripts.keventd = lib.mkIf config.boot.kernel.enable {

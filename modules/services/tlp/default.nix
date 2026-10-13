@@ -32,6 +32,24 @@ in
       '';
     };
 
+    pd = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Whether to enable [tlp-pd](${pkgs.tlp-pd.meta.homepage}) as a system service.
+        '';
+      };
+      package = lib.mkOption {
+        type = lib.types.package;
+        default = pkgs.tlp-pd;
+        defaultText = lib.literalExpression "pkgs.tlp-pd";
+        description = ''
+          The package to use for `tlp-pd`.
+        '';
+      };
+    };
+
     settings = lib.mkOption {
       type = format.type;
       default = { };
@@ -47,7 +65,8 @@ in
 
     environment.systemPackages = [
       cfg.package
-    ];
+    ]
+    ++ lib.optionals cfg.pd.enable [ cfg.pd.package ];
 
     finit.tmpfiles.rules = [
       "d /var/lib/tlp"
@@ -65,6 +84,7 @@ in
       };
     };
 
+    services.dbus.packages = lib.mkIf cfg.pd.enable [ cfg.pd.package ];
     services.udev.packages = [ cfg.package ];
 
     # TODO: revisit rules... compare with udev
@@ -91,6 +111,10 @@ in
         description = "tlp system reload";
         command = "${tlpExe} start";
         conditions = "service/syslogd/ready";
+
+        reload-triggers = [
+          config.environment.etc."tlp.conf".source
+        ];
       };
 
       "tlp@stop" = {
@@ -101,11 +125,9 @@ in
       };
     };
 
-    # TODO: add finit.services.restartTriggers option
-    environment.etc."finit.d/tlp@reload.conf".text = lib.mkAfter ''
-
-      # standard nixos trick to force a restart when something has changed
-      # ${config.environment.etc."tlp.conf".source}
-    '';
+    finit.services.tlp-pd = lib.mkIf cfg.pd.enable {
+      description = "tlp-pd service";
+      command = lib.getExe cfg.pd.package;
+    };
   };
 }

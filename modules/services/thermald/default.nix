@@ -58,8 +58,8 @@ in
       description = "thermal daemon service";
       conditions = "service/syslogd/ready";
       command = "${lib.getExe cfg.package} " + lib.escapeShellArgs cfg.extraArgs;
-      log = true;
-      nohup = true;
+      log = { };
+      reload-signal = "none";
     };
   };
 }

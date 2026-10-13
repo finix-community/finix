@@ -13,12 +13,12 @@ in
       type = lib.types.bool;
       default = false;
       description = ''
-        Whether to enable [bash](${pkgs.bash.meta.homepage}).
+        Whether to enable [bash](${pkgs.bash.meta.homepage}) as a system shell.
       '';
     };
 
     package = lib.mkOption {
-      type = lib.types.package;
+      type = lib.types.shellPackage;
       default = pkgs.bashInteractive;
       defaultText = lib.literalExpression "pkgs.bashInteractive";
       description = ''
@@ -30,8 +30,8 @@ in
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [ cfg.package ];
     environment.shells = [
-      "/run/current-system/sw/bin/bash"
-      (lib.getExe cfg.package)
+      "/run/current-system/sw${cfg.package.shellPath}"
+      "${cfg.package}${cfg.package.shellPath}"
     ];
 
     environment.etc."profile.d/bash.sh".text = ''
