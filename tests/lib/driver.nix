@@ -11,5 +11,11 @@ nixosTestDriver.overrideAttrs (old: {
 
   postPatch = (old.postPatch or "") + ''
     cp ${./finit_machine.py} test_driver/finit_machine.py
+    cp ${./qmp.py} test_driver/machine/qmp.py
+    substituteInPlace test_driver/driver.py \
+      --replace-fail '    QemuMachine,' '    # QemuMachine is provided by finit_machine below' \
+      --replace-fail 'from test_driver.logger import AbstractLogger' \
+        'from test_driver.finit_machine import FinitMachine as QemuMachine
+from test_driver.logger import AbstractLogger'
   '';
 })
