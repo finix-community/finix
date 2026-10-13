@@ -68,7 +68,5 @@ in
       poweroff = lib.mkDefault [ "/run/current-system/sw/bin/poweroff" ];
       suspend = lib.mkDefault [ "/run/current-system/sw/bin/suspend" ];
     };
-
-    services.sessiond.suppressPowerManagementWarning = true;
   };
 }
