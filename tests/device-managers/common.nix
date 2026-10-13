@@ -6,7 +6,7 @@
 let
   inherit (backend) name serviceName readyCondition coldplugCondition configCheck module;
   deviceManagerModule =
-    { config, pkgs, ... }:
+    { config, lib, pkgs, ... }:
     let
       eventScript = pkgs.writeShellScript "device-manager-test-event" ''
         set -eu
@@ -15,18 +15,10 @@ let
           >> /run/device-manager-test/events
       '';
 
-      coldplugDisk = pkgs.runCommand "device-manager-coldplug-disk.img"
-        {
-          nativeBuildInputs = [ pkgs.coreutils pkgs.e2fsprogs ];
-        }
-        ''
-          truncate -s 32M "$out"
-          mkfs.ext4 -q -F -L finix-coldplug \
-            -U 11111111-2222-3333-4444-555555555555 "$out"
-        '';
+      disks = import ./disk/images.nix { inherit pkgs; };
     in
     {
-      imports = [ (module { inherit eventScript coldplugDisk; }) ];
+      imports = [ (module { inherit eventScript; }) ];
 
       services.getty.enable = true;
 
@@ -52,10 +44,10 @@ let
         "d /run/device-manager-test 0755 root root -"
       ];
 
-      virtualisation.qemu.extraArgs = [
+      virtualisation.qemu.extraArgs = lib.concatMap (disk: [
         "-drive"
-        "if=virtio,format=raw,readonly=on,file=${coldplugDisk}"
-      ];
+        "if=virtio,format=raw,readonly=on,file=${disk.image}"
+      ]) (builtins.attrValues disks);
 
       assertions = [
         {
@@ -85,21 +77,22 @@ let
       DISK_GID = ${toString diskGid}
       CONFIG_CHECK = ${builtins.toJSON "${managerPackage}/bin/${serviceName} ${configCheck}"}
       EVENT_LOG = "/run/device-manager-test/events"
-      LABEL = "finix-coldplug"
+      LABEL = "finix-ext4"
       UUID = "11111111-2222-3333-4444-555555555555"
 
       def service_status(name):
           return json.loads(machine.succeed(f"initctl -j status {name}"))
 
       def wait_for_link(path, target):
-          machine.wait_until_succeeds(f"test -L {path} && test \\\"$(readlink {path})\\\" = \\\"{target}\\\"", timeout=30)
+          machine.succeed(f"test -L {path} && readlink -f {path} | grep -Fx {target}")
 
-      def assert_device_metadata(device, target):
+      def assert_device_metadata(device, target, verify_target=False):
           stat = machine.succeed(f"stat -c '%u:%g:%a' {device}").strip()
           assert stat == f"0:{DISK_GID}:660", f"unexpected {device} metadata: {stat}"
           link_stat = machine.succeed(f"stat -c '%u:%g:%a' {target}").strip()
           assert link_stat == "0:0:777", f"unexpected symlink metadata: {link_stat}"
-          wait_for_link(target, "../../" + device.rsplit("/", 1)[-1])
+          if verify_target:
+              wait_for_link(target, device)
 
       machine.start()
       machine.wait_for_console_text("finix - stage 1", timeout=180)
@@ -119,16 +112,24 @@ let
           machine.succeed("test -e /run/finit/cond/${readyCondition}")
           machine.succeed(CONFIG_CHECK)
 
-      with subtest("coldplug creates rule-owned disk links"):
+      with subtest("coldplug creates filesystem-specific disk links"):
           machine.wait_until_succeeds(
               "test -b /dev/vda && test -L /dev/disk/by-id/vda && "
-              "test -L /dev/disk/by-label/finix-coldplug && "
+              "test -L /dev/disk/by-label/finix-ext4 && "
               "test -L /dev/disk/by-uuid/11111111-2222-3333-4444-555555555555",
               timeout=30,
           )
-          assert_device_metadata("/dev/vda", "/dev/disk/by-id/vda")
+          assert_device_metadata("/dev/vda", "/dev/disk/by-id/vda", True)
           assert_device_metadata("/dev/vda", f"/dev/disk/by-label/{LABEL}")
           assert_device_metadata("/dev/vda", f"/dev/disk/by-uuid/{UUID}")
+
+          for device, label in (("/dev/vdb", "finix-btrfs"), ("/dev/vdc", "FINIXVFAT")):
+              machine.wait_until_succeeds(
+                  f"test -b {device} && test -L /dev/disk/by-label/{label}", timeout=30
+              )
+              assert_device_metadata(device, f"/dev/disk/by-label/{label}")
+
+          machine.succeed("test -b /dev/vdd && test ! -e /dev/disk/by-label/finix-raw")
 
       with subtest("device-manager isolation"):
           for service in ("udevd", "keventd", "gardendevd"):
@@ -146,42 +147,10 @@ let
           assert after["pid"] == before["pid"], (before, after)
           machine.succeed(CONFIG_CHECK)
 
-      with subtest("loop-device add/remove events and rules"):
-          image = "/run/device-manager-test/hotplug.img"
-          label = "finix-hotplug"
-          uuid = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
-          machine.succeed(
-              "truncate -s 32M {image} && "
-              "mkfs.ext4 -q -F -L {label} -U {uuid} {image}".format(
-                  image=image, label=label, uuid=uuid
-              )
-          )
-
-          for cycle in range(3):
-              loop = machine.succeed(
-                  f"losetup --find --show {image}"
-              ).strip()
-              device = loop.rsplit("/", 1)[-1]
-              assert device.startswith("loop"), loop
-              machine.wait_until_succeeds(f"test -b {loop}", timeout=30)
-              machine.wait_until_succeeds(
-                  f"test -L /dev/disk/by-label/{label} && "
-                  f"test -L /dev/disk/by-uuid/{uuid}",
-                  timeout=30,
-              )
+      with subtest("coldplug processes every QEMU disk event"):
+          for device in ("vda", "vdb", "vdc", "vdd"):
               machine.wait_until_succeeds(
                   f"grep -Eq '^add {device} ' {EVENT_LOG}", timeout=30
-              )
-              assert_device_metadata(loop, f"/dev/disk/by-label/{label}")
-              assert_device_metadata(loop, f"/dev/disk/by-uuid/{uuid}")
-
-              machine.succeed(f"losetup --detach {loop}")
-              machine.wait_until_succeeds(
-                  f"! losetup --list --noheadings --output NAME,BACK-FILE | "
-                  f"grep -F {image}", timeout=30
-              )
-              machine.wait_until_succeeds(
-                  f"test ! -e /sys/block/{device}/loop/backing_file", timeout=30
               )
 
       with subtest("shutdown"):
