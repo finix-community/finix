@@ -16,7 +16,12 @@ def coldplug_filesystems(machine, disks, order, event_log, add_check, timeout):
         disk = wait_for_serial(machine, metadata["serial"], timeout=timeout)
         filesystem = _filesystem_device(machine, disk, metadata, timeout)
         assert_filesystem_metadata(machine, filesystem, metadata)
-        record = {"name": name, "metadata": metadata, "disk": disk, "device": filesystem}
+        record = {
+            "name": name,
+            "metadata": metadata,
+            "disk": disk,
+            "device": filesystem,
+        }
         records[name] = record
         add_check(machine, record, event_log, None, timeout)
     return records
@@ -49,7 +54,12 @@ def hotplug_filesystems(
         machine.hotplug_disk(image, metadata["serial"])
         disk = wait_for_serial(machine, metadata["serial"], timeout=timeout)
         filesystem = _filesystem_device(machine, disk, metadata, timeout)
-        record = {"name": name, "metadata": metadata, "disk": disk, "device": filesystem}
+        record = {
+            "name": name,
+            "metadata": metadata,
+            "disk": disk,
+            "device": filesystem,
+        }
         add_check(machine, record, event_log, None, timeout)
         assert_filesystem_metadata(machine, filesystem, metadata)
 
@@ -88,7 +98,12 @@ def hotplug_filesystems(
         machine.hotplug_disk(image, metadata["serial"])
         disk = wait_for_serial(machine, metadata["serial"], timeout=timeout)
         filesystem = _filesystem_device(machine, disk, metadata, timeout)
-        record = {"name": name, "metadata": metadata, "disk": disk, "device": filesystem}
+        record = {
+            "name": name,
+            "metadata": metadata,
+            "disk": disk,
+            "device": filesystem,
+        }
         add_check(machine, record, event_log, readd_events, timeout)
         assert_filesystem_metadata(machine, filesystem, metadata)
 

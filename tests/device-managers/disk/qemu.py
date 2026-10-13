@@ -6,16 +6,18 @@ import datetime as dt
 def _serial_probe(serial):
     return (
         "for serial_path in /sys/block/*/serial; do "
-        "[ -r \"$serial_path\" ] || continue; "
-        f"[ \"$(cat \"$serial_path\")\" = \"{serial}\" ] || continue; "
-        "basename \"$(dirname \"$serial_path\")\"; exit 0; "
+        '[ -r "$serial_path" ] || continue; '
+        f'[ "$(cat "$serial_path")" = "{serial}" ] || continue; '
+        'basename "$(dirname "$serial_path")"; exit 0; '
         "done; exit 1"
     )
 
 
 def device_for_serial(machine, serial):
     name = machine.succeed(_serial_probe(serial)).strip()
-    assert name.startswith("vd"), f"serial {serial!r} resolved to unexpected block name {name!r}"
+    assert name.startswith("vd"), (
+        f"serial {serial!r} resolved to unexpected block name {name!r}"
+    )
     return f"/dev/{name}"
 
 
@@ -37,9 +39,9 @@ def wait_for_partition(machine, device, number=1, timeout=dt.timedelta(seconds=3
 def disk_serials(machine):
     output = machine.succeed(
         "for serial_path in /sys/block/*/serial; do "
-        "[ -r \"$serial_path\" ] || continue; "
-        "printf '%s %s\\n' \"$(basename \"$(dirname \"$serial_path\")\")\" "
-        "\"$(cat \"$serial_path\")\"; "
+        '[ -r "$serial_path" ] || continue; '
+        'printf \'%s %s\\n\' "$(basename "$(dirname "$serial_path")")" '
+        '"$(cat "$serial_path")"; '
         "done"
     )
     return dict(line.split(" ", 1) for line in output.splitlines())

@@ -32,7 +32,9 @@ def assert_link_absent(machine, link, timeout):
 def assert_device_mode(machine, device, disk_gid):
     actual = machine.succeed(f"stat -c '%u:%g:%a' {device}").strip()
     expected = f"0:{disk_gid}:660"
-    assert actual == expected, f"unexpected {device} metadata: {actual}, expected {expected}"
+    assert actual == expected, (
+        f"unexpected {device} metadata: {actual}, expected {expected}"
+    )
 
 
 def assert_filesystem_metadata(machine, device, metadata):
@@ -57,6 +59,7 @@ def event_count(machine, action, device_name, event_log):
 
 def wait_for_new_event(machine, action, device_name, event_log, previous, timeout):
     machine.wait_until_succeeds(
-        f"test $(grep -Ec '^{action} {device_name} ' {event_log} || true) -ge {previous + 1}",
+        f"test $(grep -Ec '^{action} {device_name} ' {event_log} || true) "
+        f"-ge {previous + 1}",
         timeout=timeout,
     )
