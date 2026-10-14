@@ -20,4 +20,5 @@ in
   mdevd = runTest ./mdevd.nix;
   udev = runTest ./udev.nix;
   keventd = runTest ./keventd.nix;
+  gardendevd = runTest ./gardendevd.nix;
 }
