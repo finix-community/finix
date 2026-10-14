@@ -22,7 +22,7 @@ let
   scheduleFrom =
     interval:
     let
-      field = lib.elemAt lib.splitString " " interval;
+      field = lib.elemAt (lib.splitString " " interval);
     in
     {
       schedule = {

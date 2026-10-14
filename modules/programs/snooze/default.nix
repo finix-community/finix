@@ -204,7 +204,7 @@ in
         inherit (task) user description;
         command = mkCommand task;
         respawn = true;
-        log = true;
+        log = { };
       }) (lib.filterAttrs (_: task: task.enable) cfg.tasks);
 
       # this module supplies an implementation for `providers.scheduler`
