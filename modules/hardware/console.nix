@@ -43,7 +43,7 @@ let
   colorsScript = lib.optionalString (cfg.colors != [ ]) (
     let
       inherit (lib) imap0 concatStringsSep;
-      esc = "\033]P";
+      esc = "\\033]P";
       entries = imap0 (i: c: "${esc}${lib.toHexString i}${c}") cfg.colors;
     in
     ''printf "${concatStringsSep "" entries}" > /dev/console''
