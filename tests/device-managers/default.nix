@@ -19,4 +19,5 @@ in
 {
   mdevd = runTest ./mdevd.nix;
   udev = runTest ./udev.nix;
+  keventd = runTest ./keventd.nix;
 }

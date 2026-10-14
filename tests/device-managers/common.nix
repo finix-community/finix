@@ -4,10 +4,12 @@
   extraNodeConfig ? { },
 }:
 let
-  inherit (backend) name serviceName readyCondition coldplugCondition configCheck module disks eventScript;
+  inherit (backend) name serviceName readyCondition coldplugCondition module disks eventScript;
+  configCheck = backend.configCheck or "";
   configServiceName = backend.configServiceName or serviceName;
   configBinary = backend.configBinary or serviceName;
   reloadCommand = backend.reloadCommand or "initctl reload ${serviceName}";
+  coldplugEvents = backend.coldplugEvents or true;
   diskAt = name: builtins.getAttr name disks.cold;
   coldDiskOrder = builtins.filter (name: name != "gptExt4") disks.order;
   hotDiskOrder = disks.order;
@@ -74,7 +76,21 @@ let
   testScript =
     { nodes }:
     let
-      managerPackage = toString nodes.machine.config.services.${configServiceName}.package;
+      managerService = builtins.getAttr configServiceName nodes.machine.config.services;
+      managerHasPackage = builtins.hasAttr "package" managerService;
+      managerPackage =
+        if managerHasPackage then
+          toString managerService.package
+        else
+          toString nodes.machine.config.finit.package;
+      configCommand =
+        backend.configCommand
+        or (
+          if managerHasPackage then
+            "${managerPackage}/bin/${configBinary} ${configCheck}"
+          else
+            "${managerPackage}/libexec/finit/${configBinary} ${configCheck}"
+        );
       diskGid = toString nodes.machine.config.ids.gids.disk;
       jsonMetadata = set:
         builtins.replaceStrings [ "null" "true" "false" ] [ "None" "True" "False" ] (
@@ -90,14 +106,14 @@ let
       ${backend.backendScript}
 
       DISK_GID = ${diskGid}
-      CONFIG_CHECK = ${builtins.toJSON "${managerPackage}/bin/${configBinary} ${configCheck}"}
+      CONFIG_CHECK = ${builtins.toJSON configCommand}
       RELOAD_COMMAND = ${builtins.toJSON reloadCommand}
       EVENT_LOG = "/run/device-manager-test/events"
       COLD_DISKS = ${jsonMetadata coldDisks}
       COLD_ORDER = ${builtins.toJSON coldDiskOrder}
       HOT_DISKS = ${jsonMetadata hotDisks}
       HOT_ORDER = ${builtins.toJSON hotDiskOrder}
-      COLDPLUG = True
+      COLDPLUG = ${if coldplugEvents then "True" else "False"}
       TEST_TIMEOUT = dt.timedelta(seconds=30)
 
       def service_status(name):
