@@ -5,16 +5,16 @@ let
   presets = {
     hourly = {
       schedule.hour = "*";
-      slack = "1h";
+      timing.slack = "1h";
     };
-    daily.slack = "1d";
+    daily.timing.slack = "1d";
     weekly = {
       schedule.weekday = "0";
-      slack = "7d";
+      timing.slack = "7d";
     };
     monthly = {
       schedule.day = "1";
-      slack = "28d";
+      timing.slack = "28d";
     };
     yearly.schedule.day_of_year = "1";
   };

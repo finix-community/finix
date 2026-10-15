@@ -7,11 +7,11 @@
 let
   cfg = config.programs.snooze;
 
-  mkDelayOption =
-    description:
+  mkTimingOption =
+    default: description:
     lib.mkOption {
+      inherit default;
       type = with lib.types; nullOr str;
-      default = null;
       description = ''
         ${description}
 
@@ -75,13 +75,14 @@ in
                 default = true;
               };
 
-              command = lib.mkOption {
-                type = lib.types.str;
-                description = "The command to execute.";
-              };
               description = lib.mkOption {
                 type = lib.types.str;
                 default = "snooze: ${name}";
+              };
+
+              command = lib.mkOption {
+                type = lib.types.str;
+                description = "The command to execute.";
               };
 
               user = lib.mkOption {
@@ -97,27 +98,24 @@ in
                 description = ''
                   Path to the timefile location.
 
-                  If {option}`timeFile` does not exist, it will be assumed outdated enough to ensure earliest execution.
+                  If `timeFile` does not exist, it will be assumed outdated enough to ensure earliest execution.
                 '';
               };
-              timeWait = mkDelayOption ''
-                When provided, execution will not start earlier than the mtime of {option}`timeFile` plus {option}`timeWait` seconds.
-                When not provided, snooze will start finding the first matching time starting from the mtime of {option}`timeFile`, and taking {option}`slack` into account. 
-              '';
-              randDelay = mkDelayOption ''
-                Delay determination of scheduled time randomly up to `randDelay` seconds later.
-              '';
-              jitter = mkDelayOption ''
-                Delay execution randomly up to `jitter` seconds later than scheduled time.
-              '';
-              slack = lib.mkOption {
-                type = lib.types.str;
-                default = "60";
-                description = ''
+
+              timing = {
+                timeWait = mkTimingOption null ''
+                  When provided, execution will not start earlier than the mtime of `timeFile` plus `timeWait` seconds.
+                  When not provided, snooze will start finding the first matching time starting from the mtime of `timeFile`, and taking `slack` into account. 
+                '';
+                randDelay = mkTimingOption null ''
+                  Delay determination of scheduled time randomly up to `randDelay` seconds later.
+                '';
+                jitter = mkTimingOption null ''
+                  Delay execution randomly up to `jitter` seconds later than scheduled time.
+                '';
+                slack = mkTimingOption "60" ''
                   Commands are executed even if they are `slack` seconds late.
                   This will not result in immediate execution unless `timeFile` is used.
-
-                  The duration is parsed as seconds, unless a postfix of `m` for minutes, `h` for hours, or `d` for days is used.
                 '';
               };
 
@@ -159,11 +157,11 @@ in
             "-m '${task.schedule.month}'"
             "-D '${task.schedule.day_of_year}'"
             "-W '${task.schedule.week_of_year}'"
-            "-s ${task.slack}"
           ]
-          ++ lib.optionals (task.randDelay != null) [ "-R ${task.randDelay}" ]
-          ++ lib.optionals (task.jitter != null) [ "-J ${task.jitter}" ]
-          ++ lib.optionals (task.timeWait != null) [ "-T ${task.timeWait}" ]
+          ++ lib.optionals (task.timing.slack != null) [ "-s ${task.timing.slack}" ]
+          ++ lib.optionals (task.timing.randDelay != null) [ "-R ${task.timing.randDelay}" ]
+          ++ lib.optionals (task.timing.jitter != null) [ "-J ${task.timing.jitter}" ]
+          ++ lib.optionals (task.timing.timeWait != null) [ "-T ${task.timing.timeWait}" ]
           ++ lib.optionals (task.timeFile != null) [ "-t ${task.timeFile}" ]
         );
       mkCommand =
@@ -175,7 +173,7 @@ in
           [
             "${lib.getExe cfg.package}"
             "${mkFlags task}"
-            # "--"
+            "--"
           ]
           ++ (
             if task.timeFile == null then
