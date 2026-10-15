@@ -173,7 +173,7 @@ in
           [
             "${lib.getExe cfg.package}"
             "${mkFlags task}"
-            "--"
+            # "--"
           ]
           ++ (
             if task.timeFile == null then
