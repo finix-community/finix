@@ -50,7 +50,7 @@ in
     };
 
     settings = lib.mkOption {
-      type = format.type;
+      inherit (format) type;
       default = { };
       description = ''
         `sessiond` configuration. See [upstream documentation](https://r0chd.tngl.sh/sessiond/configuration.html)

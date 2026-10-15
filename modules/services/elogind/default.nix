@@ -37,7 +37,7 @@ in
     };
 
     settings.Login = lib.mkOption {
-      type = (pkgs.formats.keyValue { }).type;
+      inherit ((pkgs.formats.keyValue { })) type;
       default = { };
       description = ''
         `elogind` login manager configuration. See {manpage}`logind.conf(5)`
@@ -46,7 +46,7 @@ in
     };
 
     settings.Sleep = lib.mkOption {
-      type = (pkgs.formats.keyValue { }).type;
+      inherit ((pkgs.formats.keyValue { })) type;
       default = { };
       description = ''
         `elogind` suspend and hibernation configuration. See {manpage}`sleep.conf(5)`

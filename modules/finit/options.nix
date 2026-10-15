@@ -323,7 +323,7 @@ let
         };
 
         environment = lib.mkOption {
-          type = keyValue.type;
+          inherit (keyValue) type;
           default = { };
           example = {
             TZ = "CET";
@@ -889,7 +889,7 @@ in
     };
 
     settings = lib.mkOption {
-      type = format.type;
+      inherit (format) type;
       default = { };
       description = ''
         Freeform top-level `finit.conf` settings.
@@ -980,7 +980,7 @@ in
 
   options.boot.initrd.finit = {
     settings = lib.mkOption {
-      type = format.type;
+      inherit (format) type;
       default = { };
       description = ''
         Freeform top-level `finit.conf` settings for the initramfs.

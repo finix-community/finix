@@ -5,12 +5,10 @@
 {
   name = "shell";
 
-  nodes.machine =
-    { ... }:
-    {
-      services.getty.enable = true;
-      services.mdevd.enable = true;
-    };
+  nodes.machine = _: {
+    services.getty.enable = true;
+    services.mdevd.enable = true;
+  };
 
   testScript = ''
     import datetime
