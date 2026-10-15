@@ -102,6 +102,10 @@ in
   };
 
   config = {
+    finit.tmpfiles.rules = [
+      "d /var/lib/lastlog 0755 - - -"
+    ];
+
     environment.etc =
       let
         etcTree = lib.mapAttrs' (
