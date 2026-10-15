@@ -23,7 +23,7 @@ TODO
 
 #### limine
 
-Finix currently ships [limine](https://github.com/Limine-Bootloader/Limine) as the only available bootloader program. It can be installed on BIOS and UEFI systems, with support for x86-64, aarch64, and riscv64 architectures. It supports both MBR and GPT paritioning schemes, as well as the FAT12/16/32 and ISO9660 filesystems. It may also be configured to support secure boot with [`sbctl`](https://github.com/Foxboron/sbctl).
+Finix currently ships [limine](https://github.com/Limine-Bootloader/Limine) as the only available bootloader program. It can be installed on BIOS and UEFI systems, with support for x86-64, aarch64, and riscv64 architectures. It supports both MBR and GPT partitioning schemes, as well as the FAT12/16/32 and ISO9660 filesystems. It may also be configured to support secure boot with [`sbctl`](https://github.com/Foxboron/sbctl).
 
 This program is not imported by default. To enable it, add the following to your configuration:
 
@@ -35,6 +35,22 @@ This program is not imported by default. To enable it, add the following to your
   programs.limine.enable = true;
 }
 ```
+
+**BIOS support**
+
+Limine supports UEFI out of the box, but it can be configured to boot on BIOS systems. To enable limine's BIOS support, add the following to your configuration:
+
+```nix
+programs.limine.biosSupport = true;
+```
+
+To denote the BIOS device to install to, set the following option:
+
+```nix
+programs.limine.biosDevice = "/dev/sda";
+```
+
+The specified device must be a whole disk name.
 
 **Limiting the number of generations**
 
@@ -117,6 +133,10 @@ Finix's filesystem configuration syntax is nearly the same as NixOS. The followi
 
 Support for each filesystem configuration is automatically enabled in both the initial ramdisk and a live system when the `fsType` option is specified.
 
+#### ZFS
+
+It is commonly reported that ZFS does not work with the latest release of the kernel. It is recommended to use the latest ZFS compatible LTS kernel with `boot.kernelPackages = pkgs.linuxPackages`. 
+
 #### Note about encrypted LUKS volumes
 
 Finix does not ship the `boot.initrd.luks.devices` option set, so you will need to manually add entries for the encrypted volume and its respective mapped name in `/dev/mapper`. Here is an example configuration:
@@ -175,7 +195,7 @@ services.udev.packages = [ pkgs.libtmp.out ];
 
 #### gardendevd
 
-[gardendevd](https://codeberg.org/Gardenhouse/gardendevd) is a device manager designed to be a lightweight replacement to systemd-udev. It is able to read and parse udev-style device rules to populate device nodes. It optionally runs on top of mdevd, another lightweight device manager, but it is runable as a standalone daemon. Some programs may require recompilation with [libudev-garden](https://codeberg.org/Gardenhouse/libudev-garden), a fork of libudev-zero written to be used with gardendevd. Issues have been reported regarding the reliability of services written to be tighly integrated with systemd-udev -- particularly gvfs and udisks2. It is possible that users will need to write custom udev rules to support any uncommon hardware not covered by the stock rules shipped by gardendevd.
+[gardendevd](https://codeberg.org/Gardenhouse/gardendevd) is a device manager designed to be a lightweight replacement to systemd-udev. It is able to read and parse udev-style device rules to populate device nodes. It optionally runs on top of mdevd, another lightweight device manager, but it is runnable as a standalone daemon. Some programs may require recompilation with [libudev-garden](https://codeberg.org/Gardenhouse/libudev-garden), a fork of libudev-zero written to be used with gardendevd. Issues have been reported regarding the reliability of services written to be tightly integrated with systemd-udev -- particularly gvfs and udisks2. It is possible that users will need to write custom udev rules to support any uncommon hardware not covered by the stock rules shipped by gardendevd.
 
 This service is imported by default. To enable it, add the following line to your system configuration:
 
@@ -195,7 +215,7 @@ services.udev.packages = [ pkgs.libtmp.out ];
 
 #### keventd
 
-[keventd](https://troglobit.com/projects/finit/) is the device manager bundled with finit since version 5 and up. It is capable as a lightweight replacement to systemd-udev in tandem with libudev-zero, as it is able to read udev style rules. It is not as feature complete as gardendevd at the time of writing, and some programs and services will need to be recompiled with libudev-zero in place of libudev in order for them to function properly with keventd. Issues have been reported regarding the reliability of services that are tighly integrated with systemd-udev -- notably gvfs and udisks2, and it is possible that end users will need to write custom udev rules to support any uncommon hardware not covered by the stock rules shipped by keventd.
+[keventd](https://troglobit.com/projects/finit/) is the device manager bundled with finit since version 5 and up. It is capable as a lightweight replacement to systemd-udev in tandem with libudev-zero, as it is able to read udev style rules. It is not as feature complete as gardendevd at the time of writing, and some programs and services will need to be recompiled with libudev-zero in place of libudev in order for them to function properly with keventd. Issues have been reported regarding the reliability of services that are tightly integrated with systemd-udev -- notably gvfs and udisks2, and it is possible that end users will need to write custom udev rules to support any uncommon hardware not covered by the stock rules shipped by keventd.
 
 This service is imported by default. To enable it, add the following line to your system configuration:
 
@@ -213,7 +233,7 @@ services.udev.packages = [ pkgs.libtmp.out ];
 
 #### mdevd
 
-[mdevd](https://skarnet.org/software/mdevd/) is a lightweight device manager from the Skarnet/s6 family of Linux system utilities. It is designed to be a drop in replacement to the mdev device manager included in the BusyBox software suite. It is by far the leanest of the other three services listed, and it has the narrowest hardware compatibility. It is ideal for systems with limited resources or those with little need for broad hardware support beyond standard input and storage devices. Programs and services dealing with low level input, notably pipewire and most graphical environments, will require recompilation with libudev-zero in order to function properly. gvfs and udisks2 will not work with this device manager. If any additional hardware support is desired, a user will need to write custom rules utilising mdevd syntax, which is wholly unique to udev syntax. Examples for what these rules look like may be found [here](https://git.lin.moe/aports/lin/mdev-helper/mdev.conf.html).
+[mdevd](https://skarnet.org/software/mdevd/) is a lightweight device manager from the Skarnet/s6 family of Linux system utilities. It is designed to be a drop in replacement to the mdev device manager included in the BusyBox software suite. It is by far the leanest of the four device managers, and it has the narrowest hardware compatibility. It is ideal for systems with limited resources or those with little need for broad hardware support beyond standard input and storage devices. Programs and services dealing with low level input, notably pipewire and most graphical environments, will require recompilation with libudev-zero in order to function properly. gvfs and udisks2 will not work with this device manager. If any additional hardware support is desired, a user will need to write custom rules utilising mdevd syntax, which is wholly unique to udev syntax. Examples for what these rules look like may be found [here](https://git.lin.moe/aports/lin/mdev-helper/mdev.conf.html).
 
 This service is imported by default. To enable it, add the following line to your system configuration:
 
@@ -232,7 +252,7 @@ It is generally advised when running this device manager to set the value of `se
 
 ### getty
 
-getty is a program that manages login terminals. Finit ships with a built in getty implementation used by default when getty is enabled.
+getty is a program that manages login terminals. Finit ships with a built-in getty implementation used by default when getty is enabled.
 
 This service is not imported by default. To import and enable it, add the following to your system configuration:
 
