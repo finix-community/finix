@@ -139,7 +139,7 @@ in
     };
 
     subscriptions = lib.mkOption {
-      type = format.type;
+      inherit (format) type;
       default = { };
       example = {
         "YouTube Playlist" = {
@@ -180,7 +180,7 @@ in
     users.users = lib.optionalAttrs (cfg.user == "ytdl-sub") {
       ytdl-sub = {
         isSystemUser = true;
-        group = cfg.group;
+        inherit (cfg) group;
       };
     };
 

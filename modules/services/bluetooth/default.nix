@@ -37,7 +37,7 @@ in
     };
 
     settings = lib.mkOption {
-      type = format.type;
+      inherit (format) type;
       default = { };
       description = ''
         `bluez` configuration. See [upstream documentation](https://github.com/bluez/bluez/blob/master/src/main.conf)

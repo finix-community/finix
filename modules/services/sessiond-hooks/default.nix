@@ -44,7 +44,7 @@ in
               default = true;
             };
             settings = lib.mkOption {
-              type = format.type;
+              inherit (format) type;
               description = "Hook settings serialized to TOML.";
             };
           };
