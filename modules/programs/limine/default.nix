@@ -9,7 +9,8 @@ let
 
   format = pkgs.formats.keyValue { };
 
-  defaultWallpaper = pkgs.nixos-artwork.wallpapers.simple-dark-gray-bootloader.gnomeFilePath;
+  defaultWallpaper = ./../../../assets/finix-bootloader.png;
+
 in
 {
   imports = [
