@@ -1,6 +1,6 @@
 # Installation
 
-This guide contains instructions for installing finix from the standard NixOS installation environment and tools, which is currently the recommended way of installing finix in lieu of a standalone installation environment.
+This guide contains instructions for installing finix from the standard NixOS installation environment and tools, as well as from the experimental graphical installer based on Calamares.
 
 finix can be installed and configured using any of channels, pinned inputs, or flakes.
 
@@ -218,7 +218,6 @@ nixos-generate-config --root /mnt --show-hardware-config > ./hardware-configurat
 
 Open the generated file with your editor and delete the `imports = [ ... ];` statement at the beginning, keeping all of the `boot` options for kernel modules, and removing every option below the `fileSystems` and `swapDevices` options. If you need an example for what this file will look like after the specified modifications, see below. Do NOT copy this file directly, as the listed filesystem configuration will fail to evaluate.
 
-
 ```nix
 # hardware-configuration.nix
 {
@@ -276,6 +275,18 @@ It is generally recommended to add the following line to `hardware-configuration
 hardware.firmware = [ pkgs.linux-firmware ];
 ```
 
+#### Virtual machine installs
+
+**VirtualBox**
+
+If you are installing finix into a VirtualBox machine, you will only need to remove this option at the bottom of `hardware-configuration.nix`.
+
+```nix
+virtualisation.virtualbox.guest.enable = true;
+```
+
+**QEMU**
+
 If you are installing finix into a QEMU-based virtual machine, you will need to keep or re-add the following statement in your hardware configuration:
 
 ```nix
@@ -307,6 +318,8 @@ finix.lib.finixSystem {
 };
 ```
 
+#### BIOS systems
+
 If you are installing onto a BIOS system, you will need to add the following Limine settings to your configuration.
 
 ```nix
@@ -321,7 +334,7 @@ programs.limine.biosDevice = "/dev/sda";
 
 The specified device must be a whole disk name.
 
-#### Note about LUKS devices
+#### LUKS devices
 
 Finix does not ship the `boot.initrd.luks.devices` option set, so you will need to manually add entries for the encrypted volume and its respective mapped name in `/dev/mapper`. Here is an example configuration:
 
@@ -384,31 +397,11 @@ nix-channel --add https://github.com/finix-community/finix/archive/refs/heads/ma
 nix-channel --update
 ```
 
-If you are installing finix into a QEMU-based virtual machine, you will need to keep or re-add the following statement in your hardware configuration:
-
-```nix
-imports = [
-  (modulesPath + "/profiles/qemu-guest.nix")
-];
-```
-
-Since modulesPath does not exist by default in finix, you will need to add the following to your flake.nix inside finix.lib.finixSystem to expose it (or system.nix if you are using channels):
-
-```nix
-finix.lib.finixSystem {
-  inherit (pkgs) lib;
-  specialArgs = {
-    modulesPath = toString nixpkgs + "/nixos/modules";
-    inherit inputs;
-  };
-};
-```
-
 ### Configuring
 
 Copy the contents of your edited `/mnt/etc/nixos/hardware-configuration.nix` into the hardware configuration file you cloned from the examples repository.
 
-You can now edit `configuration.nix` to your liking. The default configuration comes preset with options for network setup, preferred editors, and sudo/doas. Refer to our [options search](https://finix-community.github.io/finix/options.html) for a comprehensive list of configuration modules, or our [configuration guide](https://finix-community.github.io/finix/finix-vs-nixos.html) for a more simplified overview of common options. You will need to add any wanted modules into the top level `imports` statement in order for them to be included at evaluation time.
+You can now edit `configuration.nix` to your liking. The default configuration comes preset with options for network setup, preferred editors, and sudo/doas. Refer to our [options search](https://finix-community.github.io/finix/options.html) for a comprehensive list of configuration modules, or our [configuration guide](https://finix-community.github.io/finix/configuring.html) for a more simplified overview of common options. You will need to add any wanted modules into the top level `imports` statement in order for them to be included at evaluation time.
 
 It is generally recommended to add the `shadow` package into your packages list, if it is not there already. Some users have reported an issue where the root user password prompt does not appear at install time without this package. You may remove it after installation as it is enabled by default.
 
@@ -438,6 +431,10 @@ nixos-install --root /mnt --flake /path/to/flake/directory#<desired profile name
 ```bash
 nixos-install --root /mnt --file /mnt/etc/finix/system.nix --channel /nix/var/nix/profiles/per-user/root/channels
 ```
+
+### Wrapping up
+
+If you added `pkgs.shadow` to your list of system packages, you will be prompted to set the password for the root user account. Once the install command completes, you can run `nixos-enter --root /mnt -c 'passwd user'` to set a password for your user account.
 
 Once installation has completed, reboot your system and remove the flash drive with the NixOS live environment. Welcome to finix!
 
