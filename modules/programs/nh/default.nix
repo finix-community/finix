@@ -3,11 +3,9 @@
   lib,
   pkgs,
   ...
-}:
-let
+}: let
   cfg = config.programs.nh;
-in
-{
+in {
   options = {
     programs.nh = {
       enable = lib.mkOption {
@@ -131,7 +129,7 @@ in
             };
           };
         };
-        default = { };
+        default = {};
         description = ''
           Settings passed to nh as environment variables.
 
@@ -213,15 +211,14 @@ in
   config = {
     assertions = [
       {
-        assertion =
-          let
-            flakes = with cfg.settings; [
-              NH_FLAKE
-              NH_OS_FLAKE
-              NH_HOME_FLAKE
-              NH_DARWIN_FLAKE
-            ];
-          in
+        assertion = let
+          flakes = with cfg.settings; [
+            NH_FLAKE
+            NH_OS_FLAKE
+            NH_HOME_FLAKE
+            NH_DARWIN_FLAKE
+          ];
+        in
           lib.all (flake: !lib.hasSuffix ".nix" flake) (lib.filter (flake: flake != null) flakes);
 
         message = "FLAKE options must be a directory, or valid repository, not a .nix file.";
@@ -230,7 +227,8 @@ in
         assertion =
           !(
             (
-              cfg.settings.NH_FLAKE != null
+              cfg.settings.NH_FLAKE
+              != null
               || cfg.settings.NH_OS_FLAKE != null
               || cfg.settings.NH_HOME_FLAKE != null
               || cfg.settings.NH_DARWIN_FLAKE != null
@@ -243,7 +241,8 @@ in
         assertion =
           !(
             (
-              cfg.settings.NH_FLAKE == null
+              cfg.settings.NH_FLAKE
+              == null
               && cfg.settings.NH_OS_FLAKE == null
               && cfg.settings.NH_HOME_FLAKE == null
               && cfg.settings.NH_DARWIN_FLAKE == null
@@ -255,18 +254,26 @@ in
     ];
 
     environment = lib.mkIf cfg.enable {
-      systemPackages = [ cfg.package ];
+      systemPackages = [cfg.package];
       variables = lib.mapAttrs (
-        _: v: if builtins.isBool v then (if v then "1" else "0") else toString v
+        _: v:
+          if builtins.isBool v
+          then
+            (
+              if v
+              then "1"
+              else "0"
+            )
+          else toString v
       ) (lib.filterAttrs (_: v: v != null) cfg.settings);
     };
 
     providers.scheduler.tasks = {
-      NH_CLEAN = {
+      NH_CLEAN = lib.mkIf cfg.clean.enable {
         command = "${lib.getExe cfg.package} clean all ${cfg.clean.extraArgs}";
         interval = "${cfg.clean.interval}";
       };
-      NH_UPDATE = {
+      NH_UPDATE = lib.mkIf cfg.update.enable {
         command = "${lib.getExe cfg.package} ${cfg.update.platform} switch ${cfg.update.extraArgs}";
         interval = "${cfg.update.interval}";
       };
