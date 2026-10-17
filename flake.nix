@@ -15,6 +15,7 @@
     in
     {
       nixosModules = import ./modules;
+      overlays.without-systemd = import ./overlays/without-systemd.nix;
 
       lib.finixSystem =
         {
