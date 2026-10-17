@@ -67,7 +67,11 @@ in
     };
 
     interval = lib.mkOption {
-      inherit (options.providers.scheduler.interval) type description example;
+      inherit ((options.providers.scheduler.tasks.type.getSubOptions [ ]).interval)
+        type
+        description
+        example
+        ;
       default = "daily";
     };
 
