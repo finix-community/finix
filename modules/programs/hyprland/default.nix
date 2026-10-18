@@ -53,14 +53,11 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default =
-        pkgs.hyprland.override {
-          inherit aquamarine libinput;
-        }
-        // lib.optionalAttrs (udevApi != null) {
-          # since we're recompiling go ahead and disable systemd
-          withSystemd = false;
-        };
+      default = pkgs.hyprland.override {
+        inherit aquamarine libinput;
+        # since we're recompiling go ahead and disable systemd
+        ${if udevApi != null then "withSystemd" else null} = false;
+      };
       defaultText = lib.literalExpression "pkgs.hyprland";
       description = ''
         The package to use for `hyprland`.
