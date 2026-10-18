@@ -1,0 +1,14 @@
+name: "apply statix check"
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  statix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+      - name: Statix check
+        run: nix run nixpkgs#statix check
