@@ -69,7 +69,9 @@ in
           fi
         fi
 
-        eval "$(${pkgs.coreutils}/bin/dircolors -b)"
+        if command -v dircolors >/dev/null; then
+          eval "$(dircolors -b)"
+        fi
 
         alias ls='ls --color=auto'
       fi

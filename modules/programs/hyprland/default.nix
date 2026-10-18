@@ -55,9 +55,8 @@ in
       type = lib.types.package;
       default = pkgs.hyprland.override {
         inherit aquamarine libinput;
-
         # since we're recompiling go ahead and disable systemd
-        withSystemd = udevApi == null;
+        ${if udevApi != null then "withSystemd" else null} = false;
       };
       defaultText = lib.literalExpression "pkgs.hyprland";
       description = ''

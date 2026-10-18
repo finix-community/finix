@@ -40,7 +40,7 @@ in
     };
 
     settings = lib.mkOption {
-      type = format.type;
+      inherit (format) type;
       default = { };
       description = ''
         `lemurs` configuration. See [upstream documentation](https://github.com/coastalwhite/lemurs/blob/main/extra/config.toml)
@@ -122,7 +122,7 @@ in
           # https://github.com/coastalwhite/lemurs/issues/166
           session optional pam_loginuid.so # loginuid (order 10300)
           ${lib.optionalString (session_rundir != false) session_rundir}
-          session required ${config.security.pam.package}/lib/security/pam_lastlog.so silent # lastlog (order 10700)
+          session required ${pkgs.util-linux.lastlog}/lib/security/pam_lastlog2.so silent # lastlog (order 10700)
           session required pam_limits.so
         '';
       };

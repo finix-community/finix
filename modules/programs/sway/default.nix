@@ -40,9 +40,8 @@ let
     {
       inherit libinput;
       ${wlrootsAttr} = o.${wlrootsAttr}.override { inherit libinput; };
-
       # since we're recompiling go ahead and disable systemd
-      systemdSupport = udevApi == null;
+      ${if udevApi != null then "systemdSupport" else null} = false;
     }
   );
 in

@@ -53,7 +53,8 @@ in
         {
           inherit libinput;
           ${wlrootsAttr} = o.${wlrootsAttr}.override { inherit libinput; };
-          enableSystemd = false;
+          # since we're recompiling go ahead and disable systemd
+          ${if udevApi != null then "enableSystemd" else null} = false;
         }
       );
       defaultText = lib.literalExpression "pkgs.labwc";

@@ -60,7 +60,7 @@ in
     };
 
     settings = lib.mkOption {
-      type = format.type;
+      inherit (format) type;
       default = { };
       description = ''
         `avahi` configuration. See {manpage}`avahi-daemon.conf(5)`

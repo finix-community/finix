@@ -17,10 +17,9 @@ in
       '';
     };
 
-    # NOTE: package override required for `loginctl poweroff` to work with elogind
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.polkit.override { useSystemd = !config.services.elogind.enable; };
+      default = pkgs.polkit;
       defaultText = lib.literalExpression "pkgs.polkit";
       description = ''
         The package to use for `polkit`.
@@ -84,12 +83,17 @@ in
       }
     ];
 
-    services.polkit.package = lib.mkIf config.services.sessiond.enable (
-      pkgs.polkit.override {
-        useConsoleKit = true;
-        useSystemd = false;
-      }
-    );
+    services.polkit.package = lib.mkMerge [
+      (lib.mkIf config.services.sessiond.enable (
+        pkgs.polkit.override {
+          useConsoleKit = true;
+          useSystemd = false;
+        }
+      ))
+
+      # NOTE: package override required for `loginctl poweroff` to work with elogind
+      (lib.mkIf config.services.elogind.enable (pkgs.polkit.override { useSystemd = false; }))
+    ];
 
     environment.systemPackages = [
       cfg.package.bin
