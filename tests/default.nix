@@ -67,7 +67,10 @@ let
         name: type:
         type == "regular"
         && lib.hasSuffix ".nix" name
-        && !(builtins.elem name [ "default.nix" "common.nix" ])
+        && !(builtins.elem name [
+          "default.nix"
+          "common.nix"
+        ])
       ) subDirContents;
     in
     lib.recurseIntoAttrs (

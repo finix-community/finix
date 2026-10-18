@@ -4,7 +4,15 @@
   extraNodeConfig ? { },
 }:
 let
-  inherit (backend) name serviceName readyCondition coldplugCondition module disks eventScript;
+  inherit (backend)
+    name
+    serviceName
+    readyCondition
+    coldplugCondition
+    module
+    disks
+    eventScript
+    ;
   configCheck = backend.configCheck or "";
   configServiceName = backend.configServiceName or serviceName;
   configBinary = backend.configBinary or serviceName;
@@ -22,7 +30,12 @@ let
   hotDisks = disks.hot;
   metadata = disk: disk // { image = toString disk.image; };
   deviceManagerModule =
-    { config, lib, pkgs, ... }:
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
     {
       imports = [ (module { inherit eventScript; }) ];
 
@@ -45,14 +58,18 @@ let
         "d /run/device-manager-test 0755 root root -"
       ];
 
-      virtualisation.qemu.extraArgs = lib.concatMap (name: let
-        disk = diskAt name;
-      in [
-        "-drive"
-        "if=none,id=${disk.serial},format=raw,readonly=on,file=${disk.image}"
-        "-device"
-        "virtio-blk-pci,drive=${disk.serial},id=${disk.serial},serial=${disk.serial}"
-      ]) coldDiskOrder;
+      virtualisation.qemu.extraArgs = lib.concatMap (
+        name:
+        let
+          disk = diskAt name;
+        in
+        [
+          "-drive"
+          "if=none,id=${disk.serial},format=raw,readonly=on,file=${disk.image}"
+          "-device"
+          "virtio-blk-pci,drive=${disk.serial},id=${disk.serial},serial=${disk.serial}"
+        ]
+      ) coldDiskOrder;
 
       assertions = [
         {
@@ -60,9 +77,7 @@ let
           message = "device-manager test backend '${name}' must enable ${configServiceName}";
         }
         {
-          assertion = lib.all (
-            service: service == configServiceName || !config.services.${service}.enable
-          ) [
+          assertion = lib.all (service: service == configServiceName || !config.services.${service}.enable) [
             "mdevd"
             "udev"
             "keventd"
@@ -84,15 +99,15 @@ let
         else
           toString nodes.machine.config.finit.package;
       configCommand =
-        backend.configCommand
-        or (
+        backend.configCommand or (
           if managerHasPackage then
             "${managerPackage}/bin/${configBinary} ${configCheck}"
           else
             "${managerPackage}/libexec/finit/${configBinary} ${configCheck}"
         );
       diskGid = toString nodes.machine.config.ids.gids.disk;
-      jsonMetadata = set:
+      jsonMetadata =
+        set:
         builtins.replaceStrings [ "null" "true" "false" ] [ "None" "True" "False" ] (
           builtins.toJSON (builtins.mapAttrs (_: metadata) set)
         );
