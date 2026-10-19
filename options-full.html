@@ -5664,6 +5664,52 @@
   
   <li>
     <details class="toc-category">
+      <summary title="programs.dconf">
+        <span>programs.dconf</span>
+        <span class="toc-count">4</span>
+      </summary>
+      <ul>
+        
+
+        
+        <li>
+          <a href='#option-programs.dconf.enable' title="programs.dconf.enable">
+            enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs.dconf.package' title="programs.dconf.package">
+            package
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs.dconf.packages' title="programs.dconf.packages">
+            packages
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-programs.dconf.profiles' title="programs.dconf.profiles">
+            profiles
+            
+            
+          </a>
+        </li>
+        
+      </ul>
+    </details>
+  </li>
+  
+  <li>
+    <details class="toc-category">
       <summary title="programs.dma">
         <span>programs.dma</span>
         <span class="toc-count">3</span>
@@ -24879,6 +24925,79 @@ accidentally on a wrong machine.</p>
   </dl>
   <dl class="option-details option-sources">
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/cosmic-workspaces-epoch" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/cosmic-workspaces-epoch&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-programs.dconf.enable">
+  <h3 class="option-name">
+    <a href="#option-programs.dconf.enable" class="option-anchor">programs.dconf.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://gitlab.gnome.org/GNOME/dconf">dconf</a>.</p>
+<p>This only enables dconf integration; it does not select settings for a desktop environment.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/dconf" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/dconf&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-programs.dconf.package">
+  <h3 class="option-name">
+    <a href="#option-programs.dconf.package" class="option-anchor">programs.dconf.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>dconf</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">dconf</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/dconf" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/dconf&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-programs.dconf.packages">
+  <h3 class="option-name">
+    <a href="#option-programs.dconf.packages" class="option-anchor">programs.dconf.packages</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Packages providing dconf profiles or databases under <code>/etc/dconf</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/dconf" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/dconf&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-programs.dconf.profiles">
+  <h3 class="option-name">
+    <a href="#option-programs.dconf.profiles" class="option-anchor">programs.dconf.profiles</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>dconf profiles. A profile named <code>user</code> is used by default by GLib.</p>
+<p>Profiles can be declared in Nix supplied as files or supplied by packages
+containing an already prepared profile.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of (absolute path or package or (submodule))</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">user</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">databases</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">settings</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">org/finix/example</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">enabled</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">true</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><br></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/dconf" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/dconf&gt;</a></code></dd>
   </dl>
 </div>
 <div class="option" id="option-programs.dma.enable">
