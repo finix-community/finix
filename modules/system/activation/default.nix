@@ -147,7 +147,6 @@ in
       pkgs.gnugrep
       pkgs.findutils
       pkgs.getent
-      pkgs.stdenv.cc.libc # nscd in update-users-groups.pl
       pkgs.shadow
       pkgs.nettools # needed for hostname
       pkgs.util-linux # needed for mount and mountpoint
