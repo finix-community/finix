@@ -43,7 +43,10 @@ in
 
     finit.services.accounts-daemon = {
       description = "accounts service";
-      conditions = "service/dbus/ready";
+      conditions = [
+        "service/dbus/ready"
+      ]
+      ++ lib.optionals config.services.polkit.enable [ "service/polkit/ready" ];
       command = "${cfg.package}/libexec/accounts-daemon" + lib.optionalString cfg.debug " --debug";
       reload-signal = "none";
       log = { };
