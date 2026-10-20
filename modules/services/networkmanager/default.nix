@@ -84,7 +84,10 @@ in
 
     finit.services.network-manager = {
       description = "network manager service";
-      conditions = "service/dbus/ready";
+      conditions = [
+        "service/dbus/ready"
+      ]
+      ++ lib.optionals config.services.polkit.enable [ "service/polkit/ready" ];
       command = "${cfg.package}/bin/NetworkManager -n";
 
       reload-triggers = [
