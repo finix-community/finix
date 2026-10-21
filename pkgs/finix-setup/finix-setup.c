@@ -40,35 +40,21 @@ static char *system_config = NULL;
  */
 static char *get_system_config(void)
 {
-    char cmdline[PATH_MAX];
+    extern char *arg0; // argv[0], populated by finit
     char *copy;
-    int fd;
-    ssize_t n;
 
     if (system_config)
         return system_config;
 
-    fd = open("/proc/self/cmdline", O_RDONLY);
-    if (fd < 0) {
-        logit(LOG_ERR, "finix-setup: failed to open /proc/self/cmdline");
+    if (!arg0) {
+        logit(LOG_ERR, "finix-setup: failed to determine systemConfig (no argv[0])");
         return NULL;
     }
-
-    n = read(fd, cmdline, sizeof(cmdline) - 1);
-    close(fd);
-
-    if (n <= 0) {
-        logit(LOG_ERR, "finix-setup: failed to read /proc/self/cmdline");
-        return NULL;
-    }
-    cmdline[n] = '\0';
 
     /*
-     * cmdline contains null-separated arguments.
-     * argv[0] is the first null-terminated string.
-     * we need to copy it before calling dirname() since dirname may modify its argument.
+     * we need to copy arg0 before calling dirname() since dirname may modify its argument.
      */
-    copy = strdup(cmdline);
+    copy = strdup(arg0);
     if (!copy) {
         logit(LOG_ERR, "finix-setup: strdup failed");
         return NULL;
