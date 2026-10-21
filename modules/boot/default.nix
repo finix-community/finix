@@ -26,28 +26,30 @@
     finit.tasks.remount-nix-store = {
       description = "remount the nix store in read only mode";
       runlevel = "S";
-      command = pkgs.writeShellApplication {
-        name = "remount-nix-store.sh";
-        runtimeInputs = [
-          config.programs.coreutils.package
-          pkgs.util-linux
-        ];
-        text = ''
-          #!${pkgs.runtimeShell}
+      path = [
+        config.programs.coreutils.package
+        pkgs.util-linux
+      ];
+      script = ''
+        # Make /nix/store a read-only bind mount to enforce immutability of
+        # the Nix store.  Note that we can't use "chown root:nixbld" here
+        # because users/groups might not exist yet.
+        # Silence chown/chmod to fail gracefully on a readonly filesystem
+        # like squashfs.
+        chown -f 0:30000 /nix/store || true
+        chmod -f 1775 /nix/store || true
 
-          # Make /nix/store a read-only bind mount to enforce immutability of
-          # the Nix store.  Note that we can't use "chown root:nixbld" here
-          # because users/groups might not exist yet.
-          # Silence chown/chmod to fail gracefully on a readonly filesystem
-          # like squashfs.
-          chown -f 0:30000 /nix/store
-          chmod -f 1775 /nix/store
-          if ! [[ "$(findmnt --noheadings --output OPTIONS /nix/store)" =~ ro(,|$) ]]; then
+        # Ensure that we pick the "top" (i.e. last) mount so we don't get a false positive for a lower mount.
+        current_opts="$(findmnt --direction backward --first-only --noheadings --output OPTIONS /nix/store)"
+        case "$current_opts" in
+          # matches '$opt', foo,$opt', '$opt,foo', 'foo,$opt,bar'
+          ro | *,ro | ro,* | *,ro,*) ;;
+          *)
             mount --bind /nix/store /nix/store
             mount -o remount,ro,bind /nix/store
-          fi
-        '';
-      };
+            ;;
+        esac
+      '';
     };
 
     # task to run if ctrl-alt-del is pressed - this condition is asserted by finit upon receiving SIGINT (from the kernel).
