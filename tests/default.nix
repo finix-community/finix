@@ -60,16 +60,27 @@ let
   subDirTests = lib.mapAttrs (
     dirName: _:
     let
-      subDirContents = builtins.readDir (./. + "/${dirName}");
+      subDir = ./. + "/${dirName}";
+      subDirContents = builtins.readDir subDir;
+      suiteFile = subDir + "/default.nix";
       nixFiles = lib.filterAttrs (
-        name: type: type == "regular" && lib.hasSuffix ".nix" name
+        name: type:
+        type == "regular"
+        && lib.hasSuffix ".nix" name
+        && !(builtins.elem name [
+          "default.nix"
+          "common.nix"
+        ])
       ) subDirContents;
     in
     lib.recurseIntoAttrs (
-      lib.mapAttrs' (filename: _: {
-        name = lib.removeSuffix ".nix" filename;
-        value = runTest (./. + "/${dirName}/${filename}");
-      }) nixFiles
+      if builtins.pathExists suiteFile then
+        import suiteFile { inherit pkgs callTest; }
+      else
+        lib.mapAttrs' (filename: _: {
+          name = lib.removeSuffix ".nix" filename;
+          value = runTest (subDir + "/${filename}");
+        }) nixFiles
     )
   ) subDirs;
 in
