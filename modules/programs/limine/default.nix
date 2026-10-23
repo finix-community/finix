@@ -8,8 +8,6 @@ let
   cfg = config.programs.limine;
 
   format = pkgs.formats.keyValue { };
-
-  defaultWallpaper = pkgs.nixos-artwork.wallpapers.simple-dark-gray-bootloader.gnomeFilePath;
 in
 {
   imports = [
@@ -287,10 +285,6 @@ in
       programs.limine.settings = {
         graphics = true;
         verbose = lib.mkIf cfg.debug true;
-
-        wallpaper = lib.mkDefault [ defaultWallpaper ];
-        backdrop = lib.mkDefault "2F302F";
-        wallpaper_style = lib.mkDefault "stretched";
       };
 
       # this module supplies an implementation for `providers.bootloader`
