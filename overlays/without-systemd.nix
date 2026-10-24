@@ -190,4 +190,6 @@ final: prev: {
           sed -i "/'test_usb.py',/d" tests/meson.build
         '';
       });
+
+  tmux = prev.tmux.override { withSystemd = false; };
 }
