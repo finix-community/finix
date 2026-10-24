@@ -68,7 +68,10 @@ in
     finit.services.udisks2 = {
       description = "disk manager";
       command = "${cfg.package}/libexec/udisks2/udisksd" + lib.optionalString cfg.debug " --debug";
-      conditions = "service/dbus/ready";
+      conditions = [
+        "service/dbus/ready"
+      ]
+      ++ lib.optionals config.services.polkit.enable [ "service/polkit/ready" ];
       log = { };
     };
   };
