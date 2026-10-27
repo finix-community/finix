@@ -286,21 +286,6 @@ in
       inherit udevPath;
     };
 
-    # where does this belong?
-    system.activation.scripts.udevd = lib.mkIf config.boot.kernel.enable {
-      text = ''
-        # The deprecated hotplug uevent helper is not used anymore
-        if [ -e /proc/sys/kernel/hotplug ]; then
-          echo "" > /proc/sys/kernel/hotplug
-        fi
-
-        # Allow the kernel to find our firmware.
-        if [ -e /sys/module/firmware_class/parameters/path ]; then
-          echo -n "${config.hardware.firmware}/lib/firmware" > /sys/module/firmware_class/parameters/path
-        fi
-      '';
-    };
-
     system.switch.inhibitors.device-manager = "udev";
 
     # build out the default initramfs image
