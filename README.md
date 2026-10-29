@@ -23,14 +23,6 @@ This project aims to fix NixOS by creating a software system without hardcoded a
 - **Flexible Shells & Utilities:** Supports multiple shells (`ash`, `bash`, `fish`) and modular system services.
 - **Multi-System Support:** Built for both `x86_64-linux` and `aarch64-linux`.
 
-## Getting Started
-
-Clone the repository and enter the development shell:
-
-```bash
-nix develop
-```
- 
 ## TODO
 
 - [ ] Agnostic init
