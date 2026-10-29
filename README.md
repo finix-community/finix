@@ -32,8 +32,15 @@ This project aims to fix NixOS by creating a software system without hardcoded a
 - **Embedded & Multi-System Support:** Optimized for minimal resource footprints across `x86_64-linux`, `aarch64-linux`, and RISC-V architectures.
 
 ## Ideas into consideration (feel free to reach me and suggest ideas)
-- Exploring alternative high-performance lazy module evaluation engines (such as [adios](https://github.com/adisbladis/adios)) to slash evaluation overhead.
-- Designing custom non-Turing complete configurations to bypass traditional Nix interpreter bottlenecks.
+
+- **Alternative Module System Engines (Adios by adisbladis / [adisbladis/adios](https://github.com/adisbladis/adios)):**
+  - *What it is:* An independent, alternative rewrite of the Nix module system designed from scratch for high-performance evaluation memoization.
+  - *Why use it / Rationale:* Standard NixOS module evaluation (`lib/modules.nix` in Nixpkgs) can become a massive performance bottleneck as configurations scale. Adios experiments with optimization paths to slash evaluation overhead.
+  - *Why haven't I implemented it yet:* It is currently an experimental sandbox/R&D project rather than an official mainstream replacement. Adopting it means moving away from stable Nixpkgs module APIs, facing niche debugging errors, and risking high maintenance overhead if upstream code diverges.
+- **Alternative High-Performance Evaluation Engines (e.g., [llakala/lladios](https://github.com/llakala/lladios)):**
+  - Exploring optimized personal forks and patches to further squeeze evaluation performance.
+- **Custom Non-Turing Complete Configurations:**
+  - Designing custom configurations to bypass traditional Nix interpreter bottlenecks and guarantee termination.
 
 ## TODO
 - [ ] Decouple remaining hardcoded bashisms from core build scripts and activation logic
