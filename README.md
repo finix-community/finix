@@ -6,7 +6,7 @@
   <a href="https://github.com/finix-community/finix"><img src="https://img.shields.io/badge/Community-finix-orange" alt="Finix Community"></a>
 </p>
 
-> F-nixos Fixing nixos of all the hardcoded asumptions fork of finix which decopules the init to be agnostic keeping compatibility with nixos
+> F-nixos (Fixing nixos) of all the hardcoded asumptions fork of finix which decopules the init to be agnostic keeping compatibility with nixos
 
 > **Note:** F-nixos is a fork of [finix](https://github.com/finix-community/finix) by the finix-community. All credits for the foundational work go to them!
 
