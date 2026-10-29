@@ -23,7 +23,7 @@ This project aims to fix NixOS by creating a software system without hardcoded a
 - **True Shell Agnosticism:** Who says `/bin/sh` has to be a bloated GNU Bash? Run a system completely free of Bash, leveraging lightweight alternatives like `ash`, `dash`, `kmsh`, or whatever fits your architecture.
 - **The Next-Gen Config Language:** Planned development of a dedicated, non-Turing-complete configuration language (inspired by Dhall) to guarantee evaluation termination and eliminate Nix quirks, keeping a cleaner and less abstract approach than alternatives like Lix, Snix, or Nickel.
 - **Daemon & Tooling Agnostic:** Decoupling userland from the traditional `nix-daemon` RPC protocol to allow modular store managers, transport layers, and independent tooling ecosystems.
-- **Kernel Agnostic Explorations:** Investigating alternative kernel architectures and primitives, including framework experiments like [sigil](https://git.sr.ht/~ehmry/sigil) and [lladios](https://github.com/llakala/lladios).
+- **Kernel Agnostic Explorations:** Investigating alternative kernel architectures and primitives, including framework experiments like [sigil](https://git.sr.ht/~ehmry/sigil) and [adios](https://github.com/adisbladis/adios).
 
 ## Features
 
@@ -32,7 +32,7 @@ This project aims to fix NixOS by creating a software system without hardcoded a
 - **Embedded & Multi-System Support:** Optimized for minimal resource footprints across `x86_64-linux`, `aarch64-linux`, and RISC-V architectures.
 
 ## Ideas into consideration (feel free to reach me and suggest ideas)
-- Exploring alternative high-performance lazy module evaluation engines (such as [lladios](https://github.com/llakala/lladios)) to slash evaluation overhead.
+- Exploring alternative high-performance lazy module evaluation engines (such as [adios](https://github.com/adisbladis/adios)) to slash evaluation overhead.
 - Designing custom non-Turing complete configurations to bypass traditional Nix interpreter bottlenecks.
 
 ## TODO
