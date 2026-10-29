@@ -13,7 +13,7 @@ let
         meta = cfg.package.meta // {
           mainProgram = "ash";
         };
-        passthru = { inherit (cfg.package) shellPath; };
+        passthru = { shellPath = "/bin/ash"; };
       }
       ''
         mkdir -p $out/bin
@@ -26,14 +26,14 @@ in
       type = lib.types.bool;
       default = false;
       description = ''
-        Whether to enable [ash](${pkgs.busybox.meta.homepage}) as a system shell.
+        Whether to enable [ash](${cfg.package.meta.homepage or ""}) as a system shell.
       '';
     };
 
     package = lib.mkOption {
       type = lib.types.shellPackage;
-      default = pkgs.busybox;
-      defaultText = lib.literalExpression "pkgs.busybox";
+      default = import ./package.nix { inherit pkgs; };
+      defaultText = lib.literalExpression "import ./package.nix { inherit pkgs; }";
       description = ''
         The package to use for `ash`.
       '';
