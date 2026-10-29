@@ -1,79 +1,44 @@
-# finix
+# F-nixos
 
 <p align="center">
   <a href="https://nixos.org"><img src="https://img.shields.io/badge/Built_with-Nix-5277C3?logo=nixos&logoColor=white" alt="Built with Nix"></a>
   <a href="https://discord.gg/nVe5Zkaypg"><img src="https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
+  <a href="https://github.com/finix-community/finix"><img src="https://img.shields.io/badge/Community-finix-orange" alt="Finix Community"></a>
 </p>
 
-> `finix` - a daily-drivable experimental os, featuring [finit](https://github.com/finit-project/finit) as pid 1, to explore the NixOS design space
+> F-nixos Fixing nixos of all the hardcoded asumptions fork of finix which decopules the init to be agnostic keeping compatibility with nixos
 
-While exploring the NixOS design space I had several topics in mind:
+> **Note:** F-nixos is a fork of [finix](https://github.com/finix-community/finix) by the finix-community. All credits for the foundational work go to them!
 
-- [NixOS evaluation speed regression](https://github.com/NixOS/nixpkgs/issues/79943)
-- [NixOS always imports all modules](https://github.com/NixOS/nixpkgs/issues/137168)
-- [modular services](https://github.com/NixOS/nixpkgs/pull/372170)
-- [decoupling services](https://discourse.nixos.org/t/pre-rfc-decouple-services-using-structured-typing/58257)
-- [NixNG](https://github.com/nix-community/NixNG)
-- [sixos](https://discourse.nixos.org/t/sixos-a-nix-os-without-systemd/58141)
-- [nixbsd](https://github.com/nixos-bsd/nixbsd)
+This project aims to fix NixOS by creating a software system without hardcoded assumptions or opinions—striving for true agnosticism.
 
-Now that `finix` is running on my laptop I have a working base for experimentation. More to come.
 
----
+## Overview
 
-An example of defining a `finit` service in `nix`:
+**F-nixos** is a modular NixOS framework designed to provide granular control over your system architecture, from initialization and shells to kernels and utilities.
 
+## Features
+
+- **Agnostic Architecture:** Build custom system configurations using reusable Nix modules.
+- **Flexible Shells & Utilities:** Supports multiple shells (`ash`, `bash`, `fish`) and modular system services.
+- **Multi-System Support:** Built for both `x86_64-linux` and `aarch64-linux`.
+
+## Getting Started
+
+Clone the repository and enter the development shell:
+
+```bash
+nix develop
 ```
-{ config, pkgs, lib, ... }:
-{
-  finit.services.network-manager = {
-    description = "network manager service";
-    runlevel = "2345";
-    conditions = "service/syslogd/ready";
-    command = "${pkgs.networkmanager}/bin/NetworkManager -n";
-  };
-}
-```
+ 
+## TODO
 
-`finix` is currently running on my ~spare~ primary laptop:
-
-- with `finit` instead of `systemd` as the init system
-- with `seatd` instead of `elogind` as the seat manager
-- with `mdevd` instead of `eudev` as the device manager
-- using [niri](https://github.com/YaLTeR/niri) as my `wayland` compositor
-
-![niri-desktop-screenshot](https://github.com/user-attachments/assets/1bcfab8d-d363-4a48-beb5-27ec9843a683)
-
-`finix` initially ran:
-- in an `incus` container
-- in a `nspawn` container
-- on `virtualbox`
-- with `x11`
-
-None of the above methods have been attempted in some time.
-
-# Getting Started
-
-[Documentation](https://finix-community.github.io/finix)
-
-`finix` does not yet have a disk image available to download - installation will need to take place from a standard NixOS image, which can be downloaded [here](https://nixos.org/download#nixos-iso). You may download and burn either the minimal image or the graphical image and the steps will remain the same. 
-
-For an installation guide, see [Installation](https://finix-community.github.io/finix/installation.html) on our documentation site. Credits to [@xZecora](https://github.com/xZecora) for writing the referenced [examples](https://github.com/finix-community/examples).
-
-# `cachix` binary cache
-
-A binary cache is generously provided by the [cachix](https://www.cachix.org/) free tier offering.
-
-```nix
-  services.nix-daemon.settings = {
-    substituters = [ "https://finix.cachix.org" ];
-    trusted-public-keys = [ "finix.cachix.org-1:0ejikHDeCp0UErsduUUHcg9IJczY2/h2e5132Z/As/c=" ];
-  };
-```
-
-# See also
-
-- [finix options search](https://finix-community.github.io/finix/options.html)
-- [finit project](https://finit-project.github.io/)
-- [finix profiles](https://github.com/finix-community/community-modules/tree/main/modules/profiles)
-- [finix community modules](https://github.com/finix-community/community-modules/)
+- [ ] Agnostic init
+- [ ] Agnostic shell
+- [ ] Agnostic utilities
+- [ ] Agnostic kernel
+- [ ] Ensure full compatibility with NixOS
+- [ ] Remove remaining hardcoded system assumptions
+- [ ] Enhance modular shell support
+- [ ] Expand documentation and agnostic configuration examples
+- [ ] Improve testing workflows
