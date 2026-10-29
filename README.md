@@ -15,15 +15,32 @@ This project aims to fix NixOS by creating a software system without hardcoded a
 
 ## Overview
 
-**F-nixos** is a modular NixOS framework designed to provide granular control over your system architecture, from initialization and shells to kernels and utilities.
+**F-nixos** is an experimental, modular NixOS framework designed to push declarative systems engineering to the absolute edge.
+
+### The Core Vision & Mission
+- **The Ultimate OpenWrt Slayer & Embedded RISC-V Powerhouse:** Managing embedded systems to replace OpenWrt and build ultra-small, deterministic flash images using `ubase`, `busybox`, or custom `uutils`. Perfect for constrained targets like RISC-V boards (Milk-V, StarFive, D1) and IoT devices.
+- **True Shell Agnosticism:** Who says `/bin/sh` has to be a bloated GNU Bash? Run a system completely free of Bash, leveraging lightweight alternatives like `ash`, `dash`, `kmsh`, or whatever fits your architecture.
+- **The Next-Gen Config Language:** Planned development of a dedicated, non-Turing-complete configuration language (inspired by Dhall) to guarantee evaluation termination and eliminate Nix quirks, keeping a cleaner and less abstract approach than alternatives like Lix, Snix, or Nickel.
+- **Daemon & Tooling Agnostic:** Decoupling userland from the traditional `nix-daemon` RPC protocol to allow modular store managers, transport layers, and independent tooling ecosystems.
+- **Kernel Agnostic Explorations:** Investigating alternative kernel architectures and primitives, including framework experiments like [sigil](https://git.sr.ht/~ehmry/sigil).
 
 ## Features
 
-- **Agnostic Architecture:** Build custom system configurations using reusable Nix modules.
-- **Flexible Shells & Utilities:** Supports multiple shells (`ash`, `bash`, `fish`) and modular system services.
-- **Multi-System Support:** Built for both `x86_64-linux` and `aarch64-linux`.
+- **Agnostic Architecture:** Build custom system configurations using reusable, decoupled Nix modules.
+- **Flexible Shells & Utilities:** Plug-and-play support for alternative shells (`ash`, `dash`, `bash`, `fish`) and minimal userland coreutils.
+- **Embedded & Multi-System Support:** Optimized for minimal resource footprints across `x86_64-linux`, `aarch64-linux`, and RISC-V architectures.
 
 ## TODO
+- [ ] Agnostic init system integration (finit and minimal PID 1 architectures)
+- [ ] Agnostic shell support (`ash`, `dash`, `kmsh` integration)
+- [ ] Minimal embedded image generation using `ubase`, `busybox`, and `uutils` (OpenWrt replacement target)
+- [ ] RISC-V hardware target validation and optimization
+- [ ] Kernel-agnostic component and framework integration (via [sigil](https://git.sr.ht/~ehmry/sigil))
+- [ ] Non-Turing-complete configuration language specification (guaranteed termination/Dhall-inspired)
+- [ ] Daemon-agnostic tooling decoupling (`nix-daemon` independence)
+- [ ] Ensure full backward compatibility with standard NixOS packages and modules
+- [ ] Remove all remaining hardcoded system assumptions and opinions
+- [ ] Expand documentation and agnostic configuration examples
 
 - [ ] Agnostic init
 - [ ] Agnostic shell
