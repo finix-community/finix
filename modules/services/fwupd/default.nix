@@ -90,7 +90,10 @@ in
       description = "";
       command =
         "${cfg.package}/libexec/fwupd/fwupd --no-timestamp" + lib.optionalString cfg.debug " --verbose";
-      conditions = "service/polkit/ready";
+      conditions = [
+        "service/dbus/ready"
+      ]
+      ++ lib.optionals config.services.polkit.enable [ "service/polkit/ready" ];
       log = { };
       reload-signal = "none";
       state-dir = "fwupd";
