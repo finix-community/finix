@@ -12,7 +12,9 @@ let
   udevApi =
     if config.services.gardendevd.enable then
       pkgs.libudev-garden
-    else if config.services.mdevd.enable || config.services.keventd.enable then
+    else if
+      config.services.mdevd.enable || config.services.mdev.enable || config.services.keventd.enable
+    then
       pkgs.libudev-zero
     else
       null;
