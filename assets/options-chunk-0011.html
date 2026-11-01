@@ -1,3 +1,302 @@
+<div class="option" id="option-services.nvidia-powerd.enable">
+  <h3 class="option-name">
+    <a href="#option-services.nvidia-powerd.enable" class="option-anchor">services.nvidia-powerd.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <code>nvidia-powerd</code> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nvidia-powerd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nvidia-powerd&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.nvidia-powerd.package">
+  <h3 class="option-name">
+    <a href="#option-services.nvidia-powerd.package" class="option-anchor">services.nvidia-powerd.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>nvidia-powerd</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">config</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">hardware</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">nvidia</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">package</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nvidia-powerd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nvidia-powerd&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.nzbget.enable">
+  <h3 class="option-name">
+    <a href="#option-services.nzbget.enable" class="option-anchor">services.nzbget.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://nzbget.com/">nzbget</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nzbget" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nzbget&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.nzbget.package">
+  <h3 class="option-name">
+    <a href="#option-services.nzbget.package" class="option-anchor">services.nzbget.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>nzbget</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">nzbget</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nzbget" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nzbget&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.nzbget.group">
+  <h3 class="option-name">
+    <a href="#option-services.nzbget.group" class="option-anchor">services.nzbget.group</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Group account under which <code>nzbget</code> runs.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this group will automatically be created
+on system activation, otherwise you are responsible for
+ensuring the group exists before the <code>nzbget</code> service starts.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">nzbget</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nzbget" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nzbget&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.nzbget.settings">
+  <h3 class="option-name">
+    <a href="#option-services.nzbget.settings" class="option-anchor">services.nzbget.settings</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p><code>nzbget</code> configuration. See <a href="https://nzbget.com/documentation/command-line-reference">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of (boolean or signed integer or string)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">MainDir</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/data</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nzbget" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nzbget&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.nzbget.stateDir">
+  <h3 class="option-name">
+    <a href="#option-services.nzbget.stateDir" class="option-anchor">services.nzbget.stateDir</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The directory used to store all <code>nzbget</code> data.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this directory will automatically be created on
+system activation, otherwise you are responsible for ensuring the directory exists
+with appropriate ownership and permissions before the <code>nzbget</code> service starts.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>absolute path</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/var/lib/nzbget</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nzbget" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nzbget&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.nzbget.user">
+  <h3 class="option-name">
+    <a href="#option-services.nzbget.user" class="option-anchor">services.nzbget.user</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>User account under which <code>nzbget</code> runs.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this user will automatically be created
+on system activation, otherwise you are responsible for
+ensuring the user exists before the <code>nzbget</code> service starts.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">nzbget</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nzbget" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nzbget&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.openssh.enable">
+  <h3 class="option-name">
+    <a href="#option-services.openssh.enable" class="option-anchor">services.openssh.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://www.openssh.com/">openssh</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/openssh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/openssh&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.openssh.package">
+  <h3 class="option-name">
+    <a href="#option-services.openssh.package" class="option-anchor">services.openssh.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>openssh</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">openssh</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/openssh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/openssh&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.openssh.settings">
+  <h3 class="option-name">
+    <a href="#option-services.openssh.settings" class="option-anchor">services.openssh.settings</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p><code>openssh</code> configuration. See <a href="https://man.archlinux.org/man/sshd_config.5" class="manpage-reference">sshd_config(5)</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>open submodule of attribute set of (atom (null, bool, int, float or string) or a list of them for duplicate keys)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/openssh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/openssh&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.openssh.settings.AddressFamily">
+  <h3 class="option-name">
+    <a href="#option-services.openssh.settings.AddressFamily" class="option-anchor">services.openssh.settings.AddressFamily</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Specifies which address family should be used by <a href="https://man.archlinux.org/man/sshd.8" class="manpage-reference">sshd(8)</a>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>one of "any", "inet", "inet6"</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">any</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/openssh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/openssh&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.openssh.settings.Banner">
+  <h3 class="option-name">
+    <a href="#option-services.openssh.settings.Banner" class="option-anchor">services.openssh.settings.Banner</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The contents of the specified file are sent to the remote user before authentication is
+allowed. If the argument is <code>none</code> then no banner is displayed.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>value "none" (singular enum) or absolute path</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">none</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/openssh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/openssh&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.openssh.settings.Ciphers">
+  <h3 class="option-name">
+    <a href="#option-services.openssh.settings.Ciphers" class="option-anchor">services.openssh.settings.Ciphers</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Allowed ciphers</p>
+<p>Defaults to recommended settings from both
+&lt;<a href="https://stribika.github.io/2015/01/04/secure-secure-shell.html">https://stribika.github.io/2015/01/04/secure-secure-shell.html</a>&gt;
+and
+&lt;<a href="https://infosec.mozilla.org/guidelines/openssh#modern-openssh-67">https://infosec.mozilla.org/guidelines/openssh#modern-openssh-67</a>&gt;</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">chacha20-poly1305@openssh.com</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">aes256-gcm@openssh.com</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">aes128-gcm@openssh.com</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">aes256-ctr</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">aes192-ctr</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">aes128-ctr</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/openssh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/openssh&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.openssh.settings.HostKey">
+  <h3 class="option-name">
+    <a href="#option-services.openssh.settings.HostKey" class="option-anchor">services.openssh.settings.HostKey</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Specifies a file containing a private host key used by <a href="https://man.archlinux.org/man/sshd.8" class="manpage-reference">sshd(8)</a>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of absolute path</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/openssh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/openssh&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.openssh.settings.KbdInteractiveAuthentication">
+  <h3 class="option-name">
+    <a href="#option-services.openssh.settings.KbdInteractiveAuthentication" class="option-anchor">services.openssh.settings.KbdInteractiveAuthentication</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Specifies whether keyboard-interactive authentication is allowed.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">config</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">openssh</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">settings</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">PasswordAuthentication</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/openssh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/openssh&gt;</a></code></dd>
+  </dl>
+</div>
 <div class="option" id="option-services.openssh.settings.KexAlgorithms">
   <h3 class="option-name">
     <a href="#option-services.openssh.settings.KexAlgorithms" class="option-anchor">services.openssh.settings.KexAlgorithms</a>
@@ -1510,283 +1809,5 @@ for additional details.</p>
   </dl>
   <dl class="option-details option-sources">
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sonarr" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sonarr&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.sonarr.user">
-  <h3 class="option-name">
-    <a href="#option-services.sonarr.user" class="option-anchor">services.sonarr.user</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>User account under which <code>sonarr</code> runs.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>If left as the default value this user will automatically be created
-on system activation, otherwise you are responsible for
-ensuring the user exists before the <code>sonarr</code> service starts.</p>
-</div>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">sonarr</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sonarr" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sonarr&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.sshguard.enable">
-  <h3 class="option-name">
-    <a href="#option-services.sshguard.enable" class="option-anchor">services.sshguard.enable</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://sshguard.net">sshguard</a> as a system service.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sshguard" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sshguard&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.sshguard.package">
-  <h3 class="option-name">
-    <a href="#option-services.sshguard.package" class="option-anchor">services.sshguard.package</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The package to use for <code>sshguard</code>.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">sshguard</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sshguard" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sshguard&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.sshguard.debug">
-  <h3 class="option-name">
-    <a href="#option-services.sshguard.debug" class="option-anchor">services.sshguard.debug</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sshguard" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sshguard&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.sshguard.settings">
-  <h3 class="option-name">
-    <a href="#option-services.sshguard.settings" class="option-anchor">services.sshguard.settings</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p><code>sshguard</code> configuration. See <a href="https://github.com/SSHGuard/sshguard/tree/master/examples">upstream documentation</a>
-for additional details.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>open submodule of attribute set of (atom (null, bool, int, float or string))</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sshguard" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sshguard&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.sshguard.settings.BACKEND">
-  <h3 class="option-name">
-    <a href="#option-services.sshguard.settings.BACKEND" class="option-anchor">services.sshguard.settings.BACKEND</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Backend executable.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>value "nft-sets" (singular enum)</code></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sshguard" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sshguard&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.sshguard.settings.FILES">
-  <h3 class="option-name">
-    <a href="#option-services.sshguard.settings.FILES" class="option-anchor">services.sshguard.settings.FILES</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Log files to monitor.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>list of absolute path</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/var/log/auth.log</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sshguard" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sshguard&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.sysklogd.enable">
-  <h3 class="option-name">
-    <a href="#option-services.sysklogd.enable" class="option-anchor">services.sysklogd.enable</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://github.com/troglobit/sysklogd">sysklogd</a> as a system service.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sysklogd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sysklogd&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.sysklogd.package">
-  <h3 class="option-name">
-    <a href="#option-services.sysklogd.package" class="option-anchor">services.sysklogd.package</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The package to use for <code>sysklogd</code>.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">sysklogd</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sysklogd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sysklogd&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.sysklogd.extraConfig">
-  <h3 class="option-name">
-    <a href="#option-services.sysklogd.extraConfig" class="option-anchor">services.sysklogd.extraConfig</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Additional <code>sysklogd</code> configuration. See <a href="https://man.troglobit.com/man5/syslog.conf.5.html" class="manpage-reference">syslog.conf(5)</a>
-for additional details.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>strings concatenated with "\n"</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sysklogd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sysklogd&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.system76-scheduler.enable">
-  <h3 class="option-name">
-    <a href="#option-services.system76-scheduler.enable" class="option-anchor">services.system76-scheduler.enable</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://github.com/pop-os/system76-scheduler">system76-scheduler</a> as a system service.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/system76-scheduler" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/system76-scheduler&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.system76-scheduler.package">
-  <h3 class="option-name">
-    <a href="#option-services.system76-scheduler.package" class="option-anchor">services.system76-scheduler.package</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The package to use for <code>system76-scheduler</code>.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">system76-scheduler</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/system76-scheduler" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/system76-scheduler&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.system76-scheduler.configFile">
-  <h3 class="option-name">
-    <a href="#option-services.system76-scheduler.configFile" class="option-anchor">services.system76-scheduler.configFile</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Path to the <code>system76-scheduler</code> configuration file.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>absolute path</code></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/system76-scheduler" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/system76-scheduler&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.system76-scheduler.debug">
-  <h3 class="option-name">
-    <a href="#option-services.system76-scheduler.debug" class="option-anchor">services.system76-scheduler.debug</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/system76-scheduler" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/system76-scheduler&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.thermald.enable">
-  <h3 class="option-name">
-    <a href="#option-services.thermald.enable" class="option-anchor">services.thermald.enable</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://github.com/intel/thermal_daemon">thermald</a> as a system service.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/thermald" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/thermald&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.thermald.package">
-  <h3 class="option-name">
-    <a href="#option-services.thermald.package" class="option-anchor">services.thermald.package</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The package to use for <code>thermald</code>.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">thermald</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/thermald" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/thermald&gt;</a></code></dd>
   </dl>
 </div>

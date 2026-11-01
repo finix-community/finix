@@ -150,6 +150,295 @@ default editor using the <code>EDITOR</code> environment variable.</p>
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/nano" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/nano&gt;</a></code></dd>
   </dl>
 </div>
+<div class="option" id="option-programs.nh.enable">
+  <h3 class="option-name">
+    <a href="#option-programs.nh.enable" class="option-anchor">programs.nh.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://github.com/nix-community/nh">nh</a>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/nh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/nh&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-programs.nh.package">
+  <h3 class="option-name">
+    <a href="#option-programs.nh.package" class="option-anchor">programs.nh.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>nh</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">nh</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/nh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/nh&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-programs.nh.clean.enable">
+  <h3 class="option-name">
+    <a href="#option-programs.nh.clean.enable" class="option-anchor">programs.nh.clean.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable periodic garbage collection.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/nh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/nh&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-programs.nh.clean.extraArgs">
+  <h3 class="option-name">
+    <a href="#option-programs.nh.clean.extraArgs" class="option-anchor">programs.nh.clean.extraArgs</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <code class="command">nh clean all</code>. See <a href="https://github.com/nix-community/nh/tree/master/docs#nh-clean">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">--keep</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">5</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">--keep-since</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">3d</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/nh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/nh&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-programs.nh.clean.interval">
+  <h3 class="option-name">
+    <a href="#option-programs.nh.clean.interval" class="option-anchor">programs.nh.clean.interval</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The interval at which this task should run its specified <code class="nixos-option">command</code>. Accepts either a
+standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression or one of: <code>hourly</code>, <code>daily</code>, <code>weekly</code>, <code>monthly</code>, or <code>yearly</code>.</p>
+<p>If a standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression is provided this value will be passed directly
+to the <code>scheduler</code> implementation and execute exactly as specified.</p>
+<p>If one of the special values, <code>hourly</code>, <code>daily</code>, <code>monthly</code>, <code>weekly</code>, or <code>yearly</code>, is provided then the
+underlying <code>scheduler</code> implementation will use its features to decide when best to run.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>(optionally newline-terminated) single-line string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">weekly</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/nh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/nh&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-programs.nh.settings">
+  <h3 class="option-name">
+    <a href="#option-programs.nh.settings" class="option-anchor">programs.nh.settings</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p><code>nh</code> configuration. See <a href="https://github.com/nix-community/nh/tree/master/docs#environment-variables">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>open submodule of attribute set of (null or string or signed integer or boolean or absolute path)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/nh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/nh&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-programs.nh.settings.NH_ATTRP">
+  <h3 class="option-name">
+    <a href="#option-programs.nh.settings.NH_ATTRP" class="option-anchor">programs.nh.settings.NH_ATTRP</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The <code>nix</code> attribute and path.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/nh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/nh&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-programs.nh.settings.NH_DARWIN_FLAKE">
+  <h3 class="option-name">
+    <a href="#option-programs.nh.settings.NH_DARWIN_FLAKE" class="option-anchor">programs.nh.settings.NH_DARWIN_FLAKE</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Command-specific flake references for <code>darwin</code>, commands.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/nh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/nh&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-programs.nh.settings.NH_FILE">
+  <h3 class="option-name">
+    <a href="#option-programs.nh.settings.NH_FILE" class="option-anchor">programs.nh.settings.NH_FILE</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The <code>nix</code> file and path.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/nh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/nh&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-programs.nh.settings.NH_FLAKE">
+  <h3 class="option-name">
+    <a href="#option-programs.nh.settings.NH_FLAKE" class="option-anchor">programs.nh.settings.NH_FLAKE</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Preferred path/reference to a directory containing your <code>flake.nix</code> used by <code>NH</code> when running flake-based commands.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/nh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/nh&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-programs.nh.settings.NH_HOME_FLAKE">
+  <h3 class="option-name">
+    <a href="#option-programs.nh.settings.NH_HOME_FLAKE" class="option-anchor">programs.nh.settings.NH_HOME_FLAKE</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Command-specific flake references for <code>home</code>, commands.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/nh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/nh&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-programs.nh.settings.NH_OS_FLAKE">
+  <h3 class="option-name">
+    <a href="#option-programs.nh.settings.NH_OS_FLAKE" class="option-anchor">programs.nh.settings.NH_OS_FLAKE</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Command-specific flake references for <code>os</code>, commands.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/nh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/nh&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-programs.nh.update.enable">
+  <h3 class="option-name">
+    <a href="#option-programs.nh.update.enable" class="option-anchor">programs.nh.update.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable automatic updates and activation of the configured flake.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/nh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/nh&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-programs.nh.update.extraArgs">
+  <h3 class="option-name">
+    <a href="#option-programs.nh.update.extraArgs" class="option-anchor">programs.nh.update.extraArgs</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <code class="command">nh &lt;platform&gt; switch --update</code>. See <a href="https://github.com/nix-community/nh/tree/master/docs#platform-specific-subcommands">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">--update-input</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">nixpkgs</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">github://NixOS/nixpkgs/nixos-unstable</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/nh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/nh&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-programs.nh.update.interval">
+  <h3 class="option-name">
+    <a href="#option-programs.nh.update.interval" class="option-anchor">programs.nh.update.interval</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The interval at which this task should run its specified <code class="nixos-option">command</code>. Accepts either a
+standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression or one of: <code>hourly</code>, <code>daily</code>, <code>weekly</code>, <code>monthly</code>, or <code>yearly</code>.</p>
+<p>If a standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression is provided this value will be passed directly
+to the <code>scheduler</code> implementation and execute exactly as specified.</p>
+<p>If one of the special values, <code>hourly</code>, <code>daily</code>, <code>monthly</code>, <code>weekly</code>, or <code>yearly</code>, is provided then the
+underlying <code>scheduler</code> implementation will use its features to decide when best to run.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">weekly</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/nh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/nh&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-programs.nh.update.platform">
+  <h3 class="option-name">
+    <a href="#option-programs.nh.update.platform" class="option-anchor">programs.nh.update.platform</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Platform to update automatically.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>one of "os", "home", "darwin"</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">os</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/nh" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/nh&gt;</a></code></dd>
+  </dl>
+</div>
 <div class="option" id="option-programs.niri.enable">
   <h3 class="option-name">
     <a href="#option-programs.niri.enable" class="option-anchor">programs.niri.enable</a>
@@ -1503,284 +1792,5 @@ configuration. Card-specific drivers that need explicit configuration
   </dl>
   <dl class="option-details option-sources">
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/xorg" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/xorg&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-programs.xorg.xkb.layout">
-  <h3 class="option-name">
-    <a href="#option-programs.xorg.xkb.layout" class="option-anchor">programs.xorg.xkb.layout</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>X keyboard layout, or multiple keyboard layouts separated by commas.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">us</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/xorg" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/xorg&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-programs.xorg.xkb.model">
-  <h3 class="option-name">
-    <a href="#option-programs.xorg.xkb.model" class="option-anchor">programs.xorg.xkb.model</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>X keyboard model.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">pc104</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
-</body></html></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">presario</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/xorg" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/xorg&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-programs.xorg.xkb.options">
-  <h3 class="option-name">
-    <a href="#option-programs.xorg.xkb.options" class="option-anchor">programs.xorg.xkb.options</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>X keyboard options; layout switching goes here.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>strings concatenated with ","</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">terminate:ctrl_alt_bksp</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
-</body></html></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">grp:caps_toggle,grp_led:scroll</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/xorg" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/xorg&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-programs.xorg.xkb.variant">
-  <h3 class="option-name">
-    <a href="#option-programs.xorg.xkb.variant" class="option-anchor">programs.xorg.xkb.variant</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>X keyboard variant.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
-</body></html></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">colemak</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/xorg" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/xorg&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-programs.xwayland-satellite.enable">
-  <h3 class="option-name">
-    <a href="#option-programs.xwayland-satellite.enable" class="option-anchor">programs.xwayland-satellite.enable</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://github.com/Supreeeme/xwayland-satellite">xwayland-satellite</a>.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/xwayland-satellite" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/xwayland-satellite&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-programs.xwayland-satellite.package">
-  <h3 class="option-name">
-    <a href="#option-programs.xwayland-satellite.package" class="option-anchor">programs.xwayland-satellite.package</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The package to use for <code>xwayland-satellite</code>.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">xwayland-satellite</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/xwayland-satellite" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/xwayland-satellite&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-programs.zzz.enable">
-  <h3 class="option-name">
-    <a href="#option-programs.zzz.enable" class="option-anchor">programs.zzz.enable</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://github.com/jirutka/zzz">zzz</a>.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/zzz" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/zzz&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-programs.zzz.package">
-  <h3 class="option-name">
-    <a href="#option-programs.zzz.package" class="option-anchor">programs.zzz.package</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The package to use for <code>zzz</code>.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">zzz</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/zzz" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/zzz&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-providers.bootloader.backend">
-  <h3 class="option-name">
-    <a href="#option-providers.bootloader.backend" class="option-anchor">providers.bootloader.backend</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The selected module which should implement functionality for the <code class="nixos-option">providers.bootloader</code> contract.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>one of "limine", "none", "script"</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">none</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/programs/limine/providers.bootloader.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/programs/limine/providers.bootloader.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-providers.bootloader.installHook">
-  <h3 class="option-name">
-    <a href="#option-providers.bootloader.installHook" class="option-anchor">providers.bootloader.installHook</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The full path to a program of your choosing which performs the bootloader installation process.</p>
-<p>The program will be called with an argument pointing to the output of the system's toplevel.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>absolute path</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">writeShellScript</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">no-bootloader</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(152,195,121);">''</span><span style="color:rgb(152,195,121);"></span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;</span><span style="color:rgb(86,182,194);">echo</span><span style="color:rgb(152,195,121);">&nbsp;</span><span style="color:rgb(152,195,121);">'Warning:&nbsp;do&nbsp;not&nbsp;know&nbsp;how&nbsp;to&nbsp;make&nbsp;this&nbsp;configuration&nbsp;bootable;&nbsp;please&nbsp;enable&nbsp;a&nbsp;boot&nbsp;loader.'</span><span style="color:rgb(152,195,121);">&nbsp;</span><span style="color:rgb(171,178,191);">1</span><span style="color:rgb(171,178,191);">&gt;&amp;</span><span style="color:rgb(209,154,102);">2</span><span style="color:rgb(152,195,121);"></span><br><span style="color:rgb(152,195,121);">''</span><br></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/bootloader" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/bootloader&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-providers.firewall.allowedTCPPortRanges">
-  <h3 class="option-name">
-    <a href="#option-providers.firewall.allowedTCPPortRanges" class="option-anchor">providers.firewall.allowedTCPPortRanges</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>A range of TCP ports on which incoming connections are accepted.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>list of (submodule)</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">from</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">8999</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">to</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">9003</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/firewall" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/firewall&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-providers.firewall.allowedTCPPortRanges._.from">
-  <h3 class="option-name">
-    <a href="#option-providers.firewall.allowedTCPPortRanges._.from" class="option-anchor">providers.firewall.allowedTCPPortRanges.*.from</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The first port of the range, inclusive.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>16 bit unsigned integer; between 0 and 65535 (both inclusive)</code></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/firewall" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/firewall&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-providers.firewall.allowedTCPPortRanges._.to">
-  <h3 class="option-name">
-    <a href="#option-providers.firewall.allowedTCPPortRanges._.to" class="option-anchor">providers.firewall.allowedTCPPortRanges.*.to</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The last port of the range, inclusive.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>16 bit unsigned integer; between 0 and 65535 (both inclusive)</code></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/firewall" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/firewall&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-providers.firewall.allowedTCPPorts">
-  <h3 class="option-name">
-    <a href="#option-providers.firewall.allowedTCPPorts" class="option-anchor">providers.firewall.allowedTCPPorts</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>List of TCP ports on which incoming connections are accepted.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>list of 16 bit unsigned integer; between 0 and 65535 (both inclusive)</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(209,154,102);">22</span><br>&nbsp;&nbsp;<span style="color:rgb(209,154,102);">80</span><br>&nbsp;&nbsp;<span style="color:rgb(209,154,102);">443</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/firewall" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/firewall&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-providers.firewall.allowedUDPPortRanges">
-  <h3 class="option-name">
-    <a href="#option-providers.firewall.allowedUDPPortRanges" class="option-anchor">providers.firewall.allowedUDPPortRanges</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Range of open UDP ports.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>list of (submodule)</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">from</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">60000</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">to</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">61000</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/firewall" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/firewall&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-providers.firewall.allowedUDPPortRanges._.from">
-  <h3 class="option-name">
-    <a href="#option-providers.firewall.allowedUDPPortRanges._.from" class="option-anchor">providers.firewall.allowedUDPPortRanges.*.from</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The first port of the range, inclusive.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>16 bit unsigned integer; between 0 and 65535 (both inclusive)</code></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/firewall" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/firewall&gt;</a></code></dd>
   </dl>
 </div>
