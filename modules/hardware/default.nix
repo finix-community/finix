@@ -54,4 +54,19 @@ in
         };
     };
   };
+
+  config.system.activation.scripts = lib.mkIf config.boot.kernel.enable {
+    firmware.text = ''
+      # Allow the kernel to find our firmware.
+      if [ -e /sys/module/firmware_class/parameters/path ]; then
+        echo -n "${config.hardware.firmware}/lib/firmware" > /sys/module/firmware_class/parameters/path
+      fi
+    '';
+
+    disable-uevent-helper.text = ''
+      if [ -e /proc/sys/kernel/hotplug ]; then
+        echo "" > /proc/sys/kernel/hotplug
+      fi
+    '';
+  };
 }
