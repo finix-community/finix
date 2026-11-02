@@ -19,6 +19,8 @@ let
       "session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so"
     else
       false;
+
+  gnome-keyring = config.programs.gnome-keyring.enable or false;
 in
 {
   options.services.lemurs = {
@@ -110,6 +112,7 @@ in
 
           # Authentication management.
           auth optional pam_unix.so likeauth nullok # unix-early (order 11500)
+          ${lib.optionalString gnome-keyring "auth optional ${pkgs.gnome-keyring}/lib/security/pam_gnome_keyring.so"}
           auth sufficient pam_unix.so likeauth nullok try_first_pass # unix (order 12800)
           auth required pam_deny.so # deny (order 13600)
 
@@ -124,6 +127,7 @@ in
           ${lib.optionalString (session_rundir != false) session_rundir}
           session required ${pkgs.util-linux.lastlog}/lib/security/pam_lastlog2.so silent # lastlog (order 10700)
           session required pam_limits.so
+          ${lib.optionalString gnome-keyring "session optional ${pkgs.gnome-keyring}/lib/security/pam_gnome_keyring.so auto_start"}
         '';
       };
     };
