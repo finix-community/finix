@@ -24,6 +24,8 @@ let
       false;
 
   gnome-keyring = config.programs.gnome-keyring.enable or false;
+
+  fprintd = config.services.fprintd.enable or false;
 in
 {
   options.programs.shadow = {
@@ -167,6 +169,7 @@ in
         account required pam_unix.so # unix (order 10900)
 
         # Authentication management.
+        ${lib.optionalString fprintd "auth sufficient ${config.services.fprintd.package}/lib/security/pam_fprintd.so"}
         auth optional pam_unix.so likeauth nullok # unix-early (order 11500)
         ${lib.optionalString gnome-keyring "auth optional ${pkgs.gnome-keyring}/lib/security/pam_gnome_keyring.so"}
         auth sufficient pam_unix.so likeauth nullok try_first_pass # unix (order 12800)
@@ -195,6 +198,7 @@ in
         # Authentication management.
         auth sufficient pam_rootok.so # rootok (order 10200)
         auth required pam_faillock.so # faillock (order 10400)
+        ${lib.optionalString fprintd "auth sufficient ${config.services.fprintd.package}/lib/security/pam_fprintd.so"}
         auth sufficient pam_unix.so likeauth try_first_pass # unix (order 11500)
         auth required pam_deny.so # deny (order 12300)
 
