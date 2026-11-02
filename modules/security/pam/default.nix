@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  utils,
   ...
 }:
 let
@@ -103,6 +104,20 @@ let
       )
     );
 
+  escapeArg =
+    arg: if lib.hasInfix " " arg then "[${lib.replaceStrings [ "]" ] [ "\\]" ] arg}]" else arg;
+
+  formatRule =
+    type: rule:
+    lib.concatStringsSep " " (
+      [
+        type
+        rule.control
+        rule.modulePath
+      ]
+      ++ map escapeArg rule.args
+    );
+
   ruleModule =
     { name, config, ... }:
     {
@@ -135,8 +150,15 @@ let
       type = rulesType;
     };
 
+  ruleTypes = [
+    "account"
+    "auth"
+    "password"
+    "session"
+  ];
+
   pamOpts =
-    { name, ... }:
+    { name, config, ... }:
     {
       options = {
         enable = lib.mkEnableOption "this PAM service" // {
@@ -159,13 +181,37 @@ let
             :::
           '';
           type = lib.types.submodule {
-            options = lib.genAttrs [ "account" "auth" "password" "session" ] mkRulesTypeOption;
+            options = lib.genAttrs ruleTypes mkRulesTypeOption;
           };
+        };
+
+        orderedRules = lib.mkOption {
+          type = lib.types.attrsOf (lib.types.listOf lib.types.raw);
+          readOnly = true;
+          description = ''
+            The enabled {option}`rules` of this service for each rule type, sorted by `order` with ties broken by name.
+
+            Use this to inspect the final order of the rules:
+
+            ```
+            nix-repl> map (r: "''${r.name} ''${toString r.order}") config.security.pam.services.login.orderedRules.auth
+            ```
+          '';
         };
 
         text = lib.mkOption {
           type = lib.types.lines;
         };
+      };
+
+      config = {
+        orderedRules = lib.genAttrs ruleTypes (type: utils.pam.orderRules config.rules.${type});
+
+        text = lib.mkDefault (
+          lib.concatMapStrings (
+            type: lib.concatMapStrings (rule: formatRule type rule + "\n") config.orderedRules.${type}
+          ) ruleTypes
+        );
       };
     };
 
