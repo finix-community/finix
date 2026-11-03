@@ -2,7 +2,6 @@
   config,
   pkgs,
   lib,
-  utils,
   ...
 }:
 let
@@ -150,6 +149,20 @@ let
       type = rulesType;
     };
 
+  ruleTypes = [
+    "account"
+    "auth"
+    "password"
+    "session"
+  ];
+
+  # Enabled rules of a single type, sorted by `order` with ties broken by name.
+  orderRules =
+    rules:
+    lib.sort (a: b: if a.order == b.order then a.name < b.name else a.order < b.order) (
+      lib.filter (rule: rule.enable) (lib.attrValues rules)
+    );
+
   pamOpts =
     { name, config, ... }:
     {
@@ -174,7 +187,7 @@ let
             :::
           '';
           type = lib.types.submodule {
-            options = lib.genAttrs utils.pam.ruleTypes mkRulesTypeOption;
+            options = lib.genAttrs ruleTypes mkRulesTypeOption;
           };
         };
 
@@ -198,12 +211,12 @@ let
       };
 
       config = {
-        orderedRules = lib.genAttrs utils.pam.ruleTypes (type: utils.pam.orderRules config.rules.${type});
+        orderedRules = lib.genAttrs ruleTypes (type: orderRules config.rules.${type});
 
         text = lib.mkDefault (
           lib.concatMapStrings (
             type: lib.concatMapStrings (rule: formatRule type rule + "\n") config.orderedRules.${type}
-          ) utils.pam.ruleTypes
+          ) ruleTypes
         );
       };
     };
