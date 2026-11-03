@@ -417,18 +417,27 @@ in
       ];
     };
 
-    security.pam.services.other = {
-      text = ''
-        auth     required pam_warn.so
-        auth     required pam_deny.so
-        account  required pam_warn.so
-        account  required pam_deny.so
-        password required pam_warn.so
-        password required pam_deny.so
-        session  required pam_warn.so
-        session  required pam_deny.so
-      '';
-    };
+    security.pam.services.other.rules =
+      let
+        warnThenDeny = {
+          warn = {
+            order = 10000;
+            control = "required";
+            modulePath = "pam_warn.so";
+          };
+          deny = {
+            order = 20000;
+            control = "required";
+            modulePath = "pam_deny.so";
+          };
+        };
+      in
+      {
+        account = warnThenDeny;
+        auth = warnThenDeny;
+        password = warnThenDeny;
+        session = warnThenDeny;
+      };
 
     security.wrappers = {
       unix_chkpwd = {
