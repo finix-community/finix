@@ -150,13 +150,6 @@ let
       type = rulesType;
     };
 
-  ruleTypes = [
-    "account"
-    "auth"
-    "password"
-    "session"
-  ];
-
   pamOpts =
     { name, config, ... }:
     {
@@ -181,7 +174,7 @@ let
             :::
           '';
           type = lib.types.submodule {
-            options = lib.genAttrs ruleTypes mkRulesTypeOption;
+            options = lib.genAttrs utils.pam.ruleTypes mkRulesTypeOption;
           };
         };
 
@@ -205,12 +198,12 @@ let
       };
 
       config = {
-        orderedRules = lib.genAttrs ruleTypes (type: utils.pam.orderRules config.rules.${type});
+        orderedRules = lib.genAttrs utils.pam.ruleTypes (type: utils.pam.orderRules config.rules.${type});
 
         text = lib.mkDefault (
           lib.concatMapStrings (
             type: lib.concatMapStrings (rule: formatRule type rule + "\n") config.orderedRules.${type}
-          ) ruleTypes
+          ) utils.pam.ruleTypes
         );
       };
     };

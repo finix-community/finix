@@ -39,6 +39,14 @@
     || lib.any (lib.hasPrefix a'.mountPoint) b'.depends;
 
   pam = {
+    # PAM rule types, in the order they are rendered in a service file.
+    ruleTypes = [
+      "account"
+      "auth"
+      "password"
+      "session"
+    ];
+
     # Enabled PAM rules of a single type, sorted by `order` with ties broken by name.
     orderRules =
       rules:
