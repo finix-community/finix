@@ -15,13 +15,13 @@ let
 
   session_rundir =
     if config.services.sessiond.enable then
-      "session optional ${config.services.sessiond.package}/lib/security/pam_sessiond.so"
+      "${config.services.sessiond.package}/lib/security/pam_sessiond.so"
     else if config.services.elogind.enable then
-      "session optional ${pkgs.elogind}/lib/security/pam_elogind.so"
+      "${pkgs.elogind}/lib/security/pam_elogind.so"
     else if config.services.seatd.enable then
-      "session optional ${pkgs.pam_rundir}/lib/security/pam_rundir.so"
+      "${pkgs.pam_rundir}/lib/security/pam_rundir.so"
     else
-      false;
+      null;
 in
 {
   options.programs.shadow = {
@@ -159,70 +159,217 @@ in
     environment.etc."security/limits.conf".text = lib.mkDefault "";
     environment.etc."login.defs".source = format.generate "login.defs" cfg.settings;
 
-    security.pam.services.login = {
-      text = ''
-        # Account management.
-        account required pam_unix.so # unix (order 10900)
+    security.pam.services.login.rules = {
+      account.unix = {
+        order = 10900;
+        control = "required";
+        modulePath = "pam_unix.so";
+      };
 
-        # Authentication management.
-        auth optional pam_unix.so likeauth nullok # unix-early (order 11500)
-        auth sufficient pam_unix.so likeauth nullok try_first_pass # unix (order 12800)
-        auth required pam_deny.so # deny (order 13600)
+      auth = {
+        unix-early = {
+          order = 11500;
+          control = "optional";
+          modulePath = "pam_unix.so";
+          settings = {
+            likeauth = true;
+            nullok = true;
+          };
+        };
+        unix = {
+          order = 12800;
+          control = "sufficient";
+          modulePath = "pam_unix.so";
+          settings = {
+            likeauth = true;
+            nullok = true;
+            try_first_pass = true;
+          };
+        };
+        deny = {
+          order = 13600;
+          control = "required";
+          modulePath = "pam_deny.so";
+        };
+      };
 
-        # Password management.
-        password sufficient pam_unix.so nullok ${encryptMethod} # unix (order 10200)
+      password.unix = {
+        order = 10200;
+        control = "sufficient";
+        modulePath = "pam_unix.so";
+        settings = {
+          nullok = true;
+          ${encryptMethod} = true;
+        };
+      };
 
-        # Session management.
-        session required pam_env.so conffile=/etc/security/pam_env.conf readenv=0 # env (order 10100)
-        session required pam_unix.so # unix (order 10200)
-        session required pam_loginuid.so # loginuid (order 10300)
-        session required pam_limits.so conf=/etc/security/limits.conf
-        session required ${pkgs.util-linux.lastlog}/lib/security/pam_lastlog2.so silent # lastlog (order 10700)
-
-        ${lib.optionalString (session_rundir != false) session_rundir}
-      '';
+      session = {
+        env = {
+          order = 10100;
+          control = "required";
+          modulePath = "pam_env.so";
+          settings = {
+            conffile = "/etc/security/pam_env.conf";
+            readenv = 0;
+          };
+        };
+        unix = {
+          order = 10200;
+          control = "required";
+          modulePath = "pam_unix.so";
+        };
+        loginuid = {
+          order = 10300;
+          control = "required";
+          modulePath = "pam_loginuid.so";
+        };
+        limits = {
+          order = 10400;
+          control = "required";
+          modulePath = "pam_limits.so";
+          settings.conf = "/etc/security/limits.conf";
+        };
+        lastlog = {
+          order = 10700;
+          control = "required";
+          modulePath = "${pkgs.util-linux.lastlog}/lib/security/pam_lastlog2.so";
+          settings.silent = true;
+        };
+        rundir = lib.mkIf (session_rundir != null) {
+          order = 12000;
+          control = "optional";
+          modulePath = session_rundir;
+        };
+      };
     };
 
-    security.pam.services.su = {
-      text = ''
-        # Account management.
-        account required pam_unix.so # unix (order 10900)
+    security.pam.services.su.rules = {
+      account.unix = {
+        order = 10900;
+        control = "required";
+        modulePath = "pam_unix.so";
+      };
 
-        # Authentication management.
-        auth sufficient pam_rootok.so # rootok (order 10200)
-        auth required pam_faillock.so # faillock (order 10400)
-        auth sufficient pam_unix.so likeauth try_first_pass # unix (order 11500)
-        auth required pam_deny.so # deny (order 12300)
+      auth = {
+        rootok = {
+          order = 10200;
+          control = "sufficient";
+          modulePath = "pam_rootok.so";
+        };
+        faillock = {
+          order = 10400;
+          control = "required";
+          modulePath = "pam_faillock.so";
+        };
+        unix = {
+          order = 11500;
+          control = "sufficient";
+          modulePath = "pam_unix.so";
+          settings = {
+            likeauth = true;
+            try_first_pass = true;
+          };
+        };
+        deny = {
+          order = 12300;
+          control = "required";
+          modulePath = "pam_deny.so";
+        };
+      };
 
-        # Password management.
-        password sufficient pam_unix.so nullok ${encryptMethod} # unix (order 10200)
+      password.unix = {
+        order = 10200;
+        control = "sufficient";
+        modulePath = "pam_unix.so";
+        settings = {
+          nullok = true;
+          ${encryptMethod} = true;
+        };
+      };
 
-        # Session management.
-        session required pam_env.so conffile=/etc/security/pam_env.conf readenv=0 # env (order 10100)
-        session required pam_unix.so # unix (order 10200)
-        session required pam_limits.so
-      ''
-      + lib.optionalString config.programs.xorg.enable or false ''
-        session optional pam_xauth.so systemuser=99 xauthpath=${pkgs.xauth}/bin/xauth # xauth (order 12100)
-      '';
+      session = {
+        env = {
+          order = 10100;
+          control = "required";
+          modulePath = "pam_env.so";
+          settings = {
+            conffile = "/etc/security/pam_env.conf";
+            readenv = 0;
+          };
+        };
+        unix = {
+          order = 10200;
+          control = "required";
+          modulePath = "pam_unix.so";
+        };
+        limits = {
+          order = 10300;
+          control = "required";
+          modulePath = "pam_limits.so";
+        };
+        xauth = {
+          enable = config.programs.xorg.enable or false;
+          order = 12100;
+          control = "optional";
+          modulePath = "pam_xauth.so";
+          settings = {
+            systemuser = 99;
+            xauthpath = "${pkgs.xauth}/bin/xauth";
+          };
+        };
+      };
     };
 
-    security.pam.services.passwd = {
-      text = ''
-        # Account management.
-        account required pam_unix.so # unix (order 10900)
+    security.pam.services.passwd.rules = {
+      account.unix = {
+        order = 10900;
+        control = "required";
+        modulePath = "pam_unix.so";
+      };
 
-        # Authentication management.
-        auth sufficient pam_unix.so likeauth try_first_pass # unix (order 11500)
-        auth required pam_deny.so # deny (order 12300)
+      auth = {
+        unix = {
+          order = 11500;
+          control = "sufficient";
+          modulePath = "pam_unix.so";
+          settings = {
+            likeauth = true;
+            try_first_pass = true;
+          };
+        };
+        deny = {
+          order = 12300;
+          control = "required";
+          modulePath = "pam_deny.so";
+        };
+      };
 
-        # Password management.
-        password sufficient pam_unix.so nullok ${encryptMethod} # unix (order 10200)
+      password.unix = {
+        order = 10200;
+        control = "sufficient";
+        modulePath = "pam_unix.so";
+        settings = {
+          nullok = true;
+          ${encryptMethod} = true;
+        };
+      };
 
-        # Session management.
-        session required pam_env.so conffile=/etc/security/pam_env.conf readenv=0 # env (order 10100)
-        session required pam_unix.so # unix (order 10200)
-      '';
+      session = {
+        env = {
+          order = 10100;
+          control = "required";
+          modulePath = "pam_env.so";
+          settings = {
+            conffile = "/etc/security/pam_env.conf";
+            readenv = 0;
+          };
+        };
+        unix = {
+          order = 10200;
+          control = "required";
+          modulePath = "pam_unix.so";
+        };
+      };
     };
 
     security.wrappers =
