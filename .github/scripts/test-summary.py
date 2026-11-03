@@ -42,37 +42,57 @@ def list_tests():
     print(line, flush=True)
 
 
+ICONS = {'passed': '✅', 'failed': '❌', 'skipped': '⏭️'}
+
+
 def merge(root):
-    tests, errors, details = [], [], []
+    runs, errors = [], []
     for path in sorted(Path(root).glob('*/*/results.json')):
         data = json.loads(read_small(path))
         if isinstance(data, list):
             data = {'tests': data, 'runner_errors': []}
-        tests += data['tests']
         errors += data['runner_errors']
-        if data['runner_errors'] or any(t['status'] != 'passed' for t in data['tests']):
-            details.append(read_small(path.with_name('summary.md')))
-    failed = sum(t['status'] == 'failed' for t in tests)
-    skipped = sum(t['status'] == 'skipped' for t in tests)
+        runs += [(t, path.parent) for t in data['tests']]
+    if not runs and not errors:
+        print('## Finix VM test results\n\nNo test results found. Check the earlier jobs of this run.')
+        return
+    order = {'failed': 0, 'skipped': 1, 'passed': 2}
+    runs.sort(key=lambda r: (order.get(r[0]['status'], 1), r[0]['name']))
+    failed = sum(t['status'] == 'failed' for t, _ in runs)
+    skipped = sum(t['status'] == 'skipped' for t, _ in runs)
+    passed = len(runs) - failed - skipped
+    head = f'{ICONS["passed"]} {passed} passed'
+    if failed:
+        head += f' · {ICONS["failed"]} {failed} failed'
+    if skipped:
+        head += f' · {ICONS["skipped"]} {skipped} skipped'
+    if errors:
+        head += f' · {len(errors)} runner errors'
     rows = [
-        '## Finix VM test results', '',
-        (f'**{len(tests) - failed - skipped} passed · {failed} failed · '
-         f'{skipped} skipped · {len(errors)} errors**'), '',
-        '| Test | Result | Time |', '| --- | --- | ---: |',
+        '## Finix VM test results', '', f'**{head}**', '',
+        '| Test | Result | Time | Subtests |', '| --- | --- | ---: | --- |',
     ]
-    for t in sorted(tests, key=lambda t: t['name']):
-        status = t['status'] + (': ' + t['failure_stage'] if t.get('failure_stage') else '')
+    for t, _ in runs:
+        status = ICONS.get(t['status'], '❔') + ' ' + t['status']
+        if t.get('failure_stage'):
+            status += ': ' + t['failure_stage']
         rows.append('| ' + ' | '.join(cell(v) for v in (
-            t['name'], status, f"{t.get('seconds') or 0:.1f}s",
+            t['name'], status, f"{t.get('seconds') or 0:.1f}s", subtest_counts(t),
         )) + ' |')
+    rows += ['', 'Full logs for every test are in the `finix-vm-test-*` artifacts of this run.', '']
+    for error in errors:
+        rows += ['### Runner error', '', '<pre>' + html.escape(error[:6000]) + '</pre>', '']
     out = '\n'.join(rows) + '\n'
     budget = 900_000 - len(out.encode('utf-8'))
-    for detail in details:
+    for t, run_dir in runs:
+        if t['status'] == 'passed':
+            continue
+        detail = '\n'.join(test_details(t, run_dir, opened=True)) + '\n'
         size = len(detail.encode('utf-8'))
         if size > budget:
-            out += '\nFurther failure details exceed the size limit - see the per-test artifacts.\n'
+            out += '\nFurther failure details exceed the size limit, see the per-test artifacts.\n'
             break
-        out += '\n' + detail + '\n'
+        out += '\n' + detail
         budget -= size
     print(out)
 
@@ -248,6 +268,42 @@ def cell(value, limit=600):
     return html.escape(text).replace('|', '&#124;').replace('\n', ' ').replace('\r', ' ').replace('`', '&#96;')
 
 
+def subtest_counts(result):
+    counts = {s: sum(t['status'] == s for t in result.get('subtests', [])) for s in ('passed', 'failed', 'unknown')}
+    return ', '.join(f'{n} {s}' for s, n in counts.items() if n) or 'unavailable'
+
+
+def test_details(result, artifact_dir, opened=False):
+    rows = []
+    paths = result.get('outputs_after') or result.get('outputs_before') or {}
+    rows += [f"<details{' open' if opened else ''}><summary>{cell(result['name'])}</summary>", '',
+             f"Derivation: <code>{cell(result['drvPath'])}</code>", '',
+             f"Build exit code: {result.get('exit_code', 'unavailable')}", '']
+    for path, exists in paths.items():
+        rows.append(f'- <code>{cell(path)}</code> - {"available" if exists else "missing"}')
+    if not paths:
+        rows.append('Output paths unavailable - see output-query logs.')
+    for warning in result.get('warnings', []):
+        rows += ['', cell(warning)]
+    if result.get('subtests'):
+        rows += ['', f"Subtest records ({cell(result['driver_log_provenance'])}):", '']
+        for subtest in result['subtests'][:50]:
+            rows.append(f"- {cell(subtest['name'])}: {subtest['status']}")
+        if len(result['subtests']) > 50:
+            rows.append('- Further records are in results.json.')
+    if result['status'] == 'failed':
+        rows += ['', cell(result.get('failure_evidence', 'Reporter error - see results.json.')), '']
+        for filename in ('build.stderr.log', 'derivation.stdout.log'):
+            tail = excerpt(artifact_dir / result['logs'] / filename)
+            if tail:
+                label = filename
+                if filename.startswith('derivation'):
+                    label += ' (' + result.get('driver_log_provenance', 'unverified') + ')'
+                rows += [f'**{cell(label)} - final excerpt**', '', '<pre>' + html.escape(tail) + '</pre>', '']
+    rows += ['', '</details>', '']
+    return rows
+
+
 def summary(results, errors, artifact_dir):
     failed = sum(r['status'] == 'failed' for r in results)
     skipped = sum(r['status'] == 'skipped' for r in results)
@@ -259,8 +315,7 @@ def summary(results, errors, artifact_dir):
         '| --- | --- | ---: | --- | --- |',
     ]
     for result in results:
-        counts = {s: sum(t['status'] == s for t in result.get('subtests', [])) for s in ('passed', 'failed', 'unknown')}
-        sub = ', '.join(f'{n} {s}' for s, n in counts.items() if n) or 'unavailable'
+        sub = subtest_counts(result)
         if result.get('subtests'):
             sub += ' (' + result['driver_log_provenance'] + ')'
         status = result['status']
@@ -274,32 +329,7 @@ def summary(results, errors, artifact_dir):
     for error in errors:
         rows += ['### Runner error', '', '<pre>' + html.escape(error[:6000]) + '</pre>', '']
     for result in results:
-        paths = result.get('outputs_after') or result.get('outputs_before') or {}
-        rows += [f"<details><summary>{cell(result['name'])}</summary>", '',
-                 f"Derivation: <code>{cell(result['drvPath'])}</code>", '',
-                 f"Build exit code: {result.get('exit_code', 'unavailable')}", '']
-        for path, exists in paths.items():
-            rows.append(f'- <code>{cell(path)}</code> - {"available" if exists else "missing"}')
-        if not paths:
-            rows.append('Output paths unavailable - see output-query logs.')
-        for warning in result.get('warnings', []):
-            rows += ['', cell(warning)]
-        if result.get('subtests'):
-            rows += ['', f"Subtest records ({cell(result['driver_log_provenance'])}):", '']
-            for subtest in result['subtests'][:50]:
-                rows.append(f"- {cell(subtest['name'])}: {subtest['status']}")
-            if len(result['subtests']) > 50:
-                rows.append('- Further records are in results.json.')
-        if result['status'] == 'failed':
-            rows += ['', cell(result.get('failure_evidence', 'Reporter error - see results.json.')), '']
-            for filename in ('build.stderr.log', 'derivation.stdout.log'):
-                tail = excerpt(artifact_dir / result['logs'] / filename)
-                if tail:
-                    label = filename
-                    if filename.startswith('derivation'):
-                        label += ' (' + result.get('driver_log_provenance', 'unverified') + ')'
-                    rows += [f'**{cell(label)} - final excerpt**', '', '<pre>' + html.escape(tail) + '</pre>', '']
-        rows += ['', '</details>', '']
+        rows += test_details(result, artifact_dir)
     return '\n'.join(rows)
 
 
@@ -378,7 +408,7 @@ def main():
         json.dumps({'tests': results, 'runner_errors': errors}, indent=2) + '\n', encoding='utf-8',
     )
     summary_path = os.environ.get('GITHUB_STEP_SUMMARY')
-    if summary_path:
+    if summary_path and not os.environ.get('TEST_SUMMARY_ONLY'):
         try:
             inline = report
             if len(inline.encode('utf-8')) > 900_000:
