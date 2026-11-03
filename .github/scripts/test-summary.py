@@ -28,6 +28,55 @@ in walk [] (import ./tests {})
 '''
 
 
+def list_tests():
+    out = subprocess.run(
+        ['nix-instantiate', '--eval', '--strict', '--json', '--read-write-mode', '--expr', DISCOVER],
+        cwd=ROOT, capture_output=True, text=True, check=True,
+    ).stdout
+    names = [t['name'] for t in json.loads(out)]
+    line = 'tests=' + json.dumps(names)
+    target = os.environ.get('GITHUB_OUTPUT')
+    if target:
+        with open(target, 'a', encoding='utf-8') as stream:
+            stream.write(line + '\n')
+    print(line, flush=True)
+
+
+def merge(root):
+    tests, errors, details = [], [], []
+    for path in sorted(Path(root).glob('*/*/results.json')):
+        data = json.loads(read_small(path))
+        if isinstance(data, list):
+            data = {'tests': data, 'runner_errors': []}
+        tests += data['tests']
+        errors += data['runner_errors']
+        if data['runner_errors'] or any(t['status'] != 'passed' for t in data['tests']):
+            details.append(read_small(path.with_name('summary.md')))
+    failed = sum(t['status'] == 'failed' for t in tests)
+    skipped = sum(t['status'] == 'skipped' for t in tests)
+    rows = [
+        '## Finix VM test results', '',
+        (f'**{len(tests) - failed - skipped} passed · {failed} failed · '
+         f'{skipped} skipped · {len(errors)} errors**'), '',
+        '| Test | Result | Time |', '| --- | --- | ---: |',
+    ]
+    for t in sorted(tests, key=lambda t: t['name']):
+        status = t['status'] + (': ' + t['failure_stage'] if t.get('failure_stage') else '')
+        rows.append('| ' + ' | '.join(cell(v) for v in (
+            t['name'], status, f"{t.get('seconds') or 0:.1f}s",
+        )) + ' |')
+    out = '\n'.join(rows) + '\n'
+    budget = 900_000 - len(out.encode('utf-8'))
+    for detail in details:
+        size = len(detail.encode('utf-8'))
+        if size > budget:
+            out += '\nFurther failure details exceed the size limit - see the per-test artifacts.\n'
+            break
+        out += '\n' + detail + '\n'
+        budget -= size
+    print(out)
+
+
 def command(argv, folder, label, timeout):
     started = time.monotonic()
     with (folder / (label + '.stdout.log')).open('wb') as out, (
@@ -281,6 +330,11 @@ def main():
                     or not test['drvPath'].startswith('/nix/store/')
                     or not test['drvPath'].endswith('.drv')):
                 raise ValueError('Discovery returned an invalid test derivation')
+        only = os.environ.get('TEST_SUMMARY_ONLY')
+        if only:
+            tests = [t for t in tests if t['name'] == only]
+            if not tests:
+                raise ValueError(f'Unknown test: {only}')
         fail_fast = os.environ.get('TEST_SUMMARY_FAIL_FAST', '1').strip().lower() not in (
             '0', 'false', 'no', 'off', '',
         )
@@ -347,4 +401,10 @@ def main():
 
 
 if __name__ == '__main__':
+    if '--list' in sys.argv:
+        list_tests()
+        sys.exit(0)
+    if '--merge' in sys.argv:
+        merge(sys.argv[sys.argv.index('--merge') + 1])
+        sys.exit(0)
     sys.exit(main())
