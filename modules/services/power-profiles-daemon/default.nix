@@ -64,7 +64,10 @@ in
 
     finit.services.power-profiles-daemon = {
       description = "power profiles daemon";
-      conditions = "service/dbus/ready";
+      conditions = [
+        "service/dbus/ready"
+      ]
+      ++ lib.optionals config.services.polkit.enable [ "service/polkit/ready" ];
       command = "${cfg.package}/libexec/power-profiles-daemon";
       state-dir = "power-profiles-daemon";
     };
