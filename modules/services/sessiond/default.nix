@@ -44,7 +44,7 @@ in
       inherit (format) type;
       default = { };
       description = ''
-        `sessiond` configuration. See [upstream documentation](https://r0chd.tngl.sh/sessiond/configuration.html)
+        `sessiond` configuration. See [upstream documentation](https://r0chd.tngl.io/sessiond/configuration.html)
         for additional details.
       '';
     };

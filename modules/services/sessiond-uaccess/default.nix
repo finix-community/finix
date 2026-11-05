@@ -37,7 +37,7 @@ in
       );
       defaultText = lib.literalExpression "pkgs.sessiond-uaccess";
       description = ''
-        The package to use for `sessiond`.
+        The package to use for `sessiond-uaccess`.
       '';
     };
 
@@ -61,7 +61,7 @@ in
         }
       '';
       description = ''
-        Additional `lua` rules loaded after the packaged `sessiond-uaccess` rules. See [upstream documentation](https://tangled.org/r0chd.pl/sessiond-uaccess/blob/master/rules/70-uaccess.lua)
+        Additional `lua` rules loaded after the packaged `sessiond-uaccess` rules. See [upstream documentation](https://r0chd.tngl.io/sessiond/clients/client-uaccess.html)
         for additional details.
       '';
     };
