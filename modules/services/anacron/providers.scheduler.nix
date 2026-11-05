@@ -1,11 +1,9 @@
 { config, lib, ... }:
 let
   anacronCompatible =
-    v:
-    v.interval == "daily"
-    || v.interval == "weekly"
-    || v.interval == "monthly"
-    || v.interval == "yearly";
+    task:
+    task.persistent
+    && (task.interval == "daily" || task.interval == "weekly" || task.interval == "monthly");
 in
 {
   options.providers.scheduler = {
@@ -17,20 +15,32 @@ in
   config = lib.mkIf (config.providers.scheduler.backend == "anacron") {
     providers.scheduler.supportedFeatures = {
       user = false;
+      persistent = true;
     };
 
     services.cron.systab = lib.mapAttrsToList (
-      k: v:
+      _: t:
       let
-        expr = if v.interval == "hourly" then "0 0 * * *" else v.interval;
-
-        user = if v.user != null then v.user else "root";
+        interval =
+          if t.interval == "minutely" then
+            "* * * * *"
+          else if t.interval == "hourly" then
+            "@hourly"
+          else if t.interval == "daily" then
+            "@daily"
+          else if t.interval == "weekly" then
+            "@weekly"
+          else if t.interval == "monthly" then
+            "@monthly"
+          else
+            throw "Unsupported cron interval: ${t.interval}";
+        user = if t.user != null then t.user else "root";
       in
-      "${expr} ${user} ${v.command}"
-    ) (lib.filterAttrs (k: v: !anacronCompatible v) config.providers.scheduler.tasks);
+      "${interval} ${user} ${t.command}"
+    ) (lib.filterAttrs (_: task: !anacronCompatible task) config.providers.scheduler.tasks);
 
-    services.anacron.systab = lib.mapAttrsToList (k: v: "@${v.interval} 0 ${k} ${v.command}") (
-      lib.filterAttrs (k: anacronCompatible) config.providers.scheduler.tasks
+    services.anacron.systab = lib.mapAttrsToList (name: t: "@${t.interval} 0 ${name} ${t.command}") (
+      lib.filterAttrs (_: anacronCompatible) config.providers.scheduler.tasks
     );
   };
 }
