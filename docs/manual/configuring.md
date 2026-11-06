@@ -684,15 +684,19 @@ exec "pipewire & sleep 1 && pipewire-pulse"
     modules.wireplumber
   ];
 
-  programs.pipewire = {
-    enable = true;
-    settings = {
-      "context.exec" = [
-        {
-          path = "${config.programs.pipewire.package}/bin/pipewire-pulse";
-        }
-      ];
+  programs = {
+    pipewire = {
+      enable = true;
+      settings = {
+        "context.exec" = [
+          {
+            path = "${config.programs.wireplumber.package}/bin/wireplumber";
+            path = "${config.programs.pipewire.package}/bin/pipewire-pulse";
+          }
+        ];
+      };
     };
+    wireplumber.enable = true;
   };
 }
 ```
