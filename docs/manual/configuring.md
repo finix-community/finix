@@ -569,9 +569,133 @@ etc.
 
 ### Audio
 
-TODO
+#### Pipewire
 
-`pipewire` mostly
+Finix provides a [Pipewire module](https://github.com/finix-community/finix/blob/main/modules/programs/pipewire/default.nix) which is not imported by default. To enable it, add the following to your configuration:
+
+```nix
+{ config, modules, ... }:
+{
+  imports = [ modules.pipewire ];
+
+  programs.pipewire.enable = true;
+}
+```
+
+Enabling the Pipewire module will not make it start on its own. Typically, it is started via your graphical environment. For example, with [Niri](https://github.com/niri-wm/niri):
+
+```kdl
+spawn-sh-at-startup "pipewire"
+```
+
+Using [Wireplumber](#Wireplumber) is also advised for session management.
+
+##### Wireplumber
+Finix provides a [Wireplumber module](https://github.com/finix-community/finix/blob/main/modules/programs/wireplumber). To enable it, add the following to your configuration:
+
+```nix
+{ config, modules, ... }:
+{
+  imports = [
+    modules.pipewire
+    modules.wireplumber
+  ];
+  programs = {
+    pipewire.enable = true;
+    wireplumber.enable = true;
+  };
+}
+```
+
+Enabling the Wireplumber module will not make it start on its own. It has to be started via either:
+
+- Your graphical environment. For example, with [Sway](https://github.com/swaywm/sway) or [i3](https://github.com/i3/i3):
+
+```ini
+exec "pipewire & sleep 1 && wireplumber"
+```
+
+> [!Caution]
+> A `sleep` call is added after executing `pipewire` to avoid a race condition where `pipewire` isn't initialized in time for `wireplumber` to hook into it. It is preferable to execute it via Pipewire's configuration to avoid this hack.
+
+- Pipewire's configuration
+
+```nix
+{ config, modules, ... }:
+{
+  imports = [
+    modules.pipewire
+    modules.wireplumber
+  ];
+
+  programs = {
+    pipewire = {
+      enable = true;
+      settings = {
+        "context.exec" = [
+          {
+            path = "${config.programs.wireplumber.package}/bin/wireplumber";
+          }
+        ];
+      };
+    };
+    wireplumber.enable = true;
+  };
+}
+```
+
+
+##### ALSA and Pulseaudio compatibility
+
+Some programs may not function properly without ALSA and/or Pulseaudio. Pipewire has integrations that add compatibility for these APIs.
+
+To enable **ALSA** compatibility, add the following to your configuration:
+
+```nix
+{ config, modules, ... }:
+{
+  imports = [ modules.pipewire ];
+
+  programs.pipewire = {
+    enable = true;
+    alsa.enable = true;
+  };
+}
+```
+
+To enable **Pulseaudio** compatibility, `pipewire-pulse` must be executed after `pipewire`. This can be done via either:
+
+- Your graphical environment. For example, with [Sway](https://github.com/swaywm/sway) or [i3](https://github.com/i3/i3):
+
+```ini
+exec "pipewire & sleep 1 && pipewire-pulse"
+```
+
+> [!Caution]
+> Similarly, as with [Wireplumber](#Wireplumber), `sleep` is called after executing `pipewire` to give it time to start before `pipewire-pulse` tries to find it. It is preferable to execute it via Pipewire's configuration.
+
+- Pipewire's configuration (note that `pipewire` still needs to be executed!)
+
+```nix
+{ config, modules, ... }:
+{
+  imports = [
+    modules.pipewire
+    modules.wireplumber
+  ];
+
+  programs.pipewire = {
+    enable = true;
+    settings = {
+      "context.exec" = [
+        {
+          path = "${config.programs.pipewire.package}/bin/pipewire-pulse";
+        }
+      ];
+    };
+  };
+}
+```
 
 ## Server software
 
