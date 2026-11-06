@@ -701,6 +701,39 @@ exec "pipewire & sleep 1 && pipewire-pulse"
 }
 ```
 
+#### ALSA-only
+
+> [!WARNING]
+> [Pipewire](#Pipewire) is more widely supported and easier to setup. This setup is only advisable if you need a super minimal audio stack, like on ancient computers or low power SOCs.
+
+Add the following example configuration to your finix configuration:
+```nix
+{
+  environment.etc."asound.conf".text = ''
+  ctl.!default {
+    type hw
+    card "Generic_1" # Replace Generic_1 with your card name from `aplay -l`
+  }
+
+  pcm.dmixer {
+    type dmix
+    ipc_key 1024
+    ipc_perm 0666
+    slave {
+      pcm "hw:Generic_1,0" # Replace Generic_1 with your card name from `aplay -l`
+      period_size 1024     # Prevent audio cracking on certain cards
+      buffer_size 4096
+    }
+  }
+
+  pcm.!default {
+    type plug
+    slave.pcm "dmixer"
+  }
+  '';
+}
+```
+
 ## Server software
 
 ### IP banning
