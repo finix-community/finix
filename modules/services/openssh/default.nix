@@ -7,6 +7,8 @@
 let
   cfg = config.services.openssh;
 
+  fprintd = config.services.fprintd.enable or false;
+
   configFile = settingsFormat.generate "sshd.conf" cfg.settings;
   settingsFormat =
     let
@@ -342,6 +344,7 @@ in
         account required pam_unix.so debug # unix (order 10900)
 
         # Authentication management.
+        ${lib.optionalString fprintd "auth sufficient ${config.services.fprintd.package}/lib/security/pam_fprintd.so debug"}
         auth sufficient pam_unix.so likeauth try_first_pass debug # unix (order 11500)
         auth required pam_deny.so debug # deny (order 12300)
 
