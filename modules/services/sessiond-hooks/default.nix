@@ -45,7 +45,11 @@ in
             };
             settings = lib.mkOption {
               inherit (format) type;
-              description = "Hook settings serialized to TOML.";
+              default = { };
+              description = ''
+                `sessiond-hooks` configuration. See [upstream documentation](https://r0chd.tngl.io/sessiond/clients/client-hooks.html)
+                for additional details.
+              '';
             };
           };
         }
