@@ -1,3 +1,126 @@
+<div class="option" id="option-swapDevices._.randomEncryption.allowDiscards">
+  <h3 class="option-name">
+    <a href="#option-swapDevices._.randomEncryption.allowDiscards" class="option-anchor">swapDevices.*.randomEncryption.allowDiscards</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to allow TRIM requests to the underlying device.
+This option has security implications, see the
+upstream NixOS manual section on swap encryption.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/options.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-swapDevices._.randomEncryption.cipher">
+  <h3 class="option-name">
+    <a href="#option-swapDevices._.randomEncryption.cipher" class="option-anchor">swapDevices.*.randomEncryption.cipher</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Specify the cipher to use, see <code class="command">cryptsetup
+benchmark</code> for a list of options.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>non-empty string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">aes-xts-plain64</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/options.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-swapDevices._.randomEncryption.keySize">
+  <h3 class="option-name">
+    <a href="#option-swapDevices._.randomEncryption.keySize" class="option-anchor">swapDevices.*.randomEncryption.keySize</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Specify the size of the randomly generated key, in bits.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>positive integer, meaning &gt;0</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">256</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/options.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-swapDevices._.randomEncryption.sectorSize">
+  <h3 class="option-name">
+    <a href="#option-swapDevices._.randomEncryption.sectorSize" class="option-anchor">swapDevices.*.randomEncryption.sectorSize</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Specify the sector size in bytes, or <code>0</code> to let
+<code class="command">cryptsetup</code> pick the default.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>unsigned integer, meaning &gt;=0</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">0</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/options.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-swapDevices._.randomEncryption.source">
+  <h3 class="option-name">
+    <a href="#option-swapDevices._.randomEncryption.source" class="option-anchor">swapDevices.*.randomEncryption.source</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Source of randomness used to generate the swap
+encryption key on every boot.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>non-empty string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/dev/urandom</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/options.nix&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-system.activation.enable">
+  <h3 class="option-name">
+    <a href="#option-system.activation.enable" class="option-anchor">system.activation.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable system activation scripts.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/system/activation" target="_blank" rel="noopener noreferrer">&lt;finix/modules/system/activation&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-system.activation.out">
+  <h3 class="option-name">
+    <a href="#option-system.activation.out" class="option-anchor">system.activation.out</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-metadata"><span class="option-badge">read-only</span></div>
+  <div class="option-description"><html><head></head><body><p>the actual script to run on activation....</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>absolute path</code></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/system/activation" target="_blank" rel="noopener noreferrer">&lt;finix/modules/system/activation&gt;</a></code></dd>
+  </dl>
+</div>
 <div class="option" id="option-system.activation.path">
   <h3 class="option-name">
     <a href="#option-system.activation.path" class="option-anchor">system.activation.path</a>
