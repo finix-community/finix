@@ -12286,6 +12286,100 @@
   
   <li>
     <details class="toc-category">
+      <summary title="services.victorialogs">
+        <span>services.victorialogs</span>
+        <span class="toc-count">10</span>
+      </summary>
+      <ul>
+        
+
+        
+        <li>
+          <a href='#option-services.victorialogs.dataDir' title="services.victorialogs.dataDir">
+            dataDir
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.victorialogs.enable' title="services.victorialogs.enable">
+            enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.victorialogs.extraArgs' title="services.victorialogs.extraArgs">
+            extraArgs
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.victorialogs.group' title="services.victorialogs.group">
+            group
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.victorialogs.httpListenAddr' title="services.victorialogs.httpListenAddr">
+            httpListenAddr
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.victorialogs.httpListenAddr.address' title="services.victorialogs.httpListenAddr.address">
+            httpListenAddr.address
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.victorialogs.httpListenAddr.port' title="services.victorialogs.httpListenAddr.port">
+            httpListenAddr.port
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.victorialogs.package' title="services.victorialogs.package">
+            package
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.victorialogs.retentionPeriod' title="services.victorialogs.retentionPeriod">
+            retentionPeriod
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.victorialogs.user' title="services.victorialogs.user">
+            user
+            
+            
+          </a>
+        </li>
+        
+      </ul>
+    </details>
+  </li>
+  
+  <li>
+    <details class="toc-category">
       <summary title="services.vnstat">
         <span>services.vnstat</span>
         <span class="toc-count">9</span>
@@ -36477,6 +36571,209 @@ ensuring the user exists before the <code>vector</code> service starts.</p>
   </dl>
   <dl class="option-details option-sources">
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/vector" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/vector&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.victorialogs.enable">
+  <h3 class="option-name">
+    <a href="#option-services.victorialogs.enable" class="option-anchor">services.victorialogs.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://docs.victoriametrics.com/victorialogs/">victorialogs</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/victorialogs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/victorialogs&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.victorialogs.package">
+  <h3 class="option-name">
+    <a href="#option-services.victorialogs.package" class="option-anchor">services.victorialogs.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>victorialogs</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">victorialogs</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/victorialogs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/victorialogs&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.victorialogs.dataDir">
+  <h3 class="option-name">
+    <a href="#option-services.victorialogs.dataDir" class="option-anchor">services.victorialogs.dataDir</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The directory used to store all <code>victorialogs</code> data.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this directory will automatically be created on
+service activation, otherwise you are responsible for ensuring the directory exists
+with appropriate ownership and permissions before the <code>victorialogs</code> service starts.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>absolute path</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/var/lib/victorialogs</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/victorialogs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/victorialogs&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.victorialogs.extraArgs">
+  <h3 class="option-name">
+    <a href="#option-services.victorialogs.extraArgs" class="option-anchor">services.victorialogs.extraArgs</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <code>victorialogs</code>. See <a href="https://docs.victoriametrics.com/victorialogs/#list-of-command-line-flags">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">-retention.maxDiskSpaceUsageBytes=50GiB</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">-syslog.listenAddr.udp=:514</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/victorialogs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/victorialogs&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.victorialogs.group">
+  <h3 class="option-name">
+    <a href="#option-services.victorialogs.group" class="option-anchor">services.victorialogs.group</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Group account under which <code>victorialogs</code> runs.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this group will automatically be created
+on system activation, otherwise you are responsible for
+ensuring the group exists before the <code>victorialogs</code> service starts.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">victorialogs</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/victorialogs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/victorialogs&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.victorialogs.httpListenAddr">
+  <h3 class="option-name">
+    <a href="#option-services.victorialogs.httpListenAddr" class="option-anchor">services.victorialogs.httpListenAddr</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The address <code>victorialogs</code> listens on for ingestion and queries.</p>
+<p>Additional addresses, including Unix domain sockets, can be added with <code>-httpListenAddr</code> in
+<a class="option-reference" href="options.html#option-services.victorialogs.extraArgs"><code class="nixos-option">services.victorialogs.extraArgs</code></a>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or (submodule)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/victorialogs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/victorialogs&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.victorialogs.httpListenAddr.address">
+  <h3 class="option-name">
+    <a href="#option-services.victorialogs.httpListenAddr.address" class="option-anchor">services.victorialogs.httpListenAddr.address</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The address to listen on, or <code>null</code> to listen on all IPv4 addresses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>IPv6 addresses must be enclosed in brackets and require <code>-enableTCP6</code> in
+<a class="option-reference" href="options.html#option-services.victorialogs.extraArgs"><code class="nixos-option">services.victorialogs.extraArgs</code></a>.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">127.0.0.1</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/victorialogs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/victorialogs&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.victorialogs.httpListenAddr.port">
+  <h3 class="option-name">
+    <a href="#option-services.victorialogs.httpListenAddr.port" class="option-anchor">services.victorialogs.httpListenAddr.port</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The port to listen on.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>16 bit unsigned integer; between 0 and 65535 (both inclusive)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">9428</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/victorialogs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/victorialogs&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.victorialogs.retentionPeriod">
+  <h3 class="option-name">
+    <a href="#option-services.victorialogs.retentionPeriod" class="option-anchor">services.victorialogs.retentionPeriod</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>How long to keep logs before they are deleted. Supported suffixes are <code>s</code>, <code>h</code>, <code>d</code>, <code>w</code>, <code>M</code>,
+and <code>y</code>, a value without a suffix is counted in months. The minimum is <code>1d</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">7d</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">60d</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/victorialogs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/victorialogs&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.victorialogs.user">
+  <h3 class="option-name">
+    <a href="#option-services.victorialogs.user" class="option-anchor">services.victorialogs.user</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>User account under which <code>victorialogs</code> runs.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this user will automatically be created
+on system activation, otherwise you are responsible for
+ensuring the user exists before the <code>victorialogs</code> service starts.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">victorialogs</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/victorialogs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/victorialogs&gt;</a></code></dd>
   </dl>
 </div>
 <div class="option" id="option-services.vnstat.enable">

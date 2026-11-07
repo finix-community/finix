@@ -947,6 +947,209 @@ ensuring the user exists before the <code>vector</code> service starts.</p>
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/vector" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/vector&gt;</a></code></dd>
   </dl>
 </div>
+<div class="option" id="option-services.victorialogs.enable">
+  <h3 class="option-name">
+    <a href="#option-services.victorialogs.enable" class="option-anchor">services.victorialogs.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://docs.victoriametrics.com/victorialogs/">victorialogs</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/victorialogs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/victorialogs&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.victorialogs.package">
+  <h3 class="option-name">
+    <a href="#option-services.victorialogs.package" class="option-anchor">services.victorialogs.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>victorialogs</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">victorialogs</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/victorialogs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/victorialogs&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.victorialogs.dataDir">
+  <h3 class="option-name">
+    <a href="#option-services.victorialogs.dataDir" class="option-anchor">services.victorialogs.dataDir</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The directory used to store all <code>victorialogs</code> data.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this directory will automatically be created on
+service activation, otherwise you are responsible for ensuring the directory exists
+with appropriate ownership and permissions before the <code>victorialogs</code> service starts.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>absolute path</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/var/lib/victorialogs</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/victorialogs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/victorialogs&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.victorialogs.extraArgs">
+  <h3 class="option-name">
+    <a href="#option-services.victorialogs.extraArgs" class="option-anchor">services.victorialogs.extraArgs</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <code>victorialogs</code>. See <a href="https://docs.victoriametrics.com/victorialogs/#list-of-command-line-flags">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">-retention.maxDiskSpaceUsageBytes=50GiB</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">-syslog.listenAddr.udp=:514</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/victorialogs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/victorialogs&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.victorialogs.group">
+  <h3 class="option-name">
+    <a href="#option-services.victorialogs.group" class="option-anchor">services.victorialogs.group</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Group account under which <code>victorialogs</code> runs.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this group will automatically be created
+on system activation, otherwise you are responsible for
+ensuring the group exists before the <code>victorialogs</code> service starts.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">victorialogs</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/victorialogs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/victorialogs&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.victorialogs.httpListenAddr">
+  <h3 class="option-name">
+    <a href="#option-services.victorialogs.httpListenAddr" class="option-anchor">services.victorialogs.httpListenAddr</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The address <code>victorialogs</code> listens on for ingestion and queries.</p>
+<p>Additional addresses, including Unix domain sockets, can be added with <code>-httpListenAddr</code> in
+<a class="option-reference" href="options.html#option-services.victorialogs.extraArgs"><code class="nixos-option">services.victorialogs.extraArgs</code></a>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or (submodule)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/victorialogs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/victorialogs&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.victorialogs.httpListenAddr.address">
+  <h3 class="option-name">
+    <a href="#option-services.victorialogs.httpListenAddr.address" class="option-anchor">services.victorialogs.httpListenAddr.address</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The address to listen on, or <code>null</code> to listen on all IPv4 addresses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>IPv6 addresses must be enclosed in brackets and require <code>-enableTCP6</code> in
+<a class="option-reference" href="options.html#option-services.victorialogs.extraArgs"><code class="nixos-option">services.victorialogs.extraArgs</code></a>.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>null or string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">127.0.0.1</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/victorialogs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/victorialogs&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.victorialogs.httpListenAddr.port">
+  <h3 class="option-name">
+    <a href="#option-services.victorialogs.httpListenAddr.port" class="option-anchor">services.victorialogs.httpListenAddr.port</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The port to listen on.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>16 bit unsigned integer; between 0 and 65535 (both inclusive)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">9428</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/victorialogs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/victorialogs&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.victorialogs.retentionPeriod">
+  <h3 class="option-name">
+    <a href="#option-services.victorialogs.retentionPeriod" class="option-anchor">services.victorialogs.retentionPeriod</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>How long to keep logs before they are deleted. Supported suffixes are <code>s</code>, <code>h</code>, <code>d</code>, <code>w</code>, <code>M</code>,
+and <code>y</code>, a value without a suffix is counted in months. The minimum is <code>1d</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">7d</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">60d</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/victorialogs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/victorialogs&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.victorialogs.user">
+  <h3 class="option-name">
+    <a href="#option-services.victorialogs.user" class="option-anchor">services.victorialogs.user</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>User account under which <code>victorialogs</code> runs.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this user will automatically be created
+on system activation, otherwise you are responsible for
+ensuring the user exists before the <code>victorialogs</code> service starts.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">victorialogs</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/victorialogs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/victorialogs&gt;</a></code></dd>
+  </dl>
+</div>
 <div class="option" id="option-services.vnstat.enable">
   <h3 class="option-name">
     <a href="#option-services.vnstat.enable" class="option-anchor">services.vnstat.enable</a>
@@ -1643,202 +1846,5 @@ reversals due to daylight savings, timezone or other date/time changes.</p>
   </dl>
   <dl class="option-details option-sources">
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zram-swap" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/zram-swap&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.zram-swap.memoryPercent">
-  <h3 class="option-name">
-    <a href="#option-services.zram-swap.memoryPercent" class="option-anchor">services.zram-swap.memoryPercent</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Size of the zram device as a percentage of total memory.</p>
-<p>Must be positive. Values above 100 are allowed because the device
-stores compressed data; actual memory usage depends on compressibility.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>positive integer, meaning &gt;0</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">50</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zram-swap" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/zram-swap&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.zram-swap.priority">
-  <h3 class="option-name">
-    <a href="#option-services.zram-swap.priority" class="option-anchor">services.zram-swap.priority</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Swap priority of the zram device. Higher values are preferred by
-the kernel over lower-priority swap devices.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>signed integer</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">5</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zram-swap" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/zram-swap&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-specialisation">
-  <h3 class="option-name">
-    <a href="#option-specialisation" class="option-anchor">specialisation</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Additional configurations to build.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>attribute set of (submodule)</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
-</body></html></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">mdevd</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">mdevd</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">enable</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(171,178,191);">lib</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">mkForce</span>&nbsp;<span style="color:rgb(209,154,102);">true</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">udev</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">enable</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(171,178,191);">lib</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">mkForce</span>&nbsp;<span style="color:rgb(209,154,102);">false</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><br></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/system/activation/specialisation.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/system/activation/specialisation.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-swapDevices">
-  <h3 class="option-name">
-    <a href="#option-swapDevices" class="option-anchor">swapDevices</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The swap devices and swap files. These are activated at boot time.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>list of (submodule)</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">device</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/dev/sda2</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/options.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-swapDevices._.device">
-  <h3 class="option-name">
-    <a href="#option-swapDevices._.device" class="option-anchor">swapDevices.*.device</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Path of the swap device or file.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>non-empty string</code></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/dev/sda2</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/options.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-swapDevices._.discardPolicy">
-  <h3 class="option-name">
-    <a href="#option-swapDevices._.discardPolicy" class="option-anchor">swapDevices.*.discardPolicy</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Specify the discard policy for the swap device. If "once",
-then the discard operation will be performed once, at swapon
-invocation. If "pages", then the discard operation will be
-performed on every freed page (this is "discard" semantics
-in swap parlance, not TRIM). If "both", then both will be
-enabled. If unset, then no discard policy is applied.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>null or one of "once", "pages", "both"</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
-</body></html></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">both</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/options.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-swapDevices._.label">
-  <h3 class="option-name">
-    <a href="#option-swapDevices._.label" class="option-anchor">swapDevices.*.label</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Label of the swap device (if any).</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>null or non-empty string</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
-</body></html></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">swap</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/options.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-swapDevices._.options">
-  <h3 class="option-name">
-    <a href="#option-swapDevices._.options" class="option-anchor">swapDevices.*.options</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Options used to set up the swap device.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>non-empty (list of non-empty string)</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">defaults</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">nofail</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/options.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-swapDevices._.priority">
-  <h3 class="option-name">
-    <a href="#option-swapDevices._.priority" class="option-anchor">swapDevices.*.priority</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Specify the priority of the swap device. Higher numbers
-indicate higher priority. <code>null</code> lets the kernel choose
-a priority, starting at -1 and going down.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>null or signed integer</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">null</span></code></pre></body></html>
-</body></html></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">100</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/options.nix&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-swapDevices._.randomEncryption.enable">
-  <h3 class="option-name">
-    <a href="#option-swapDevices._.randomEncryption.enable" class="option-anchor">swapDevices.*.randomEncryption.enable</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Encrypt swap device with a random key. This way you won't have a
-persistent swap device, the entire contents become unreadable
-after every reboot. Mutually exclusive with <code class="nixos-option">label</code>,
-since the underlying mapped device is regenerated on every boot
-and is therefore not activated through <code>/etc/fstab</code> like a
-regular swap device, but through a dedicated <code>finit</code> task.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/filesystems/options.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/filesystems/options.nix&gt;</a></code></dd>
   </dl>
 </div>
