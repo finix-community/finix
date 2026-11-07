@@ -150,11 +150,29 @@
 </div>
 <h2 id="general-notes">General notes</h2>
 <ul>
-<li>Most services and programs have a boolean option to enable debug logging, commonly under <code>programs.*.debug</code> or <code>services.*.debug</code>.</li>
+<li>Most programs and services have an option to enable debug logging, commonly under <code>programs.*.debug</code> or <code>services.*.debug</code>.</li>
+<li>Most programs and services have an option to change the package providing the main binary, commonly under <code>programs.*.package</code> or <code>services.*.package</code>.</li>
 </ul>
 <h2 id="core-system-components">Core system components</h2>
 <h3 id="init-system-and-service-manager">Init system and service manager</h3>
-<p>TODO</p>
+<p>Finix utilises <a href="https://github.com/finit-project/finit">Finit</a> as its primary init system and service supervisor. Beyond service and one shot task declarations, Finix exposes an extensive amount of customisation options for Finit that can help users fine tune its performance, set environment variables shared among all services, manage kernel cgroups, and much more. These options are derived from upstream configuration and defaults. This section will go over a limited set of these defaults relevant to <em>most</em> use cases. If you're looking for more extensive documentation for all available Finit customisations exposed by Finix, consult the <a href="https://finix-community.github.io/finix/options.html#option-finit.package">Finit section</a> in the options search.</p>
+<h4 id="runlevels">Runlevels</h4>
+<p>Finit supports runlevels numbered 1 through 9, with runlevel S representing a bootstrap runlevel. Finix adheres to the runlevel specification outlined by <a href="https://finit-project.github.io/5.x/config/runlevels">upstream documentation</a> as follows:</p>
+<ul>
+<li><code>S</code>: bootstrap</li>
+<li><code>1</code>: single user mode</li>
+<li><code>2-5</code>: traditional multi-user mode</li>
+<li><code>6</code>: reboot</li>
+<li><code>7-9</code>: multi-user mode (extra)</li>
+<li><code>0</code>: shutdown</li>
+</ul>
+<p>Most services operate in runlevels <code>234</code>, but services which manage graphical environments reside in runlevels <code>34</code>. This is the runlevel that all greeter services reside.</p>
+<p>The default runlevel started after bootstrap that Finix configures is <code>2</code>. While this default allows most services to run without modification, greeter services will be prevented from executing even if they are enabled. You can change the default runlevel by adding the following line:</p>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">finit</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">runlevel</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">3</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
+<h4 id="cgroups-and-default-cpu-weight">Cgroups and default CPU weight</h4>
+<p>Finit supports configuring cgroups both globally and on a per-service basis. Explaining the full breadth of all cgroup options is far beyond the scope of this section - consult <a href="https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html">upstreap documentation</a> for a full explanation - but it will go over one notable default set by Finit that may affect system performance for desktop users.</p>
+<p>Finit sets the default CPU weight to 9700, which will case any compilation actions triggered by system rebuilds to deprive any X11 desktop or Wayland compositor and audio stack of most resources, causing severe performance degradation. To set a different weight, you can add the following line to your configuration:</p>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">finit</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">cgroups</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">cpu</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">system</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">cpu.weight</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">100</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
 <h3 id="hardware-options">Hardware options</h3>
 <p>TODO</p>
 <h3 id="bootloaders">Bootloaders</h3>
@@ -194,7 +212,7 @@
 <p>Limine supports adding custom wallpapers to be shown in the background of the boot menu. To add a wallpaper, add the following line:</p>
 <pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">programs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">limine</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">settings</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">wallpaper</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">nixos-artwork</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">wallpapers</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">simple-dark-gray-bootloader</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">gnomeFilePath</span>&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
 <p>If more than one wallpaper is listed, a random one will be chosen during boot.</p>
-<p>See the options search for a full list of limine's configuration options.</p>
+<p>See the section on Limine in the <a href="https://finix-community.github.io/finix/options.html#option-programs.limine.enable">options search</a> for a full list of limine's configuration options.</p>
 <h4 id="custom-boot-script">Custom boot script</h4>
 <p>Finix exposes <code>boot.loader.script</code> for installing any bootloader not shipped by finix. See the module for <a href="https://github.com/FixeQD/efistubmgr">efistubmgr</a> in <a href="https://github.com/finix-community/community-modules/blob/main/modules/programs/efistubmgr/default.nix">community-modules</a> for a reference implementation.</p>
 <h3 id="filesystems">Filesystems</h3>
@@ -305,7 +323,7 @@
 <p class="admonition-title">Caution</p>
 <p>Switching device managers will cause the default names for your network interfaces to change, potentially breaking your configuration.</p>
 </div>
-<p>Finix also exposes <code>settings.*</code> to allow for custom configuration outside of these predefined options. See <a href="https://manpages.debian.org/unstable/ifupdown-ng/ifupdown-ng.conf.5">upstream documentation</a> for more details.</p>
+<p>Finix also exposes <code>settings.*</code> to allow for custom configuration outside of these predefined options. Any configuration defined in nix will automatically be transpiled to ifupdown-ng's native configuration format. See <a href="https://manpages.debian.org/unstable/ifupdown-ng/ifupdown-ng.conf.5">upstream documentation</a> for more details.</p>
 <h4 id="network-daemons">Network daemons</h4>
 <p>Finix offers three network management daemons:</p>
 <ul>
@@ -326,7 +344,7 @@
 <ul>
 <li><code>debug</code> - Enable debug logging.</li>
 <li><code>extraArgs</code> - Additional arguments to pass to dhcpcd.</li>
-<li><code>settings.*</code> - Dhcpcd configuration settings. Consult the <a href="https://finix-community.github.io/finix/options.html#option-services.dhcpcd.enable">dhcpcd section</a> in the options search for more details.</li>
+<li><code>settings.*</code> - Dhcpcd configuration settings. Consult the section on dhcpcd in the <a href="https://finix-community.github.io/finix/options.html#option-services.dhcpcd.enable">options search</a> in the options search for more details.</li>
 </ul>
 <h4 id="firewalls">Firewalls</h4>
 <div class="admonition caution">
@@ -343,7 +361,7 @@
 <li><code>rejectPackets</code> - Whether refused packets are rejected rather than dropped.</li>
 <li><code>trustedInterfaces</code> - Network interfaces to trust unconditionally. All network traffic is accepted on specified interfaces regardless of any ports opened through <code>providers.firewall</code>.</li>
 </ul>
-<p>Users may also configure custom rule tables with nftables syntax by adding to the <code>tables</code> attribute. See the <a href="https://finix-community.github.io/finix/options.html#option-services.nftables.tables"><code>nftables.tables</code> section</a> of the options search for more details.</p>
+<p>Users may also configure custom rule tables with nftables syntax by adding to the <code>tables</code> attribute. See the section on nftables in the <a href="https://finix-community.github.io/finix/options.html#option-services.nftables.tables">options search</a> of the options search for more details.</p>
 <p><strong><code>providers.firewall</code></strong></p>
 <p><code>providers.firewall</code> is a generic abstraction for firewall implementations shipped by finix that allows module authors (or end users) to open ports on any firewall service without having to directly interface with any of them. If a firewall backend is enabled, rules specified under <code>providers.firewall</code> are enabled. Otherwise, they are ignored.</p>
 <p>If a user is unfamiliar with a firewall's specific configuration syntax, the firewall provider serves as a user friendly interface to quickly open TCP and UDP ports. Users can specify a list or range of ports to open with the following options:</p>
