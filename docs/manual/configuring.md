@@ -7,13 +7,45 @@ This page serves as a high level overview for configuring a finix system. It int
 
 ## General notes
 
-- Most services and programs have a boolean option to enable debug logging, commonly under `programs.*.debug` or `services.*.debug`.
+- Most programs and services have an option to enable debug logging, commonly under `programs.*.debug` or `services.*.debug`.
+- Most programs and services have an option to change the package providing the main binary, commonly under `programs.*.package` or `services.*.package`.
 
 ## Core system components
 
 ### Init system and service manager
 
-TODO
+Finix utilises [Finit](https://github.com/finit-project/finit) as its primary init system and service supervisor. Beyond service and one shot task declarations, Finix exposes an extensive amount of customisation options for Finit that can help users fine tune its performance, set environment variables shared among all services, manage kernel cgroups, and much more. These options are derived from upstream configuration and defaults. This section will go over a limited set of these defaults relevant to *most* use cases. If you're looking for more extensive documentation for all available Finit customisations exposed by Finix, consult the [Finit section](https://finix-community.github.io/finix/options.html#option-finit.package) in the options search.
+
+#### Runlevels
+
+Finit supports runlevels numbered 1 through 9, with runlevel S representing a bootstrap runlevel. Finix adheres to the runlevel specification outlined by [upstream documentation](https://finit-project.github.io/5.x/config/runlevels) as follows:
+
+- `S`: bootstrap
+- `1`: single user mode
+- `2-5`: traditional multi-user mode
+- `6`: reboot
+- `7-9`: multi-user mode (extra)
+- `0`: shutdown
+
+Most services operate in runlevels `234`, but services which manage graphical environments reside in runlevels `34`. This is the runlevel that all greeter services reside.
+
+The default runlevel started after bootstrap that Finix configures is `2`. While this default allows most services to run without modification, greeter services will be prevented from executing even if they are enabled. You can change the default runlevel by adding the following line:
+
+```nix
+finit.runlevel = 3;
+```
+
+#### Cgroups and default CPU weight
+
+Finit supports configuring cgroups both globally and on a per-service basis. Explaining the full breadth of all cgroup options is far beyond the scope of this section - consult [upstreap documentation](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html) for a full explanation - but it will go over one notable default set by Finit that may affect system performance for desktop users.
+
+Finit sets the default CPU weight to 9700, which will case any compilation actions triggered by system rebuilds to deprive any X11 desktop or Wayland compositor and audio stack of most resources, causing severe performance degradation. To set a different weight, you can add the following line to your configuration:
+
+```nix
+finit.cgroups.cpu.system = {
+  "cpu.weight" = 100;
+};
+```
 
 ### Hardware options
 
@@ -105,7 +137,7 @@ programs.limine.settings.wallpaper = [ pkgs.nixos-artwork.wallpapers.simple-dark
 
 If more than one wallpaper is listed, a random one will be chosen during boot.
 
-See the options search for a full list of limine's configuration options.
+See the section on Limine in the [options search](https://finix-community.github.io/finix/options.html#option-programs.limine.enable) for a full list of limine's configuration options.
 
 #### Custom boot script
 
@@ -363,7 +395,7 @@ programs.ifupdown-ng.iface = {
 > [!CAUTION]
 > Switching device managers will cause the default names for your network interfaces to change, potentially breaking your configuration.
 
-Finix also exposes `settings.*` to allow for custom configuration outside of these predefined options. See [upstream documentation](https://manpages.debian.org/unstable/ifupdown-ng/ifupdown-ng.conf.5) for more details.
+Finix also exposes `settings.*` to allow for custom configuration outside of these predefined options. Any configuration defined in nix will automatically be transpiled to ifupdown-ng's native configuration format. See [upstream documentation](https://manpages.debian.org/unstable/ifupdown-ng/ifupdown-ng.conf.5) for more details.
 
 #### Network daemons
 
@@ -406,7 +438,7 @@ Dhcpcd can be configured with the following options:
 
 - `debug` - Enable debug logging.
 - `extraArgs` - Additional arguments to pass to dhcpcd.
-- `settings.*` - Dhcpcd configuration settings. Consult the [dhcpcd section](https://finix-community.github.io/finix/options.html#option-services.dhcpcd.enable) in the options search for more details.
+- `settings.*` - Dhcpcd configuration settings. Consult the section on dhcpcd in the [options search](https://finix-community.github.io/finix/options.html#option-services.dhcpcd.enable) in the options search for more details.
 
 #### Firewalls
 
@@ -435,7 +467,7 @@ Nftables can be configured with the following options:
 - `rejectPackets` - Whether refused packets are rejected rather than dropped.
 - `trustedInterfaces` - Network interfaces to trust unconditionally. All network traffic is accepted on specified interfaces regardless of any ports opened through `providers.firewall`.
 
-Users may also configure custom rule tables with nftables syntax by adding to the `tables` attribute. See the [`nftables.tables` section](https://finix-community.github.io/finix/options.html#option-services.nftables.tables) of the options search for more details.
+Users may also configure custom rule tables with nftables syntax by adding to the `tables` attribute. See the section on nftables in the [options search](https://finix-community.github.io/finix/options.html#option-services.nftables.tables) of the options search for more details.
 
 **`providers.firewall`**
 

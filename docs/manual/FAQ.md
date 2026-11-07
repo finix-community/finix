@@ -26,8 +26,8 @@ If you decide to go down this route, our recommendation is to create a separate 
 
 ## Can I use `home-manager`?
 
-There is a home-manager implementation in [community-modules](https://github.com/finix-community/community-modules), but most finix users run [Hjem](https://github.com/feel-co/hjem), a lighter alternative to home-manager with experimental first party support for finix.
+There is a home-manager implementation available in [community-modules](https://github.com/finix-community/community-modules), but most finix users run [Hjem](https://github.com/feel-co/hjem), a lighter alternative to home-manager with experimental first party support for finix.
 
 ## Is there an iso available?
 
-There is an experimental [graphical installer](https://github.com/finix-community/installer) available, but the current recommended way to install finix is with existing NixOS disk images. See the [installation guide](./installation.md) for more details.
+There is an experimental NixOS-based [graphical installer](https://github.com/finix-community/installer) available, but finix does not yet have a standalone iso. Manual installation utilizes the pre-existing NixOS environment and tools. See the [installation guide](./installation.md) for more details.
