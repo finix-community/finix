@@ -3,6 +3,10 @@ let
   cfg = config.providers.scheduler;
 
   presets = {
+    minutely.schedule = {
+      hour = "*";
+      minute = "*";
+    };
     hourly = {
       schedule.hour = "*";
       timing.slack = "1h";
@@ -18,21 +22,6 @@ let
     };
     yearly.schedule.day_of_year = "1";
   };
-
-  scheduleFrom =
-    interval:
-    let
-      field = lib.elemAt (lib.splitString " " interval);
-    in
-    {
-      schedule = {
-        minute = field 0;
-        hour = field 1;
-        day = field 2;
-        month = field 3;
-        weekday = field 4;
-      };
-    };
 in
 {
   options.providers.scheduler = {
@@ -44,14 +33,18 @@ in
   config = lib.mkIf (cfg.backend == "snooze") {
     providers.scheduler.supportedFeatures = {
       user = true;
+      persistent = true;
+      randomDelay = true;
     };
 
     programs.snooze.tasks = lib.mapAttrs (
       _: task:
       {
         inherit (task) user command;
+        timing.jitter = task.randomDelay;
       }
-      // (presets.${task.interval} or (scheduleFrom task.interval))
+      // lib.optionalAttrs (!task.persistent) { timeFile = null; }
+      // (presets.${task.interval})
     ) cfg.tasks;
   };
 }
