@@ -146,7 +146,7 @@ let
         for i in $packages; do
           echo "Adding hwdb files for package $i"
           for j in $i/{etc,lib,var/lib}/udev/hwdb.d/*; do
-            ln -s $j etc/udev/hwdb.d/$(basename $j)
+            cp $j etc/udev/hwdb.d/$(basename $j)
           done
         done
 
