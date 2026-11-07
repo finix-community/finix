@@ -5,23 +5,232 @@
   ...
 }:
 let
+  mkRulesTypeOption =
+    type:
+    lib.mkOption {
+      type = lib.types.attrsOf (
+        lib.types.submodule (
+          { name, config, ... }:
+          {
+            options = {
+              name = lib.mkOption {
+                type = lib.types.str;
+                description = ''
+                  Name of this rule.
+                '';
+                internal = true;
+                readOnly = true;
+              };
+
+              enable = lib.mkOption {
+                type = lib.types.bool;
+                default = true;
+                description = ''
+                  Whether this rule is added to the PAM service config file.
+                '';
+              };
+
+              order = lib.mkOption {
+                type = lib.types.int;
+                description = ''
+                  Order of this rule in the service file. Rules are arranged in
+                  ascending order of this value.
+
+                  ::: {.warning}
+                  The `order` values for the built-in rules are subject to change.
+                  If you assign a constant value to this option, a system update
+                  could silently reorder your rule. You could be locked out of your
+                  system, or your system could be left wide open. When using this
+                  option, set it to a relative offset from another rule's `order`
+                  value:
+
+                  ```nix
+                  {
+                    security.pam.services.login.rules.auth.foo.order =
+                      config.security.pam.services.login.rules.auth.unix.order + 10;
+                  }
+                  ```
+                  :::
+                '';
+              };
+
+              control = lib.mkOption {
+                type = lib.types.str;
+                description = ''
+                  Indicates the behavior of the PAM-API should the module fail to
+                  succeed in its authentication task. See `control` in
+                  {manpage}`pam.conf(5)` for details.
+                '';
+              };
+
+              modulePath = lib.mkOption {
+                type = lib.types.str;
+                description = ''
+                  Either the full filename of the PAM to be used by the application
+                  (it begins with a '/'), or a relative pathname from the default
+                  module location. See `module-path` in {manpage}`pam.conf(5)` for
+                  details.
+                '';
+              };
+
+              args = lib.mkOption {
+                type = with lib.types; listOf str;
+                description = ''
+                  Tokens that can be used to modify the specific behavior of the
+                  given PAM. Such arguments will be documented for each individual
+                  module. See `module-arguments` in {manpage}`pam.conf(5)` for
+                  details.
+
+                  Escaping rules for spaces and square brackets are automatically
+                  applied.
+
+                  {option}`settings` are automatically added as {option}`args`.
+                  It's recommended to use the {option}`settings` option whenever
+                  possible so that arguments can be overridden.
+                '';
+              };
+
+              settings = lib.mkOption {
+                type =
+                  with lib.types;
+                  attrsOf (
+                    nullOr (oneOf [
+                      bool
+                      str
+                      int
+                      pathInStore
+                    ])
+                  );
+                default = { };
+                description = ''
+                  Settings to add as `module-arguments`.
+
+                  Boolean values render just the key if true, and nothing if false.
+                  Null values are ignored.
+                  All other values are rendered as key-value pairs.
+                '';
+              };
+            };
+
+            config = {
+              inherit name;
+
+              # formats an attrset of settings as args for use as `module-arguments`
+              args = lib.concatLists (
+                lib.flip lib.mapAttrsToList config.settings (
+                  name: value:
+                  if lib.isBool value then
+                    lib.optional value name
+                  else
+                    lib.optional (value != null) "${name}=${toString value}"
+                )
+              );
+            };
+          }
+        )
+      );
+      description = ''
+        PAM `${type}` rules for this service.
+
+        Attribute keys are the name of each rule.
+      '';
+    };
+
+  ruleTypes = [
+    "account"
+    "auth"
+    "password"
+    "session"
+  ];
+
   pamOpts =
-    { name, ... }:
+    { name, config, ... }:
     {
       options = {
         enable = lib.mkOption {
           type = lib.types.bool;
           default = true;
+          description = "Whether to enable this PAM service.";
         };
 
         name = lib.mkOption {
           type = lib.types.str;
           default = name;
+          description = "Name of the PAM service.";
+        };
+
+        rules = lib.mkOption {
+          description = ''
+            PAM rules for this service.
+          '';
+          type = lib.types.submodule {
+            options = lib.genAttrs ruleTypes mkRulesTypeOption;
+          };
+        };
+
+        orderedRules = lib.mkOption {
+          type = with lib.types; attrsOf (listOf raw);
+          internal = true;
+          readOnly = true;
+          description = ''
+            The enabled {option}`rules` of this service for each rule type,
+            sorted by `order` with ties broken by name.
+
+            Use this to inspect the final order of the rules:
+
+            ```
+            nix-repl> map (r: "''${r.name} ''${toString r.order}") config.security.pam.services.login.orderedRules.auth
+            ```
+          '';
         };
 
         text = lib.mkOption {
           type = lib.types.lines;
+          description = "Contents of the PAM service file.";
         };
+      };
+
+      config = {
+        orderedRules = lib.genAttrs ruleTypes (
+          type:
+          lib.sort (a: b: if a.order == b.order then a.name < b.name else a.order < b.order) (
+            lib.filter (rule: rule.enable) (lib.attrValues config.rules.${type})
+          )
+        );
+
+        text =
+          let
+            # Args containing spaces are wrapped in [] with any ] escaped, see pam.conf(5).
+            formatRules =
+              type:
+              lib.concatMapStringsSep "\n" (
+                rule:
+                lib.concatStringsSep " " (
+                  [
+                    type
+                    rule.control
+                    rule.modulePath
+                  ]
+                  ++ map (
+                    arg: if lib.hasInfix " " arg then "[${lib.replaceStrings [ "]" ] [ "\\]" ] arg}]" else arg
+                  ) rule.args
+                )
+                + " # ${rule.name} (order ${toString rule.order})"
+              ) config.orderedRules.${type};
+          in
+          lib.mkDefault ''
+            # Account management.
+            ${formatRules "account"}
+
+            # Authentication management.
+            ${formatRules "auth"}
+
+            # Password management.
+            ${formatRules "password"}
+
+            # Session management.
+            ${formatRules "session"}
+          '';
       };
     };
 
