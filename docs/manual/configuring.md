@@ -519,7 +519,49 @@ TODO
 
 ### Setting environment variables
 
-`security.pam.environment` method and `environment.variables` method of setting env vars
+#### Using `security.pam.environment`
+
+The `security.pam.environment` option uses the `pam`'s `pam_env` module to set environment variables, which are then available to:
+- Interactive and non-interactive shell sessions
+- Privilege escalation/background job runners like `sudo` and `cron`
+- GUI authenticators like [polkit-kde-agent-1](https://github.com/KDE/polkit-kde-agent-1)
+- [Display managers](#login-managers) like [ly](https://codeberg.org/fairyglade/ly), [LightDM](https://github.com/ubuntu/lightdm) and [gdm](https://gitlab.gnome.org/GNOME/gdm)
+- etc.
+
+```nix
+{
+  security.pam.environment = {
+    "FOO".default = "bar";
+    EDITOR = {
+      default = "nvim";
+      override = "nvim";
+    };
+  };
+}
+```
+
+> Each line starts with the variable name, there are then two possible options for each variable DEFAULT and OVERRIDE. DEFAULT allows an administrator to set the value of the variable to some default value, if none is supplied then the empty string is assumed. The OVERRIDE option tells pam_env that it should enter in its value (overriding the default value) if there is one to use. When OVERRIDE is not used, "" is assumed and no override will be done.
+> - [PAM_ENV.CONF(5)](https://man.archlinux.org/man/pam_env.conf.5)
+
+This option is ideal for setting variables for your graphical environment/DE/WM and non-CLI programs, as they are not typically executed via an interactive login shell and won't get the variables from `environment.variables`.
+
+#### Using `environment.variables`
+
+Variables defined here are set via **POSIX syntax** shell scripts created by the [shells module](https://github.com/finix-community/finix/blob/main/modules/environment/shells/default.nix), which are sourced by login shells like `bash`, `dash` and `zsh`.
+
+>[!NOTE]
+>Non-POSIX compliant shells like `fish` **do not source these scripts**, i.e. they will not set these variables. Finix has a [fish module](https://github.com/finix-community/finix/blob/main/modules/programs/fish/default.nix) which may be useful to you.
+
+```nix
+{
+  environment.variables = {
+    FOO = "bar";
+    EDITOR = "nvim";
+  };
+}
+```
+
+This method is ideal for setting variables used by CLI programs and anything executed from the terminal (although `security.pam.environment` is still usable).
 
 ## Graphical environments
 
