@@ -140,6 +140,10 @@ final: prev: {
 
   v4l-utils = prev.v4l-utils.override { udev = final.libudev-zero; };
 
+  weston = prev.weston.overrideAttrs (old: {
+    mesonFlags = (old.mesonFlags or [ ]) ++ [ "-Dsystemd=false" ];
+  });
+
   xwayland-satellite = prev.xwayland-satellite.override { withSystemd = false; };
 
   # TODO: requires some upstream work
