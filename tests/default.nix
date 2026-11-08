@@ -6,7 +6,7 @@
 # usage:
 #   nix-build tests                   # build all tests
 #   nix-build tests -A boot           # build specific test
-#   nix-build tests -A finit.tmpfiles # build test from subdirectory
+#   nix-build tests -A finit          # build test made of several files (finit/default.nix)
 #
 # interactive mode:
 #   nix-build tests -A boot.driverInteractive
@@ -54,8 +54,10 @@ let
     name: type: type == "directory" && !(builtins.elem name excludes)
   ) dirContents;
 
-  # for each subdirectory, create a nested attrset of tests
-  # e.g., finit/tmpfiles.nix -> finit.tmpfiles
+  # for each subdirectory, either:
+  # - it has a default.nix: the directory is a single test, composed from the files next to it
+  # - otherwise create a nested attrset of tests
+  #   (e.g., foo/bar.nix -> foo.bar)
   # use recurseIntoAttrs so nix-build recurses into subdirectories
   subDirTests = lib.mapAttrs (
     dirName: _:
@@ -65,12 +67,15 @@ let
         name: type: type == "regular" && lib.hasSuffix ".nix" name
       ) subDirContents;
     in
-    lib.recurseIntoAttrs (
-      lib.mapAttrs' (filename: _: {
-        name = lib.removeSuffix ".nix" filename;
-        value = runTest (./. + "/${dirName}/${filename}");
-      }) nixFiles
-    )
+    if subDirContents ? "default.nix" then
+      runTest (./. + "/${dirName}")
+    else
+      lib.recurseIntoAttrs (
+        lib.mapAttrs' (filename: _: {
+          name = lib.removeSuffix ".nix" filename;
+          value = runTest (./. + "/${dirName}/${filename}");
+        }) nixFiles
+      )
   ) subDirs;
 in
 topLevelTests // subDirTests

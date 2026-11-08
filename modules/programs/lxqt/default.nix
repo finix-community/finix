@@ -188,7 +188,6 @@ in
     environment.systemPackages =
       packages.preRequisitePackages
       ++ packages.corePackages
-      ++ packages.optionalPackages
       ++ [ cfg.iconTheme ]
       ++ (removePackagesByName packages.optionalPackages cfg.excludePackages)
       ++ cfg.extraPackages

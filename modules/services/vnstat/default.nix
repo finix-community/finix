@@ -141,7 +141,7 @@ in
 
       description = "vnStat network traffic monitor";
       conditions = "service/syslogd/ready";
-      command = "${pkgs.vnstat}/bin/vnstatd " + lib.escapeShellArgs cfg.extraArgs;
+      command = "${cfg.package}/bin/vnstatd " + lib.escapeShellArgs cfg.extraArgs;
 
       # when running in the foreground debug logs go to stdout
       log = lib.mkIf cfg.debug (lib.mkDefault { });

@@ -12,25 +12,24 @@
     };
 
     services.cron.systab = lib.mapAttrsToList (
-      _: v:
+      _: task:
       let
-        expr =
-          if v.interval == "hourly" then
-            "0 * * * *"
-          else if v.interval == "daily" then
-            "0 0 * * *"
-          else if v.interval == "weekly" then
-            "0 0 * * 0"
-          else if v.interval == "monthly" then
-            "0 0 1 * *"
-          else if v.interval == "yearly" then
-            "0 0 1 1 *"
+        interval =
+          if task.interval == "minutely" then
+            "* * * * *"
+          else if task.interval == "hourly" then
+            "@hourly"
+          else if task.interval == "daily" then
+            "@daily"
+          else if task.interval == "weekly" then
+            "@weekly"
+          else if task.interval == "monthly" then
+            "@monthly"
           else
-            v.interval;
-
-        user = if v.user != null then v.user else "root";
+            throw "Unsupported cron interval: ${task.interval}";
+        user = if task.user != null then task.user else "root";
       in
-      "${expr} ${user} ${v.command}"
+      "${interval} ${user} ${task.command}"
     ) config.providers.scheduler.tasks;
   };
 }

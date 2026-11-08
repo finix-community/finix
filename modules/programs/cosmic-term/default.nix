@@ -28,10 +28,10 @@ in
       type = types.package;
       default = pkgs.cosmic-term.override (
         lib.optionalAttrs (udevApi != null) {
-          libinput = pkgs.libinput.override ({
+          libinput = pkgs.libinput.override {
             udev = udevApi;
             wacomSupport = false;
-          });
+          };
         }
       );
       defaultText = lib.literalExpression "pkgs.cosmic-term";

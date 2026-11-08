@@ -66,7 +66,7 @@ in
     };
 
     settings = lib.mkOption {
-      type = format.type;
+      inherit (format) type;
       default = { };
       example = {
         Autologin = {

@@ -1,0 +1,62 @@
+name: PR tests
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      tests: ${{ steps.list.outputs.tests }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: DeterminateSystems/nix-installer-action@main
+        with:
+          summarize: false
+      - id: list
+        run: python3 .github/scripts/test-summary.py --list
+
+  tests:
+    needs: discover
+    name: vm / ${{ matrix.test }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        test: ${{ fromJSON(needs.discover.outputs.tests) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+        with:
+          summarize: false
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Run VM test
+        env:
+          TEST_SUMMARY_ONLY: ${{ matrix.test }}
+        run: python3 .github/scripts/test-summary.py
+      - name: Upload VM test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: finix-vm-test-${{ matrix.test }}
+          path: test-results
+          if-no-files-found: warn
+
+  all-tests:
+    if: always()
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        if: always()
+        with:
+          pattern: finix-vm-test-*
+          path: all-results
+      - name: Combined summary
+        run: python3 .github/scripts/test-summary.py --merge all-results >> "$GITHUB_STEP_SUMMARY"
+      - run: test "${{ needs.tests.result }}" = "success"

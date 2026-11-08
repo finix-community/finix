@@ -7,13 +7,45 @@ This page serves as a high level overview for configuring a finix system. It int
 
 ## General notes
 
-- Most services and programs have a boolean option to enable debug logging, commonly under `programs.*.debug` or `services.*.debug`.
+- Most programs and services have an option to enable debug logging, commonly under `programs.*.debug` or `services.*.debug`.
+- Most programs and services have an option to change the package providing the main binary, commonly under `programs.*.package` or `services.*.package`.
 
 ## Core system components
 
 ### Init system and service manager
 
-TODO
+Finix utilises [Finit](https://github.com/finit-project/finit) as its primary init system and service supervisor. Beyond service and one shot task declarations, Finix exposes an extensive amount of customisation options for Finit that can help users fine tune its performance, set environment variables shared among all services, manage kernel cgroups, and much more. These options are derived from upstream configuration and defaults. This section will go over a limited set of these defaults relevant to *most* use cases. If you're looking for more extensive documentation for all available Finit customisations exposed by Finix, consult the [Finit section](https://finix-community.github.io/finix/options.html#option-finit.package) in the options search.
+
+#### Runlevels
+
+Finit supports runlevels numbered 1 through 9, with runlevel S representing a bootstrap runlevel. Finix adheres to the runlevel specification outlined by [upstream documentation](https://finit-project.github.io/5.x/config/runlevels) as follows:
+
+- `S`: bootstrap
+- `1`: single user mode
+- `2-5`: traditional multi-user mode
+- `6`: reboot
+- `7-9`: multi-user mode (extra)
+- `0`: shutdown
+
+Most services operate in runlevels `234`, but services which manage graphical environments reside in runlevels `34`. This is the runlevel that all greeter services reside.
+
+The default runlevel started after bootstrap that Finix configures is `2`. While this default allows most services to run without modification, greeter services will be prevented from executing even if they are enabled. You can change the default runlevel by adding the following line:
+
+```nix
+finit.runlevel = 3;
+```
+
+#### Cgroups and default CPU weight
+
+Finit supports configuring cgroups both globally and on a per-service basis. Explaining the full breadth of all cgroup options is far beyond the scope of this section - consult [upstreap documentation](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html) for a full explanation - but it will go over one notable default set by Finit that may affect system performance for desktop users.
+
+Finit sets the default CPU weight to 9700, which will case any compilation actions triggered by system rebuilds to deprive any X11 desktop or Wayland compositor and audio stack of most resources, causing severe performance degradation. To set a different weight, you can add the following line to your configuration:
+
+```nix
+finit.cgroups.cpu.system = {
+  "cpu.weight" = 100;
+};
+```
 
 ### Hardware options
 
@@ -23,7 +55,7 @@ TODO
 
 #### limine
 
-Finix currently ships [limine](https://github.com/Limine-Bootloader/Limine) as the only available bootloader program. It can be installed on BIOS and UEFI systems, with support for x86-64, aarch64, and riscv64 architectures. It supports both MBR and GPT paritioning schemes, as well as the FAT12/16/32 and ISO9660 filesystems. It may also be configured to support secure boot with [`sbctl`](https://github.com/Foxboron/sbctl).
+Finix currently ships [limine](https://github.com/Limine-Bootloader/Limine) as the only available bootloader program. It can be installed on BIOS and UEFI systems, with support for x86-64, aarch64, and riscv64 architectures. It supports both MBR and GPT partitioning schemes, as well as the FAT12/16/32 and ISO9660 filesystems. It may also be configured to support secure boot with [`sbctl`](https://github.com/Foxboron/sbctl).
 
 This program is not imported by default. To enable it, add the following to your configuration:
 
@@ -35,6 +67,22 @@ This program is not imported by default. To enable it, add the following to your
   programs.limine.enable = true;
 }
 ```
+
+**BIOS support**
+
+Limine supports UEFI out of the box, but it can be configured to boot on BIOS systems. To enable limine's BIOS support, add the following to your configuration:
+
+```nix
+programs.limine.biosSupport = true;
+```
+
+To denote the BIOS device to install to, set the following option:
+
+```nix
+programs.limine.biosDevice = "/dev/sda";
+```
+
+The specified device must be a whole disk name.
 
 **Limiting the number of generations**
 
@@ -89,7 +137,7 @@ programs.limine.settings.wallpaper = [ pkgs.nixos-artwork.wallpapers.simple-dark
 
 If more than one wallpaper is listed, a random one will be chosen during boot.
 
-See the options search for a full list of limine's configuration options.
+See the section on Limine in the [options search](https://finix-community.github.io/finix/options.html#option-programs.limine.enable) for a full list of limine's configuration options.
 
 #### Custom boot script
 
@@ -116,6 +164,10 @@ Finix's filesystem configuration syntax is nearly the same as NixOS. The followi
 - zfs
 
 Support for each filesystem configuration is automatically enabled in both the initial ramdisk and a live system when the `fsType` option is specified.
+
+#### ZFS
+
+It is commonly reported that ZFS does not work with the latest release of the kernel. It is recommended to use the latest ZFS compatible LTS kernel with `boot.kernelPackages = pkgs.linuxPackages`. 
 
 #### Note about encrypted LUKS volumes
 
@@ -175,7 +227,7 @@ services.udev.packages = [ pkgs.libtmp.out ];
 
 #### gardendevd
 
-[gardendevd](https://codeberg.org/Gardenhouse/gardendevd) is a device manager designed to be a lightweight replacement to systemd-udev. It is able to read and parse udev-style device rules to populate device nodes. It optionally runs on top of mdevd, another lightweight device manager, but it is runable as a standalone daemon. Some programs may require recompilation with [libudev-garden](https://codeberg.org/Gardenhouse/libudev-garden), a fork of libudev-zero written to be used with gardendevd. Issues have been reported regarding the reliability of services written to be tighly integrated with systemd-udev -- particularly gvfs and udisks2. It is possible that users will need to write custom udev rules to support any uncommon hardware not covered by the stock rules shipped by gardendevd.
+[gardendevd](https://codeberg.org/Gardenhouse/gardendevd) is a device manager designed to be a lightweight replacement to systemd-udev. It is able to read and parse udev-style device rules to populate device nodes. It optionally runs on top of mdevd, another lightweight device manager, but it is runnable as a standalone daemon. Some programs may require recompilation with [libudev-garden](https://codeberg.org/Gardenhouse/libudev-garden), a fork of libudev-zero written to be used with gardendevd. Issues have been reported regarding the reliability of services written to be tightly integrated with systemd-udev -- particularly gvfs and udisks2. It is possible that users will need to write custom udev rules to support any uncommon hardware not covered by the stock rules shipped by gardendevd.
 
 This service is imported by default. To enable it, add the following line to your system configuration:
 
@@ -195,7 +247,7 @@ services.udev.packages = [ pkgs.libtmp.out ];
 
 #### keventd
 
-[keventd](https://troglobit.com/projects/finit/) is the device manager bundled with finit since version 5 and up. It is capable as a lightweight replacement to systemd-udev in tandem with libudev-zero, as it is able to read udev style rules. It is not as feature complete as gardendevd at the time of writing, and some programs and services will need to be recompiled with libudev-zero in place of libudev in order for them to function properly with keventd. Issues have been reported regarding the reliability of services that are tighly integrated with systemd-udev -- notably gvfs and udisks2, and it is possible that end users will need to write custom udev rules to support any uncommon hardware not covered by the stock rules shipped by keventd.
+[keventd](https://troglobit.com/projects/finit/) is the device manager bundled with finit since version 5 and up. It is capable as a lightweight replacement to systemd-udev in tandem with libudev-zero, as it is able to read udev style rules. It is not as feature complete as gardendevd at the time of writing, and some programs and services will need to be recompiled with libudev-zero in place of libudev in order for them to function properly with keventd. Issues have been reported regarding the reliability of services that are tightly integrated with systemd-udev -- notably gvfs and udisks2, and it is possible that end users will need to write custom udev rules to support any uncommon hardware not covered by the stock rules shipped by keventd.
 
 This service is imported by default. To enable it, add the following line to your system configuration:
 
@@ -213,7 +265,7 @@ services.udev.packages = [ pkgs.libtmp.out ];
 
 #### mdevd
 
-[mdevd](https://skarnet.org/software/mdevd/) is a lightweight device manager from the Skarnet/s6 family of Linux system utilities. It is designed to be a drop in replacement to the mdev device manager included in the BusyBox software suite. It is by far the leanest of the other three services listed, and it has the narrowest hardware compatibility. It is ideal for systems with limited resources or those with little need for broad hardware support beyond standard input and storage devices. Programs and services dealing with low level input, notably pipewire and most graphical environments, will require recompilation with libudev-zero in order to function properly. gvfs and udisks2 will not work with this device manager. If any additional hardware support is desired, a user will need to write custom rules utilising mdevd syntax, which is wholly unique to udev syntax. Examples for what these rules look like may be found [here](https://git.lin.moe/aports/lin/mdev-helper/mdev.conf.html).
+[mdevd](https://skarnet.org/software/mdevd/) is a lightweight device manager from the Skarnet/s6 family of Linux system utilities. It is designed to be a drop in replacement to the mdev device manager included in the BusyBox software suite. It is by far the leanest of the four device managers, and it has the narrowest hardware compatibility. It is ideal for systems with limited resources or those with little need for broad hardware support beyond standard input and storage devices. Programs and services dealing with low level input, notably pipewire and most graphical environments, will require recompilation with libudev-zero in order to function properly. gvfs and udisks2 will not work with this device manager. If any additional hardware support is desired, a user will need to write custom rules utilising mdevd syntax, which is wholly unique to udev syntax. Examples for what these rules look like may be found [here](https://git.lin.moe/aports/lin/mdev-helper/mdev.conf.html).
 
 This service is imported by default. To enable it, add the following line to your system configuration:
 
@@ -232,7 +284,7 @@ It is generally advised when running this device manager to set the value of `se
 
 ### getty
 
-getty is a program that manages login terminals. Finit ships with a built in getty implementation used by default when getty is enabled.
+getty is a program that manages login terminals. Finit ships with a built-in getty implementation used by default when getty is enabled.
 
 This service is not imported by default. To import and enable it, add the following to your system configuration:
 
@@ -343,7 +395,7 @@ programs.ifupdown-ng.iface = {
 > [!CAUTION]
 > Switching device managers will cause the default names for your network interfaces to change, potentially breaking your configuration.
 
-Finix also exposes `settings.*` to allow for custom configuration outside of these predefined options. See [upstream documentation](https://manpages.debian.org/unstable/ifupdown-ng/ifupdown-ng.conf.5) for more details.
+Finix also exposes `settings.*` to allow for custom configuration outside of these predefined options. Any configuration defined in nix will automatically be transpiled to ifupdown-ng's native configuration format. See [upstream documentation](https://manpages.debian.org/unstable/ifupdown-ng/ifupdown-ng.conf.5) for more details.
 
 #### Network daemons
 
@@ -386,7 +438,7 @@ Dhcpcd can be configured with the following options:
 
 - `debug` - Enable debug logging.
 - `extraArgs` - Additional arguments to pass to dhcpcd.
-- `settings.*` - Dhcpcd configuration settings. Consult the [dhcpcd section](https://finix-community.github.io/finix/options.html#option-services.dhcpcd.enable) in the options search for more details.
+- `settings.*` - Dhcpcd configuration settings. Consult the section on dhcpcd in the [options search](https://finix-community.github.io/finix/options.html#option-services.dhcpcd.enable) in the options search for more details.
 
 #### Firewalls
 
@@ -415,7 +467,7 @@ Nftables can be configured with the following options:
 - `rejectPackets` - Whether refused packets are rejected rather than dropped.
 - `trustedInterfaces` - Network interfaces to trust unconditionally. All network traffic is accepted on specified interfaces regardless of any ports opened through `providers.firewall`.
 
-Users may also configure custom rule tables with nftables syntax by adding to the `tables` attribute. See the [`nftables.tables` section](https://finix-community.github.io/finix/options.html#option-services.nftables.tables) of the options search for more details.
+Users may also configure custom rule tables with nftables syntax by adding to the `tables` attribute. See the section on nftables in the [options search](https://finix-community.github.io/finix/options.html#option-services.nftables.tables) of the options search for more details.
 
 **`providers.firewall`**
 

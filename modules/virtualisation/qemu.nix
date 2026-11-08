@@ -98,9 +98,9 @@ let
       linuxHostGuestMatrix.${guestSystem} or "${qemuPkg}/bin/qemu-kvm"
     else
       let
-        guestMap = (otherHostGuestMatrix.${hostSystem} or throwUnsupportedHostSystem);
+        guestMap = otherHostGuestMatrix.${hostSystem} or throwUnsupportedHostSystem;
       in
-      (guestMap.${guestSystem} or (throwUnsupportedGuestSystem guestMap));
+      guestMap.${guestSystem} or (throwUnsupportedGuestSystem guestMap);
 
   cfg = config.virtualisation.qemu;
 

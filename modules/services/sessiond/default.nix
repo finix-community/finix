@@ -40,34 +40,17 @@ in
       '';
     };
 
-    suppressPowerManagementWarning = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      description = ''
-        Whether to suppress the warning that sessiond 0.3.0 and newer no longer
-        manage power actions.
-      '';
-    };
-
     settings = lib.mkOption {
-      type = format.type;
+      inherit (format) type;
       default = { };
       description = ''
-        `sessiond` configuration. See [upstream documentation](https://r0chd.tngl.sh/sessiond/configuration.html)
+        `sessiond` configuration. See [upstream documentation](https://r0chd.tngl.io/sessiond/configuration.html)
         for additional details.
       '';
     };
   };
 
   config = lib.mkIf cfg.enable {
-    warnings =
-      lib.optional
-        (!cfg.suppressPowerManagementWarning && lib.versionAtLeast (lib.getVersion cfg.package) "0.3.0")
-        ''
-          sessiond no longer manages power actions as of version 0.3.0.
-          To silence this warning, set services.sessiond.suppressPowerManagementWarning = true or enable sessiond-power
-        '';
-
     environment.systemPackages = [ cfg.package ];
 
     services.dbus.enable = true;

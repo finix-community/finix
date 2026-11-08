@@ -121,7 +121,7 @@ in
 
     users.users = lib.mkIf (cfg.user == "uptime-kuma") {
       uptime-kuma = {
-        group = cfg.group;
+        inherit (cfg) group;
       };
     };
 

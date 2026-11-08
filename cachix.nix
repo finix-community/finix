@@ -39,6 +39,7 @@ let
 
     specialisation.elogind = {
       services.elogind.enable = true;
+      services.sessiond.enable = lib.mkForce false;
     };
 
     programs.brightnessctl.enable = true;

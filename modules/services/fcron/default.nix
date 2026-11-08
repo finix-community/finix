@@ -214,10 +214,7 @@ in
     finit.services.fcron = {
       description = "fcron daemon";
       command = "${cfg.package}/bin/fcron --foreground " + lib.escapeShellArgs cfg.extraArgs;
-      conditions = [
-        "service/syslogd/ready"
-        "task/fcrontab/success"
-      ];
+      conditions = "service/syslogd/ready";
     };
 
     users.users = {

@@ -276,7 +276,7 @@ in
               mknod -m 666 /dev/nvidia-modeset c 195 254
               ;;
             nvidia_uvm)
-              uvm_major=$(grep nvidia-uvm /proc/devices | cut -d ' ' -f 1)
+              uvm_major=$(${pkgs.gnugrep}/bin/grep nvidia-uvm /proc/devices | cut -d ' ' -f 1)
               mknod -m 666 /dev/nvidia-uvm c "$uvm_major" 0
               mknod -m 666 /dev/nvidia-uvm-tools c "$uvm_major" 1
               ;;

@@ -122,7 +122,7 @@ PLUGIN_INIT(finix_setup_init)
     char *sys;
     char activate_path[PATH_MAX];
 
-    logit(LOG_NOTICE, "\n[1;32m<<< finix - stage 2 >>>[0m\n");
+    print_banner("finix - stage 2");
 
     logit(LOG_INFO, "finix-setup: setting PATH");
     setenv("PATH", INITIAL_PATH, 1);
