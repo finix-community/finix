@@ -547,7 +547,7 @@ This option is ideal for setting variables for your graphical environment/DE/WM 
 
 #### Using `environment.variables`
 
-Variables defined here are set via **POSIX syntax** shell scripts created by the [shells module](https://github.com/finix-community/finix/blob/main/modules/environment/shells/default.nix), which are sourced by login shells like `bash`, `dash` and `zsh`.
+Variables defined here are set via **POSIX syntax** shell scripts created by the [shells module](https://github.com/finix-community/finix/blob/main/modules/environment/shells/default.nix), which are sourced by login shells like `bash` and `ash`.
 
 >[!NOTE]
 >Non-POSIX compliant shells like `fish` **do not source these scripts**, i.e. they will not set these variables. Finix has a [fish module](https://github.com/finix-community/finix/blob/main/modules/programs/fish/default.nix) which may be useful to you.
