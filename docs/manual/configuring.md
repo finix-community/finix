@@ -582,11 +582,16 @@ Finix provides a [PipeWire module](https://github.com/finix-community/finix/blob
 }
 ```
 
-Enabling the PipeWire module will not make it start on its own. Typically, it is started via your graphical environment. For example, with [Niri](https://github.com/niri-wm/niri):
+Enabling the PipeWire module only installs `pipewire` and its related binaries. It does NOT configure PipeWire to be started as a `finit` service.
+
+`finit` does not yet support user level services. Instead, PipeWire must be started by your graphical environment as a regular process. As an example, here is how to accomplish this with [Niri](https://github.com/niri-wm/niri):
 
 ```kdl
 spawn-sh-at-startup "pipewire"
 ```
+
+> [!DANGER]
+>  Running PipeWire as root is highly discouraged due to significant security risks.
 
 Using [WirePlumber](#Wireplumber) is also advised for session management.
 
