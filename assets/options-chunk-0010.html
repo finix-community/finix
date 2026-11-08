@@ -1,3 +1,73 @@
+<div class="option" id="option-services.fwupd.debug">
+  <h3 class="option-name">
+    <a href="#option-services.fwupd.debug" class="option-anchor">services.fwupd.debug</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fwupd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/fwupd&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.fwupd.settings">
+  <h3 class="option-name">
+    <a href="#option-services.fwupd.settings" class="option-anchor">services.fwupd.settings</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p><code>fwupd</code> configuration. See <a href="https://man.archlinux.org/man/fwupd.conf.5" class="manpage-reference">fwupd.conf(5)</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>open submodule of attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string) or a non-empty list of them)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fwupd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/fwupd&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.fwupd.settings.fwupd.IdleTimeout">
+  <h3 class="option-name">
+    <a href="#option-services.fwupd.settings.fwupd.IdleTimeout" class="option-anchor">services.fwupd.settings.fwupd.IdleTimeout</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Idle timeout in seconds before the daemon exits.
+Set to <code>0</code> to disable.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>signed integer</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">0</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fwupd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/fwupd&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.gardendevd.enable">
+  <h3 class="option-name">
+    <a href="#option-services.gardendevd.enable" class="option-anchor">services.gardendevd.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://codeberg.org/Gardenhouse/gardendevd">gardendevd</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/gardendevd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/gardendevd&gt;</a></code></dd>
+  </dl>
+</div>
 <div class="option" id="option-services.gardendevd.package">
   <h3 class="option-name">
     <a href="#option-services.gardendevd.package" class="option-anchor">services.gardendevd.package</a>
@@ -1411,15 +1481,12 @@ for additional details.</p>
     <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
     <span class="copy-feedback">Link copied!</span>
   </h3>
-  <div class="option-description"><html><head></head><body><p>The interval at which this task should run its specified <code class="nixos-option">command</code>. Accepts either a
-standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression or one of: <code>hourly</code>, <code>daily</code>, <code>weekly</code>, <code>monthly</code>, or <code>yearly</code>.</p>
-<p>If a standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression is provided this value will be passed directly
-to the <code>scheduler</code> implementation and execute exactly as specified.</p>
-<p>If one of the special values, <code>hourly</code>, <code>daily</code>, <code>monthly</code>, <code>weekly</code>, or <code>yearly</code>, is provided then the
-underlying <code>scheduler</code> implementation will use its features to decide when best to run.</p>
+  <div class="option-description"><html><head></head><body><p>The interval at which this task should run.</p>
+<p>The underlying <code class="nixos-option">providers.scheduler</code> implementation uses its scheduling features
+to choose an appropriate time to run within that interval.</p>
 </body></html></div>
   <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Type</dt><dd class="option-value"><code>one of "minutely", "hourly", "daily", "monthly", "weekly"</code></dd>
     <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">weekly</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
 </body></html></dd>
   </dl>
@@ -1791,87 +1858,6 @@ group.</p>
   <dl class="option-details">
     <dt>Type</dt><dd class="option-value"><code>package</code></dd>
     <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">config</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">hardware</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">nvidia</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">package</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">persistenced</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nvidia-persistenced" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nvidia-persistenced&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.nvidia-persistenced.debug">
-  <h3 class="option-name">
-    <a href="#option-services.nvidia-persistenced.debug" class="option-anchor">services.nvidia-persistenced.debug</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nvidia-persistenced" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nvidia-persistenced&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.nvidia-persistenced.extraArgs">
-  <h3 class="option-name">
-    <a href="#option-services.nvidia-persistenced.extraArgs" class="option-anchor">services.nvidia-persistenced.extraArgs</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <code>nvidia-persistenced</code>. See <a href="https://man.archlinux.org/man/nvidia-persistenced.1" class="manpage-reference">nvidia-persistenced(1)</a>
-for additional details.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nvidia-persistenced" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nvidia-persistenced&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.nvidia-persistenced.group">
-  <h3 class="option-name">
-    <a href="#option-services.nvidia-persistenced.group" class="option-anchor">services.nvidia-persistenced.group</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Group account under which <code>nvidia-persistenced</code> runs.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>If left as the default value this group will automatically be created
-on system activation, otherwise you are responsible for
-ensuring the group exists before the <code>nvidia-persistenced</code> service starts.</p>
-</div>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">nvidia-persistenced</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nvidia-persistenced" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nvidia-persistenced&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.nvidia-persistenced.user">
-  <h3 class="option-name">
-    <a href="#option-services.nvidia-persistenced.user" class="option-anchor">services.nvidia-persistenced.user</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>User account under which <code>nvidia-persistenced</code> runs.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>If left as the default value this user will automatically be created
-on system activation, otherwise you are responsible for
-ensuring the user exists before the <code>nvidia-persistenced</code> service starts.</p>
-</div>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">nvidia-persistenced</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
 </body></html></dd>
   </dl>
   <dl class="option-details option-sources">

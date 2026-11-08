@@ -7916,7 +7916,7 @@
     <details class="toc-category">
       <summary title="providers.scheduler">
         <span>providers.scheduler</span>
-        <span class="toc-count">6</span>
+        <span class="toc-count">10</span>
       </summary>
       <ul>
         
@@ -7925,6 +7925,22 @@
         <li>
           <a href='#option-providers.scheduler.backend' title="providers.scheduler.backend">
             backend
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-providers.scheduler.supportedFeatures.persistent' title="providers.scheduler.supportedFeatures.persistent">
+            supportedFeatures.persistent
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-providers.scheduler.supportedFeatures.randomDelay' title="providers.scheduler.supportedFeatures.randomDelay">
+            supportedFeatures.randomDelay
             
             
           </a>
@@ -7957,6 +7973,22 @@
         <li>
           <a href='#option-providers.scheduler.tasks._name_.interval' title="providers.scheduler.tasks.&lt;name&gt;.interval">
             tasks.&lt;name&gt;.interval
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-providers.scheduler.tasks._name_.persistent' title="providers.scheduler.tasks.&lt;name&gt;.persistent">
+            tasks.&lt;name&gt;.persistent
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-providers.scheduler.tasks._name_.randomDelay' title="providers.scheduler.tasks.&lt;name&gt;.randomDelay">
+            tasks.&lt;name&gt;.randomDelay
             
             
           </a>
@@ -23138,15 +23170,12 @@ octal, with the leading zero.</p>
     <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
     <span class="copy-feedback">Link copied!</span>
   </h3>
-  <div class="option-description"><html><head></head><body><p>The interval at which this task should run its specified <code class="nixos-option">command</code>. Accepts either a
-standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression or one of: <code>hourly</code>, <code>daily</code>, <code>weekly</code>, <code>monthly</code>, or <code>yearly</code>.</p>
-<p>If a standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression is provided this value will be passed directly
-to the <code>scheduler</code> implementation and execute exactly as specified.</p>
-<p>If one of the special values, <code>hourly</code>, <code>daily</code>, <code>monthly</code>, <code>weekly</code>, or <code>yearly</code>, is provided then the
-underlying <code>scheduler</code> implementation will use its features to decide when best to run.</p>
+  <div class="option-description"><html><head></head><body><p>The interval at which this task should run.</p>
+<p>The underlying <code class="nixos-option">providers.scheduler</code> implementation uses its scheduling features
+to choose an appropriate time to run within that interval.</p>
 </body></html></div>
   <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Type</dt><dd class="option-value"><code>one of "minutely", "hourly", "daily", "monthly", "weekly"</code></dd>
     <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">daily</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
 </body></html></dd>
   </dl>
@@ -28933,6 +28962,42 @@ the same as with <code>lib.mkOrder</code>. Smaller values are inserted first.</p
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fcron/providers.scheduler.nix" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/fcron/providers.scheduler.nix&gt;</a></code></dd>
   </dl>
 </div>
+<div class="option" id="option-providers.scheduler.supportedFeatures.persistent">
+  <h3 class="option-name">
+    <a href="#option-providers.scheduler.supportedFeatures.persistent" class="option-anchor">providers.scheduler.supportedFeatures.persistent</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether the selected <code class="nixos-option">providers.scheduler</code> implementation supports running the tasks when
+the schedule was missed.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/scheduler" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/scheduler&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-providers.scheduler.supportedFeatures.randomDelay">
+  <h3 class="option-name">
+    <a href="#option-providers.scheduler.supportedFeatures.randomDelay" class="option-anchor">providers.scheduler.supportedFeatures.randomDelay</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether the selected <code class="nixos-option">providers.scheduler</code> implementation supports randomly delaying tasks
+by an amount determined by that implementation.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/scheduler" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/scheduler&gt;</a></code></dd>
+  </dl>
+</div>
 <div class="option" id="option-providers.scheduler.supportedFeatures.user">
   <h3 class="option-name">
     <a href="#option-providers.scheduler.supportedFeatures.user" class="option-anchor">providers.scheduler.supportedFeatures.user</a>
@@ -28944,6 +29009,8 @@ a specified user.</p>
 </body></html></div>
   <dl class="option-details">
     <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
   </dl>
   <dl class="option-details option-sources">
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/scheduler" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/scheduler&gt;</a></code></dd>
@@ -28987,16 +29054,46 @@ a specified user.</p>
     <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
     <span class="copy-feedback">Link copied!</span>
   </h3>
-  <div class="option-description"><html><head></head><body><p>The interval at which this task should run its specified <code class="nixos-option">command</code>. Accepts either a
-standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression or one of: <code>hourly</code>, <code>daily</code>, <code>weekly</code>, <code>monthly</code>, or <code>yearly</code>.</p>
-<p>If a standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression is provided this value will be passed directly
-to the <code>scheduler</code> implementation and execute exactly as specified.</p>
-<p>If one of the special values, <code>hourly</code>, <code>daily</code>, <code>monthly</code>, <code>weekly</code>, or <code>yearly</code>, is provided then the
-underlying <code>scheduler</code> implementation will use its features to decide when best to run.</p>
+  <div class="option-description"><html><head></head><body><p>The interval at which this task should run.</p>
+<p>The underlying <code class="nixos-option">providers.scheduler</code> implementation uses its scheduling features
+to choose an appropriate time to run within that interval.</p>
 </body></html></div>
   <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">15&nbsp;*&nbsp;*&nbsp;*&nbsp;*</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+    <dt>Type</dt><dd class="option-value"><code>one of "minutely", "hourly", "daily", "monthly", "weekly"</code></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/scheduler" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/scheduler&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-providers.scheduler.tasks._name_.persistent">
+  <h3 class="option-name">
+    <a href="#option-providers.scheduler.tasks._name_.persistent" class="option-anchor">providers.scheduler.tasks.&lt;name&gt;.persistent</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>If the task should be run, even if the schedule window was missed.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/providers/scheduler" target="_blank" rel="noopener noreferrer">&lt;finix/modules/providers/scheduler&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-providers.scheduler.tasks._name_.randomDelay">
+  <h3 class="option-name">
+    <a href="#option-providers.scheduler.tasks._name_.randomDelay" class="option-anchor">providers.scheduler.tasks.&lt;name&gt;.randomDelay</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to randomly delay this task. The underlying <code class="nixos-option">providers.scheduler</code>
+implementation determines the amount of delay.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
 </body></html></dd>
   </dl>
   <dl class="option-details option-sources">
@@ -31057,15 +31154,12 @@ for additional details.</p>
     <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
     <span class="copy-feedback">Link copied!</span>
   </h3>
-  <div class="option-description"><html><head></head><body><p>The interval at which this task should run its specified <code class="nixos-option">command</code>. Accepts either a
-standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression or one of: <code>hourly</code>, <code>daily</code>, <code>weekly</code>, <code>monthly</code>, or <code>yearly</code>.</p>
-<p>If a standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression is provided this value will be passed directly
-to the <code>scheduler</code> implementation and execute exactly as specified.</p>
-<p>If one of the special values, <code>hourly</code>, <code>daily</code>, <code>monthly</code>, <code>weekly</code>, or <code>yearly</code>, is provided then the
-underlying <code>scheduler</code> implementation will use its features to decide when best to run.</p>
+  <div class="option-description"><html><head></head><body><p>The interval at which this task should run.</p>
+<p>The underlying <code class="nixos-option">providers.scheduler</code> implementation uses its scheduling features
+to choose an appropriate time to run within that interval.</p>
 </body></html></div>
   <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Type</dt><dd class="option-value"><code>one of "minutely", "hourly", "daily", "monthly", "weekly"</code></dd>
     <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">weekly</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
 </body></html></dd>
   </dl>
@@ -31808,15 +31902,12 @@ for additional details.</p>
     <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
     <span class="copy-feedback">Link copied!</span>
   </h3>
-  <div class="option-description"><html><head></head><body><p>The interval at which this task should run its specified <code class="nixos-option">command</code>. Accepts either a
-standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression or one of: <code>hourly</code>, <code>daily</code>, <code>weekly</code>, <code>monthly</code>, or <code>yearly</code>.</p>
-<p>If a standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression is provided this value will be passed directly
-to the <code>scheduler</code> implementation and execute exactly as specified.</p>
-<p>If one of the special values, <code>hourly</code>, <code>daily</code>, <code>monthly</code>, <code>weekly</code>, or <code>yearly</code>, is provided then the
-underlying <code>scheduler</code> implementation will use its features to decide when best to run.</p>
+  <div class="option-description"><html><head></head><body><p>The interval at which this task should run.</p>
+<p>The underlying <code class="nixos-option">providers.scheduler</code> implementation uses its scheduling features
+to choose an appropriate time to run within that interval.</p>
 </body></html></div>
   <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Type</dt><dd class="option-value"><code>one of "minutely", "hourly", "daily", "monthly", "weekly"</code></dd>
     <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">weekly</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
 </body></html></dd>
   </dl>
@@ -33341,15 +33432,12 @@ for additional details.</p>
     <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
     <span class="copy-feedback">Link copied!</span>
   </h3>
-  <div class="option-description"><html><head></head><body><p>The interval at which this task should run its specified <code class="nixos-option">command</code>. Accepts either a
-standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression or one of: <code>hourly</code>, <code>daily</code>, <code>weekly</code>, <code>monthly</code>, or <code>yearly</code>.</p>
-<p>If a standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression is provided this value will be passed directly
-to the <code>scheduler</code> implementation and execute exactly as specified.</p>
-<p>If one of the special values, <code>hourly</code>, <code>daily</code>, <code>monthly</code>, <code>weekly</code>, or <code>yearly</code>, is provided then the
-underlying <code>scheduler</code> implementation will use its features to decide when best to run.</p>
+  <div class="option-description"><html><head></head><body><p>The interval at which this task should run.</p>
+<p>The underlying <code class="nixos-option">providers.scheduler</code> implementation uses its scheduling features
+to choose an appropriate time to run within that interval.</p>
 </body></html></div>
   <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Type</dt><dd class="option-value"><code>one of "minutely", "hourly", "daily", "monthly", "weekly"</code></dd>
     <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">weekly</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
 </body></html></dd>
   </dl>
@@ -37041,15 +37129,12 @@ ensuring the group exists before the <code>ytdl-sub</code> service starts.</p>
     <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
     <span class="copy-feedback">Link copied!</span>
   </h3>
-  <div class="option-description"><html><head></head><body><p>The interval at which this task should run its specified <code class="nixos-option">command</code>. Accepts either a
-standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression or one of: <code>hourly</code>, <code>daily</code>, <code>weekly</code>, <code>monthly</code>, or <code>yearly</code>.</p>
-<p>If a standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression is provided this value will be passed directly
-to the <code>scheduler</code> implementation and execute exactly as specified.</p>
-<p>If one of the special values, <code>hourly</code>, <code>daily</code>, <code>monthly</code>, <code>weekly</code>, or <code>yearly</code>, is provided then the
-underlying <code>scheduler</code> implementation will use its features to decide when best to run.</p>
+  <div class="option-description"><html><head></head><body><p>The interval at which this task should run.</p>
+<p>The underlying <code class="nixos-option">providers.scheduler</code> implementation uses its scheduling features
+to choose an appropriate time to run within that interval.</p>
 </body></html></div>
   <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Type</dt><dd class="option-value"><code>one of "minutely", "hourly", "daily", "monthly", "weekly"</code></dd>
     <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">daily</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
 </body></html></dd>
   </dl>
@@ -37269,15 +37354,12 @@ with appropriate ownership and permissions before the <code>zerotier</code> serv
     <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
     <span class="copy-feedback">Link copied!</span>
   </h3>
-  <div class="option-description"><html><head></head><body><p>The interval at which this task should run its specified <code class="nixos-option">command</code>. Accepts either a
-standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression or one of: <code>hourly</code>, <code>daily</code>, <code>weekly</code>, <code>monthly</code>, or <code>yearly</code>.</p>
-<p>If a standard <a href="https://man.archlinux.org/man/crontab.5" class="manpage-reference">crontab(5)</a> expression is provided this value will be passed directly
-to the <code>scheduler</code> implementation and execute exactly as specified.</p>
-<p>If one of the special values, <code>hourly</code>, <code>daily</code>, <code>monthly</code>, <code>weekly</code>, or <code>yearly</code>, is provided then the
-underlying <code>scheduler</code> implementation will use its features to decide when best to run.</p>
+  <div class="option-description"><html><head></head><body><p>The interval at which this task should run.</p>
+<p>The underlying <code class="nixos-option">providers.scheduler</code> implementation uses its scheduling features
+to choose an appropriate time to run within that interval.</p>
 </body></html></div>
   <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Type</dt><dd class="option-value"><code>one of "minutely", "hourly", "daily", "monthly", "weekly"</code></dd>
     <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">monthly</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
 </body></html></dd>
   </dl>

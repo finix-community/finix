@@ -1,3 +1,73 @@
+<div class="option" id="option-services.zfs.autoSnapshot.monthly">
+  <h3 class="option-name">
+    <a href="#option-services.zfs.autoSnapshot.monthly" class="option-anchor">services.zfs.autoSnapshot.monthly</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Number of monthly auto-snapshots that you wish to keep.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>signed integer</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">12</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zfs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/zfs&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.zfs.autoSnapshot.weekly">
+  <h3 class="option-name">
+    <a href="#option-services.zfs.autoSnapshot.weekly" class="option-anchor">services.zfs.autoSnapshot.weekly</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Number of weekly auto-snapshots that you wish to keep.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>signed integer</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">4</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zfs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/zfs&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.zram-swap.enable">
+  <h3 class="option-name">
+    <a href="#option-services.zram-swap.enable" class="option-anchor">services.zram-swap.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable swap on a compressed zram block device.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zram-swap" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/zram-swap&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.zram-swap.algorithm">
+  <h3 class="option-name">
+    <a href="#option-services.zram-swap.algorithm" class="option-anchor">services.zram-swap.algorithm</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Compression algorithm passed to <code class="command">zramctl</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">zstd</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">lz4</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zram-swap" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/zram-swap&gt;</a></code></dd>
+  </dl>
+</div>
 <div class="option" id="option-services.zram-swap.memoryPercent">
   <h3 class="option-name">
     <a href="#option-services.zram-swap.memoryPercent" class="option-anchor">services.zram-swap.memoryPercent</a>
