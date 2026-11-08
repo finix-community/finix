@@ -695,10 +695,10 @@ exec "pipewire & sleep 1 && pipewire-pulse"
       settings = {
         "context.exec" = [
           {
-            path = "${config.programs.wireplumber.package}/bin/wireplumber";
+            path = lib.getExe' config.programs.wireplumber.package "wireplumber";
           }
           {
-            path = "${config.programs.pipewire.package}/bin/pipewire-pulse";
+            path = lib.getExe' config.programs.pipewire.package "pipewire-pulse";
           }
         ];
       };
