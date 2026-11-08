@@ -387,7 +387,35 @@
 <p>TODO</p>
 <p><code>sessiond</code>, <code>seatd</code>, <code>elogind</code></p>
 <h3 id="setting-environment-variables">Setting environment variables</h3>
-<p><code>security.pam.environment</code> method and <code>environment.variables</code> method of setting env vars</p>
+<h4 id="using-security-pam-environment">Using <code>security.pam.environment</code></h4>
+<p>The <code>security.pam.environment</code> option uses <code>pam</code>'s <code>pam_env</code> module to set environment variables, which are then available to:</p>
+<ul>
+<li>Interactive and non-interactive shell sessions</li>
+<li>Privilege escalation/background job runners like <code>sudo</code> and <code>cron</code></li>
+<li>GUI authenticators like <a href="https://github.com/KDE/polkit-kde-agent-1">polkit-kde-agent-1</a></li>
+<li><a href="#login-managers">Display managers</a> like <a href="https://codeberg.org/fairyglade/ly">ly</a>, <a href="https://github.com/ubuntu/lightdm">LightDM</a>, and <a href="https://gitlab.gnome.org/GNOME/gdm">gdm</a></li>
+<li>etc.</li>
+</ul>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">security</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">pam</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">environment</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">FOO</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">default</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">bar</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">EDITOR</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">default</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">nvim</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">override</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">nvim</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><br></code></pre>
+<blockquote>
+<p>Each line starts with the variable name, there are then two possible options for each variable DEFAULT and OVERRIDE. DEFAULT allows an administrator to set the value of the variable to some default value, if none is supplied then the empty string is assumed. The OVERRIDE option tells pam_env that it should enter in its value (overriding the default value) if there is one to use. When OVERRIDE is not used, "" is assumed and no override will be done.</p>
+<ul>
+<li>Extract from <a href="https://man.archlinux.org/man/pam_env.conf.5">PAM_ENV.CONF(5)</a></li>
+</ul>
+</blockquote>
+<p>This option is ideal for setting variables for your graphical environment and non-CLI programs, as they are not typically executed via an interactive login shell and won't get the variables from <code>environment.variables</code>. It also <em>does not require a POSIX compliant login shell</em> to function.</p>
+<h4 id="using-environment-variables">Using <code>environment.variables</code></h4>
+<p>Variables defined here are set via <strong>POSIX syntax</strong> shell scripts created by the <a href="https://github.com/finix-community/finix/blob/main/modules/environment/shells/default.nix">shells module</a>, which are sourced by login shells like <code>bash</code> and <code>ash</code>.</p>
+<blockquote>
+<p>[!NOTE]
+Some shells <strong>do not source these scripts</strong>, which means variables configured through this method will not be set in:</p>
+<ul>
+<li>Non POSIX-compliant shells, like <code>fish</code>.</li>
+<li>Shells that are configured without/don't have a provided Finix module yet, like <code>zsh</code>.</li>
+</ul>
+</blockquote>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">environment</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">variables</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">FOO</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">bar</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">EDITOR</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">nvim</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><br></code></pre>
+<p>This method is ideal for setting variables used by CLI programs and anything executed from the terminal, but <code>security.pam.environment</code> is still usable for this purpose.</p>
 <h2 id="graphical-environments">Graphical environments</h2>
 <p>This section contains information for setting up and using graphical environments.</p>
 <h3 id="fonts">Fonts</h3>
