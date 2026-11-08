@@ -41,9 +41,9 @@ in
       _: task:
       {
         inherit (task) user command;
-        timing.jitter = task.randomDelay;
       }
       // lib.optionalAttrs (!task.persistent) { timeFile = null; }
+      // lib.optionalAttrs (task.randomDelay) { timing.jitter = 30; }
       // (presets.${task.interval})
     ) cfg.tasks;
   };
