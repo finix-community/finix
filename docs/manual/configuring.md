@@ -569,9 +569,9 @@ etc.
 
 ### Audio
 
-#### Pipewire
+#### PipeWire
 
-Finix provides a [Pipewire module](https://github.com/finix-community/finix/blob/main/modules/programs/pipewire/default.nix) which is not imported by default. To enable it, add the following to your configuration:
+Finix provides a [PipeWire module](https://github.com/finix-community/finix/blob/main/modules/programs/pipewire/default.nix) which is not imported by default. To enable it, add the following to your configuration:
 
 ```nix
 { config, modules, ... }:
@@ -582,16 +582,16 @@ Finix provides a [Pipewire module](https://github.com/finix-community/finix/blob
 }
 ```
 
-Enabling the Pipewire module will not make it start on its own. Typically, it is started via your graphical environment. For example, with [Niri](https://github.com/niri-wm/niri):
+Enabling the PipeWire module will not make it start on its own. Typically, it is started via your graphical environment. For example, with [Niri](https://github.com/niri-wm/niri):
 
 ```kdl
 spawn-sh-at-startup "pipewire"
 ```
 
-Using [Wireplumber](#Wireplumber) is also advised for session management.
+Using [WirePlumber](#Wireplumber) is also advised for session management.
 
-##### Wireplumber
-Finix provides a [Wireplumber module](https://github.com/finix-community/finix/blob/main/modules/programs/wireplumber). To enable it, add the following to your configuration:
+##### WirePlumber
+Finix provides a [WirePlumber module](https://github.com/finix-community/finix/blob/main/modules/programs/wireplumber). To enable it, add the following to your configuration:
 
 ```nix
 { config, modules, ... }:
@@ -607,7 +607,7 @@ Finix provides a [Wireplumber module](https://github.com/finix-community/finix/b
 }
 ```
 
-Enabling the Wireplumber module will not make it start on its own. It has to be started via either:
+Enabling the WirePlumber module will not make it start on its own. It has to be started via either:
 
 - Your graphical environment. For example, with [Sway](https://github.com/swaywm/sway) or [i3](https://github.com/i3/i3):
 
@@ -616,9 +616,9 @@ exec "pipewire & sleep 1 && wireplumber"
 ```
 
 > [!Caution]
-> A `sleep` call is added after executing `pipewire` to avoid a race condition where `pipewire` isn't initialized in time for `wireplumber` to hook into it. It is preferable to execute it via Pipewire's configuration to avoid this hack.
+> A `sleep` call is added after executing `pipewire` to avoid a race condition where `pipewire` isn't initialized in time for `wireplumber` to hook into it. It is preferable to execute it via PipeWire's configuration to avoid this hack.
 
-- Pipewire's configuration
+- PipeWire's configuration
 
 ```nix
 { config, modules, ... }:
@@ -645,9 +645,9 @@ exec "pipewire & sleep 1 && wireplumber"
 ```
 
 
-##### ALSA and Pulseaudio compatibility
+##### ALSA and PulseAudio compatibility
 
-Some programs may not function properly without ALSA and/or Pulseaudio. Pipewire has integrations that add compatibility for these APIs.
+Some programs may not function properly without ALSA and/or PulseAudio. PipeWire has integrations that add compatibility for these APIs.
 
 To enable **ALSA** compatibility, add the following to your configuration:
 
@@ -663,7 +663,7 @@ To enable **ALSA** compatibility, add the following to your configuration:
 }
 ```
 
-To enable **Pulseaudio** compatibility, `pipewire-pulse` must be executed after `pipewire`. This can be done via either:
+To enable **PulseAudio** compatibility, `pipewire-pulse` must be executed after `pipewire`. This can be done via either:
 
 - Your graphical environment. For example, with [Sway](https://github.com/swaywm/sway) or [i3](https://github.com/i3/i3):
 
@@ -672,9 +672,9 @@ exec "pipewire & sleep 1 && pipewire-pulse"
 ```
 
 > [!Caution]
-> Similarly, as with [Wireplumber](#Wireplumber), `sleep` is called after executing `pipewire` to give it time to start before `pipewire-pulse` tries to find it. It is preferable to execute it via Pipewire's configuration.
+> Similarly, as with [WirePlumber](#Wireplumber), `sleep` is called after executing `pipewire` to give it time to start before `pipewire-pulse` tries to find it. It is preferable to execute it via PipeWire's configuration.
 
-- Pipewire's configuration (note that `pipewire` still needs to be executed!)
+- PipeWire's configuration (note that `pipewire` still needs to be executed!)
 
 ```nix
 { config, modules, ... }:
@@ -706,7 +706,7 @@ exec "pipewire & sleep 1 && pipewire-pulse"
 #### ALSA-only
 
 > [!WARNING]
-> [Pipewire](#Pipewire) is more widely supported and easier to setup. This setup is only advisable if you need a super minimal audio stack, like on ancient computers or low power SOCs.
+> [PipeWire](#Pipewire) is more widely supported and easier to setup. This setup is only advisable if you need a super minimal audio stack, like on ancient computers or low power SOCs.
 
 Add the following example configuration to your finix configuration:
 ```nix
