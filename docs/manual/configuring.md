@@ -691,6 +691,8 @@ exec "pipewire & sleep 1 && pipewire-pulse"
         "context.exec" = [
           {
             path = "${config.programs.wireplumber.package}/bin/wireplumber";
+          }
+          {
             path = "${config.programs.pipewire.package}/bin/pipewire-pulse";
           }
         ];
