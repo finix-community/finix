@@ -6,6 +6,15 @@
 }:
 let
   cfg = config.services.ratbagd;
+
+  # gardendevd needs libudev-garden; mdevd/keventd need libudev-zero
+  udevApi =
+    if config.services.gardendevd.enable then
+      pkgs.libudev-garden
+    else if config.services.mdevd.enable || config.services.keventd.enable then
+      pkgs.libudev-zero
+    else
+      null;
 in
 {
   options = {
@@ -20,7 +29,17 @@ in
 
       package = lib.mkOption {
         type = lib.types.package;
-        default = pkgs.libratbag;
+        default =
+          (pkgs.libratbag.override {
+            systemd = pkgs.callPackage ./elogind/package.nix { };
+            udev = udevApi;
+          }).overrideAttrs
+            (o: {
+              mesonFlags = [
+                "-Dlogind-provider=elogind"
+                "-Dsystemd=false"
+              ];
+            });
         defaultText = lib.literalExpression "pkgs.libratbag";
         description = ''
           The package to use for `libratbag`.
