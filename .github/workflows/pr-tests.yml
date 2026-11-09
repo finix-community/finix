@@ -5,6 +5,8 @@ on:
     paths-ignore:
       - 'docs/**'
       - 'assets/**'
+      - '**.md'
+
 
 permissions:
   contents: read
