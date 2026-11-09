@@ -4,9 +4,11 @@ on:
   push:
     paths:
       - '**.nix'
+      - '.github/workflows/fmt.yml'
   pull_request:
     paths:
       - '**.nix'
+      - '.github/workflows/fmt.yml'
 
 jobs:
   format:

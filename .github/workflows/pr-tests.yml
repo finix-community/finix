@@ -6,6 +6,7 @@ on:
       - 'docs/**'
       - 'assets/**'
       - '**.md'
+      - '.github/workflows/pr-tests.yml'
 
 
 permissions:
