@@ -2,7 +2,7 @@ name: PR tests
 
 on:
   pull_request:
-    ignore-paths:
+    paths-ignore:
       - 'docs/**'
       - 'assets/**'
 
