@@ -572,7 +572,7 @@ etc.
 #### PipeWire
 
 > [!NOTE]
-> Enabling the [PipeWire](#PipeWire) and [WirePlumber](#WirePlumber) modules **does not** configure them to be started as `finit` services. `finit` does not yet support user level services.
+> Enabling the [PipeWire](#PipeWire) and [WirePlumber](#WirePlumber) modules **does not** configure them to be started as `finit` services.
 See [Running PipeWire, WirePlumber and `pipewire-pulse`](#Running-pipewire-wireplumber-and-pipewire-pulse).
 
 Finix provides a [PipeWire module](https://github.com/finix-community/finix/blob/main/modules/programs/pipewire/default.nix) which is not imported by default. To enable it, add the following to your configuration:
@@ -628,7 +628,7 @@ To enable **PulseAudio** compatibility, `pipewire-pulse` must be executed after 
 
 ##### Running PipeWire, WirePlumber and `pipewire-pulse`
 
-As, `finit` does not yet support user level services, starting `pipewire`, `wireplumber` and `pipewire-pulse` may be achieved via your graphical environment or PipeWire's configuration.
+Because `finit` does not yet support user level services, starting `pipewire`, `wireplumber` and `pipewire-pulse` must be done via your graphical environment or PipeWire's configuration.
 
 As an example, here is how to start all three in [Niri](https://github.com/niri-wm/niri):
 
@@ -642,7 +642,7 @@ spawn-sh-at-startup "pipewire & sleep 1 && pipewire-pulse & wireplumber"
 > [!CAUTION]
 > Running PipeWire as root is highly discouraged due to significant security risks.
 
-Here is how the same would be accomplished using PipeWire's configuration:
+Here is how to accomplish the same using PipeWire's configuration:
 
 ```nix
 { config, modules, ... }:
@@ -674,9 +674,9 @@ Here is how the same would be accomplished using PipeWire's configuration:
 #### ALSA-only
 
 > [!WARNING]
-> [PipeWire](#Pipewire) is more widely supported and easier to setup. This setup is only advisable if you need a super minimal audio stack, like on ancient computers or low power SOCs.
+> [PipeWire](#Pipewire) is more widely supported and easier to setup. This setup is only advisable if you need a super minimal audio stack, like on older hardware or low power SOCs.
 
-To create a basic ALSA configuration, add the following example configuration to your Finix configuration:
+To create a basic ALSA configuration, add the following to your configuration:
 
 ```nix
 {
