@@ -613,9 +613,173 @@ etc.
 
 ### Audio
 
-TODO
+#### PipeWire
 
-`pipewire` mostly
+> [!NOTE]
+> Enabling the [PipeWire](#PipeWire) and [WirePlumber](#WirePlumber) modules **does not** configure them to be started as `finit` services.
+See [Running PipeWire, WirePlumber and `pipewire-pulse`](#Running-pipewire-wireplumber-and-pipewire-pulse).
+
+Finix provides a [PipeWire module](https://github.com/finix-community/finix/blob/main/modules/programs/pipewire/default.nix) which is not imported by default. To enable it, add the following to your configuration:
+
+```nix
+{ config, modules, ... }:
+{
+  imports = [ modules.pipewire ];
+
+  programs.pipewire.enable = true;
+}
+```
+
+The module has a `settings` option to configure PipeWire.
+The following example provides a PipeWire and JACK configuration that may help reduce audio crackling and popping on some systems under high CPU load.
+
+```nix
+{ config, modules, ... }:
+{
+  imports = [ modules.pipewire ];
+  programs.pipewire = {
+    settings = {
+      "10-low-latency" = {
+        "context.properties" = {
+          "default.clock.rate" = 48000;
+          "default.clock.quantum" = 800;
+          "default.clock.min-quantum" = 512;
+          "default.clock.max-quantum" = 1024;
+        };
+      };
+    };
+    jack.settings = {
+      "12-jack-low-latency" = {
+        "jack.properties" = {
+          "node.latency" = "512/48000";
+        };
+      };
+    };
+  };
+}
+```
+
+**Source:** [EndeavourOS Forum: \[Pipewire Guide\] audio crackling/popping and latency](https://forum.endeavouros.com/t/pipewire-guide-audio-crackling-popping-and-latency/69602), [Official PipeWire configuration documentation](https://docs.pipewire.org/page_config.html)
+
+Using [WirePlumber](#Wireplumber) is also advised for session management.
+
+##### WirePlumber
+Finix provides a [WirePlumber module](https://github.com/finix-community/finix/blob/main/modules/programs/wireplumber) which is not imported by default. To enable it, add the following to your configuration:
+
+```nix
+{ config, modules, ... }:
+{
+  imports = [
+    modules.pipewire
+    modules.wireplumber
+  ];
+  programs = {
+    pipewire.enable = true;
+    wireplumber.enable = true;
+  };
+}
+```
+
+##### ALSA, JACK and PulseAudio compatibility
+
+Some programs may not function properly without ALSA, PulseAudio and JACK. The PipeWire package provides options to enable full compatibility for these audio stacks.
+To enable **ALSA** and **JACK** compatibility, add the following to your configuration:
+
+```nix
+{ config, modules, ... }:
+{
+  imports = [ modules.pipewire ];
+
+  programs.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    jack.enable = true;
+  };
+}
+```
+
+To enable **PulseAudio** compatibility, `pipewire-pulse` must be executed after `pipewire`. See [Running PipeWire, WirePlumber and `pipewire-pulse`](#Running-pipewire-wireplumber-and-pipewire-pulse).
+
+##### Running PipeWire, WirePlumber and `pipewire-pulse`
+
+Because `finit` does not yet support user level services, starting `pipewire`, `wireplumber` and `pipewire-pulse` must be done via your graphical environment or PipeWire's configuration.
+
+As an example, here is how to start all three in [Niri](https://github.com/niri-wm/niri):
+
+```kdl
+spawn-sh-at-startup "pipewire & sleep 1 && pipewire-pulse & wireplumber"
+```
+
+> [!TIP]
+> A `sleep` call is added after executing `pipewire` to avoid a race condition where `pipewire` isn't initialized in time for `wireplumber` and `pipewire-pulse` to hook into it. It is preferable to execute both via PipeWire's configuration to avoid this hack.
+
+> [!CAUTION]
+> Running PipeWire as root is highly discouraged due to significant security risks.
+
+Here is how to accomplish the same using PipeWire's configuration:
+
+```nix
+{ config, modules, ... }:
+{
+  imports = [
+    modules.pipewire
+    modules.wireplumber
+  ];
+
+  programs = {
+    pipewire = {
+      enable = true;
+      settings = {
+        "context.exec" = [
+          {
+            path = lib.getExe' config.programs.wireplumber.package "wireplumber";
+          }
+          {
+            path = lib.getExe' config.programs.pipewire.package "pipewire-pulse";
+          }
+        ];
+      };
+    };
+    wireplumber.enable = true;
+  };
+}
+```
+
+#### ALSA-only
+
+> [!WARNING]
+> [PipeWire](#Pipewire) is more widely supported and easier to setup. This setup is only advisable if you need a super minimal audio stack, like on older hardware or low power SOCs.
+
+To create a basic ALSA configuration, add the following to your configuration:
+
+```nix
+{
+  environment.etc."asound.conf".text = ''
+  ctl.!default {
+    type hw
+    card "Generic_1" # Replace Generic_1 with your card name from `aplay -l`
+  }
+
+  pcm.dmixer {
+    type dmix
+    ipc_key 1024
+    ipc_perm 0666
+    slave {
+      pcm "hw:Generic_1,0" # Replace Generic_1 with your card name from `aplay -l`
+      period_size 1024     # Prevent audio cracking on certain cards
+      buffer_size 4096
+    }
+  }
+
+  pcm.!default {
+    type plug
+    slave.pcm "dmixer"
+  }
+  '';
+}
+```
+
+Refer to ALSA's [official documentation](https://www.alsa-project.org/wiki/ALSA_User_Info) for further information on configuring it.
 
 ## Server software
 
