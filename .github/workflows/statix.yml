@@ -2,7 +2,11 @@ name: "apply statix check"
 
 on:
   push:
+    paths:
+      - '**.nix'
   pull_request:
+    paths:
+      - '**.nix'
 
 jobs:
   statix:

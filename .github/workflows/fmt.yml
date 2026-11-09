@@ -7,7 +7,6 @@ on:
   pull_request:
     paths:
       - '**.nix'
-  pull_request:
 
 jobs:
   format:
