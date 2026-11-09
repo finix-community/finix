@@ -30,10 +30,12 @@ in
       package = lib.mkOption {
         type = lib.types.package;
         default =
-          (pkgs.libratbag.override {
-            systemd = pkgs.callPackage ./elogind/package.nix { };
-            udev = udevApi;
-          }).overrideAttrs
+          (pkgs.libratbag.override (
+            {
+              systemd = pkgs.callPackage ./elogind/package.nix { };
+            }
+            // lib.optionalAttrs (udevApi != null) { udev = udevApi; }
+          )).overrideAttrs
             (o: {
               mesonFlags = [
                 "-Dlogind-provider=elogind"
