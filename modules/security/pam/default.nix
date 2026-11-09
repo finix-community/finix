@@ -6,20 +6,20 @@
 }:
 let
   mkRulesTypeOption =
-    type:
+    scope: type:
     lib.mkOption {
       type = lib.types.attrsOf (
         lib.types.submodule (
-          { name, config, ... }:
+          { name, ... }:
           {
             options = {
               name = lib.mkOption {
                 type = lib.types.str;
+                default = name;
                 description = ''
                   Name of this rule.
                 '';
                 internal = true;
-                readOnly = true;
               };
 
               enable = lib.mkOption {
@@ -36,6 +36,10 @@ let
                   Order of this rule in the service file. Rules are arranged in
                   ascending order of this value.
 
+                  Two enabled rules of the same type in one service must not
+                  share an `order`; evaluation fails with an error naming both
+                  rules.
+
                   ::: {.warning}
                   The `order` values for the built-in rules are subject to change.
                   If you assign a constant value to this option, a system update
@@ -50,6 +54,10 @@ let
                       config.security.pam.services.login.rules.auth.unix.order + 10;
                   }
                   ```
+
+                  A relative offset can still collide if another rule moves to
+                  the same value; the resulting error tells you which rules to
+                  separate.
                   :::
                 '';
               };
@@ -75,6 +83,7 @@ let
 
               args = lib.mkOption {
                 type = with lib.types; listOf str;
+                default = [ ];
                 description = ''
                   Tokens that can be used to modify the specific behavior of the
                   given PAM. Such arguments will be documented for each individual
@@ -84,9 +93,10 @@ let
                   Escaping rules for spaces and square brackets are automatically
                   applied.
 
-                  {option}`settings` are automatically added as {option}`args`.
-                  It's recommended to use the {option}`settings` option whenever
-                  possible so that arguments can be overridden.
+                  These are rendered after the arguments generated from
+                  {option}`settings`. It's recommended to use the
+                  {option}`settings` option whenever possible so that arguments
+                  can be overridden.
                 '';
               };
 
@@ -111,26 +121,12 @@ let
                 '';
               };
             };
-
-            config = {
-              inherit name;
-
-              # formats an attrset of settings as args for use as `module-arguments`
-              args = lib.concatLists (
-                lib.flip lib.mapAttrsToList config.settings (
-                  name: value:
-                  if lib.isBool value then
-                    lib.optional value name
-                  else
-                    lib.optional (value != null) "${name}=${toString value}"
-                )
-              );
-            };
           }
         )
       );
+      default = { };
       description = ''
-        PAM `${type}` rules for this service.
+        PAM `${type}` rules ${scope}.
 
         Attribute keys are the name of each rule.
       '';
@@ -142,6 +138,12 @@ let
     "password"
     "session"
   ];
+
+  mkRulesType =
+    scope:
+    lib.types.submodule {
+      options = lib.genAttrs ruleTypes (mkRulesTypeOption scope);
+    };
 
   pamOpts =
     { name, config, ... }:
@@ -163,9 +165,7 @@ let
           description = ''
             PAM rules for this service.
           '';
-          type = lib.types.submodule {
-            options = lib.genAttrs ruleTypes mkRulesTypeOption;
-          };
+          type = mkRulesType "for this service";
         };
 
         orderedRules = lib.mkOption {
@@ -174,7 +174,8 @@ let
           readOnly = true;
           description = ''
             The enabled {option}`rules` of this service for each rule type,
-            sorted by `order` with ties broken by name.
+            sorted by `order`. Two enabled rules of the same type with the
+            same `order` is an error.
 
             Use this to inspect the final order of the rules:
 
@@ -191,15 +192,35 @@ let
       };
 
       config = {
+        # Filter on `enable` before sorting: a rule defined only as
+        # `enable = false` (e.g. disabling a default rule that isn't present)
+        # has no `order`/`control`/`modulePath`, and must never be read further.
         orderedRules = lib.genAttrs ruleTypes (
           type:
-          lib.sort (a: b: if a.order == b.order then a.name < b.name else a.order < b.order) (
-            lib.filter (rule: rule.enable) (lib.attrValues config.rules.${type})
-          )
+          lib.sort (
+            a: b:
+            if a.order == b.order then
+              throw "security.pam.services.${config.name}: ${type} rules `${a.name}` and `${b.name}` have the same order (${toString a.order})"
+            else
+              a.order < b.order
+          ) (lib.filter (rule: rule.enable) (lib.attrValues config.rules.${type}))
         );
 
         text =
           let
+            # formats an attrset of settings as args for use as `module-arguments`
+            settingsToArgs =
+              settings:
+              lib.concatLists (
+                lib.flip lib.mapAttrsToList settings (
+                  name: value:
+                  if lib.isBool value then
+                    lib.optional value name
+                  else
+                    lib.optional (value != null) "${name}=${toString value}"
+                )
+              );
+
             # Args containing spaces are wrapped in [] with any ] escaped, see pam.conf(5).
             formatRules =
               type:
@@ -213,7 +234,7 @@ let
                   ]
                   ++ map (
                     arg: if lib.hasInfix " " arg then "[${lib.replaceStrings [ "]" ] [ "\\]" ] arg}]" else arg
-                  ) rule.args
+                  ) (settingsToArgs rule.settings ++ rule.args)
                 )
                 + " # ${rule.name} (order ${toString rule.order})"
               ) config.orderedRules.${type};
@@ -256,6 +277,39 @@ in
     services = lib.mkOption {
       type = with lib.types; attrsOf (submodule pamOpts);
       default = { };
+    };
+
+    defaultRules = lib.mkOption {
+      type = mkRulesType "shared by services that use the default rules";
+      default = { };
+      description = ''
+        PAM rules for the authentication methods available on this machine.
+        Modules contribute rules here based on the services they enable.
+
+        Services take these rules by assigning them to their own
+        {option}`security.pam.services.<name>.rules`, either in full or
+        as a subset:
+
+        ```nix
+        {
+          security.pam.services.login.rules = lib.mkMerge [
+            config.security.pam.defaultRules
+            { auth.fprintd.enable = lib.mkForce false; }
+          ];
+          security.pam.services.passwd.rules.auth = {
+            inherit (config.security.pam.defaultRules.auth) unix deny;
+          };
+        }
+        ```
+        Contributing modules should express `order` relative to another
+        default rule, e.g. `config.security.pam.defaultRules.auth.unix.order - 10`.
+
+        All contributors share one `order` space per rule type. If two
+        contributed rules of the same type have the same `order`, every
+        service that copies both of them fails to evaluate. The error names
+        the first such service it builds, not the contributing modules, so
+        look for the modules that define the two named rules.
+      '';
     };
 
     environment = lib.mkOption {
