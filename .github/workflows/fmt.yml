@@ -2,6 +2,11 @@ name: "apply nix fmt"
 
 on:
   push:
+    paths:
+      - '**.nix'
+  pull_request:
+    paths:
+      - '**.nix'
   pull_request:
 
 jobs:
