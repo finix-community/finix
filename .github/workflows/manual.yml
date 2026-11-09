@@ -9,6 +9,7 @@ on:
       # build the manuals only when relevant directories are updated
       - docs/**
       - modules/**
+      - '.github/workflows/manual.yml'
 
 # sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:

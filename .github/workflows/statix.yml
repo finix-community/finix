@@ -2,7 +2,13 @@ name: "apply statix check"
 
 on:
   push:
+    paths:
+      - '**.nix'
+      - '.github/workflows/statix.yml'
   pull_request:
+    paths:
+      - '**.nix'
+      - '.github/workflows/statix.yml'
 
 jobs:
   statix:

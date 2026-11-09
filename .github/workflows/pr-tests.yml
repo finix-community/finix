@@ -2,6 +2,12 @@ name: PR tests
 
 on:
   pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - 'assets/**'
+      - '**.md'
+      - '.github/workflows/pr-tests.yml'
+
 
 permissions:
   contents: read
