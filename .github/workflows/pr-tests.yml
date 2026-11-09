@@ -2,6 +2,9 @@ name: PR tests
 
 on:
   pull_request:
+    ignore-paths:
+      - 'docs/**'
+      - 'assets/**'
 
 permissions:
   contents: read
