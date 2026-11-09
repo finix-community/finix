@@ -586,8 +586,38 @@ Finix provides a [PipeWire module](https://github.com/finix-community/finix/blob
 }
 ```
 
-Using [WirePlumber](#Wireplumber) is also advised for session management.
+The module has a `settings` option to configure PipeWire.
+The following example provides a PipeWire and JACK configuration that may help reduce audio crackling and popping on some systems under high CPU load.
 
+```nix
+{ config, modules, ... }:
+{
+  imports = [ modules.pipewire ];
+  programs.pipewire = {
+    settings = {
+      "10-low-latency" = {
+        "context.properties" = {
+          "default.clock.rate" = 48000;
+          "default.clock.quantum" = 800;
+          "default.clock.min-quantum" = 512;
+          "default.clock.max-quantum" = 1024;
+        };
+      };
+    };
+    jack.settings = {
+      "12-jack-low-latency" = {
+        "jack.properties" = {
+          "node.latency" = "512/48000";
+        };
+      };
+    };
+  };
+}
+```
+
+**Source:** [EndeavourOS Forum: \[Pipewire Guide\] audio crackling/popping and latency](https://forum.endeavouros.com/t/pipewire-guide-audio-crackling-popping-and-latency/69602), [Official PipeWire configuration documentation](https://docs.pipewire.org/page_config.html)
+
+Using [WirePlumber](#Wireplumber) is also advised for session management.
 
 ##### WirePlumber
 Finix provides a [WirePlumber module](https://github.com/finix-community/finix/blob/main/modules/programs/wireplumber) which is not imported by default. To enable it, add the following to your configuration:
