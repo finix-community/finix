@@ -203,7 +203,6 @@ in
         command = mkCommand task;
         respawn = true;
         log = { };
-        exec-stop-post = "${lib.getExe' config.programs.coreutils.package "touch"} /var/cache/snooze/test";
       }) (lib.filterAttrs (_: task: task.enable) cfg.tasks);
 
       # this module supplies an implementation for `providers.scheduler`
