@@ -80,6 +80,14 @@ in
                 default = "snooze: ${name}";
               };
 
+              script = lib.mkOption {
+                type = lib.types.lines;
+                default = "";
+                description = ''
+                  Shell commands executed as the main process.
+                '';
+              };
+
               command = lib.mkOption {
                 type = lib.types.str;
                 description = "The command to execute.";
@@ -131,11 +139,14 @@ in
               };
             };
 
-            config.timeFile = lib.mkDefault (
-              if config.user != null then
-                "/var/cache/snooze/${config.user}_${name}"
-              else
-                "/var/cache/snooze/${name}"
+            config.command = lib.mkIf (config.script != "") (
+              lib.mkForce (
+                pkgs.writeScript (lib.replaceStrings [ "@" ] [ "_" ] name) ''
+                  #!/bin/sh
+                  set -eu
+                  ${config.script}
+                ''
+              )
             );
           }
         )
