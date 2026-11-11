@@ -43,8 +43,8 @@ in
         inherit (task) user command;
       }
       // lib.optionalAttrs (!task.persistent) { timeFile = null; }
-      // lib.optionalAttrs (task.randomDelay) { timing.jitter = "30"; }
-      // (presets.${task.interval})
+      // lib.optionalAttrs task.randomDelay { timing.jitter = "30"; }
+      // presets.${task.interval}
     ) cfg.tasks;
   };
 }
