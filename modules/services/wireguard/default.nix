@@ -252,11 +252,10 @@ in
 
               listenPort = lib.mkOption {
                 default = null;
-                type = types.nullOr types.int;
+                type = types.nullOr types.port;
                 example = 51820;
                 description = ''
-                  16-bit port for listening. Optional; if not specified,
-                  automatically generated based on interface name.
+                  UDP port to listen on. If `null`, the kernel picks a random port.
                 '';
               };
 
