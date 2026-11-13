@@ -15,7 +15,7 @@ let
       };
     in
     {
-      type = format'.type;
+      inherit (format') type;
       generate = name: value: format'.generate name (lib.filterAttrs (_: v: v != false) value);
     };
 in
@@ -207,7 +207,7 @@ in
         "sit*"
       ];
 
-      debug = cfg.debug;
+      inherit (cfg) debug;
     };
 
     finit.services.dhcpcd = {

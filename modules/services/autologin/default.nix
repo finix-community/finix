@@ -69,7 +69,7 @@ in
         session required pam_env.so conffile=/etc/security/pam_env.conf readenv=0 # env (order 10100)
         session required pam_unix.so # unix (order 10200)
         session required pam_loginuid.so # loginuid (order 10300)
-        session required ${config.security.pam.package}/lib/security/pam_lastlog.so silent # lastlog (order 10700)
+        session required ${pkgs.util-linux.lastlog}/lib/security/pam_lastlog2.so silent # lastlog (order 10700)
 
         ${lib.optionalString (session_rundir != false) session_rundir}
         session required pam_limits.so

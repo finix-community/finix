@@ -164,7 +164,7 @@ in
 
     users.users = lib.optionalAttrs (cfg.user == "sonarr") {
       sonarr = {
-        group = cfg.group;
+        inherit (cfg) group;
         home = cfg.dataDir;
         uid = config.ids.uids.sonarr;
       };

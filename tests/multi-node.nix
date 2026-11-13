@@ -5,19 +5,15 @@
 {
   name = "multi-node";
 
-  nodes.client =
-    { ... }:
-    {
-      services.getty.enable = true;
-      services.mdevd.enable = true;
-    };
+  nodes.client = _: {
+    services.getty.enable = true;
+    services.mdevd.enable = true;
+  };
 
-  nodes.server =
-    { ... }:
-    {
-      services.getty.enable = true;
-      services.mdevd.enable = true;
-    };
+  nodes.server = _: {
+    services.getty.enable = true;
+    services.mdevd.enable = true;
+  };
 
   testScript = ''
     with subtest("start_all starts all nodes"):

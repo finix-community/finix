@@ -11,16 +11,7 @@ let
 
   fileSystems' = lib.toposort utils.fsBefore (lib.attrValues config.fileSystems);
 
-  fileSystems =
-    if fileSystems' ? result then
-      # use topologically sorted fileSystems everywhere
-      fileSystems'.result
-    else
-      # the assertion below will catch this,
-      # but we fall back to the original order
-      # anyway so that other modules could check
-      # their assertions too
-      (lib.attrValues config.fileSystems);
+  fileSystems = fileSystems'.result or (lib.attrValues config.fileSystems);
 
   makeSwapEntry =
     sw:
@@ -75,8 +66,7 @@ let
       skipCheck =
         fs: fs.noCheck || fs.device == "none" || lib.elem fs.fsType fsToSkipCheck || isBindMount fs;
     in
-    fstabFileSystems:
-    { }:
+    fstabFileSystems: _:
     lib.concatMapStrings (
       fs:
       (

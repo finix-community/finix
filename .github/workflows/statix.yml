@@ -1,0 +1,20 @@
+name: "apply statix check"
+
+on:
+  push:
+    paths:
+      - '**.nix'
+      - '.github/workflows/statix.yml'
+  pull_request:
+    paths:
+      - '**.nix'
+      - '.github/workflows/statix.yml'
+
+jobs:
+  statix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+      - name: Statix check
+        run: nix-shell ./shell.nix --command 'statix check'

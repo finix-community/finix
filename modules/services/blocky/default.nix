@@ -66,7 +66,7 @@ in
     };
 
     settings = lib.mkOption {
-      type = format.type;
+      inherit (format) type;
       default = { };
       description = ''
         `blocky` configuration. See [upstream documentation](https://0xerr0r.github.io/blocky/configuration)
@@ -102,7 +102,7 @@ in
     users.users = lib.mkIf (cfg.user == "blocky") {
       blocky = {
         isSystemUser = true;
-        group = cfg.group;
+        inherit (cfg) group;
       };
     };
 

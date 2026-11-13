@@ -6,7 +6,7 @@
 # usage:
 #   nix-build tests                   # build all tests
 #   nix-build tests -A boot           # build specific test
-#   nix-build tests -A finit.tmpfiles # build test from subdirectory
+#   nix-build tests -A finit          # build test made of several files (finit/default.nix)
 #
 # interactive mode:
 #   nix-build tests -A boot.driverInteractive
@@ -54,33 +54,41 @@ let
     name: type: type == "directory" && !(builtins.elem name excludes)
   ) dirContents;
 
-  # for each subdirectory, create a nested attrset of tests
-  # e.g., finit/tmpfiles.nix -> finit.tmpfiles
+  # for each subdirectory:
+  # - with a default.nix: a single test or a suite of tests
+  # - otherwise: create a nested attrset of tests
+  #   (e.g., foo/bar.nix -> foo.bar)
+  # a suite's default.nix can either be:
+  # - a function taking { pkgs, callTest }: returns an attrset of tests
+  # - a plain composed test, passed through
   # use recurseIntoAttrs so nix-build recurses into subdirectories
   subDirTests = lib.mapAttrs (
     dirName: _:
     let
       subDir = ./. + "/${dirName}";
-      subDirContents = builtins.readDir subDir;
       suiteFile = subDir + "/default.nix";
-      nixFiles = lib.filterAttrs (
-        name: type:
-        type == "regular"
-        && lib.hasSuffix ".nix" name
-        && !(builtins.elem name [
-          "default.nix"
-          "common.nix"
-        ])
-      ) subDirContents;
+      suite = import suiteFile;
     in
     lib.recurseIntoAttrs (
       if builtins.pathExists suiteFile then
-        import suiteFile { inherit pkgs callTest; }
+        if builtins.isFunction suite then suite { inherit pkgs callTest; } else runTest suiteFile
       else
-        lib.mapAttrs' (filename: _: {
-          name = lib.removeSuffix ".nix" filename;
-          value = runTest (subDir + "/${filename}");
-        }) nixFiles
+        lib.mapAttrs'
+          (filename: _: {
+            name = lib.removeSuffix ".nix" filename;
+            value = runTest (subDir + "/${filename}");
+          })
+          (
+            lib.filterAttrs (
+              name: type:
+              type == "regular"
+              && lib.hasSuffix ".nix" name
+              && !(builtins.elem name [
+                "default.nix"
+                "common.nix"
+              ])
+            ) (builtins.readDir subDir)
+          )
     )
   ) subDirs;
 in

@@ -28,7 +28,7 @@ in
     };
 
     settings = lib.mkOption {
-      type = format.type;
+      inherit (format) type;
       default = { };
       description = ''
         `gamemode` configuration. See {manpage}`gamemoded(8)`

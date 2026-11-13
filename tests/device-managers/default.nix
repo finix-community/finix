@@ -8,7 +8,7 @@
   callTest ? null,
 }:
 let
-  lib = pkgs.lib;
+  inherit (pkgs) lib;
   testLib = import ../lib { inherit lib pkgs; };
   runTest =
     if callTest != null then callTest else (file: testLib.mkTest ((import file) { inherit pkgs; }));

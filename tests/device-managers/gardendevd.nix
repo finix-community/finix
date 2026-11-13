@@ -35,13 +35,12 @@ common {
     configCheck = "settle -t 30";
     reloadCommand = "gardendevctl control --reload";
     inherit disks eventScript;
-    module =
-      { ... }:
-      {
-        services.gardendevd.enable = true;
-        services.udev.packages = [ eventRules ];
-        environment.systemPackages = [ eventScript ];
-      };
+    module = _: {
+
+      services.gardendevd.enable = true;
+      services.udev.packages = [ eventRules ];
+      environment.systemPackages = [ eventScript ];
+    };
     backendScript = ''
       UDEV_DB = {}
 

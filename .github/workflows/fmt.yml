@@ -2,13 +2,19 @@ name: "apply nix fmt"
 
 on:
   push:
+    paths:
+      - '**.nix'
+      - '.github/workflows/fmt.yml'
   pull_request:
+    paths:
+      - '**.nix'
+      - '.github/workflows/fmt.yml'
 
 jobs:
   format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: DeterminateSystems/nix-installer-action@main
       - name: Check formatting
         run: |

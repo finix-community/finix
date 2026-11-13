@@ -31,13 +31,12 @@ common {
     configCheck = "settle -t 30";
     reloadCommand = "${pkgs.eudev}/bin/udevadm control --reload";
     inherit disks eventScript;
-    module =
-      { ... }:
-      {
-        services.udev.enable = true;
-        services.udev.packages = [ eventRules ];
-        environment.systemPackages = [ eventScript ];
-      };
+    module = _: {
+
+      services.udev.enable = true;
+      services.udev.packages = [ eventRules ];
+      environment.systemPackages = [ eventScript ];
+    };
     backendScript = ''
       def backend_validate(machine):
           machine.succeed(CONFIG_CHECK)

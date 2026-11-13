@@ -32,7 +32,7 @@ in
       {
         inherit (cfg) readiness runlevel;
       }
-      (lib.mkIf (cfg.environment != { }) { environment = cfg.environment; })
+      (lib.mkIf (cfg.environment != { }) { inherit (cfg) environment; })
       (lib.mkIf (cfg.cgroups != { }) { cgroup = cfg.cgroups; })
       (lib.mkIf (cfg.rlimits != { }) { rlimit = cfg.rlimits; })
     ];

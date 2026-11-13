@@ -23,11 +23,31 @@ in
     supportedFeatures = {
       user = lib.mkOption {
         type = lib.types.bool;
+        default = false;
         description = ''
           Whether the selected {option}`providers.scheduler` implementation supports running tasks as
           a specified user.
         '';
       };
+
+      persistent = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Whether the selected {option}`providers.scheduler` implementation supports running the tasks when
+          the schedule was missed.
+        '';
+      };
+
+      randomDelay = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Whether the selected {option}`providers.scheduler` implementation supports randomly delaying tasks
+          by an amount determined by that implementation.
+        '';
+      };
+
     };
 
     backend = lib.mkOption {
@@ -42,25 +62,44 @@ in
       type = lib.types.attrsOf (
         lib.types.submodule {
           options = {
+
+            interval = lib.mkOption {
+              type = lib.types.enum [
+                "minutely"
+                "hourly"
+                "daily"
+                "monthly"
+                "weekly"
+              ];
+              description = ''
+                The interval at which this task should run.
+
+                The underlying {option}`providers.scheduler` implementation uses its scheduling features
+                to choose an appropriate time to run within that interval.
+              '';
+            };
+
+            persistent = lib.mkOption {
+              type = lib.types.bool;
+              default = false;
+              description = ''
+                If the task should be run, even if the schedule window was missed.
+              '';
+            };
+
+            randomDelay = lib.mkOption {
+              type = lib.types.bool;
+              default = false;
+              description = ''
+                Whether to randomly delay this task. The underlying {option}`providers.scheduler`
+                implementation determines the amount of delay.
+              '';
+            };
+
             command = lib.mkOption {
               type = program;
               description = ''
                 The command this task should execute at specified {option}`interval`s.
-              '';
-            };
-
-            interval = lib.mkOption {
-              type = lib.types.str;
-              example = "15 * * * *";
-              description = ''
-                The interval at which this task should run its specified {option}`command`. Accepts either a
-                standard {manpage}`crontab(5)` expression or one of: `hourly`, `daily`, `weekly`, `monthly`, or `yearly`.
-
-                If a standard {manpage}`crontab(5)` expression is provided this value will be passed directly
-                to the `scheduler` implementation and execute exactly as specified.
-
-                If one of the special values, `hourly`, `daily`, `monthly`, `weekly`, or `yearly`, is provided then the
-                underlying `scheduler` implementation will use its features to decide when best to run.
               '';
             };
 
