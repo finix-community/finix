@@ -139,7 +139,7 @@ let
       {
         preferLocalBuild = true;
         allowSubstitutes = false;
-        packages = lib.unique (map toString ([ pkgs.udev ] ++ cfg.packages));
+        packages = lib.unique (map toString ([ cfg.package ] ++ cfg.packages));
       }
       ''
         mkdir -p etc/udev/hwdb.d
