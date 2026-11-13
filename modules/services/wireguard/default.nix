@@ -368,7 +368,7 @@ in
                             This is especially common for dynamic-DNS setups, but also applies to
                             any other DNS-based setup.
                             If you do not use IP endpoints, you likely want to set
-                            {option}`services.wireguard.dynamicEndpointRefreshSeconds`
+                            {option}`services.wireguard.interfaces.<name>.dynamicEndpointRefreshSeconds`
                             to refresh the IPs periodically.
                           '';
                         };
