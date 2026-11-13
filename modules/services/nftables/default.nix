@@ -45,6 +45,80 @@ let
       };
     };
 
+  portRange = lib.types.submodule {
+    options = {
+      from = lib.mkOption {
+        type = lib.types.port;
+        description = ''
+          The first port of the range, inclusive.
+        '';
+      };
+
+      to = lib.mkOption {
+        type = lib.types.port;
+        description = ''
+          The last port of the range, inclusive.
+        '';
+      };
+    };
+  };
+
+  interfaceSubmodule = {
+    options = {
+      allowedTCPPorts = lib.mkOption {
+        type = with lib.types; listOf port;
+        default = [ ];
+        apply = values: lib.unique (lib.sort lib.lessThan values);
+        example = [
+          22
+          80
+          443
+        ];
+        description = ''
+          List of TCP ports on which incoming connections are accepted.
+        '';
+      };
+
+      allowedTCPPortRanges = lib.mkOption {
+        type = lib.types.listOf portRange;
+        default = [ ];
+        example = [
+          {
+            from = 8999;
+            to = 9003;
+          }
+        ];
+        description = ''
+          A range of TCP ports on which incoming connections are accepted.
+        '';
+      };
+
+      allowedUDPPorts = lib.mkOption {
+        type = with lib.types; listOf port;
+        default = [ ];
+        apply = values: lib.unique (lib.sort lib.lessThan values);
+        example = [ 53 ];
+        description = ''
+          List of open UDP ports.
+        '';
+      };
+
+      allowedUDPPortRanges = lib.mkOption {
+        type = lib.types.listOf portRange;
+        default = [ ];
+        example = [
+          {
+            from = 60000;
+            to = 61000;
+          }
+        ];
+        description = ''
+          Range of open UDP ports.
+        '';
+      };
+    };
+  };
+
   enabledTables = lib.filterAttrs (_: table: table.enable) cfg.tables;
 
   # `delete table` fails on a table which is not loaded, so every deletion is
@@ -125,6 +199,20 @@ in
 
         The loopback interface is always trusted and cannot be removed from
         this list.
+      '';
+    };
+
+    interfaces = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.submodule interfaceSubmodule);
+      default = { };
+      example = lib.literalExpression ''
+        {
+          wg0.allowedUDPPorts = [ 53 ];
+        }
+      '';
+      description = ''
+        Interface-specific open ports, in addition to the ports opened on all
+        interfaces through {option}`providers.firewall`.
       '';
     };
 
