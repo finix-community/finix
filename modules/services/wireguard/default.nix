@@ -537,14 +537,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = (
-      lib.attrValues (
-        lib.mapAttrs (name: value: {
-          assertion = (value.privateKeyFile != null);
-          message = "services.wireguard.interfaces.${name}.privateKeyFile must be set.";
-        }) cfg.interfaces
-      )
-    );
 
     boot.extraModulePackages = lib.optional (cfg.kernelModulePackage != null) cfg.kernelModulePackage;
 
