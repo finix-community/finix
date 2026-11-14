@@ -135,6 +135,21 @@ in
         '';
       };
 
+      serialDevice = lib.mkOption {
+        type = lib.types.str;
+        readOnly = true;
+        default =
+          if pkgs.stdenv.hostPlatform.isx86 then
+            "ttyS0"
+          else if pkgs.stdenv.hostPlatform.isAarch then
+            "ttyAMA0"
+          else
+            throw "unknown QEMU serial device for ${pkgs.stdenv.hostPlatform.system}";
+        description = ''
+          Name of the guest tty backed by the QEMU serial port.
+        '';
+      };
+
       argv = lib.mkOption {
         type = with lib.types; listOf str;
         readOnly = true;
@@ -225,6 +240,8 @@ in
   };
 
   config = {
+
+    boot.kernelParams = [ "console=${cfg.serialDevice},115200n8" ];
 
     boot.initrd.kernelModules = [
       "virtio_pci" # TODO: platforms without PCI.
