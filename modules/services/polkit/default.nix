@@ -107,7 +107,7 @@ in
       ]
       ++ lib.optionals config.services.sessiond.enable [ "service/sessiond/ready" ];
       command =
-        "${cfg.package.out}/lib/polkit-1/polkitd --no-debug "
+        "${cfg.package.out}/lib/polkit-1/polkitd --no-debug --replace "
         + lib.optionalString cfg.debug "--log-level=debug";
     };
 
