@@ -531,7 +531,7 @@ so it remains constant for the whole run time of the daemon.</p>
 </body></html></div>
   <dl class="option-details">
     <dt>Type</dt><dd class="option-value"><code>package</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">dbus</span></code></pre></body></html>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">dbus</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">override</span>&nbsp;<span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(86,182,194);">enableSystemd</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">true</span><span style="color:rgb(132,139,152);">;</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
 </body></html></dd>
   </dl>
   <dl class="option-details option-sources">
