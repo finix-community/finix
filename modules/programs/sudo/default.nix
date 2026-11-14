@@ -6,6 +6,8 @@
 }:
 let
   cfg = config.programs.sudo;
+
+  fprintd = config.services.fprintd.enable or false;
 in
 {
   imports = [
@@ -41,6 +43,7 @@ in
       account required pam_unix.so # unix (order 10900)
 
       # Authentication management.
+      ${lib.optionalString fprintd "auth sufficient ${config.services.fprintd.package}/lib/security/pam_fprintd.so"}
       auth sufficient pam_unix.so likeauth try_first_pass # unix (order 11500)
       auth required pam_deny.so # deny (order 12300)
 
