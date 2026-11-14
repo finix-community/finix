@@ -29,6 +29,8 @@ final: prev: {
 
   hyprland = prev.hyprland.override { withSystemd = false; };
 
+  ibus = prev.ibus.override { systemd = final.systemdLibs; };
+
   libajantv2 = prev.libajantv2.override { udev = final.libudev-zero; };
 
   libcamera = prev.libcamera.override { udev = final.libudev-zero; };
