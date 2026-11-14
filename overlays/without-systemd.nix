@@ -29,7 +29,7 @@ final: prev: {
 
   hyprland = prev.hyprland.override { withSystemd = false; };
 
-  ibus = prev.ibus.override { systemd = final.systemdLibs; };
+  ibus = prev.ibus.override { withSystemd = false; };
 
   libajantv2 = prev.libajantv2.override { udev = final.libudev-zero; };
 
