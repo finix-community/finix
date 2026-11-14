@@ -28,8 +28,8 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.dbus;
-      defaultText = lib.literalExpression "pkgs.dbus";
+      default = pkgs.dbus.override { enableSystemd = true; };
+      defaultText = lib.literalExpression "pkgs.dbus.override { enableSystemd = true; }";
       apply =
         package:
         if cfg.debug then
