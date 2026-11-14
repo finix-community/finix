@@ -54,28 +54,42 @@ let
     name: type: type == "directory" && !(builtins.elem name excludes)
   ) dirContents;
 
-  # for each subdirectory, either:
-  # - it has a default.nix: the directory is a single test, composed from the files next to it
-  # - otherwise create a nested attrset of tests
+  # for each subdirectory:
+  # - with a default.nix: a single test or a suite of tests
+  # - otherwise: create a nested attrset of tests
   #   (e.g., foo/bar.nix -> foo.bar)
+  # a suite's default.nix can either be:
+  # - a function taking { pkgs, callTest }: returns an attrset of tests
+  # - a plain composed test, passed through
   # use recurseIntoAttrs so nix-build recurses into subdirectories
   subDirTests = lib.mapAttrs (
     dirName: _:
     let
-      subDirContents = builtins.readDir (./. + "/${dirName}");
-      nixFiles = lib.filterAttrs (
-        name: type: type == "regular" && lib.hasSuffix ".nix" name
-      ) subDirContents;
+      subDir = ./. + "/${dirName}";
+      suiteFile = subDir + "/default.nix";
+      suite = import suiteFile;
     in
-    if subDirContents ? "default.nix" then
-      runTest (./. + "/${dirName}")
-    else
-      lib.recurseIntoAttrs (
-        lib.mapAttrs' (filename: _: {
-          name = lib.removeSuffix ".nix" filename;
-          value = runTest (./. + "/${dirName}/${filename}");
-        }) nixFiles
-      )
+    lib.recurseIntoAttrs (
+      if builtins.pathExists suiteFile then
+        if builtins.isFunction suite then suite { inherit pkgs callTest; } else runTest suiteFile
+      else
+        lib.mapAttrs'
+          (filename: _: {
+            name = lib.removeSuffix ".nix" filename;
+            value = runTest (subDir + "/${filename}");
+          })
+          (
+            lib.filterAttrs (
+              name: type:
+              type == "regular"
+              && lib.hasSuffix ".nix" name
+              && !(builtins.elem name [
+                "default.nix"
+                "common.nix"
+              ])
+            ) (builtins.readDir subDir)
+          )
+    )
   ) subDirs;
 in
 topLevelTests // subDirTests
