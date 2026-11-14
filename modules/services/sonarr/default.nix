@@ -108,7 +108,7 @@ in
 
         ::: {.note}
         If left as the default value this directory will automatically be created on
-        system activation, otherwise you are responsible for ensuring the directory exists
+        service activation, otherwise you are responsible for ensuring the directory exists
         with appropriate ownership and permissions before the `sonarr` service starts.
         :::
       '';
@@ -159,7 +159,7 @@ in
     }
     // lib.optionalAttrs (cfg.dataDir == "/var/lib/sonarr") {
       state-dir = "sonarr";
-      state-dir-mode = "0700";
+      state-dir-mode = "0750";
     };
 
     users.users = lib.optionalAttrs (cfg.user == "sonarr") {

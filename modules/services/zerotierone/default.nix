@@ -34,7 +34,7 @@ in
 
         ::: {.note}
         If left as the default value this directory will automatically be created on
-        system activation, otherwise you are responsible for ensuring the directory exists
+        service activation, otherwise you are responsible for ensuring the directory exists
         with appropriate ownership and permissions before the `zerotier` service starts.
         :::
       '';
@@ -57,12 +57,11 @@ in
         "net/route/default"
       ];
       command = "${cfg.package}/bin/zerotier-one ${cfg.stateDir}";
+    }
+    // lib.optionalAttrs (cfg.stateDir == "/var/lib/zerotier-one") {
+      state-dir = "zerotier-one";
     };
 
-    finit.tmpfiles.rules = lib.optionals (cfg.stateDir == "/var/lib/zerotier-one") [
-      "d ${cfg.stateDir}"
-
-      # TODO: ${cfg.stateDir}/networks.d/<JOIN> -> managed by linker
-    ];
+    # TODO: ${cfg.stateDir}/networks.d/<JOIN> -> managed by linker
   };
 }

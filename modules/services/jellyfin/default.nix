@@ -34,7 +34,7 @@ in
 
         ::: {.note}
         If left as the default value this directory will automatically be created on
-        system activation, otherwise you are responsible for ensuring the directory exists
+        service activation, otherwise you are responsible for ensuring the directory exists
         with appropriate ownership and permissions before the `jellyfin` service starts.
         :::
       '';
@@ -81,12 +81,11 @@ in
       cache-dir-mode = "0700";
       logs-dir = "jellyfin";
       logs-dir-mode = "0750";
+    }
+    // lib.optionalAttrs (cfg.dataDir == "/var/lib/jellyfin") {
+      state-dir = "jellyfin";
+      state-dir-mode = "0700";
     };
-
-    finit.tmpfiles.rules = lib.optionals (cfg.dataDir == "/var/lib/jellyfin") [
-      "d ${cfg.dataDir} 0700 ${cfg.user} ${cfg.group}"
-      "d ${cfg.dataDir}/config 0700 ${cfg.user} ${cfg.group}"
-    ];
 
     users.users = lib.optionalAttrs (cfg.user == "jellyfin") {
       jellyfin = {

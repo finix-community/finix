@@ -132,10 +132,6 @@ in
     environment.systemPackages = [ cfg.package ];
     environment.etc."vnstat.conf".source = format.generate "vnstat.conf" cfg.settings;
 
-    finit.tmpfiles.rules = lib.optionals (cfg.settings.DatabaseDir == "/var/lib/vnstat") [
-      "d ${cfg.settings.DatabaseDir} 0750 ${cfg.user} ${cfg.group}"
-    ];
-
     finit.services.vnstat = {
       inherit (cfg) user group;
 
@@ -149,6 +145,10 @@ in
       reload-triggers = [
         config.environment.etc."vnstat.conf".source
       ];
+    }
+    // lib.optionalAttrs (cfg.settings.DatabaseDir == "/var/lib/vnstat") {
+      state-dir = "vnstat";
+      state-dir-mode = "0750";
     };
 
     users.users = lib.optionalAttrs (cfg.user == "vnstatd") {

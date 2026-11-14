@@ -113,11 +113,11 @@ in
 
       environment = cfg.settings;
       path = [ pkgs.unixtools.ping ];
+    }
+    // lib.optionalAttrs (cfg.settings.DATA_DIR == "/var/lib/uptime-kuma") {
+      state-dir = "uptime-kuma";
+      state-dir-mode = "0750";
     };
-
-    finit.tmpfiles.rules = lib.optionals (cfg.settings.DATA_DIR == "/var/lib/uptime-kuma") [
-      "d ${cfg.settings.DATA_DIR} 0750 ${cfg.user} ${cfg.group}"
-    ];
 
     users.users = lib.mkIf (cfg.user == "uptime-kuma") {
       uptime-kuma = {

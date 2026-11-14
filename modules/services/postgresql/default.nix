@@ -52,7 +52,7 @@ in
 
         ::: {.note}
         If left as the default value this directory will automatically be created on
-        system activation, otherwise you are responsible for ensuring the directory exists
+        service activation, otherwise you are responsible for ensuring the directory exists
         with appropriate ownership and permissions before the `postgresql` service starts.
         :::
       '';
@@ -152,6 +152,10 @@ in
         config.environment.etc."postgresql/${cfg.package.psqlSchema}/pg_ident.conf".source
       ];
     }
+    // lib.optionalAttrs (cfg.dataDir == "/var/lib/postgresql/${cfg.package.psqlSchema}") {
+      state-dir = "postgresql/${cfg.package.psqlSchema}";
+      state-dir-mode = "0750";
+    }
     // lib.optionalAttrs cfg.initdb.enable {
       exec-start-pre = pkgs.writeShellScript "pre.sh" ''
         if [ ! -f "${cfg.dataDir}/PG_VERSION" ]; then
@@ -159,13 +163,6 @@ in
         fi
       '';
     };
-
-    finit.tmpfiles.rules =
-      lib.optionals (cfg.dataDir == "/var/lib/postgresql/${cfg.package.psqlSchema}")
-        [
-          "d /var/lib/postgresql 0750 ${cfg.user} ${cfg.group}"
-          "d /var/lib/postgresql/${cfg.package.psqlSchema} 0750 ${cfg.user} ${cfg.group}"
-        ];
 
     users.users.${cfg.user} = {
       name = cfg.user;
