@@ -115,10 +115,14 @@ in
                 '';
               };
               timeFile = lib.mkOption {
-                type = with lib.types; nullOr path;
-                default = "/var/cache/snooze/${name}";
+                type = with lib.types; nullOr str;
+                defaultText = lib.literalExpression ''
+                  "/var/cache/snooze/{name}"
+                  or when user is specified:
+                  "/var/cache/snooze/{user}/{name}"
+                '';
                 description = ''
-                  Path to the timefile location.
+                  Path of the timefile location.
 
                   If `timeFile` does not exist, it will be assumed outdated enough to ensure earliest execution.
                 '';
@@ -153,15 +157,24 @@ in
               };
             };
 
-            config.command = lib.mkIf (config.script != "") (
-              lib.mkForce (
-                pkgs.writeScript (lib.replaceStrings [ "@" ] [ "_" ] name) ''
-                  #!/bin/sh
-                  set -eu
-                  ${config.script}
-                ''
-              )
-            );
+            config = {
+              timeFile = lib.mkDefault (
+                if config.user != null then
+                  "/var/cache/snooze/${config.user}/${name}"
+                else
+                  "/var/cache/snooze/${name}"
+              );
+
+              command = lib.mkIf (config.script != "") (
+                lib.mkForce (
+                  pkgs.writeScript (lib.replaceStrings [ "@" ] [ "_" ] name) ''
+                    #!/bin/sh
+                    set -eu
+                    ${config.script}
+                  ''
+                )
+              );
+            };
           }
         )
       );
@@ -187,10 +200,10 @@ in
           ++ lib.optionals (task.timing.randDelay != null) [ "-R ${task.timing.randDelay}" ]
           ++ lib.optionals (task.timing.jitter != null) [ "-J ${task.timing.jitter}" ]
           ++ lib.optionals (task.timing.timeWait != null) [ "-T ${task.timing.timeWait}" ]
-          ++ lib.optionals (task.timeFile != null) [ "-t ${task.timeFile}" ]
+          ++ lib.optionals (task.timeFile != null) [ "-t '${task.timeFile}'" ]
         );
       mkCommand =
-        task:
+        name: task:
         let
           touch = lib.getExe' config.programs.coreutils.package "touch";
         in
@@ -205,33 +218,41 @@ in
               [ task.command ]
             else
               [
-                "/bin/sh"
-                "-c"
-                (lib.escapeShellArg "${task.command} && umask 077 && ${touch} ${task.timeFile}")
+                (pkgs.writeScript "snooze-${name}-timefile.sh" ''
+                  #!/bin/sh
+                  set -eu
+                  ${task.command};
+                  ${touch} '${task.timeFile}' 
+                '')
               ]
           )
         );
+
+      users = lib.unique (
+        lib.concatMap (t: lib.optional (t.enable && t.user != null && t.timeFile != null) t.user) (
+          lib.attrValues cfg.tasks
+        )
+      );
     in
     {
       environment.systemPackages = [
         cfg.package
       ];
 
-      # To allow for running it as a user.
-      # The folder has open permissions. Each user needs to touch it's own timeFile with `umask 077`.
       finit.tmpfiles.rules = [
-        "d /var/cache/snooze 0777"
-      ];
+        "d /var/cache/snooze 0755"
+      ]
+      ++ map (u: "d /var/cache/snooze/${u} 0700 ${u}") users;
 
       finit.services = lib.mapAttrs (name: task: {
         inherit (task) user description;
-        command = mkCommand task;
+        command = mkCommand name task;
         respawn = true;
         log = { };
       }) (lib.filterAttrs (_: task: task.enable) cfg.tasks);
 
       # this module supplies an implementation for `providers.scheduler`
-      providers.scheduler.backend = lib.mkDefault "snooze";
+      providers.scheduler.backend = "snooze";
     }
   );
 }

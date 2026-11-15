@@ -39,12 +39,12 @@ in
 
     programs.snooze.tasks = lib.mapAttrs (
       _: task:
-      {
-        inherit (task) user command;
-      }
-      // lib.optionalAttrs (!task.persistent) { timeFile = null; }
-      // lib.optionalAttrs task.randomDelay { timing.jitter = "30"; }
-      // presets.${task.interval}
+      lib.foldl' lib.recursiveUpdate { } [
+        { inherit (task) user command; }
+        presets.${task.interval}
+        (lib.optionalAttrs (!task.persistent) { timeFile = null; })
+        (lib.optionalAttrs task.randomDelay { timing.jitter = "30"; })
+      ]
     ) cfg.tasks;
   };
 }
