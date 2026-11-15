@@ -104,6 +104,28 @@ let
 
   cfg = config.virtualisation.qemu;
 
+  guestFileSystems =
+    lib.mapAttrs' (tag: share: {
+      name = share.target;
+      value = {
+        device = tag;
+        fsType = "9p";
+        neededForBoot = true;
+        options = [
+          "trans=virtio"
+          "version=9p2000.L"
+        ]
+        ++ lib.optional (tag == "nix-store") "cache=loose";
+      };
+    }) cfg.sharedDirectories
+    // lib.optionalAttrs cfg.mountHostNixStore {
+      "/nix/store" = {
+        device = "/nix/.ro-store";
+        fsType = "none";
+        options = [ "bind" ];
+      };
+    };
+
   useBootLoader = cfg.bootMode != "kernel";
 
   bootModeArgs = {
@@ -132,6 +154,21 @@ in
         default = "kernel";
         description = ''
           Boot method used to load the guest.
+        '';
+      };
+
+      serialDevice = lib.mkOption {
+        type = lib.types.str;
+        readOnly = true;
+        default =
+          if pkgs.stdenv.hostPlatform.isx86 then
+            "ttyS0"
+          else if pkgs.stdenv.hostPlatform.isAarch then
+            "ttyAMA0"
+          else
+            throw "unknown QEMU serial device for ${pkgs.stdenv.hostPlatform.system}";
+        description = ''
+          Name of the guest tty backed by the QEMU serial port.
         '';
       };
 
@@ -212,6 +249,17 @@ in
         '';
       };
 
+      # Exposed so a configuration that replaces `fileSystems` wholesale can keep them
+      guestFileSystems = lib.mkOption {
+        type = lib.types.attrsOf lib.types.raw;
+        internal = true;
+        readOnly = true;
+        default = guestFileSystems;
+        description = ''
+          File systems the guest needs to reach the host Nix store
+        '';
+      };
+
       mountHostNixStore = lib.mkOption {
         type = lib.types.bool;
         default = !useBootLoader;
@@ -226,6 +274,8 @@ in
 
   config = {
 
+    boot.kernelParams = [ "console=${cfg.serialDevice},115200n8" ];
+
     boot.initrd.kernelModules = [
       "virtio_pci" # TODO: platforms without PCI.
       "virtio_blk"
@@ -234,28 +284,7 @@ in
     ]
     ++ lib.optional (cfg.sharedDirectories != { }) "9pnet_virtio";
 
-    fileSystems = lib.mkMerge (
-      [
-        (lib.mapAttrs' (tag: share: {
-          name = share.target;
-          value.device = tag;
-          value.fsType = "9p";
-          value.neededForBoot = true;
-          value.options = [
-            "trans=virtio"
-            "version=9p2000.L"
-          ]
-          ++ lib.optional (tag == "nix-store") "cache=loose";
-        }) cfg.sharedDirectories)
-      ]
-      ++ lib.optional cfg.mountHostNixStore {
-        "/nix/store" = {
-          device = "/nix/.ro-store";
-          fsType = "none";
-          options = [ "bind" ];
-        };
-      }
-    );
+    fileSystems = cfg.guestFileSystems;
 
     virtualisation.qemu.argv =
       (qemuCommand cfg.package)

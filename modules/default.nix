@@ -72,6 +72,7 @@ in
       ./system/nixos-compat.nix
       ./time
       ./users
+      ./virtualisation/build-vm.nix
       ./xdg
     ]
     ++ providerModules;
