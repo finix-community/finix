@@ -26,6 +26,12 @@ in
         interval =
           if t.interval == "minutely" then
             "* * * * *"
+          else if t.interval == "5m" then
+            "*/5 * * * *"
+          else if t.interval == "15m" then
+            "*/15 * * * *"
+          else if t.interval == "30m" then
+            "*/30 * * * *"
           else if t.interval == "hourly" then
             "@hourly"
           else if t.interval == "daily" then

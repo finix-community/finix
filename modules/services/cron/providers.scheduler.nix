@@ -17,6 +17,12 @@
         interval =
           if task.interval == "minutely" then
             "* * * * *"
+          else if task.interval == "5m" then
+            "*/5 * * * *"
+          else if task.interval == "15m" then
+            "*/15 * * * *"
+          else if task.interval == "30m" then
+            "*/30 * * * *"
           else if task.interval == "hourly" then
             "@hourly"
           else if task.interval == "daily" then

@@ -117,18 +117,24 @@ in
         };
 
         interval = lib.mkOption {
-          type = lib.types.singleLineStr;
-          default = "weekly";
+          type = lib.types.enum [
+            "minutely"
+            "5m"
+            "15m"
+            "30m"
+            "hourly"
+            "daily"
+            "weekly"
+            "monthly"
+          ];
           description = ''
-            The interval at which this task should run its specified {option}`command`. Accepts either a
-            standard {manpage}`crontab(5)` expression or one of: `hourly`, `daily`, `weekly`, `monthly`, or `yearly`.
+            The interval at which this task should run.
 
-            If a standard {manpage}`crontab(5)` expression is provided this value will be passed directly
-            to the `scheduler` implementation and execute exactly as specified.
-
-            If one of the special values, `hourly`, `daily`, `monthly`, `weekly`, or `yearly`, is provided then the
-            underlying `scheduler` implementation will use its features to decide when best to run.
+            The underlying {option}`providers.scheduler` implementation uses its scheduling features
+            to choose an appropriate time to run within that interval.
           '';
+
+          default = "weekly";
         };
 
         extraArgs = lib.mkOption {
@@ -157,18 +163,24 @@ in
         };
 
         interval = lib.mkOption {
-          type = lib.types.str;
-          default = "weekly";
+          type = lib.types.enum [
+            "minutely"
+            "5m"
+            "15m"
+            "30m"
+            "hourly"
+            "daily"
+            "weekly"
+            "monthly"
+          ];
           description = ''
-            The interval at which this task should run its specified {option}`command`. Accepts either a
-            standard {manpage}`crontab(5)` expression or one of: `hourly`, `daily`, `weekly`, `monthly`, or `yearly`.
+            The interval at which this task should run.
 
-            If a standard {manpage}`crontab(5)` expression is provided this value will be passed directly
-            to the `scheduler` implementation and execute exactly as specified.
-
-            If one of the special values, `hourly`, `daily`, `monthly`, `weekly`, or `yearly`, is provided then the
-            underlying `scheduler` implementation will use its features to decide when best to run.
+            The underlying {option}`providers.scheduler` implementation uses its scheduling features
+            to choose an appropriate time to run within that interval.
           '';
+
+          default = "weekly";
         };
 
         extraArgs = lib.mkOption {
@@ -218,8 +230,11 @@ in
     providers.scheduler.tasks =
       lib.optionalAttrs cfg.clean.enable {
         NH_CLEAN = {
-          command = "${nh'} clean all " + lib.escapeShellArgs cfg.clean.extraArgs;
           inherit (cfg.clean) interval;
+          persistent = true;
+          randomDelay = true;
+
+          command = "${nh'} clean all " + lib.escapeShellArgs cfg.clean.extraArgs;
         };
       }
       // lib.optionalAttrs cfg.update.enable {
