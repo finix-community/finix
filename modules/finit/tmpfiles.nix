@@ -35,10 +35,13 @@ in
       interval = lib.mkOption {
         type = lib.types.enum [
           "minutely"
+          "5m"
+          "15m"
+          "30m"
           "hourly"
           "daily"
-          "monthly"
           "weekly"
+          "monthly"
         ];
         description = ''
           The interval at which this task should run.

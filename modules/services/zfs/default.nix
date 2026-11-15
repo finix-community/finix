@@ -6,14 +6,6 @@
 }:
 let
   cfg = config.services.zfs;
-
-  snapshots = [
-    "frequent"
-    "hourly"
-    "daily"
-    "weekly"
-    "monthly"
-  ];
 in
 {
   options.services.zfs.autoSnapshot = {
@@ -101,10 +93,13 @@ in
     interval = lib.mkOption {
       type = lib.types.enum [
         "minutely"
+        "5m"
+        "15m"
+        "30m"
         "hourly"
         "daily"
-        "monthly"
         "weekly"
+        "monthly"
       ];
       description = ''
         The interval at which this task should run.
@@ -128,17 +123,42 @@ in
 
   config = lib.mkMerge [
     (lib.mkIf cfg.autoSnapshot.enable {
-      providers.scheduler.tasks = builtins.listToAttrs (
-        map (name: {
-          name = "zfs-snapshot-${name}";
-          value = {
-            command = "${pkgs.zfstools}/bin/zfs-auto-snapshot ${cfg.autoSnapshot.flags} ${name} ${
-              toString cfg.autoSnapshot.${name}
-            }";
-            interval = if name == "frequent" then "0,15,30,45 * * * *" else name;
-          };
-        }) snapshots
-      );
+      providers.scheduler.tasks = {
+        zfs-snapshot-frequent = {
+          interval = "15m";
+          persistent = true;
+
+          command = "${pkgs.zfstools}/bin/zfs-auto-snapshot ${cfg.autoSnapshot.flags} frequent ${toString cfg.autoSnapshot.frequent}";
+        };
+
+        zfs-snapshot-hourly = {
+          interval = "hourly";
+          persistent = true;
+
+          command = "${pkgs.zfstools}/bin/zfs-auto-snapshot ${cfg.autoSnapshot.flags} hourly ${toString cfg.autoSnapshot.hourly}";
+        };
+
+        zfs-snapshot-daily = {
+          interval = "daily";
+          persistent = true;
+
+          command = "${pkgs.zfstools}/bin/zfs-auto-snapshot ${cfg.autoSnapshot.flags} daily ${toString cfg.autoSnapshot.daily}";
+        };
+
+        zfs-snapshot-weekly = {
+          interval = "weekly";
+          persistent = true;
+
+          command = "${pkgs.zfstools}/bin/zfs-auto-snapshot ${cfg.autoSnapshot.flags} weekly ${toString cfg.autoSnapshot.weekly}";
+        };
+
+        zfs-snapshot-monthly = {
+          interval = "monthly";
+          persistent = true;
+
+          command = "${pkgs.zfstools}/bin/zfs-auto-snapshot ${cfg.autoSnapshot.flags} monthly ${toString cfg.autoSnapshot.monthly}";
+        };
+      };
     })
 
     (lib.mkIf cfg.autoScrub.enable {

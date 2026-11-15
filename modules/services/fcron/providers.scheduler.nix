@@ -16,11 +16,13 @@
     services.fcron.systab = lib.mapAttrsToList (
       _: t:
       let
-        periodic = !t.persistent && t.interval != "minutely";
+        subHourly =
+          t.interval == "minutely" || t.interval == "5m" || t.interval == "15m" || t.interval == "30m";
+        periodic = !t.persistent && !subHourly;
         jitter =
           if periodic then
             0
-          else if t.interval == "minutely" then
+          else if subHourly then
             15
           else
             255;
@@ -34,6 +36,12 @@
         interval =
           if t.interval == "minutely" then
             "&${options} * * * * *"
+          else if t.interval == "5m" then
+            "&${options} 0-59/5 * * * *"
+          else if t.interval == "15m" then
+            "&${options} 0-59/15 * * * *"
+          else if t.interval == "30m" then
+            "&${options} 0-59/30 * * * *"
           else if t.interval == "hourly" then
             if periodic then "%hourly,${options} *" else "&${options} 0 * * * *"
           else if t.interval == "daily" then
