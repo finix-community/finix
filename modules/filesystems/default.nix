@@ -1,5 +1,6 @@
 {
   config,
+  options,
   lib,
   pkgs,
   utils,
@@ -209,8 +210,9 @@ in
       ${lib.concatMapStrings makeSwapEntry plainSwapDevices}
     '';
 
-    boot.supportedFilesystems = lib.mapAttrs' (
-      _: v: lib.nameValuePair v.fsType { enable = true; }
-    ) config.fileSystems;
+    # only enable filesystem types that have a module declaring them
+    boot.supportedFilesystems = lib.mapAttrs' (_: v: lib.nameValuePair v.fsType { enable = true; }) (
+      lib.filterAttrs (_: fs: options.boot.supportedFilesystems ? ${fs.fsType}) config.fileSystems
+    );
   };
 }
