@@ -175,6 +175,23 @@ in
           filesystem module for. Supported types: ${lib.concatStringsSep ", " (lib.attrNames options.boot.supportedFilesystems)}
         '';
       }) config.fileSystems
+      ++
+        lib.mapAttrsToList
+          (_: fs: {
+            assertion = fs.device != null;
+            message = ''
+              fileSystems."${fs.mountPoint}" has no `device` set.
+            '';
+          })
+          (
+            lib.filterAttrs (
+              _: fs:
+              !lib.elem fs.fsType [
+                "luks"
+                "lvm"
+              ]
+            ) config.fileSystems
+          )
       ++ lib.map (sw: {
         assertion = sw.label == null && (builtins.match "/dev/disk/by-(uuid|label)/.*" sw.device == null);
         message = ''
