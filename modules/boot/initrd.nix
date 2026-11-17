@@ -123,6 +123,14 @@ in
   };
 
   config = {
+    assertions = lib.mapAttrsToList (_: fs: {
+      assertion = fs.fsType != "auto";
+      message = ''
+        fileSystems."${fs.mountPoint}" is needed for boot so `fsType` must be set explicitly.
+        The initrd cannot choose filesystem drivers and tools for `fsType = "auto"`.
+      '';
+    }) (lib.filterAttrs (_: fs: fs.neededForBoot) config.fileSystems);
+
     warnings = lib.optionals (cfg.fileSystemImportCommands != "") [
       "boot.initrd.fileSystemImportCommands has been deprecated; please use boot.initrd.finit.tasks instead"
     ];
