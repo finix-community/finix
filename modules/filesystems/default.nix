@@ -1,5 +1,6 @@
 {
   config,
+  options,
   lib,
   pkgs,
   utils,
@@ -166,15 +167,40 @@ in
     # system.fsPackages = [ pkgs.dosfstools ];
     # environment.systemPackages = with pkgs; [ fuse3 fuse ] ++ config.system.fsPackages;
 
-    assertions = lib.map (sw: {
-      assertion = sw.label == null && (builtins.match "/dev/disk/by-(uuid|label)/.*" sw.device == null);
-      message = ''
-        Random-encrypted swap device ${sw.device} must not use swapDevices.*.label,
-        and should not be referenced by UUID or label, since those are erased and regenerated on every
-        boot once the partition is encrypted. Use a stable path such as
-        /dev/disk/by-partuuid/... instead.
-      '';
-    }) encryptedSwapDevices;
+    assertions =
+      lib.mapAttrsToList (_: fs: {
+        assertion = fs.fsType == "auto" || options.boot.supportedFilesystems ? ${fs.fsType};
+        message = ''
+          fileSystems."${fs.mountPoint}" uses fsType "${fs.fsType}", which finix has no
+          filesystem module for. Supported types: ${lib.concatStringsSep ", " (lib.attrNames options.boot.supportedFilesystems)}
+        '';
+      }) config.fileSystems
+      ++
+        lib.mapAttrsToList
+          (_: fs: {
+            assertion = fs.device != null;
+            message = ''
+              fileSystems."${fs.mountPoint}" has no `device` set.
+            '';
+          })
+          (
+            lib.filterAttrs (
+              _: fs:
+              !lib.elem fs.fsType [
+                "luks"
+                "lvm"
+              ]
+            ) config.fileSystems
+          )
+      ++ lib.map (sw: {
+        assertion = sw.label == null && (builtins.match "/dev/disk/by-(uuid|label)/.*" sw.device == null);
+        message = ''
+          Random-encrypted swap device ${sw.device} must not use swapDevices.*.label,
+          and should not be referenced by UUID or label, since those are erased and regenerated on every
+          boot once the partition is encrypted. Use a stable path such as
+          /dev/disk/by-partuuid/... instead.
+        '';
+      }) encryptedSwapDevices;
 
     environment.systemPackages =
       lib.unique (
@@ -209,8 +235,9 @@ in
       ${lib.concatMapStrings makeSwapEntry plainSwapDevices}
     '';
 
-    boot.supportedFilesystems = lib.mapAttrs' (
-      _: v: lib.nameValuePair v.fsType { enable = true; }
-    ) config.fileSystems;
+    # only enable filesystem types that have a module declaring them
+    boot.supportedFilesystems = lib.mapAttrs' (_: v: lib.nameValuePair v.fsType { enable = true; }) (
+      lib.filterAttrs (_: fs: options.boot.supportedFilesystems ? ${fs.fsType}) config.fileSystems
+    );
   };
 }

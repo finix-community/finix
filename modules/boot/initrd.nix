@@ -1,5 +1,6 @@
 {
   config,
+  options,
   pkgs,
   lib,
   ...
@@ -122,13 +123,35 @@ in
   };
 
   config = {
+    assertions =
+      let
+        bootFileSystems = lib.filterAttrs (_: fs: fs.neededForBoot) config.fileSystems;
+      in
+      lib.mapAttrsToList (_: fs: {
+        assertion = fs.fsType != "auto";
+        message = ''
+          fileSystems."${fs.mountPoint}" is needed for boot so `fsType` must be set explicitly.
+          The initrd cannot choose filesystem drivers and tools for `fsType = "auto"`.
+        '';
+      }) bootFileSystems
+      ++ lib.mapAttrsToList (_: fs: {
+        assertion = fs.fsType == "auto" || options.boot.initrd.supportedFilesystems ? ${fs.fsType};
+        message = ''
+          fileSystems."${fs.mountPoint}" is needed for boot, but fsType "${fs.fsType}" has no initrd support. Supported types: ${lib.concatStringsSep ", " (lib.attrNames options.boot.initrd.supportedFilesystems)}
+        '';
+      }) bootFileSystems;
+
     warnings = lib.optionals (cfg.fileSystemImportCommands != "") [
       "boot.initrd.fileSystemImportCommands has been deprecated; please use boot.initrd.finit.tasks instead"
     ];
 
-    boot.initrd.supportedFilesystems = lib.mapAttrs' (
-      _: v: lib.nameValuePair v.fsType { enable = true; }
-    ) (lib.filterAttrs (_: fs: fs.neededForBoot) config.fileSystems);
+    boot.initrd.supportedFilesystems =
+      lib.mapAttrs' (_: v: lib.nameValuePair v.fsType { enable = true; })
+        (
+          lib.filterAttrs (
+            _: fs: fs.neededForBoot && options.boot.initrd.supportedFilesystems ? ${fs.fsType}
+          ) config.fileSystems
+        );
 
     boot.initrd.package = pkgs.makeInitrdNG {
       name = "initrd-" + config.boot.kernelPackages.kernel.name or "kernel";
