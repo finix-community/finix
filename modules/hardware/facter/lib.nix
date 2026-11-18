@@ -28,28 +28,11 @@ let
 
   # Extract all driver_modules from a list of hardware entries
   collectDrivers = list: lib.concatMap (entry: entry.driver_modules or [ ]) list;
-
-  # Convert number to zero-padded 4-digit hex string (for USB device IDs)
-  toZeroPaddedHex =
-    n:
-    let
-      hex = lib.toHexString n;
-      len = builtins.stringLength hex;
-    in
-    if len == 1 then
-      "000${hex}"
-    else if len == 2 then
-      "00${hex}"
-    else if len == 3 then
-      "0${hex}"
-    else
-      hex;
 in
 {
   inherit
     hasCpu
     collectDrivers
-    toZeroPaddedHex
     ;
 
   hasAmdCpu = hasCpu "AuthenticAMD";
