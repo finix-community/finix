@@ -8,7 +8,8 @@
 {
   imports = [
     ./graphics
-    ./networking
+    # TODO: we should add this back when we have initrd networking
+    # ./networking
     ./amd-cpu.nix
     ./disk.nix
     ./firmware.nix
