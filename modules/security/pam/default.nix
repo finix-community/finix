@@ -417,6 +417,56 @@ in
       ];
     };
 
+    security.pam.defaultRules = {
+      account.unix = {
+        order = 10900;
+        control = "required";
+        modulePath = "pam_unix.so";
+      };
+
+      auth.unix = {
+        order = 11500;
+        control = "sufficient";
+        modulePath = "pam_unix.so";
+        settings = {
+          likeauth = true;
+          try_first_pass = true;
+        };
+      };
+
+      auth.deny = {
+        order = 12300;
+        control = "required";
+        modulePath = "pam_deny.so";
+      };
+
+      password.unix = {
+        order = 10200;
+        control = "sufficient";
+        modulePath = "pam_unix.so";
+        settings = {
+          nullok = true;
+          yescrypt = lib.mkDefault true;
+        };
+      };
+
+      session.env = {
+        order = 10100;
+        control = "required";
+        modulePath = "pam_env.so";
+        settings = {
+          conffile = "/etc/security/pam_env.conf";
+          readenv = 0;
+        };
+      };
+
+      session.unix = {
+        order = 10200;
+        control = "required";
+        modulePath = "pam_unix.so";
+      };
+    };
+
     security.pam.services.other = {
       text = ''
         auth     required pam_warn.so
