@@ -37,9 +37,9 @@ finit.runlevel = 3;
 
 #### Cgroups and default CPU weight
 
-Finit supports configuring cgroups both globally and on a per-service basis. Explaining the full breadth of all cgroup options is far beyond the scope of this section - consult [upstreap documentation](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html) for a full explanation - but it will go over one notable default set by Finit that may affect system performance for desktop users.
+Finit supports configuring cgroups both globally and on a per-service basis. Explaining the full breadth of all cgroup options is far beyond the scope of this section - consult [upstream documentation](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html) for a full explanation - but it will go over one notable default set by Finit that may affect system performance for desktop users.
 
-Finit sets the default CPU weight to 9700, which will case any compilation actions triggered by system rebuilds to deprive any X11 desktop or Wayland compositor and audio stack of most resources, causing severe performance degradation. To set a different weight, you can add the following line to your configuration:
+Finit sets the default CPU weight to 9700, which will cause any compilation actions triggered by system rebuilds to deprive any X11 desktop or Wayland compositor and audio stack of most resources, causing severe performance degradation. To set a different weight, you can add the following line to your configuration:
 
 ```nix
 finit.cgroups.cpu.system = {
@@ -49,7 +49,20 @@ finit.cgroups.cpu.system = {
 
 ### Hardware options
 
-TODO
+Finix exposes the `hardware.*` option set for customizing low level aspects of a finix system, such as: 
+
+- [`hardware.firmware`](https://finix-community.github.io/finix/options.html#option-hardware.firmware): configure firmware packages
+- [`hardware.console`](https://finix-community.github.io/finix/options.html#option-hardware.console.binaryKeyMap): configuring TTY consoles
+- [`hardware.cpu`](https://finix-community.github.io/finix/options.html#option-hardware.cpu.amd.microcodePackage): configure CPU microcode packages and enable automatic microcode updates
+- [`hardware.graphics`](https://finix-community.github.io/finix/options.html#option-hardware.graphics.enable): configure support for graphics drivers; required for some GUI programs to function, e.g. Steam
+- [`hardware.i2c`](https://finix-community.github.io/finix/options.html#option-hardware.i2c.enable): configure support for `ic2` disks
+- [`hardware.nvidia`](https://finix-community.github.io/finix/options.html#option-hardware.nvidia.enable): configure support for Nvidia graphics drivers
+- [`hardware.uinput`](https://finix-community.github.io/finix/options.html#option-hardware.uinput.enable): configure support for the kernel's `uinput` feature
+
+This option set is imported by default.
+
+> [!NOTE]
+> Most programs that require `hardware.graphics.enable` to be `true` do so automatically when enabling the module.
 
 ### Bootloaders
 
@@ -305,7 +318,40 @@ services.getty.package = pkgs.util-linux // { mainProgram = "agetty"; };
 
 ### Localisation
 
-TODO
+Finix exposes the `i18n.*` option set for configuring libc localisation settings. These settings accept locale codes defined by the `i18n` industry standard for internationalisation. A full list of supported locale codes can be found [here](https://sourceware.org/git/?p=glibc.git;a=blob;f=localedata/SUPPORTED). Generally, they are written in the following format:
+
+```la_CN.CHARSET```
+
+where `la` is a two letter shorthand language code, `CN` is a two letter shorthand country code, and `CHARSET` is a character set.
+
+The default value for `i18n.defaultLocale`, which determines the default language for system messages, date/time formatting, sort order, etc., is `en_US.UTF-8`. To change this value, set the following in your configuration:
+
+```
+i18n.defaultLocale = "nl_NL.UTF-8";
+```
+
+Users may further configure system-wide locale settings other than `LANG` by declaring extra attributes in the `i18n.extraLocaleSettings` attribute set, as seen in the below example:
+
+```
+i18n.extraLocaleSettings = {
+  LC_MESSAGES = "en_US.UTF-8";
+  LC_TIME = "de_DE.UTF-8";
+};
+```
+
+A full list of compatible options can be found in section 5 of the [locale man page](https://www.man7.org/linux/man-pages/man5/locale.5.html).
+
+Additional locales can be installed by adding the corresponding locale code to the `i18n.supportedLocales` list, with new lines separating each entry. For example: 
+
+```
+i18n.supportedLocales = [
+  "en_US.UTF-8/UTF-8"
+  "nl_NL.UTF-8/UTF-8"
+  "nl_NL/ISO-8859-1"
+];
+```
+
+Users may also choose to provide a custom locale codes package with the `i18n.glibcLocales` option.
 
 ### Shells
 
@@ -337,7 +383,7 @@ Any one of these shells listed above may be imported and enabled with the follow
 
 If a user does not have any shell package specified under `user.defaultUserShell`, `pkgs.bashInteractive` will be used as the default login shell for any users created with `isNormalUser = true`.
 
-### Network management
+### Basic network configuration
 
 #### Configuring hostname, hostId, and `/etc/hosts`
 
@@ -399,7 +445,7 @@ Finix also exposes `settings.*` to allow for custom configuration outside of the
 
 #### Network daemons
 
-Finix offers three network management daemons:
+Finix offers three automatic network device managers:
 
 - [NetworkManager](https://networkmanager.dev/)
 - [iwd](https://git.kernel.org/pub/scm/network/wireless/iwd.git)
@@ -432,6 +478,9 @@ NetworkManager configuration settings may be added with the `settings` attribute
 
 Iwd configuration settings may be added by with the `settings` attribute. See [upstream documentation](https://man.archlinux.org/man/iwd.config.5) for details.
 
+> [!CAUTION]
+> Iwd has not been updated in some time, and it has unpatched CVEs in its most recent release at the time of writing. It is recommended to choose an alternative wireless manager if you are configuring finix on security critical machines.
+
 **Configuring dhcpcd**
 
 Dhcpcd can be configured with the following options: 
@@ -440,12 +489,51 @@ Dhcpcd can be configured with the following options:
 - `extraArgs` - Additional arguments to pass to dhcpcd.
 - `settings.*` - Dhcpcd configuration settings. Consult the section on dhcpcd in the [options search](https://finix-community.github.io/finix/options.html#option-services.dhcpcd.enable) in the options search for more details.
 
-#### Firewalls
+### System time
+
+#### Configure timezone
+
+To configure the system time zone, set the `time.timeZone` option to any valid time zone code specified in the standard tz database, like so: 
+
+```
+time.timeZone = "America/Chicago";
+```
+
+See the following resource for a list of valid time zone codes: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+
+#### NTP
+
+Finix ships a configuration module for [chrony](https://chrony-project.org/), a network time protocol daemon. This service is not enabled by default. To enable it, add the following to your configuration: 
+
+```
+{ config, pkgs, modules, ... }:
+{
+  imports = [
+    modules.chrony
+  ];
+
+  services.chrony.enable = true;
+}
+```
+
+Additional configuration can be delcared for chrony under the `services.chrony.*` attribute set. The following options are exposed: 
+
+- `package`: the package to use for chrony
+- `configFile`: a custom configuration file sourced via absolute path; see [upstream documentation](https://chrony-project.org/doc/latest/chrony.conf.html) for details
+- `debug`: whether to enable debug logging
+
+### Nix daemon
+
+TODO
+
+## Network security
+
+### Firewalls
 
 > [!CAUTION]
 > Finix does not enable any firewall service by default -- it is highly recommended to enable one.
 
-**nftables**
+#### nftables
 
 Currently, finix only ships the [nftables](https://netfilter.org/projects/nftables/) firewall implementation. 
 
@@ -469,7 +557,7 @@ Nftables can be configured with the following options:
 
 Users may also configure custom rule tables with nftables syntax by adding to the `tables` attribute. See the section on nftables in the [options search](https://finix-community.github.io/finix/options.html#option-services.nftables.tables) of the options search for more details.
 
-**`providers.firewall`**
+#### `providers.firewall`
 
 `providers.firewall` is a generic abstraction for firewall implementations shipped by finix that allows module authors (or end users) to open ports on any firewall service without having to directly interface with any of them. If a firewall backend is enabled, rules specified under `providers.firewall` are enabled. Otherwise, they are ignored.
 
@@ -493,19 +581,27 @@ providers.firewall.allowedUDPPortRanges = [
 
 The firewall provider does not allow specifying a list of trusted network interfaces - these need to be configured under each firewall service.
 
-### System time
+### VPNs
 
 TODO
 
-timezone setup, ntp daemon setup
+### IP blocklists
 
-### Nix daemon
+sshguard
+
+TODO
+
+### DNS
 
 TODO
 
-### Specialisations
+### ssh
+
+- dropbear
+- openssh
 
 TODO
+
 
 ## User management
 
@@ -779,26 +875,9 @@ To create a basic ALSA configuration, add the following to your configuration:
 }
 ```
 
-Refer to ALSA's [official documentation](https://www.alsa-project.org/wiki/ALSA_User_Info) for further information on configuring it.
+See [upstream documentation](https://www.alsa-project.org/wiki/ALSA_User_Info) for more details.
 
 ## Server software
-
-### IP banning
-
-sshguard
-
-TODO
-
-### DNS
-
-TODO
-
-### ssh
-
-- dropbear
-- openssh
-
-TODO
 
 ### Databases
 
@@ -827,5 +906,13 @@ TODO
 ## Miscellaneous
 
 ### Bluetooth
+
+TODO
+
+### Specialisations
+
+TODO
+
+### Alternative libc
 
 TODO
