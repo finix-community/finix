@@ -112,10 +112,15 @@
 <li><a href="#getty">getty</a>
 <li><a href="#localisation">Localisation</a>
 <li><a href="#shells">Shells</a>
-<li><a href="#network-management">Network management</a>
+<li><a href="#basic-network-configuration">Basic network configuration</a>
 <li><a href="#system-time">System time</a>
 <li><a href="#nix-daemon">Nix daemon</a>
-<li><a href="#specialisations">Specialisations</a>
+</ul><li><a href="#network-security">Network security</a>
+<ul><li><a href="#firewalls">Firewalls</a>
+<li><a href="#vpns">VPNs</a>
+<li><a href="#ip-blocklists">IP blocklists</a>
+<li><a href="#dns">DNS</a>
+<li><a href="#ssh">ssh</a>
 </ul><li><a href="#user-management">User management</a>
 <ul><li><a href="#session-managers">Session managers</a>
 <li><a href="#setting-environment-variables">Setting environment variables</a>
@@ -127,15 +132,14 @@
 <li><a href="#desktop-environments">Desktop environments</a>
 <li><a href="#audio">Audio</a>
 </ul><li><a href="#server-software">Server software</a>
-<ul><li><a href="#ip-banning">IP banning</a>
-<li><a href="#dns">DNS</a>
-<li><a href="#ssh">ssh</a>
-<li><a href="#databases">Databases</a>
+<ul><li><a href="#databases">Databases</a>
 <li><a href="#containerization">Containerization</a>
 <li><a href="#virtualization">Virtualization</a>
 <li><a href="#schedulers">Schedulers</a>
 </ul><li><a href="#miscellaneous">Miscellaneous</a>
 <ul><li><a href="#bluetooth">Bluetooth</a>
+<li><a href="#specialisations">Specialisations</a>
+<li><a href="#alternative-libc">Alternative libc</a>
 </li></ul></li></ul></li>
               </ul>
             </div>
@@ -170,11 +174,25 @@
 <p>The default runlevel started after bootstrap that Finix configures is <code>2</code>. While this default allows most services to run without modification, greeter services will be prevented from executing even if they are enabled. You can change the default runlevel by adding the following line:</p>
 <pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">finit</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">runlevel</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">3</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
 <h4 id="cgroups-and-default-cpu-weight">Cgroups and default CPU weight</h4>
-<p>Finit supports configuring cgroups both globally and on a per-service basis. Explaining the full breadth of all cgroup options is far beyond the scope of this section - consult <a href="https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html">upstreap documentation</a> for a full explanation - but it will go over one notable default set by Finit that may affect system performance for desktop users.</p>
-<p>Finit sets the default CPU weight to 9700, which will case any compilation actions triggered by system rebuilds to deprive any X11 desktop or Wayland compositor and audio stack of most resources, causing severe performance degradation. To set a different weight, you can add the following line to your configuration:</p>
+<p>Finit supports configuring cgroups both globally and on a per-service basis. Explaining the full breadth of all cgroup options is far beyond the scope of this section - consult <a href="https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html">upstream documentation</a> for a full explanation - but it will go over one notable default set by Finit that may affect system performance for desktop users.</p>
+<p>Finit sets the default CPU weight to 9700, which will cause any compilation actions triggered by system rebuilds to deprive any X11 desktop or Wayland compositor and audio stack of most resources, causing severe performance degradation. To set a different weight, you can add the following line to your configuration:</p>
 <pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">finit</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">cgroups</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">cpu</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">system</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">cpu.weight</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">100</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
 <h3 id="hardware-options">Hardware options</h3>
-<p>TODO</p>
+<p>Finix exposes the <code>hardware.*</code> option set for customizing low level aspects of a finix system, such as:</p>
+<ul>
+<li><a href="https://finix-community.github.io/finix/options.html#option-hardware.firmware"><code>hardware.firmware</code></a>: configure firmware packages</li>
+<li><a href="https://finix-community.github.io/finix/options.html#option-hardware.console.binaryKeyMap"><code>hardware.console</code></a>: configuring TTY consoles</li>
+<li><a href="https://finix-community.github.io/finix/options.html#option-hardware.cpu.amd.microcodePackage"><code>hardware.cpu</code></a>: configure CPU microcode packages and enable automatic microcode updates</li>
+<li><a href="https://finix-community.github.io/finix/options.html#option-hardware.graphics.enable"><code>hardware.graphics</code></a>: configure support for graphics drivers; required for some GUI programs to function, e.g. Steam</li>
+<li><a href="https://finix-community.github.io/finix/options.html#option-hardware.i2c.enable"><code>hardware.i2c</code></a>: configure support for <code>ic2</code> disks</li>
+<li><a href="https://finix-community.github.io/finix/options.html#option-hardware.nvidia.enable"><code>hardware.nvidia</code></a>: configure support for Nvidia graphics drivers</li>
+<li><a href="https://finix-community.github.io/finix/options.html#option-hardware.uinput.enable"><code>hardware.uinput</code></a>: configure support for the kernel's <code>uinput</code> feature</li>
+</ul>
+<p>This option set is imported by default.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Most programs that require <code>hardware.graphics.enable</code> to be <code>true</code> do so automatically when enabling the module.</p>
+</div>
 <h3 id="bootloaders">Bootloaders</h3>
 <h4 id="limine">limine</h4>
 <p>Finix currently ships <a href="https://github.com/Limine-Bootloader/Limine">limine</a> as the only available bootloader program. It can be installed on BIOS and UEFI systems, with support for x86-64, aarch64, and riscv64 architectures. It supports both MBR and GPT partitioning schemes, as well as the FAT12/16/32 and ISO9660 filesystems. It may also be configured to support secure boot with <a href="https://github.com/Foxboron/sbctl"><code>sbctl</code></a>.</p>
@@ -283,7 +301,27 @@
 <p>You may also switch your preferred getty implementation using <code>services.getty.package</code>, like so:</p>
 <pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">getty</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">package</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">util-linux</span>&nbsp;<span style="color:rgb(171,178,191);">//</span>&nbsp;<span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(86,182,194);">mainProgram</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">agetty</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span>&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
 <h3 id="localisation">Localisation</h3>
-<p>TODO</p>
+<p>Finix exposes the <code>i18n.*</code> option set for configuring libc localisation settings. These settings accept locale codes defined by the <code>i18n</code> industry standard for internationalisation. A full list of supported locale codes can be found <a href="https://sourceware.org/git/?p=glibc.git;a=blob;f=localedata/SUPPORTED">here</a>. Generally, they are written in the following format:</p>
+<p><code>la_CN.CHARSET</code></p>
+<p>where <code>la</code> is a two letter shorthand language code, <code>CN</code> is a two letter shorthand country code, and <code>CHARSET</code> is a character set.</p>
+<p>The default value for <code>i18n.defaultLocale</code>, which determines the default language for system messages, date/time formatting, sort order, etc., is <code>en_US.UTF-8</code>. To change this value, set the following in your configuration:</p>
+<pre><code>i18n.defaultLocale = "nl_NL.UTF-8";
+</code></pre>
+<p>Users may further configure system-wide locale settings other than <code>LANG</code> by declaring extra attributes in the <code>i18n.extraLocaleSettings</code> attribute set, as seen in the below example:</p>
+<pre><code>i18n.extraLocaleSettings = {
+  LC_MESSAGES = "en_US.UTF-8";
+  LC_TIME = "de_DE.UTF-8";
+};
+</code></pre>
+<p>A full list of compatible options can be found in section 5 of the <a href="https://www.man7.org/linux/man-pages/man5/locale.5.html">locale man page</a>.</p>
+<p>Additional locales can be installed by adding the corresponding locale code to the <code>i18n.supportedLocales</code> list, with new lines separating each entry. For example:</p>
+<pre><code>i18n.supportedLocales = [
+  "en_US.UTF-8/UTF-8"
+  "nl_NL.UTF-8/UTF-8"
+  "nl_NL/ISO-8859-1"
+];
+</code></pre>
+<p>Users may also choose to provide a custom locale codes package with the <code>i18n.glibcLocales</code> option.</p>
 <h3 id="shells">Shells</h3>
 <p>Finix ships configuration modules for three login shells:</p>
 <ul>
@@ -294,12 +332,12 @@
 <p>These all live under the <code>programs.*</code> module set. Additionally, you may specify a POSIX-compliant shell package to use for <code>/bin/sh</code> with <code>programs.sh.package</code>.</p>
 <p>Any one of these shells listed above may be imported and enabled with the following option:</p>
 <pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(232,102,113);">modules</span><span style="color:rgb(132,139,152);">,</span>&nbsp;<span style="color:rgb(232,102,113);">...</span>&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">:</span><br><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">imports</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(171,178,191);">modules</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">ash</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(171,178,191);">modules</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">bash</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(171,178,191);">modules</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">fish</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">programs</span><span style="color:rgb(132,139,152);">.</span>&lt;<span style="color:rgb(86,182,194);">your</span>&nbsp;shell&gt;<span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">enable</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">true</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><br></code></pre>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Non POSIX-compliant shells (notably <code>fish</code>), or shells with no backwards compatibility with POSIX syntax, will not be able to source environment variables declared in <code>environment.variables</code>. See <a href="#setting-environment-variables">Setting environment variables</a> for more details.</p>
-</div>
+<blockquote>
+<p>[!NOTE]
+Non POSIX-compliant shells (notably <code>fish</code>), or shells with no backwards compatibility with POSIX syntax, will not be able to source environment variables declared in <code>environment.variables</code>. See <a href="#setting-environment-variables">Setting environment variables</a> for more details.</p>
+</blockquote>
 <p>If a user does not have any shell package specified under <code>user.defaultUserShell</code>, <code>pkgs.bashInteractive</code> will be used as the default login shell for any users created with <code>isNormalUser = true</code>.</p>
-<h3 id="network-management">Network management</h3>
+<h3 id="basic-network-configuration">Basic network configuration</h3>
 <h4 id="configuring-hostname--hostid--and--etc-hosts">Configuring hostname, hostId, and <code>/etc/hosts</code></h4>
 <p>Configuring network options such as the system hostname, hostId, and <code>/etc/hosts</code> can be done with the following:</p>
 <pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">networking</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">hostname</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">finixbox</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(171,178,191);">networking</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">hostId</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">4e98920d</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(171,178,191);">networking</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">hosts</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">127.0.0.1</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">foo.bar.baz</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">192.168.0.2</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">fileserver.local</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">nameserver.local</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
@@ -319,13 +357,13 @@
 </ul>
 <p>Any network interface configured under <code>iface</code> will be automatically brought up by a Finit one-shot task on a system rebuild. An example interface configuration may consist of the following:</p>
 <pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">programs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">ifupdown-ng</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">iface</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">eth0</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">address</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">203.0.113.2/24</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">2001:db8::2/64</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">gateway</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">203.0.113.1</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">use</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">dhcp</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
-<div class="admonition caution">
-<p class="admonition-title">Caution</p>
-<p>Switching device managers will cause the default names for your network interfaces to change, potentially breaking your configuration.</p>
-</div>
+<blockquote>
+<p>[!CAUTION]
+Switching device managers will cause the default names for your network interfaces to change, potentially breaking your configuration.</p>
+</blockquote>
 <p>Finix also exposes <code>settings.*</code> to allow for custom configuration outside of these predefined options. Any configuration defined in nix will automatically be transpiled to ifupdown-ng's native configuration format. See <a href="https://manpages.debian.org/unstable/ifupdown-ng/ifupdown-ng.conf.5">upstream documentation</a> for more details.</p>
 <h4 id="network-daemons">Network daemons</h4>
-<p>Finix offers three network management daemons:</p>
+<p>Finix offers three automatic network device managers:</p>
 <ul>
 <li><a href="https://networkmanager.dev/">NetworkManager</a></li>
 <li><a href="https://git.kernel.org/pub/scm/network/wireless/iwd.git">iwd</a></li>
@@ -339,6 +377,10 @@
 <p>NetworkManager configuration settings may be added with the <code>settings</code> attribute. See <a href="https://man.archlinux.org/man/NetworkManager.conf.5">upstream documentation</a> for details.</p>
 <p><strong>Configuring iwd</strong></p>
 <p>Iwd configuration settings may be added by with the <code>settings</code> attribute. See <a href="https://man.archlinux.org/man/iwd.config.5">upstream documentation</a> for details.</p>
+<blockquote>
+<p>[!CAUTION]
+Iwd has not been updated in some time, and it has unpatched CVEs in its most recent release at the time of writing. It is recommended to choose an alternative wireless manager if you are configuring finix on security critical machines.</p>
+</blockquote>
 <p><strong>Configuring dhcpcd</strong></p>
 <p>Dhcpcd can be configured with the following options:</p>
 <ul>
@@ -346,12 +388,38 @@
 <li><code>extraArgs</code> - Additional arguments to pass to dhcpcd.</li>
 <li><code>settings.*</code> - Dhcpcd configuration settings. Consult the section on dhcpcd in the <a href="https://finix-community.github.io/finix/options.html#option-services.dhcpcd.enable">options search</a> in the options search for more details.</li>
 </ul>
-<h4 id="firewalls">Firewalls</h4>
-<div class="admonition caution">
-<p class="admonition-title">Caution</p>
-<p>Finix does not enable any firewall service by default -- it is highly recommended to enable one.</p>
-</div>
-<p><strong>nftables</strong></p>
+<h3 id="system-time">System time</h3>
+<h4 id="configure-timezone">Configure timezone</h4>
+<p>To configure the system time zone, set the <code>time.timeZone</code> option to any valid time zone code specified in the standard tz database, like so:</p>
+<pre><code>time.timeZone = "America/Chicago";
+</code></pre>
+<p>See the following resource for a list of valid time zone codes: <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">https://en.wikipedia.org/wiki/List_of_tz_database_time_zones</a></p>
+<h4 id="ntp">NTP</h4>
+<p>Finix ships a configuration module for <a href="https://chrony-project.org/">chrony</a>, a network time protocol daemon. This service is not enabled by default. To enable it, add the following to your configuration:</p>
+<pre><code>{ config, pkgs, modules, ... }:
+{
+  imports = [
+    modules.chrony
+  ];
+
+  services.chrony.enable = true;
+}
+</code></pre>
+<p>Additional configuration can be delcared for chrony under the <code>services.chrony.*</code> attribute set. The following options are exposed:</p>
+<ul>
+<li><code>package</code>: the package to use for chrony</li>
+<li><code>configFile</code>: a custom configuration file sourced via absolute path; see <a href="https://chrony-project.org/doc/latest/chrony.conf.html">upstream documentation</a> for details</li>
+<li><code>debug</code>: whether to enable debug logging</li>
+</ul>
+<h3 id="nix-daemon">Nix daemon</h3>
+<p>TODO</p>
+<h2 id="network-security">Network security</h2>
+<h3 id="firewalls">Firewalls</h3>
+<blockquote>
+<p>[!CAUTION]
+Finix does not enable any firewall service by default -- it is highly recommended to enable one.</p>
+</blockquote>
+<h4 id="nftables">nftables</h4>
 <p>Currently, finix only ships the <a href="https://netfilter.org/projects/nftables/">nftables</a> firewall implementation.</p>
 <p>To import and enable nftables, add the following to your configuration:</p>
 <pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(232,102,113);">modules</span><span style="color:rgb(132,139,152);">,</span>&nbsp;<span style="color:rgb(232,102,113);">...</span>&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">:</span><br><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">imports</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(171,178,191);">modules</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">nftables</span>&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">nftables</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">enable</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">true</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><br></code></pre>
@@ -362,7 +430,7 @@
 <li><code>trustedInterfaces</code> - Network interfaces to trust unconditionally. All network traffic is accepted on specified interfaces regardless of any ports opened through <code>providers.firewall</code>.</li>
 </ul>
 <p>Users may also configure custom rule tables with nftables syntax by adding to the <code>tables</code> attribute. See the section on nftables in the <a href="https://finix-community.github.io/finix/options.html#option-services.nftables.tables">options search</a> of the options search for more details.</p>
-<p><strong><code>providers.firewall</code></strong></p>
+<h4 id="providers-firewall"><code>providers.firewall</code></h4>
 <p><code>providers.firewall</code> is a generic abstraction for firewall implementations shipped by finix that allows module authors (or end users) to open ports on any firewall service without having to directly interface with any of them. If a firewall backend is enabled, rules specified under <code>providers.firewall</code> are enabled. Otherwise, they are ignored.</p>
 <p>If a user is unfamiliar with a firewall's specific configuration syntax, the firewall provider serves as a user friendly interface to quickly open TCP and UDP ports. Users can specify a list or range of ports to open with the following options:</p>
 <ul>
@@ -374,12 +442,18 @@
 <p>While <code>allowedTCPPorts</code> and <code>allowedUDPPorts</code> simply take a list of port numbers, ranges take a list of attribute sets containing the <code>from</code> and <code>to</code> options for inclusively specifying a range of port numbers to open, like so:</p>
 <pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">providers</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">firewall</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">allowedUDPPortRanges</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">from</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">60000</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">to</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">61000</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><br><span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
 <p>The firewall provider does not allow specifying a list of trusted network interfaces - these need to be configured under each firewall service.</p>
-<h3 id="system-time">System time</h3>
+<h3 id="vpns">VPNs</h3>
 <p>TODO</p>
-<p>timezone setup, ntp daemon setup</p>
-<h3 id="nix-daemon">Nix daemon</h3>
+<h3 id="ip-blocklists">IP blocklists</h3>
+<p>sshguard</p>
 <p>TODO</p>
-<h3 id="specialisations">Specialisations</h3>
+<h3 id="dns">DNS</h3>
+<p>TODO</p>
+<h3 id="ssh">ssh</h3>
+<ul>
+<li>dropbear</li>
+<li>openssh</li>
+</ul>
 <p>TODO</p>
 <h2 id="user-management">User management</h2>
 <p>This section contains information for general user management.</p>
@@ -453,11 +527,11 @@ Some shells <strong>do not source these scripts</strong>, which means variables 
 <p>etc.</p>
 <h3 id="audio">Audio</h3>
 <h4 id="pipewire">PipeWire</h4>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Enabling the <a href="#PipeWire">PipeWire</a> and <a href="#WirePlumber">WirePlumber</a> modules <strong>does not</strong> configure them to be started as <code>finit</code> services.
+<blockquote>
+<p>[!NOTE]
+Enabling the <a href="#PipeWire">PipeWire</a> and <a href="#WirePlumber">WirePlumber</a> modules <strong>does not</strong> configure them to be started as <code>finit</code> services.
 See <a href="#Running-pipewire-wireplumber-and-pipewire-pulse">Running PipeWire, WirePlumber and <code>pipewire-pulse</code></a>.</p>
-</div>
+</blockquote>
 <p>Finix provides a <a href="https://github.com/finix-community/finix/blob/main/modules/programs/pipewire/default.nix">PipeWire module</a> which is not imported by default. To enable it, add the following to your configuration:</p>
 <pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(232,102,113);">config</span><span style="color:rgb(132,139,152);">,</span>&nbsp;<span style="color:rgb(232,102,113);">modules</span><span style="color:rgb(132,139,152);">,</span>&nbsp;<span style="color:rgb(232,102,113);">...</span>&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">:</span><br><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">imports</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(171,178,191);">modules</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">pipewire</span>&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">programs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">pipewire</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">enable</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">true</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><br></code></pre>
 <p>The module has a <code>settings</code> option to configure PipeWire.
@@ -478,36 +552,25 @@ To enable <strong>ALSA</strong> and <strong>JACK</strong> compatibility, add the
 <p>As an example, here is how to start all three in <a href="https://github.com/niri-wm/niri">Niri</a>:</p>
 <pre><code class="language-kdl">spawn-sh-at-startup "pipewire &amp; sleep 1 &amp;&amp; pipewire-pulse &amp; wireplumber"
 </code></pre>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>A <code>sleep</code> call is added after executing <code>pipewire</code> to avoid a race condition where <code>pipewire</code> isn't initialized in time for <code>wireplumber</code> and <code>pipewire-pulse</code> to hook into it. It is preferable to execute both via PipeWire's configuration to avoid this hack.</p>
-</div>
-<div class="admonition caution">
-<p class="admonition-title">Caution</p>
-<p>Running PipeWire as root is highly discouraged due to significant security risks.</p>
-</div>
+<blockquote>
+<p>[!TIP]
+A <code>sleep</code> call is added after executing <code>pipewire</code> to avoid a race condition where <code>pipewire</code> isn't initialized in time for <code>wireplumber</code> and <code>pipewire-pulse</code> to hook into it. It is preferable to execute both via PipeWire's configuration to avoid this hack.</p>
+</blockquote>
+<blockquote>
+<p>[!CAUTION]
+Running PipeWire as root is highly discouraged due to significant security risks.</p>
+</blockquote>
 <p>Here is how to accomplish the same using PipeWire's configuration:</p>
 <pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(232,102,113);">config</span><span style="color:rgb(132,139,152);">,</span>&nbsp;<span style="color:rgb(232,102,113);">modules</span><span style="color:rgb(132,139,152);">,</span>&nbsp;<span style="color:rgb(232,102,113);">...</span>&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">:</span><br><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">imports</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(171,178,191);">modules</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">pipewire</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(171,178,191);">modules</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">wireplumber</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">programs</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">pipewire</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">enable</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">true</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">settings</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">context.exec</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">path</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(171,178,191);">lib</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">getExe'</span>&nbsp;<span style="color:rgb(171,178,191);">config</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">programs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">wireplumber</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">package</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">wireplumber</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">path</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(171,178,191);">lib</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">getExe'</span>&nbsp;<span style="color:rgb(171,178,191);">config</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">programs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">pipewire</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">package</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">pipewire-pulse</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">wireplumber</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">enable</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">true</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><br></code></pre>
 <h4 id="alsa-only">ALSA-only</h4>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p><a href="#Pipewire">PipeWire</a> is more widely supported and easier to setup. This setup is only advisable if you need a super minimal audio stack, like on older hardware or low power SOCs.</p>
-</div>
+<blockquote>
+<p>[!WARNING]
+<a href="#Pipewire">PipeWire</a> is more widely supported and easier to setup. This setup is only advisable if you need a super minimal audio stack, like on older hardware or low power SOCs.</p>
+</blockquote>
 <p>To create a basic ALSA configuration, add the following to your configuration:</p>
 <pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">environment</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">etc</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">asound.conf</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">text</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">''</span><span style="color:rgb(152,195,121);"></span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;ctl.!default&nbsp;{</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;hw</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;card&nbsp;"Generic_1"&nbsp;#&nbsp;Replace&nbsp;Generic_1&nbsp;with&nbsp;your&nbsp;card&nbsp;name&nbsp;from&nbsp;`aplay&nbsp;-l`</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;}</span><br><span style="color:rgb(152,195,121);"></span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;pcm.dmixer&nbsp;{</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;dmix</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;ipc_key&nbsp;1024</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;ipc_perm&nbsp;0666</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;slave&nbsp;{</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pcm&nbsp;"hw:Generic_1,0"&nbsp;#&nbsp;Replace&nbsp;Generic_1&nbsp;with&nbsp;your&nbsp;card&nbsp;name&nbsp;from&nbsp;`aplay&nbsp;-l`</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;period_size&nbsp;1024&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Prevent&nbsp;audio&nbsp;cracking&nbsp;on&nbsp;certain&nbsp;cards</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;buffer_size&nbsp;4096</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;}</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;}</span><br><span style="color:rgb(152,195,121);"></span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;pcm.!default&nbsp;{</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;plug</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;slave.pcm&nbsp;"dmixer"</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;}</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;</span><span style="color:rgb(152,195,121);">''</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><br></code></pre>
-<p>Refer to ALSA's <a href="https://www.alsa-project.org/wiki/ALSA_User_Info">official documentation</a> for further information on configuring it.</p>
+<p>See <a href="https://www.alsa-project.org/wiki/ALSA_User_Info">upstream documentation</a> for more details.</p>
 <h2 id="server-software">Server software</h2>
-<h3 id="ip-banning">IP banning</h3>
-<p>sshguard</p>
-<p>TODO</p>
-<h3 id="dns">DNS</h3>
-<p>TODO</p>
-<h3 id="ssh">ssh</h3>
-<ul>
-<li>dropbear</li>
-<li>openssh</li>
-</ul>
-<p>TODO</p>
 <h3 id="databases">Databases</h3>
 <p>TODO</p>
 <p>postgresql, mariadb</p>
@@ -528,6 +591,10 @@ To enable <strong>ALSA</strong> and <strong>JACK</strong> compatibility, add the
 <h2 id="miscellaneous">Miscellaneous</h2>
 <h3 id="bluetooth">Bluetooth</h3>
 <p>TODO</p>
+<h3 id="specialisations">Specialisations</h3>
+<p>TODO</p>
+<h3 id="alternative-libc">Alternative libc</h3>
+<p>TODO</p>
 </body></html></main>
       </div>
 
@@ -546,10 +613,15 @@ To enable <strong>ALSA</strong> and <strong>JACK</strong> compatibility, add the
 <li><a href="#getty">getty</a>
 <li><a href="#localisation">Localisation</a>
 <li><a href="#shells">Shells</a>
-<li><a href="#network-management">Network management</a>
+<li><a href="#basic-network-configuration">Basic network configuration</a>
 <li><a href="#system-time">System time</a>
 <li><a href="#nix-daemon">Nix daemon</a>
-<li><a href="#specialisations">Specialisations</a>
+</ul><li><a href="#network-security">Network security</a>
+<ul><li><a href="#firewalls">Firewalls</a>
+<li><a href="#vpns">VPNs</a>
+<li><a href="#ip-blocklists">IP blocklists</a>
+<li><a href="#dns">DNS</a>
+<li><a href="#ssh">ssh</a>
 </ul><li><a href="#user-management">User management</a>
 <ul><li><a href="#session-managers">Session managers</a>
 <li><a href="#setting-environment-variables">Setting environment variables</a>
@@ -561,15 +633,14 @@ To enable <strong>ALSA</strong> and <strong>JACK</strong> compatibility, add the
 <li><a href="#desktop-environments">Desktop environments</a>
 <li><a href="#audio">Audio</a>
 </ul><li><a href="#server-software">Server software</a>
-<ul><li><a href="#ip-banning">IP banning</a>
-<li><a href="#dns">DNS</a>
-<li><a href="#ssh">ssh</a>
-<li><a href="#databases">Databases</a>
+<ul><li><a href="#databases">Databases</a>
 <li><a href="#containerization">Containerization</a>
 <li><a href="#virtualization">Virtualization</a>
 <li><a href="#schedulers">Schedulers</a>
 </ul><li><a href="#miscellaneous">Miscellaneous</a>
 <ul><li><a href="#bluetooth">Bluetooth</a>
+<li><a href="#specialisations">Specialisations</a>
+<li><a href="#alternative-libc">Alternative libc</a>
 </li></ul></li></ul></li>
           </ul>
         </nav>
