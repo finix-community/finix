@@ -193,13 +193,16 @@ in
     package = lib.mkOption {
       type = types.package;
       default = pkgs.wireguard-tools;
-      example = pkgs.amneziawg-tools;
+      defaultText = lib.literalExpression "pkgs.wireguard-tools";
+      example = lib.literalExpression "pkgs.amneziawg-tools";
+      description = "Package providing the `wg`-compatible userspace tool.";
     };
 
     kernelModule = lib.mkOption {
       type = types.str;
       default = "wireguard";
       example = "amneziawg";
+      description = "Name of the kernel module backing the interfaces.";
     };
 
     kernelModulePackage = lib.mkOption {
@@ -209,7 +212,14 @@ in
           config.boot.kernelPackages.wireguard
         else
           null;
-      example = config.boot.kernelPackages.amneziawg;
+      defaultText = lib.literalExpression ''
+        if lib.versionOlder config.boot.kernelPackages.kernel.version "5.6" then
+          config.boot.kernelPackages.wireguard
+        else
+          null
+      '';
+      example = lib.literalExpression "config.boot.kernelPackages.amneziawg";
+      description = "Out-of-tree kernel module package, if the kernel doesn't ship `kernelModule`.";
     };
 
     interfaces = lib.mkOption {
