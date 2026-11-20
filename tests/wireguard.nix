@@ -80,7 +80,7 @@ in
 
     with subtest("peers are configured"):
         server.wait_until_succeeds("wg show wg0 peers | grep '${peer1.publicKey}'", timeout=datetime.timedelta(seconds=30))
-        client.wait_until_succeeds("initctl status wireguard-wg0-peer-server | grep running", timeout=datetime.timedelta(seconds=30))
+        client.wait_for_service("wireguard-wg0-peer-server", timeout=datetime.timedelta(seconds=30))
         client.succeed("ip route show 10.23.42.1 | grep wg0")
 
     with subtest("ping over tunnel"):
