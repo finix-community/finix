@@ -73,8 +73,8 @@ in
     client.wait_for_console_text("entering runlevel 2")
 
     with subtest("interfaces are up"):
-        server.wait_until_succeeds("initctl cond get task/wireguard-wg0/success", timeout=datetime.timedelta(seconds=30))
-        client.wait_until_succeeds("initctl cond get task/wireguard-wg0/success", timeout=datetime.timedelta(seconds=30))
+        server.wait_for_condition("task/wireguard-wg0/success", timeout=datetime.timedelta(seconds=30))
+        client.wait_for_condition("task/wireguard-wg0/success", timeout=datetime.timedelta(seconds=30))
         server.succeed("ip addr show wg0 | grep 'inet 10.23.42.1'")
         client.succeed("ip addr show wg0 | grep 'inet 10.23.42.2'")
 
