@@ -1,3 +1,172 @@
+<div class="option" id="option-services.ytdl-sub.extraArgs">
+  <h3 class="option-name">
+    <a href="#option-services.ytdl-sub.extraArgs" class="option-anchor">services.ytdl-sub.extraArgs</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Additional arguments to pass to <code>ytdl-sub</code>. See <a href="https://ytdl-sub.readthedocs.io/en/latest/usage.html">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/ytdl-sub" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/ytdl-sub&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.ytdl-sub.group">
+  <h3 class="option-name">
+    <a href="#option-services.ytdl-sub.group" class="option-anchor">services.ytdl-sub.group</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Group account under which <code>ytdl-sub</code> runs.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this group will automatically be created
+on system activation, otherwise you are responsible for
+ensuring the group exists before the <code>ytdl-sub</code> service starts.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">ytdl-sub</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/ytdl-sub" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/ytdl-sub&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.ytdl-sub.interval">
+  <h3 class="option-name">
+    <a href="#option-services.ytdl-sub.interval" class="option-anchor">services.ytdl-sub.interval</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The interval at which this task should run.</p>
+<p>The underlying <code class="nixos-option">providers.scheduler</code> implementation uses its scheduling features
+to choose an appropriate time to run within that interval.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>one of "minutely", "5m", "15m", "30m", "hourly", "daily", "weekly", "monthly"</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">daily</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/ytdl-sub" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/ytdl-sub&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.ytdl-sub.settings">
+  <h3 class="option-name">
+    <a href="#option-services.ytdl-sub.settings" class="option-anchor">services.ytdl-sub.settings</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p><code>ytdl-sub</code> configuration. See <a href="https://ytdl-sub.readthedocs.io/en/latest/config_reference/config_yaml.html">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>open submodule of (YAML 1.1 value)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/ytdl-sub" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/ytdl-sub&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.ytdl-sub.settings.configuration.lock_directory">
+  <h3 class="option-name">
+    <a href="#option-services.ytdl-sub.settings.configuration.lock_directory" class="option-anchor">services.ytdl-sub.settings.configuration.lock_directory</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The directory to temporarily store file locks, which prevents multiple instances of <code>ytdl-sub</code> from
+running. Note that file locks do not work on network-mounted directories. Ensure that this directory
+resides on the host machine.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/run/lock/ytdl-sub</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/ytdl-sub" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/ytdl-sub&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.ytdl-sub.settings.configuration.persist_logs.keep_successful_logs">
+  <h3 class="option-name">
+    <a href="#option-services.ytdl-sub.settings.configuration.persist_logs.keep_successful_logs" class="option-anchor">services.ytdl-sub.settings.configuration.persist_logs.keep_successful_logs</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>When <code>true</code> always writes log files for the subscription both for successful downloads and when it encounters
+an error while downloading. When this key is <code>false</code>, only write log files for errors.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/ytdl-sub" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/ytdl-sub&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.ytdl-sub.settings.configuration.persist_logs.logs_directory">
+  <h3 class="option-name">
+    <a href="#option-services.ytdl-sub.settings.configuration.persist_logs.logs_directory" class="option-anchor">services.ytdl-sub.settings.configuration.persist_logs.logs_directory</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Write log files to this directory with names like <code>YYYY-mm-dd-HHMMSS.subscription_name.(success|error).log</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/var/log/ytdl-sub</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/ytdl-sub" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/ytdl-sub&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.ytdl-sub.settings.configuration.working_directory">
+  <h3 class="option-name">
+    <a href="#option-services.ytdl-sub.settings.configuration.working_directory" class="option-anchor">services.ytdl-sub.settings.configuration.working_directory</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The directory to temporarily store downloaded files before moving them into their final directory.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/run/ytdl-sub</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/ytdl-sub" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/ytdl-sub&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.ytdl-sub.subscriptions">
+  <h3 class="option-name">
+    <a href="#option-services.ytdl-sub.subscriptions" class="option-anchor">services.ytdl-sub.subscriptions</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p><code>ytdl-sub</code> subscriptions. See <a href="https://ytdl-sub.readthedocs.io/en/latest/config_reference/subscription_yaml.html">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>YAML 1.1 value</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">YouTube&nbsp;Playlist</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">Some&nbsp;Playlist</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">https://www.youtube.com/playlist?list=...</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/ytdl-sub" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/ytdl-sub&gt;</a></code></dd>
+  </dl>
+</div>
 <div class="option" id="option-services.ytdl-sub.user">
   <h3 class="option-name">
     <a href="#option-services.ytdl-sub.user" class="option-anchor">services.ytdl-sub.user</a>
