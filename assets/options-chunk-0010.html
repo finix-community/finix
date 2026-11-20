@@ -1,3 +1,223 @@
+<div class="option" id="option-services.forgejo-runner.settings.runner.capacity">
+  <h3 class="option-name">
+    <a href="#option-services.forgejo-runner.settings.runner.capacity" class="option-anchor">services.forgejo-runner.settings.runner.capacity</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Execute how many tasks concurrently at the same time.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>positive integer, meaning &gt;0</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">1</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/forgejo-runner" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/forgejo-runner&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.forgejo-runner.settings.runner.labels">
+  <h3 class="option-name">
+    <a href="#option-services.forgejo-runner.settings.runner.labels" class="option-anchor">services.forgejo-runner.settings.runner.labels</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The labels of a runner are used to determine which jobs the runner can run and how to run them.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">native:host</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">bookworm:docker://node:22-bookworm</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/forgejo-runner" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/forgejo-runner&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.forgejo-runner.settings.server.connections">
+  <h3 class="option-name">
+    <a href="#option-services.forgejo-runner.settings.server.connections" class="option-anchor">services.forgejo-runner.settings.server.connections</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A map of connections to one or more Forgejo instances.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of (YAML 1.1 value)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">example</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">fetch_interval</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">30s</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">token</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">6634bb58be0db23cc013a2e72dd1828ae0257cf</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">url</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">https://example.com/</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">uuid</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">c9e50be9-a7c3-4aee-ba35-624c4ff8c519</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/forgejo-runner" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/forgejo-runner&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.forgejo-runner.user">
+  <h3 class="option-name">
+    <a href="#option-services.forgejo-runner.user" class="option-anchor">services.forgejo-runner.user</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>User account under which <code>forgejo-runner</code> runs.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this user will automatically be created
+on system activation, otherwise you are responsible for
+ensuring the user exists before the <code>forgejo-runner</code> service starts.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">forgejo-runner</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/forgejo-runner" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/forgejo-runner&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.fprintd.enable">
+  <h3 class="option-name">
+    <a href="#option-services.fprintd.enable" class="option-anchor">services.fprintd.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://fprint.freedesktop.org/">fprintd</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fprintd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/fprintd&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.fprintd.package">
+  <h3 class="option-name">
+    <a href="#option-services.fprintd.package" class="option-anchor">services.fprintd.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>fprintd</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">fprintd</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fprintd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/fprintd&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.fprintd.debug">
+  <h3 class="option-name">
+    <a href="#option-services.fprintd.debug" class="option-anchor">services.fprintd.debug</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fprintd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/fprintd&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.fprintd.extraGroups">
+  <h3 class="option-name">
+    <a href="#option-services.fprintd.extraGroups" class="option-anchor">services.fprintd.extraGroups</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A list of groups to <em>unconditionally</em> grant access, via <code>polkit</code>, to this services offerings. Useful
+on systems without <code>(e)logind</code>. See <a href="https://wiki.alpinelinux.org/wiki/Polkit#Using_polkit_with_seatd">Using polkit with seatd</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(171,178,191);">config</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">seatd</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">group</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fprintd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/fprintd&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.fstrim.enable">
+  <h3 class="option-name">
+    <a href="#option-services.fstrim.enable" class="option-anchor">services.fstrim.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable periodic SSD TRIM of mounted partitions in background.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fstrim" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/fstrim&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.fstrim.interval">
+  <h3 class="option-name">
+    <a href="#option-services.fstrim.interval" class="option-anchor">services.fstrim.interval</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The interval at which this task should run.</p>
+<p>The underlying <code class="nixos-option">providers.scheduler</code> implementation uses its scheduling features
+to choose an appropriate time to run within that interval.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>one of "minutely", "5m", "15m", "30m", "hourly", "daily", "weekly", "monthly"</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">weekly</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fstrim" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/fstrim&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.fwupd.enable">
+  <h3 class="option-name">
+    <a href="#option-services.fwupd.enable" class="option-anchor">services.fwupd.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://fwupd.org/">fwupd</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fwupd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/fwupd&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.fwupd.package">
+  <h3 class="option-name">
+    <a href="#option-services.fwupd.package" class="option-anchor">services.fwupd.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>fwupd</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">fwupd</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/fwupd" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/fwupd&gt;</a></code></dd>
+  </dl>
+</div>
 <div class="option" id="option-services.fwupd.debug">
   <h3 class="option-name">
     <a href="#option-services.fwupd.debug" class="option-anchor">services.fwupd.debug</a>
@@ -1600,267 +1820,5 @@ always allowed to connect.</p>
   </dl>
   <dl class="option-details option-sources">
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nix-daemon" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nix-daemon&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.nix-daemon.settings.auto-optimise-store">
-  <h3 class="option-name">
-    <a href="#option-services.nix-daemon.settings.auto-optimise-store" class="option-anchor">services.nix-daemon.settings.auto-optimise-store</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>If set to true, Nix automatically detects files in the store that have
-identical contents, and replaces them with hard links to a single copy.
-This saves disk space. If set to false (the default), you can still run
-nix-store --optimise to get rid of duplicate files.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
-</body></html></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nix-daemon" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nix-daemon&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.nix-daemon.settings.cores">
-  <h3 class="option-name">
-    <a href="#option-services.nix-daemon.settings.cores" class="option-anchor">services.nix-daemon.settings.cores</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>This option defines the maximum number of concurrent tasks during
-one build. It affects, e.g., -j option for make.
-The special value 0 means that the builder should use all
-available CPU cores in the system. Some builds may become
-non-deterministic with this option; use with care! Packages will
-only be affected if enableParallelBuilding is set for them.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>signed integer</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">0</span></code></pre></body></html>
-</body></html></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">64</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nix-daemon" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nix-daemon&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.nix-daemon.settings.max-jobs">
-  <h3 class="option-name">
-    <a href="#option-services.nix-daemon.settings.max-jobs" class="option-anchor">services.nix-daemon.settings.max-jobs</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>This option defines the maximum number of jobs that Nix will try to
-build in parallel. The default is auto, which means it will use all
-available logical cores. It is recommend to set it to the total
-number of logical cores in your system (e.g., 16 for two CPUs with 4
-cores each and hyper-threading).</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>signed integer or value "auto" (singular enum)</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">auto</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
-</body></html></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">64</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nix-daemon" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nix-daemon&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.nix-daemon.settings.require-sigs">
-  <h3 class="option-name">
-    <a href="#option-services.nix-daemon.settings.require-sigs" class="option-anchor">services.nix-daemon.settings.require-sigs</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>If enabled (the default), Nix will only download binaries from binary caches if
-they are cryptographically signed with any of the keys listed in
-<code class="nixos-option">nix.settings.trusted-public-keys</code>. If disabled, signatures are neither
-required nor checked, so it's strongly recommended that you use only
-trustworthy caches and https to prevent man-in-the-middle attacks.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nix-daemon" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nix-daemon&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.nix-daemon.settings.sandbox">
-  <h3 class="option-name">
-    <a href="#option-services.nix-daemon.settings.sandbox" class="option-anchor">services.nix-daemon.settings.sandbox</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>If set, Nix will perform builds in a sandboxed environment that it
-will set up automatically for each build. This prevents impurities
-in builds by disallowing access to dependencies outside of the Nix
-store by using network and mount namespaces in a chroot environment.</p>
-<p>This is enabled by default even though it has a possible performance
-impact due to the initial setup time of a sandbox for each build. It
-doesn't affect derivation hashes, so changing this option will not
-trigger a rebuild of packages.</p>
-<p>When set to "relaxed", this option permits derivations that set
-<code>__noChroot = true;</code> to run outside of the sandboxed environment.
-Exercise caution when using this mode of operation! It is intended to
-be a quick hack when building with packages that are not easily setup
-to be built reproducibly.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean or value "relaxed" (singular enum)</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">true</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nix-daemon" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nix-daemon&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.nix-daemon.settings.substituters">
-  <h3 class="option-name">
-    <a href="#option-services.nix-daemon.settings.substituters" class="option-anchor">services.nix-daemon.settings.substituters</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>List of binary cache URLs used to obtain pre-built binaries
-of Nix packages.</p>
-<p>By default <a href="https://cache.nixos.org/">https://cache.nixos.org/</a> is added.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nix-daemon" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nix-daemon&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.nix-daemon.settings.system-features">
-  <h3 class="option-name">
-    <a href="#option-services.nix-daemon.settings.system-features" class="option-anchor">services.nix-daemon.settings.system-features</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The set of features supported by the machine. Derivations
-can express dependencies on system features through the
-<code>requiredSystemFeatures</code> attribute.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nix-daemon" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nix-daemon&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.nix-daemon.settings.trusted-public-keys">
-  <h3 class="option-name">
-    <a href="#option-services.nix-daemon.settings.trusted-public-keys" class="option-anchor">services.nix-daemon.settings.trusted-public-keys</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>List of public keys used to sign binary caches. If
-<code class="nixos-option">nix.settings.trusted-public-keys</code> is enabled,
-then Nix will use a binary from a binary cache if and only
-if it is signed by <em>any</em> of the keys
-listed here. By default, only the key for
-<code>cache.nixos.org</code> is included.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">hydra.nixos.org-1:CNHJZBh9K4tP3EKF6FkkgeVYsS3ohTl+oS0Qa8bezVs=</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nix-daemon" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nix-daemon&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.nix-daemon.settings.trusted-substituters">
-  <h3 class="option-name">
-    <a href="#option-services.nix-daemon.settings.trusted-substituters" class="option-anchor">services.nix-daemon.settings.trusted-substituters</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>List of binary cache URLs that non-root users can use (in
-addition to those specified using
-<code class="nixos-option">nix.settings.substituters</code>) by passing
-<code>--option binary-caches</code> to Nix commands.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">https://hydra.nixos.org/</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nix-daemon" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nix-daemon&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.nix-daemon.settings.trusted-users">
-  <h3 class="option-name">
-    <a href="#option-services.nix-daemon.settings.trusted-users" class="option-anchor">services.nix-daemon.settings.trusted-users</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>A list of names of users that have additional rights when
-connecting to the Nix daemon, such as the ability to specify
-additional binary caches, or to import unsigned NARs. You
-can also specify groups by prefixing them with
-<code>@</code>; for instance,
-<code>@wheel</code> means all users in the wheel
-group.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">root</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">alice</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">@wheel</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nix-daemon" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nix-daemon&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.nvidia-persistenced.enable">
-  <h3 class="option-name">
-    <a href="#option-services.nvidia-persistenced.enable" class="option-anchor">services.nvidia-persistenced.enable</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://docs.nvidia.com/deploy/driver-persistence/persistence-daemon.html">nvidia-persistenced</a> as a system service.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nvidia-persistenced" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nvidia-persistenced&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.nvidia-persistenced.package">
-  <h3 class="option-name">
-    <a href="#option-services.nvidia-persistenced.package" class="option-anchor">services.nvidia-persistenced.package</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The package to use for <code>nvidia-persistenced</code>.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">config</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">hardware</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">nvidia</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">package</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">persistenced</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/nvidia-persistenced" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/nvidia-persistenced&gt;</a></code></dd>
   </dl>
 </div>

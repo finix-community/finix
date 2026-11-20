@@ -1,3 +1,224 @@
+<div class="option" id="option-services.sessiond-power.debug">
+  <h3 class="option-name">
+    <a href="#option-services.sessiond-power.debug" class="option-anchor">services.sessiond-power.debug</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sessiond-power" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sessiond-power&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.sessiond-power.settings">
+  <h3 class="option-name">
+    <a href="#option-services.sessiond-power.settings" class="option-anchor">services.sessiond-power.settings</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p><code>sessiond-power</code> configuration. See <a href="https://r0chd.tngl.io/sessiond/clients/client-power.html">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>TOML value</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sessiond-power" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sessiond-power&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.sessiond-uaccess.enable">
+  <h3 class="option-name">
+    <a href="#option-services.sessiond-uaccess.enable" class="option-anchor">services.sessiond-uaccess.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://tangled.org/r0chd.pl/sessiond">sessiond</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sessiond-uaccess" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sessiond-uaccess&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.sessiond-uaccess.package">
+  <h3 class="option-name">
+    <a href="#option-services.sessiond-uaccess.package" class="option-anchor">services.sessiond-uaccess.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>sessiond-uaccess</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">sessiond-uaccess</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sessiond-uaccess" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sessiond-uaccess&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.sessiond-uaccess.debug">
+  <h3 class="option-name">
+    <a href="#option-services.sessiond-uaccess.debug" class="option-anchor">services.sessiond-uaccess.debug</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sessiond-uaccess" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sessiond-uaccess&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.sessiond-uaccess.extraConfig">
+  <h3 class="option-name">
+    <a href="#option-services.sessiond-uaccess.extraConfig" class="option-anchor">services.sessiond-uaccess.extraConfig</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Additional <code>lua</code> rules loaded after the packaged <code>sessiond-uaccess</code> rules. See <a href="https://r0chd.tngl.io/sessiond/clients/client-uaccess.html">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>strings concatenated with "\n"</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">''</span><span style="color:rgb(152,195,121);"></span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;device&nbsp;{</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;access&nbsp;=&nbsp;"rw",</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;=&nbsp;function(dev)</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;dev.subsystem&nbsp;==&nbsp;"backlight"</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;end,</span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;}</span><br><span style="color:rgb(152,195,121);">''</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sessiond-uaccess" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sessiond-uaccess&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.sonarr.enable">
+  <h3 class="option-name">
+    <a href="#option-services.sonarr.enable" class="option-anchor">services.sonarr.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://sonarr.tv">sonarr</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sonarr" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sonarr&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.sonarr.package">
+  <h3 class="option-name">
+    <a href="#option-services.sonarr.package" class="option-anchor">services.sonarr.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>sonarr</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">sonarr</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sonarr" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sonarr&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.sonarr.dataDir">
+  <h3 class="option-name">
+    <a href="#option-services.sonarr.dataDir" class="option-anchor">services.sonarr.dataDir</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The directory used to store all <code>sonarr</code> data.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this directory will automatically be created on
+service activation, otherwise you are responsible for ensuring the directory exists
+with appropriate ownership and permissions before the <code>sonarr</code> service starts.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>absolute path</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/var/lib/sonarr</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sonarr" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sonarr&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.sonarr.group">
+  <h3 class="option-name">
+    <a href="#option-services.sonarr.group" class="option-anchor">services.sonarr.group</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Group account under which <code>sonarr</code> runs.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this group will automatically be created
+on system activation, otherwise you are responsible for
+ensuring the group exists before the <code>sonarr</code> service starts.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">sonarr</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sonarr" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sonarr&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.sonarr.settings">
+  <h3 class="option-name">
+    <a href="#option-services.sonarr.settings" class="option-anchor">services.sonarr.settings</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p><code>sonarr</code> configuration. See <a href="https://wiki.servarr.com/sonarr/environment-variables">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>open submodule of attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sonarr" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sonarr&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.sonarr.settings.log.analyticsEnabled">
+  <h3 class="option-name">
+    <a href="#option-services.sonarr.settings.log.analyticsEnabled" class="option-anchor">services.sonarr.settings.log.analyticsEnabled</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Send Anonymous Usage Data.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/sonarr" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/sonarr&gt;</a></code></dd>
+  </dl>
+</div>
 <div class="option" id="option-services.sonarr.settings.log.level">
   <h3 class="option-name">
     <a href="#option-services.sonarr.settings.log.level" class="option-anchor">services.sonarr.settings.log.level</a>
@@ -1603,240 +1824,5 @@ for additional details.</p>
   </dl>
   <dl class="option-details option-sources">
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/ytdl-sub" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/ytdl-sub&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.ytdl-sub.user">
-  <h3 class="option-name">
-    <a href="#option-services.ytdl-sub.user" class="option-anchor">services.ytdl-sub.user</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>User account under which <code>ytdl-sub</code> runs.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>If left as the default value this user will automatically be created
-on system activation, otherwise you are responsible for
-ensuring the user exists before the <code>ytdl-sub</code> service starts.</p>
-</div>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">ytdl-sub</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/ytdl-sub" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/ytdl-sub&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.zerotierone.enable">
-  <h3 class="option-name">
-    <a href="#option-services.zerotierone.enable" class="option-anchor">services.zerotierone.enable</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://www.zerotier.com">zerotierone</a> as a system service.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zerotierone" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/zerotierone&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.zerotierone.package">
-  <h3 class="option-name">
-    <a href="#option-services.zerotierone.package" class="option-anchor">services.zerotierone.package</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The package to use for <code>zerotierone</code>.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">zerotierone</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zerotierone" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/zerotierone&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.zerotierone.stateDir">
-  <h3 class="option-name">
-    <a href="#option-services.zerotierone.stateDir" class="option-anchor">services.zerotierone.stateDir</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The directory used to store all <code>zerotier</code> data.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>If left as the default value this directory will automatically be created on
-service activation, otherwise you are responsible for ensuring the directory exists
-with appropriate ownership and permissions before the <code>zerotier</code> service starts.</p>
-</div>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>absolute path</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/var/lib/zerotier-one</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zerotierone" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/zerotierone&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.zfs.autoScrub.enable">
-  <h3 class="option-name">
-    <a href="#option-services.zfs.autoScrub.enable" class="option-anchor">services.zfs.autoScrub.enable</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>This option has no description.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zfs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/zfs&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.zfs.autoScrub.interval">
-  <h3 class="option-name">
-    <a href="#option-services.zfs.autoScrub.interval" class="option-anchor">services.zfs.autoScrub.interval</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>The interval at which this task should run.</p>
-<p>The underlying <code class="nixos-option">providers.scheduler</code> implementation uses its scheduling features
-to choose an appropriate time to run within that interval.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>one of "minutely", "5m", "15m", "30m", "hourly", "daily", "weekly", "monthly"</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">monthly</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zfs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/zfs&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.zfs.autoScrub.pools">
-  <h3 class="option-name">
-    <a href="#option-services.zfs.autoScrub.pools" class="option-anchor">services.zfs.autoScrub.pools</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>List of ZFS pools to periodically scrub. If empty, all pools will be scrubbed.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>list of non-empty string</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">tank</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zfs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/zfs&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.zfs.autoSnapshot.enable">
-  <h3 class="option-name">
-    <a href="#option-services.zfs.autoSnapshot.enable" class="option-anchor">services.zfs.autoSnapshot.enable</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Enable the (OpenSolaris-compatible) ZFS auto-snapshotting service.
-Note that you must set the <code>com.sun:auto-snapshot</code>
-property to <code>true</code> on all datasets which you wish
-to auto-snapshot.</p>
-<p>You can override a child dataset to use, or not use auto-snapshotting
-by setting its flag with the given interval:
-<code>zfs set com.sun:auto-snapshot:weekly=false DATASET</code></p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zfs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/zfs&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.zfs.autoSnapshot.daily">
-  <h3 class="option-name">
-    <a href="#option-services.zfs.autoSnapshot.daily" class="option-anchor">services.zfs.autoSnapshot.daily</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Number of daily auto-snapshots that you wish to keep.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>signed integer</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">7</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zfs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/zfs&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.zfs.autoSnapshot.flags">
-  <h3 class="option-name">
-    <a href="#option-services.zfs.autoSnapshot.flags" class="option-anchor">services.zfs.autoSnapshot.flags</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Flags to pass to the zfs-auto-snapshot command.</p>
-<p>Run <code>zfs-auto-snapshot</code> (without any arguments) to
-see available flags.</p>
-<p>If it's not too inconvenient for snapshots to have timestamps in UTC,
-it is suggested that you append <code>--utc</code> to the list
-of default options (see example).</p>
-<p>Otherwise, snapshot names can cause name conflicts or apparent time
-reversals due to daylight savings, timezone or other date/time changes.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">-k&nbsp;-p</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
-</body></html></dd>
-    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">-k&nbsp;-p&nbsp;--utc</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zfs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/zfs&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.zfs.autoSnapshot.frequent">
-  <h3 class="option-name">
-    <a href="#option-services.zfs.autoSnapshot.frequent" class="option-anchor">services.zfs.autoSnapshot.frequent</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Number of frequent (15-minute) auto-snapshots that you wish to keep.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>signed integer</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">4</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zfs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/zfs&gt;</a></code></dd>
-  </dl>
-</div>
-<div class="option" id="option-services.zfs.autoSnapshot.hourly">
-  <h3 class="option-name">
-    <a href="#option-services.zfs.autoSnapshot.hourly" class="option-anchor">services.zfs.autoSnapshot.hourly</a>
-    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
-    <span class="copy-feedback">Link copied!</span>
-  </h3>
-  <div class="option-description"><html><head></head><body><p>Number of hourly auto-snapshots that you wish to keep.</p>
-</body></html></div>
-  <dl class="option-details">
-    <dt>Type</dt><dd class="option-value"><code>signed integer</code></dd>
-    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">24</span></code></pre></body></html>
-</body></html></dd>
-  </dl>
-  <dl class="option-details option-sources">
-    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/zfs" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/zfs&gt;</a></code></dd>
   </dl>
 </div>

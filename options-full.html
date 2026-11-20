@@ -9500,6 +9500,116 @@
   
   <li>
     <details class="toc-category">
+      <summary title="services.forgejo-runner">
+        <span>services.forgejo-runner</span>
+        <span class="toc-count">12</span>
+      </summary>
+      <ul>
+        
+
+        
+        <li>
+          <a href='#option-services.forgejo-runner.dataDir' title="services.forgejo-runner.dataDir">
+            dataDir
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.forgejo-runner.debug' title="services.forgejo-runner.debug">
+            debug
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.forgejo-runner.docker.enable' title="services.forgejo-runner.docker.enable">
+            docker.enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.forgejo-runner.enable' title="services.forgejo-runner.enable">
+            enable
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.forgejo-runner.extraPackages' title="services.forgejo-runner.extraPackages">
+            extraPackages
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.forgejo-runner.group' title="services.forgejo-runner.group">
+            group
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.forgejo-runner.package' title="services.forgejo-runner.package">
+            package
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.forgejo-runner.settings' title="services.forgejo-runner.settings">
+            settings
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.forgejo-runner.settings.runner.capacity' title="services.forgejo-runner.settings.runner.capacity">
+            settings.runner.capacity
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.forgejo-runner.settings.runner.labels' title="services.forgejo-runner.settings.runner.labels">
+            settings.runner.labels
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.forgejo-runner.settings.server.connections' title="services.forgejo-runner.settings.server.connections">
+            settings.server.connections
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-services.forgejo-runner.user' title="services.forgejo-runner.user">
+            user
+            
+            
+          </a>
+        </li>
+        
+      </ul>
+    </details>
+  </li>
+  
+  <li>
+    <details class="toc-category">
       <summary title="services.fprintd">
         <span>services.fprintd</span>
         <span class="toc-count">4</span>
@@ -31807,6 +31917,241 @@ for additional details.</p>
   </dl>
   <dl class="option-details option-sources">
     <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/flatpak" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/flatpak&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.forgejo-runner.enable">
+  <h3 class="option-name">
+    <a href="#option-services.forgejo-runner.enable" class="option-anchor">services.forgejo-runner.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable <a href="https://code.forgejo.org/forgejo/runner">forgejo-runner</a> as a system service.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/forgejo-runner" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/forgejo-runner&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.forgejo-runner.package">
+  <h3 class="option-name">
+    <a href="#option-services.forgejo-runner.package" class="option-anchor">services.forgejo-runner.package</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The package to use for <code>forgejo-runner</code>.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">forgejo-runner</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/forgejo-runner" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/forgejo-runner&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.forgejo-runner.dataDir">
+  <h3 class="option-name">
+    <a href="#option-services.forgejo-runner.dataDir" class="option-anchor">services.forgejo-runner.dataDir</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The directory used to store all <code>forgejo-runner</code> data.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this directory will automatically be created on
+service activation, otherwise you are responsible for ensuring the directory exists
+with appropriate ownership and permissions before the <code>forgejo-runner</code> service starts.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>absolute path</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/var/lib/forgejo-runner</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/forgejo-runner" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/forgejo-runner&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.forgejo-runner.debug">
+  <h3 class="option-name">
+    <a href="#option-services.forgejo-runner.debug" class="option-anchor">services.forgejo-runner.debug</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to enable debug logging.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/forgejo-runner" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/forgejo-runner&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.forgejo-runner.docker.enable">
+  <h3 class="option-name">
+    <a href="#option-services.forgejo-runner.docker.enable" class="option-anchor">services.forgejo-runner.docker.enable</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Whether to allow <code>forgejo-runner</code> to run jobs on <code>docker://</code> labels, using the
+<code>docker</code> daemon provided by <a class="option-reference" href="options.html#option-services.docker.enable"><code class="nixos-option">services.docker.enable</code></a>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This adds <code>forgejo-runner</code> to the <a class="option-reference" href="options.html#option-services.docker.group"><code class="nixos-option">services.docker.group</code></a> group, which
+is equivalent to giving it <code>root</code> access.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>boolean</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">false</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/forgejo-runner" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/forgejo-runner&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.forgejo-runner.extraPackages">
+  <h3 class="option-name">
+    <a href="#option-services.forgejo-runner.extraPackages" class="option-anchor">services.forgejo-runner.extraPackages</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Extra packages to be be made available to the <code>forgejo-runner</code> daemon process.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of package</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(198,120,221);">with</span>&nbsp;<span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">;</span>&nbsp;<span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(171,178,191);">bash</span>&nbsp;<span style="color:rgb(171,178,191);">coreutils</span>&nbsp;<span style="color:rgb(171,178,191);">git</span>&nbsp;<span style="color:rgb(171,178,191);">nodejs</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/forgejo-runner" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/forgejo-runner&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.forgejo-runner.group">
+  <h3 class="option-name">
+    <a href="#option-services.forgejo-runner.group" class="option-anchor">services.forgejo-runner.group</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Group account under which <code>forgejo-runner</code> runs.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this group will automatically be created
+on system activation, otherwise you are responsible for
+ensuring the group exists before the <code>forgejo-runner</code> service starts.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">forgejo-runner</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/forgejo-runner" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/forgejo-runner&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.forgejo-runner.settings">
+  <h3 class="option-name">
+    <a href="#option-services.forgejo-runner.settings" class="option-anchor">services.forgejo-runner.settings</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p><code>forgejo-runner</code> configuration. See <a href="https://forgejo.org/docs/latest/admin/actions/runner-installation/#configuration">upstream documentation</a>
+for additional details.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>open submodule of (YAML 1.1 value)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/forgejo-runner" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/forgejo-runner&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.forgejo-runner.settings.runner.capacity">
+  <h3 class="option-name">
+    <a href="#option-services.forgejo-runner.settings.runner.capacity" class="option-anchor">services.forgejo-runner.settings.runner.capacity</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>Execute how many tasks concurrently at the same time.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>positive integer, meaning &gt;0</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(209,154,102);">1</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/forgejo-runner" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/forgejo-runner&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.forgejo-runner.settings.runner.labels">
+  <h3 class="option-name">
+    <a href="#option-services.forgejo-runner.settings.runner.labels" class="option-anchor">services.forgejo-runner.settings.runner.labels</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>The labels of a runner are used to determine which jobs the runner can run and how to run them.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>list of string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">native:host</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">bookworm:docker://node:22-bookworm</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(132,139,152);">]</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/forgejo-runner" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/forgejo-runner&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.forgejo-runner.settings.server.connections">
+  <h3 class="option-name">
+    <a href="#option-services.forgejo-runner.settings.server.connections" class="option-anchor">services.forgejo-runner.settings.server.connections</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>A map of connections to one or more Forgejo instances.</p>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>attribute set of (YAML 1.1 value)</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+    <dt>Example</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">example</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">fetch_interval</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">30s</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">token</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">6634bb58be0db23cc013a2e72dd1828ae0257cf</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">url</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">https://example.com/</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">uuid</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">c9e50be9-a7c3-4aee-ba35-624c4ff8c519</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/forgejo-runner" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/forgejo-runner&gt;</a></code></dd>
+  </dl>
+</div>
+<div class="option" id="option-services.forgejo-runner.user">
+  <h3 class="option-name">
+    <a href="#option-services.forgejo-runner.user" class="option-anchor">services.forgejo-runner.user</a>
+    <button type="button" class="copy-link" aria-label="Copy link to this option" title="Copy link to this option"></button>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-description"><html><head></head><body><p>User account under which <code>forgejo-runner</code> runs.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If left as the default value this user will automatically be created
+on system activation, otherwise you are responsible for
+ensuring the user exists before the <code>forgejo-runner</code> service starts.</p>
+</div>
+</body></html></div>
+  <dl class="option-details">
+    <dt>Type</dt><dd class="option-value"><code>string</code></dd>
+    <dt>Default</dt><dd class="option-value"><html><head></head><body><html><head></head><body><pre class="highlight"><code class="language-nix"><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">forgejo-runner</span><span style="color:rgb(152,195,121);">"</span></code></pre></body></html>
+</body></html></dd>
+  </dl>
+  <dl class="option-details option-sources">
+    <dt>Declared in</dt><dd class="option-value"><code><a href="https://github.com/finix-community/finix/blob/main/modules/services/forgejo-runner" target="_blank" rel="noopener noreferrer">&lt;finix/modules/services/forgejo-runner&gt;</a></code></dd>
   </dl>
 </div>
 <div class="option" id="option-services.fprintd.enable">
