@@ -397,7 +397,8 @@ in
                             restart that service after this many seconds.
 
                             If set to `null` the value of
-                            {option}`services.wireguard.dynamicEndpointRefreshSeconds`
+                            If set to `null` the effective `dynamicEndpointRefreshSeconds` of this peer 
+                            (the peer's own value or the interface-level {option}`services.wireguard.interfaces.<name>.dynamicEndpointRefreshSeconds` if unset) will be used as the default.
                             will be used as the default.
                           '';
                         };
