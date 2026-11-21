@@ -126,23 +126,61 @@ in
     services.dbus.enable = true;
     services.dbus.packages = [ cfg.package.out ];
 
-    security.pam.services.polkit-1 = {
-      text = ''
-        # Account management.
-        account required pam_unix.so # unix (order 10900)
+    security.pam.services.polkit-1.rules = {
+      account.unix = {
+        order = 10900;
+        control = "required";
+        modulePath = "pam_unix.so";
+      };
 
-        # Authentication management.
-        auth sufficient pam_unix.so likeauth try_first_pass # unix (order 11600)
-        auth required pam_deny.so # deny (order 12400)
+      auth = {
+        unix = {
+          order = 11600;
+          control = "sufficient";
+          modulePath = "pam_unix.so";
+          settings = {
+            likeauth = true;
+            try_first_pass = true;
+          };
+        };
+        deny = {
+          order = 12400;
+          control = "required";
+          modulePath = "pam_deny.so";
+        };
+      };
 
-        # Password management.
-        password sufficient pam_unix.so nullok yescrypt # unix (order 10200)
+      password.unix = {
+        order = 10200;
+        control = "sufficient";
+        modulePath = "pam_unix.so";
+        settings = {
+          nullok = true;
+          yescrypt = true;
+        };
+      };
 
-        # Session management.
-        session required pam_env.so conffile=/etc/security/pam_env.conf readenv=0 # env (order 10100)
-        session required pam_unix.so # unix (order 10200)
-        session required pam_limits.so # conf=/nix/store/mibdlp1bmk4wl2qjk77i6fl1dg4kq6k6-limits.conf # limits (order 12200)
-      '';
+      session = {
+        env = {
+          order = 10100;
+          control = "required";
+          modulePath = "pam_env.so";
+          settings = {
+            conffile = "/etc/security/pam_env.conf";
+            readenv = 0;
+          };
+        };
+        unix = {
+          order = 10200;
+          control = "required";
+          modulePath = "pam_unix.so";
+        };
+        limits = {
+          order = 12200;
+          control = "required";
+          modulePath = "pam_limits.so";
+        };
+      };
     };
 
     security.wrappers = {
