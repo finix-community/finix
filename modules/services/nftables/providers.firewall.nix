@@ -15,8 +15,17 @@ let
 
   ifaceSet = lib.concatMapStringsSep ", " (iface: ''"${iface}"'') nftCfg.trustedInterfaces;
 
-  tcpSet = portsToNftSet cfg.allowedTCPPorts cfg.allowedTCPPortRanges;
-  udpSet = portsToNftSet cfg.allowedUDPPorts cfg.allowedUDPPortRanges;
+  allowRules =
+    iface: ports:
+    let
+      ifaceExpr = lib.optionalString (iface != null) ''iifname "${iface}" '';
+      tcpSet = portsToNftSet ports.allowedTCPPorts ports.allowedTCPPortRanges;
+      udpSet = portsToNftSet ports.allowedUDPPorts ports.allowedUDPPortRanges;
+    in
+    ''
+      ${lib.optionalString (tcpSet != "") "${ifaceExpr}tcp dport { ${tcpSet} } accept"}
+      ${lib.optionalString (udpSet != "") "${ifaceExpr}udp dport { ${udpSet} } accept"}
+    '';
 in
 {
   options.providers.firewall = {
@@ -60,8 +69,8 @@ in
         }
 
         chain input-allow {
-          ${lib.optionalString (tcpSet != "") "tcp dport { ${tcpSet} } accept"}
-          ${lib.optionalString (udpSet != "") "udp dport { ${udpSet} } accept"}
+          ${allowRules null cfg}
+          ${lib.concatStrings (lib.mapAttrsToList allowRules nftCfg.interfaces)}
 
           meta l4proto . th dport @temp-ports accept
         }

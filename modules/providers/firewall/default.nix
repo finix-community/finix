@@ -50,6 +50,7 @@ in
     allowedTCPPorts = lib.mkOption {
       type = with lib.types; listOf port;
       default = [ ];
+      apply = values: lib.unique (lib.sort lib.lessThan values);
       example = [
         22
         80
@@ -77,6 +78,7 @@ in
     allowedUDPPorts = lib.mkOption {
       type = with lib.types; listOf port;
       default = [ ];
+      apply = values: lib.unique (lib.sort lib.lessThan values);
       example = [ 53 ];
       description = ''
         List of open UDP ports.

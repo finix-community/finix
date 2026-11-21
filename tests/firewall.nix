@@ -72,7 +72,7 @@
         client.fail("ncat -z -w 3 192.168.1.2 8081")
 
     with subtest("nixos-firewall-tool: detects the nftables backend"):
-        nftables.succeed("nixos-firewall-tool show | grep -q 'table inet nixos-fw'")
+        nftables.succeed("nixos-firewall-tool show | grep 'table inet nixos-fw' > /dev/null")
 
     with subtest("nixos-firewall-tool: opens a port at runtime"):
         nftables.succeed("nixos-firewall-tool open tcp 8081")
