@@ -1,4 +1,5 @@
 {
+  modules,
   config,
   pkgs,
   lib,
@@ -14,6 +15,9 @@ let
   multiValueType = with lib.types; nullOr (coercedTo str lib.singleton (listOf str));
 in
 {
+
+  imports = [ modules.dhcpcd ];
+
   options.programs.ifupdown-ng = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -158,6 +162,11 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+
+    # Needed for /etc/dhcpcd.conf
+    services.dhcpcd.enable = true;
+    finit.services.dhcpcd.enable = lib.mkDefault false;
+
     programs.ifupdown-ng.extraArgs = [ "-a" ] ++ lib.optionals cfg.debug [ "-v" ];
 
     environment.systemPackages = [ cfg.package ];
