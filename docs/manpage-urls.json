@@ -52,6 +52,7 @@
   "pulse-daemon.conf(5)": "https://man.archlinux.org/man/pulse-daemon.conf.5",
   "resolvconf.conf(5)": "https://man.archlinux.org/man/resolvconf.conf.5",
   "sleep.conf(5)": "https://manpages.debian.org/testing/elogind/sleep.conf.5",
+  "snooze(1)": "https://man.voidlinux.org/snooze.1",
   "sshd(8)": "https://man.archlinux.org/man/sshd.8",
   "sshd_config(5)": "https://man.archlinux.org/man/sshd_config.5",
   "syd(5)": "https://man.archlinux.org/man/syd.5",
