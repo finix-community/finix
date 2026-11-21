@@ -159,6 +159,13 @@ in
     environment.etc."security/limits.conf".text = lib.mkDefault "";
     environment.etc."login.defs".source = format.generate "login.defs" cfg.settings;
 
+    security.pam.defaultRules.password.unix.settings = lib.genAttrs [
+      "yescrypt"
+      "sha512"
+      "sha256"
+      "md5"
+    ] (method: method == encryptMethod);
+
     security.pam.services.login = {
       text = ''
         # Account management.

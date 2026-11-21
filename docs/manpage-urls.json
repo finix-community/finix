@@ -40,6 +40,7 @@
   "nix-collect-garbage(1)": "https://man.archlinux.org/man/extra/nix/nix-collect-garbage.1",
   "nix.conf(5)": "https://man.archlinux.org/man/nix.conf.5",
   "nvidia-persistenced(1)": "https://man.archlinux.org/man/nvidia-persistenced.1",
+  "pam.conf(5)": "https://man.archlinux.org/man/pam.conf.5",
   "pam_env(8)": "https://man.archlinux.org/man/pam_env.8",
   "pam_env.conf(5)": "https://man.archlinux.org/man/pam_env.conf.5",
   "pipewire-client.conf(5)": "https://man.archlinux.org/man/pipewire-client.conf.5",
