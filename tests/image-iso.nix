@@ -12,6 +12,7 @@
 
           services.getty.enable = true;
           services.mdevd.enable = true;
+          services.nix-daemon.enable = true;
 
           virtualisation.qemu.bootMode = bootMode;
           virtualisation.qemu.extraArgs = [
@@ -36,6 +37,7 @@
       uefi.wait_for_console_text("getty on /dev/tty1")
 
       uefi.succeed("touch /nix/store/.rw-check")
+      uefi.succeed("test -n \"$(nix-store -q --references $(readlink -f /run/current-system))\"")
       print("iso image booted to runlevel 2 successfully")
 
       uefi.shutdown()
@@ -50,6 +52,7 @@
       bios.wait_for_console_text("getty on /dev/tty1")
 
       bios.succeed("touch /nix/store/.rw-check")
+      bios.succeed("test -n \"$(nix-store -q --references $(readlink -f /run/current-system))\"")
       print("iso image booted to runlevel 2 successfully")
 
       bios.shutdown()

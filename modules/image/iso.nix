@@ -176,6 +176,17 @@ in
       "uas"
     ];
 
+    finit.tasks.register-nix-store = {
+      description = "register the Nix store from the iso image";
+      runlevel = "S";
+      script = ''
+        ${lib.getExe' (config.services.nix-daemon.package or pkgs.nix) "nix-store"} \
+          --load-db < /nix/store/nix-path-registration
+      '';
+    };
+
+    finit.services.nix-daemon.conditions = [ "task/register-nix-store/success" ];
+
     system.build.image = lib.recursiveUpdate biosIso {
       passthru.filePath = config.image.filePath;
     };
