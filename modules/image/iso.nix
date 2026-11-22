@@ -14,12 +14,7 @@ let
   limine = pkgs.limine.override { buildCDs = true; };
 
   limineConf = import ./limine-conf.nix {
-    inherit
-      lib
-      pkgs
-      kernel
-      initrd
-      ;
+    inherit lib pkgs;
     kernelTarget = "/boot/kernel";
     initrdTarget = "/boot/initrd";
     topLevel = config.system.topLevel;

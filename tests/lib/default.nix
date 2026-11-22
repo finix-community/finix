@@ -64,6 +64,11 @@ let
         mkdir -p "$SHARED_DIR"
       fi
 
+      ${lib.optionalString (config.virtualisation.qemu.bootMode == "uefi") ''
+        cp ${pkgs.OVMF.variables} ${config.networking.hostName}-efi-vars.fd
+        chmod 0644 ${config.networking.hostName}-efi-vars.fd
+      ''}
+
       exec ${lib.escapeShellArgs qemuArgs} \
         -name "${name}" \
         -device "virtio-net-pci,netdev=vlan${toString vlan},mac=${mac}" \

@@ -6,6 +6,9 @@
 }:
 
 let
+  cfg = config.virtualisation.qemu;
+  useBootLoader = cfg.bootMode != "kernel";
+
   qemuCommand =
     qemuPkg:
     let
@@ -17,7 +20,7 @@ let
         x86_64-linux = [
           "${qemuPkg}/bin/qemu-system-x86_64"
           "-machine"
-          "accel=kvm:tcg"
+          (if useBootLoader then "q35,accel=kvm:tcg" else "accel=kvm:tcg")
           "-cpu"
           "max"
         ];
@@ -102,8 +105,6 @@ let
       in
       guestMap.${guestSystem} or (throwUnsupportedGuestSystem guestMap);
 
-  cfg = config.virtualisation.qemu;
-
   guestFileSystems =
     lib.mapAttrs' (tag: share: {
       name = share.target;
@@ -126,8 +127,6 @@ let
       };
     };
 
-  useBootLoader = cfg.bootMode != "kernel";
-
   bootModeArgs = {
     kernel = [
       "-kernel"
@@ -140,6 +139,13 @@ let
       "-append"
       (toString (config.boot.kernelParams ++ [ "init=${config.system.topLevel}/init" ]))
     ];
+    uefi = [
+      "-drive"
+      "if=pflash,format=raw,unit=0,readonly=on,file=${pkgs.OVMF.firmware}"
+      # the writable VARS copy is created by the VM start script in its working directory
+      "-drive"
+      "if=pflash,format=raw,unit=1,readonly=off,file=${config.networking.hostName}-efi-vars.fd"
+    ];
   };
 in
 {
@@ -150,7 +156,10 @@ in
       package = lib.mkPackageOption pkgs [ "qemu" ] { };
 
       bootMode = lib.mkOption {
-        type = lib.types.enum [ "kernel" ]; # ++ [ "bios" "uefi" ];
+        type = lib.types.enum [
+          "kernel"
+          "uefi"
+        ];
         default = "kernel";
         description = ''
           Boot method used to load the guest.
@@ -273,6 +282,9 @@ in
   };
 
   config = {
+
+    # limine needs more low memory to load the kernel than the kernel boot path does.
+    virtualisation.memorySize = lib.mkIf (cfg.bootMode == "uefi") (lib.mkOverride 50 2048);
 
     boot.kernelParams = [ "console=${cfg.serialDevice},115200n8" ];
 
