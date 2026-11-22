@@ -128,6 +128,10 @@ let
     };
 
   bootModeArgs = {
+    bios = [
+      "-boot"
+      "order=d"
+    ];
     kernel = [
       "-kernel"
       "${config.boot.kernelPackages.kernel}/${
@@ -158,6 +162,7 @@ in
       bootMode = lib.mkOption {
         type = lib.types.enum [
           "kernel"
+          "bios"
           "uefi"
         ];
         default = "kernel";

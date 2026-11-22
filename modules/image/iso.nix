@@ -13,6 +13,11 @@ let
 
   limine = pkgs.limine.override { buildCDs = true; };
 
+  # make-iso9660-image.sh unconditionally sorts /isolinux to the start of the media when bootable = true and aborts if the directory is missing
+  isolinuxPlaceholder = pkgs.runCommand "isolinux" { } ''
+    mkdir -p $out
+  '';
+
   limineConf = import ./limine-conf.nix {
     inherit lib pkgs;
     kernelTarget = "/boot/kernel";
@@ -50,6 +55,18 @@ let
         target = "/boot/limine/limine-uefi-cd.bin";
       }
       {
+        source = "${limine}/share/limine/limine-bios-cd.bin";
+        target = "/boot/limine/limine-bios-cd.bin";
+      }
+      {
+        source = "${limine}/share/limine/limine-bios.sys";
+        target = "/boot/limine/limine-bios.sys";
+      }
+      {
+        source = isolinuxPlaceholder;
+        target = "/isolinux";
+      }
+      {
         source = "${limine}/share/limine/BOOTX64.EFI";
         target = "/EFI/BOOT/BOOTX64.EFI";
       }
@@ -60,10 +77,25 @@ let
     efiBootable = true;
     efiBootImage = "boot/limine/limine-uefi-cd.bin";
 
-    bootable = false;
+    bootable = true;
+    bootImage = "/boot/limine/limine-bios-cd.bin";
     usbBootable = false;
     syslinux = null;
   };
+
+  # The El Torito entry alone is not enough, limine's BIOS stage 1 has to be written into the image.
+  # The protective GPT left by -isohybrid-gpt-basdat makes limine refuse without --force.
+  biosIso =
+    pkgs.runCommand "finix-bios-${config.image.fileName}"
+      {
+        nativeBuildInputs = [ limine ];
+      }
+      ''
+        mkdir -p $out/iso
+        cp ${iso}/${config.image.filePath} $out/iso/${config.image.fileName}
+        chmod u+w $out/iso/${config.image.fileName}
+        ${lib.getExe' limine "limine"} bios-install $out/iso/${config.image.fileName} --force
+      '';
 in
 {
   config = {
@@ -110,7 +142,7 @@ in
       "uas"
     ];
 
-    system.build.image = lib.recursiveUpdate iso {
+    system.build.image = lib.recursiveUpdate biosIso {
       passthru.filePath = config.image.filePath;
     };
   };
