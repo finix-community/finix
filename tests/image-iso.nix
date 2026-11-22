@@ -35,6 +35,7 @@
       uefi.wait_for_console_text("entering runlevel 2")
       uefi.wait_for_console_text("getty on /dev/tty1")
 
+      uefi.succeed("touch /nix/store/.rw-check")
       print("iso image booted to runlevel 2 successfully")
 
       uefi.shutdown()
@@ -48,6 +49,7 @@
       bios.wait_for_console_text("entering runlevel 2")
       bios.wait_for_console_text("getty on /dev/tty1")
 
+      bios.succeed("touch /nix/store/.rw-check")
       print("iso image booted to runlevel 2 successfully")
 
       bios.shutdown()

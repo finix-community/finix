@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  utils,
   ...
 }:
 let
@@ -113,13 +114,32 @@ in
         neededForBoot = true;
         noCheck = true;
       };
-      "/nix/store" = {
+      "/nix/.ro-store" = {
         device = "/iso/nix-store.squashfs";
         fsType = "squashfs";
         options = [
           "loop"
         ]
         ++ lib.optional (lib.versionAtLeast kernelPackages.kernel.version "6.2") "threads=multi";
+        neededForBoot = true;
+      };
+      "/nix/.rw-store" = {
+        fsType = "tmpfs";
+        options = [ "mode=0755" ];
+        neededForBoot = true;
+      };
+      "/nix/store" = {
+        device = "overlay";
+        fsType = "overlay";
+        options = [
+          "lowerdir=/nix/.ro-store"
+          "upperdir=/nix/.rw-store/store"
+          "workdir=/nix/.rw-store/work"
+        ];
+        depends = [
+          "/nix/.ro-store"
+          "/nix/.rw-store"
+        ];
         neededForBoot = true;
       };
     };
@@ -135,6 +155,20 @@ in
         '';
       }
     ];
+
+    boot.initrd.finit.tasks.prepare-overlay-store = {
+      conditions = [ "task/mount-${utils.escapePath "/nix/.rw-store"}/success" ];
+      script = ''
+        mkdir -p /sysroot/nix/.rw-store/store /sysroot/nix/.rw-store/work
+      '';
+    };
+
+    boot.initrd.finit.tasks."mount-${utils.escapePath "/nix/store"}".conditions = lib.mkAfter [
+      "task/prepare-overlay-store/success"
+    ];
+
+    # An overlay is already writable with the overlay
+    finit.tasks.remount-nix-store.enable = false;
 
     # Hybrid ISOs booted from a USB stick need USB storage in the initrd
     boot.initrd.availableKernelModules = [
