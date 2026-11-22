@@ -38,7 +38,7 @@ let
         else if lib.isFloat v then
           lib.floatToString v
         else if lib.isList v then
-          toString v
+          toString (lib.unique v)
         else if lib.isDerivation v then
           toString v
         else if builtins.isPath v then
