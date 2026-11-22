@@ -6,6 +6,19 @@
 }:
 let
   cfg = config.boot.initrd;
+  targetRoot = "/sysroot";
+
+  # overlay options are paths relative to the final root in stage 2, but the initrd mounts them under /sysroot
+  prefixOverlayOption =
+    option:
+    let
+      key = lib.findFirst (k: lib.hasPrefix (k + "=") option) null [
+        "lowerdir"
+        "upperdir"
+        "workdir"
+      ];
+    in
+    if key == null then option else "${key}=${targetRoot}${lib.removePrefix (key + "=") option}";
 
   isBind = fs: lib.elem "bind" fs.options;
   isLoop = fs: lib.elem "loop" fs.options;
@@ -111,8 +124,8 @@ in
           conditions = readinessConditions fs ++ parentConditions fs;
           command =
             let
-              targetRoot = "/sysroot";
-              opts = lib.concatStringsSep "," (fs.options ++ [ "X-mount.mkdir" ]);
+              options = if fs.fsType == "overlay" then map prefixOverlayOption fs.options else fs.options;
+              opts = lib.concatStringsSep "," (options ++ [ "X-mount.mkdir" ]);
             in
             if isBind fs then
               "mount -o ${opts} ${targetRoot}${fs.device} ${targetRoot}${fs.mountPoint}"
