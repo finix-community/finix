@@ -2,8 +2,17 @@
 { lib }:
 {
   # simple path escape into a name safe for use as a finit stanza name and conditions
+  #
+  # "/" escapes to "" — call sites compose "<prefix>-${escapePath p}", so the
+  # root filesystem gets the bare prefix (e.g. "mount-") and every other path
+  # keeps its previous name (leading slash dropped, "/" -> "-"). "/" used to
+  # escape to "root", which collided with "/root" and tripped the mount.nix
+  # uniqueness assert. Deliberately not the systemd-escape convention
+  # ("/" -> "-"): finit reads "-- " anywhere on a stanza line as the
+  # description delimiter, so a "mount--" name would swallow the rest of the
+  # line, conditions and command included.
   escapePath =
-    s: if s == "/" then "root" else lib.replaceStrings [ "/" ] [ "-" ] (lib.removePrefix "/" s);
+    s: if s == "/" then "" else lib.replaceStrings [ "/" ] [ "-" ] (lib.removePrefix "/" s);
 
   # Convert a shell package or path into an absolute shell path.
   toShellPath =
