@@ -159,6 +159,14 @@ in
     virtualisation.qemu = {
       package = lib.mkPackageOption pkgs [ "qemu" ] { };
 
+      diskImage = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = null;
+        description = ''
+          Image copied to the VM working directory before start.
+        '';
+      };
+
       bootMode = lib.mkOption {
         type = lib.types.enum [
           "kernel"

@@ -8,7 +8,7 @@
         { config, ... }:
         {
           # build the same image the `iso` variant produces
-          imports = [ ../modules/image/iso.nix ];
+          imports = [ ../../modules/image/iso.nix ];
 
           services.getty.enable = true;
           services.mdevd.enable = true;

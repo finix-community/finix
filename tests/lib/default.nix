@@ -69,6 +69,11 @@ let
         chmod 0644 ${config.networking.hostName}-efi-vars.fd
       ''}
 
+      ${lib.optionalString (config.virtualisation.qemu.diskImage != null) ''
+        cp ${config.virtualisation.qemu.diskImage} disk.img
+        chmod 0644 disk.img
+      ''}
+
       exec ${lib.escapeShellArgs qemuArgs} \
         -name "${name}" \
         -device "virtio-net-pci,netdev=vlan${toString vlan},mac=${mac}" \

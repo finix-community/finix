@@ -27,13 +27,6 @@ let
     kernelParams = config.boot.kernelParams;
   };
 
-  deviceManagers = [
-    "mdevd"
-    "gardendevd"
-    "udev"
-    "keventd"
-  ];
-
   iso = pkgs.callPackage (pkgs.path + "/nixos/lib/make-iso9660-image.nix") {
     isoName = config.image.fileName;
     volumeID = "FINIX_ISO";
@@ -143,18 +136,6 @@ in
         neededForBoot = true;
       };
     };
-
-    assertions = [
-      {
-        assertion = lib.any (name: config.services.${name}.enable) deviceManagers;
-        message = ''
-          The iso image needs a device manager to create /dev/disk/by-label/FINIX_ISO.
-          Enable one of: ${
-            lib.concatStringsSep ", " (lib.map (name: "services.${name}.enable") deviceManagers)
-          }.
-        '';
-      }
-    ];
 
     boot.initrd.finit.tasks.prepare-overlay-store = {
       conditions = [ "task/mount-${utils.escapePath "/nix/.rw-store"}/success" ];

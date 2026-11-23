@@ -8,7 +8,15 @@
 let
   imageModules = {
     iso = ./iso.nix;
+    raw = ./raw.nix;
   };
+
+  deviceManagers = [
+    "mdevd"
+    "gardendevd"
+    "udev"
+    "keventd"
+  ];
 
   # A variant must not re-enter image.modules
   noNestedImageModules = {
@@ -74,6 +82,18 @@ in
 
   config = {
     image.modules = imageModules;
+
+    assertions = [
+      {
+        assertion = lib.any (name: config.services.${name}.enable) deviceManagers;
+        message = ''
+          Image blocks are found by /dev/disk/by-label, which needs a device manager.
+          Enable one of: ${
+            lib.concatStringsSep ", " (lib.map (name: "services.${name}.enable") deviceManagers)
+          }.
+        '';
+      }
+    ];
 
     system.build.images = lib.mapAttrs (
       _: imageConfig: imageConfig.config.system.build.image
