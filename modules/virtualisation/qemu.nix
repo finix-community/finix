@@ -167,6 +167,15 @@ in
         '';
       };
 
+      growDiskImage = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Enlarge the copied disk image and relocate the GPT backup header.
+          Only valid for raw images.
+        '';
+      };
+
       bootMode = lib.mkOption {
         type = lib.types.enum [
           "kernel"

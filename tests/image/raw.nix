@@ -15,6 +15,7 @@
 
           virtualisation.qemu.bootMode = bootMode;
           virtualisation.qemu.diskImage = toString config.system.build.image;
+          virtualisation.qemu.growDiskImage = true;
           virtualisation.qemu.extraArgs = [
             "-drive"
             "file=disk.img,format=raw"

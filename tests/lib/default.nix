@@ -72,7 +72,10 @@ let
       ${lib.optionalString (config.virtualisation.qemu.diskImage != null) ''
         cp ${config.virtualisation.qemu.diskImage} disk.img
         chmod 0644 disk.img
-        # emulate installing the image on a larger disk
+      ''}
+
+      ${lib.optionalString config.virtualisation.qemu.growDiskImage ''
+        # emulate installing the raw image on a larger disk
         ${lib.getExe' pkgs.coreutils "truncate"} -s +1G disk.img
         ${lib.getExe' pkgs.util-linuxMinimal "sfdisk"} --relocate gpt-bak-std disk.img
       ''}
