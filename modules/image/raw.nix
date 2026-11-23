@@ -114,6 +114,8 @@ in
       };
     };
 
+    system.build.rawImage = biosRawImage;
+
     system.build.image = lib.recursiveUpdate biosRawImage {
       passthru.filePath = config.image.filePath;
     };

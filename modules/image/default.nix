@@ -8,6 +8,7 @@
 let
   imageModules = {
     iso = ./iso.nix;
+    qcow2 = ./qcow2.nix;
     raw = ./raw.nix;
   };
 
