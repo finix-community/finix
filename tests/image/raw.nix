@@ -41,6 +41,7 @@
       uefi.wait_for_console_text("getty on /dev/tty1")
 
       uefi.succeed("/run/current-system/bin/switch-to-configuration boot")
+      uefi.succeed("test $(df -k / | tail -1 | tr -s ' ' | cut -d' ' -f2) -gt 1000000")
       print("raw image booted to runlevel 2 successfully")
 
       uefi.shutdown()
@@ -55,6 +56,7 @@
       bios.wait_for_console_text("getty on /dev/tty1")
 
       bios.succeed("/run/current-system/bin/switch-to-configuration boot")
+      bios.succeed("test $(df -k / | tail -1 | tr -s ' ' | cut -d' ' -f2) -gt 1000000")
       print("raw image booted to runlevel 2 successfully")
 
       bios.shutdown()

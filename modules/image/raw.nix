@@ -116,6 +116,19 @@ in
 
     programs.limine.enable = true;
 
+    finit.tasks.grow-root-fs = {
+      description = "grow the root filesystem to fill the disk";
+      runlevel = "S";
+      script = ''
+        rootLink=$(${lib.getExe' pkgs.coreutils "readlink"} -f /dev/disk/by-label/finix-root)
+        part=$(${lib.getExe' pkgs.coreutils "basename"} "$rootLink")
+        disk=/dev/$(${lib.getExe' pkgs.coreutils "basename"} "$(${lib.getExe' pkgs.coreutils "readlink"} -f /sys/class/block/$part/..)")
+        partNr=$(${lib.getExe' pkgs.coreutils "cat"} /sys/class/block/$part/partition)
+        ${lib.getExe' pkgs.cloud-utils "growpart"} "$disk" "$partNr"
+        ${lib.getExe' pkgs.e2fsprogs "resize2fs"} "$rootLink"
+      '';
+    };
+
     finit.tasks.register-nix-store = {
       description = "register the Nix store and set the system profile";
       runlevel = "S";
