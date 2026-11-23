@@ -111,11 +111,13 @@ let
       disk=/dev/$(basename "$(readlink -f "/sys/class/block/$part/..")")
       partNr=$(cat "/sys/class/block/$part/partition")
 
-      partBytes=$(blockdev --getsize64 "$rootLink")
+      start=$(cat "/sys/class/block/$part/start")
+      size=$(cat "/sys/class/block/$part/size")
+      partEnd=$(( (start + size) * 512 ))
       diskBytes=$(blockdev --getsize64 "$disk")
       # Leave room for the backup GPT header and alignment.
-      if [ "$partBytes" -lt $((diskBytes - 1048576)) ]; then
-        printf ',+\n' | sfdisk -N "$partNr" --force "$disk" > /dev/null
+      if [ "$partEnd" -lt $((diskBytes - 1048576)) ]; then
+        printf ',+\n' | sfdisk -N "$partNr" --no-reread --force "$disk" > /dev/null
         partx -u "$disk"
       fi
       resize2fs "$rootLink"
