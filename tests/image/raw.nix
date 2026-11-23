@@ -40,6 +40,7 @@
       uefi.wait_for_console_text("entering runlevel 2")
       uefi.wait_for_console_text("getty on /dev/tty1")
 
+      uefi.succeed("/run/current-system/bin/switch-to-configuration boot")
       print("raw image booted to runlevel 2 successfully")
 
       uefi.shutdown()
@@ -53,6 +54,7 @@
       bios.wait_for_console_text("entering runlevel 2")
       bios.wait_for_console_text("getty on /dev/tty1")
 
+      bios.succeed("/run/current-system/bin/switch-to-configuration boot")
       print("raw image booted to runlevel 2 successfully")
 
       bios.shutdown()

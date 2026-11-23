@@ -114,6 +114,19 @@ in
       };
     };
 
+    programs.limine.enable = true;
+
+    finit.tasks.register-nix-store = {
+      description = "register the Nix store and set the system profile";
+      runlevel = "S";
+      script = ''
+        ${lib.getExe' (config.services.nix-daemon.package or pkgs.nix) "nix-store"} \
+          --load-db < /nix-path-registration
+        ${lib.getExe' (config.services.nix-daemon.package or pkgs.nix) "nix-env"} \
+          -p /nix/var/nix/profiles/system --set "$(${lib.getExe' config.programs.coreutils.package "readlink"} -f /run/current-system)"
+      '';
+    };
+
     system.build.rawImage = biosRawImage;
 
     system.build.image = lib.recursiveUpdate biosRawImage {
