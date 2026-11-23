@@ -97,6 +97,30 @@ let
         chmod u+w $out
         ${lib.getExe' limine "limine"} bios-install $out 1
       '';
+
+  growRootFs = pkgs.writeShellApplication {
+    name = "grow-root-fs";
+    runtimeInputs = [
+      pkgs.coreutils
+      pkgs.util-linuxMinimal
+      pkgs.e2fsprogs
+    ];
+    text = ''
+      rootLink=$(readlink -f /dev/disk/by-label/finix-root)
+      part=$(basename "$rootLink")
+      disk=/dev/$(basename "$(readlink -f "/sys/class/block/$part/..")")
+      partNr=$(cat "/sys/class/block/$part/partition")
+
+      partBytes=$(blockdev --getsize64 "$rootLink")
+      diskBytes=$(blockdev --getsize64 "$disk")
+      # Leave room for the backup GPT header and alignment.
+      if [ "$partBytes" -lt $((diskBytes - 1048576)) ]; then
+        printf ',+\n' | sfdisk -N "$partNr" --force "$disk" > /dev/null
+        partx -u "$disk"
+      fi
+      resize2fs "$rootLink"
+    '';
+  };
 in
 {
   imports = [ ../programs/limine ];
@@ -121,14 +145,7 @@ in
     finit.tasks.grow-root-fs = {
       description = "grow the root filesystem to fill the disk";
       runlevel = "S";
-      script = ''
-        rootLink=$(${lib.getExe' pkgs.coreutils "readlink"} -f /dev/disk/by-label/finix-root)
-        part=$(${lib.getExe' pkgs.coreutils "basename"} "$rootLink")
-        disk=/dev/$(${lib.getExe' pkgs.coreutils "basename"} "$(${lib.getExe' pkgs.coreutils "readlink"} -f /sys/class/block/$part/..)")
-        partNr=$(${lib.getExe' pkgs.coreutils "cat"} /sys/class/block/$part/partition)
-        ${lib.getExe' pkgs.cloud-utils "growpart"} "$disk" "$partNr"
-        ${lib.getExe' pkgs.e2fsprogs "resize2fs"} "$rootLink"
-      '';
+      command = growRootFs;
     };
 
     finit.tasks.register-nix-store = {
@@ -136,7 +153,8 @@ in
       runlevel = "S";
       script = ''
         ${lib.getExe' (config.services.nix-daemon.package or pkgs.nix) "nix-store"} \
-          --load-db < /nix-path-registration
+          --load-db < /nix-path-registration \
+          && ${lib.getExe' pkgs.coreutils "rm"} -f /nix-path-registration
         ${lib.getExe' (config.services.nix-daemon.package or pkgs.nix) "nix-env"} \
           -p /nix/var/nix/profiles/system --set "$(${lib.getExe' config.programs.coreutils.package "readlink"} -f /run/current-system)"
       '';

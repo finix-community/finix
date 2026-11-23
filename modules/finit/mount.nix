@@ -9,6 +9,8 @@ let
   targetRoot = "/sysroot";
 
   # overlay options are paths relative to the final root in stage 2, but the initrd mounts them under /sysroot
+  prefixOverlayPath = path: "${targetRoot}${path}";
+
   prefixOverlayOption =
     option:
     let
@@ -18,7 +20,14 @@ let
         "workdir"
       ];
     in
-    if key == null then option else "${key}=${targetRoot}${lib.removePrefix (key + "=") option}";
+    if key == null then
+      option
+    else
+      "${key}=${
+        lib.concatStringsSep ":" (
+          map prefixOverlayPath (lib.splitString ":" (lib.removePrefix (key + "=") option))
+        )
+      }";
 
   isBind = fs: lib.elem "bind" fs.options;
   isLoop = fs: lib.elem "loop" fs.options;
