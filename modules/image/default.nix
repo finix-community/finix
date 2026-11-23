@@ -81,6 +81,14 @@ in
     };
   };
 
+  options.system.build.images = lib.mkOption {
+    type = lib.types.lazyAttrsOf lib.types.raw;
+    internal = true;
+    description = ''
+      Different target images generated for this configuration.
+    '';
+  };
+
   config = {
     image.modules = imageModules;
 
