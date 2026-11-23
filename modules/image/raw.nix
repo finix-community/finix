@@ -10,6 +10,19 @@ let
     kernelPackages.kernel.target or kernelPackages.stdenv.hostPlatform.linux-kernel.target
   }";
   initrd = "${config.boot.initrd.package}/initrd";
+  mib = 1024 * 1024;
+
+  sectorSize = 512;
+  biosBootMiB = 1;
+  espMiB = 64;
+  biosBootSectors = (biosBootMiB * mib) / sectorSize;
+  espSectors = (espMiB * mib) / sectorSize;
+  biosBootStart = biosBootSectors;
+  espStart = biosBootStart + biosBootSectors;
+  rootStart = espStart + espSectors;
+
+  # Space reserved at the end of the disk for the GPT backup header
+  gptBackupSectors = 34;
 
   inherit (pkgs) limine;
 
@@ -37,7 +50,7 @@ let
         ];
       }
       ''
-        ${lib.getExe' pkgs.coreutils "truncate"} -s 64M $out
+        ${lib.getExe' pkgs.coreutils "truncate"} -s ${toString espMiB}M $out
         ${lib.getExe' pkgs.dosfstools "mkfs.vfat"} --invariant -i 12345678 -n ESP $out > /dev/null
         ${lib.getExe' pkgs.mtools "mmd"} -i $out ::/EFI
         ${lib.getExe' pkgs.mtools "mmd"} -i $out ::/EFI/BOOT
@@ -59,21 +72,19 @@ let
       }
       ''
         rootBytes=$(${lib.getExe' pkgs.coreutils "stat"} -c%s ${rootFs})
-        rootSectors=$(((rootBytes + 511) / 512))
-        # 1 MiB BIOS boot, 64 MiB ESP at sector 4096, then the root filesystem.
-        # Leave 34 sectors for the GPT backup at the end.
-        totalSectors=$((135168 + rootSectors + 34))
+        rootSectors=$(((rootBytes + ${toString sectorSize} - 1) / ${toString sectorSize}))
+        totalSectors=$(( ${toString rootStart} + rootSectors + ${toString gptBackupSectors} ))
 
-        ${lib.getExe' pkgs.coreutils "truncate"} -s $((totalSectors * 512)) $out
+        ${lib.getExe' pkgs.coreutils "truncate"} -s $((totalSectors * ${toString sectorSize})) $out
         ${lib.getExe' pkgs.util-linuxMinimal "sfdisk"} $out <<EOF
         label: gpt
         unit: sectors
-        start=2048, size=2048, type=21686148-6449-6E6F-744E-656564454649, name=bios-boot
-        start=4096, size=131072, type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B, name=ESP
-        start=135168, size=''${rootSectors}, type=0FC63DAF-8483-4772-8E79-3D69D8477DE4, name=finix-root
+        start=${toString biosBootStart}, size=${toString biosBootSectors}, type=21686148-6449-6E6F-744E-656564454649, name=bios-boot
+        start=${toString espStart}, size=${toString espSectors}, type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B, name=ESP
+        start=${toString rootStart}, size=''${rootSectors}, type=0FC63DAF-8483-4772-8E79-3D69D8477DE4, name=finix-root
         EOF
-        ${lib.getExe' pkgs.coreutils "dd"} if=${esp} of=$out bs=512 seek=4096 conv=notrunc
-        ${lib.getExe' pkgs.coreutils "dd"} if=${rootFs} of=$out bs=512 seek=135168 conv=notrunc
+        ${lib.getExe' pkgs.coreutils "dd"} if=${esp} of=$out bs=${toString sectorSize} seek=${toString espStart} conv=notrunc
+        ${lib.getExe' pkgs.coreutils "dd"} if=${rootFs} of=$out bs=${toString sectorSize} seek=${toString rootStart} conv=notrunc
       '';
 
   biosRawImage =
