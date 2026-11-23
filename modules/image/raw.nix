@@ -44,6 +44,7 @@ let
         ${lib.getExe' pkgs.mtools "mmd"} -i $out ::/limine
         ${lib.getExe' pkgs.mtools "mcopy"} -i $out ${limine}/share/limine/BOOTX64.EFI ::/EFI/BOOT/BOOTX64.EFI
         ${lib.getExe' pkgs.mtools "mcopy"} -i $out ${limineConf} ::/limine/limine.conf
+        ${lib.getExe' pkgs.mtools "mcopy"} -i $out ${limine}/share/limine/limine-bios.sys ::/limine/limine-bios.sys
         ${lib.getExe' pkgs.mtools "mcopy"} -i $out ${kernel} ::/kernel
         ${lib.getExe' pkgs.mtools "mcopy"} -i $out ${initrd} ::/initrd
       '';
@@ -59,18 +60,31 @@ let
       ''
         rootBytes=$(${lib.getExe' pkgs.coreutils "stat"} -c%s ${rootFs})
         rootSectors=$(((rootBytes + 511) / 512))
-        # 1 MiB ESP at sector 2048, 64 MiB long, it should leave the GPT backup at the end
-        totalSectors=$((133120 + rootSectors + 34))
+        # 1 MiB BIOS boot, 64 MiB ESP at sector 4096, then the root filesystem.
+        # Leave 34 sectors for the GPT backup at the end.
+        totalSectors=$((135168 + rootSectors + 34))
 
         ${lib.getExe' pkgs.coreutils "truncate"} -s $((totalSectors * 512)) $out
         ${lib.getExe' pkgs.util-linuxMinimal "sfdisk"} $out <<EOF
         label: gpt
         unit: sectors
-        start=2048, size=131072, type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B, name=ESP
-        start=133120, size=''${rootSectors}, type=0FC63DAF-8483-4772-8E79-3D69D8477DE4, name=finix-root
+        start=2048, size=2048, type=21686148-6449-6E6F-744E-656564454649, name=bios-boot
+        start=4096, size=131072, type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B, name=ESP
+        start=135168, size=''${rootSectors}, type=0FC63DAF-8483-4772-8E79-3D69D8477DE4, name=finix-root
         EOF
-        ${lib.getExe' pkgs.coreutils "dd"} if=${esp} of=$out bs=512 seek=2048 conv=notrunc
-        ${lib.getExe' pkgs.coreutils "dd"} if=${rootFs} of=$out bs=512 seek=133120 conv=notrunc
+        ${lib.getExe' pkgs.coreutils "dd"} if=${esp} of=$out bs=512 seek=4096 conv=notrunc
+        ${lib.getExe' pkgs.coreutils "dd"} if=${rootFs} of=$out bs=512 seek=135168 conv=notrunc
+      '';
+
+  biosRawImage =
+    pkgs.runCommand "finix-bios-${config.image.fileName}"
+      {
+        nativeBuildInputs = [ limine ];
+      }
+      ''
+        cp ${rawImage} $out
+        chmod u+w $out
+        ${lib.getExe' limine "limine"} bios-install $out 1
       '';
 in
 {
@@ -89,7 +103,7 @@ in
       };
     };
 
-    system.build.image = lib.recursiveUpdate rawImage {
+    system.build.image = lib.recursiveUpdate biosRawImage {
       passthru.filePath = config.image.filePath;
     };
   };
