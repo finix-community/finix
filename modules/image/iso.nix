@@ -92,84 +92,87 @@ let
       '';
 in
 {
-  config = {
-    image.extension = "iso";
-    image.filePath = "iso/${config.image.fileName}";
+  config = lib.mkMerge [
+    {
+      image.extension = "iso";
+      image.filePath = "iso/${config.image.fileName}";
 
-    fileSystems = lib.mkImageMediaOverride {
-      "/" = {
-        fsType = "tmpfs";
-        options = [ "mode=0755" ];
+      fileSystems = lib.mkImageMediaOverride {
+        "/" = {
+          fsType = "tmpfs";
+          options = [ "mode=0755" ];
+        };
+        "/iso" = {
+          device = "/dev/disk/by-label/FINIX_ISO";
+          fsType = "iso9660";
+          neededForBoot = true;
+          noCheck = true;
+        };
+        "/nix/.ro-store" = {
+          device = "/iso/nix-store.squashfs";
+          fsType = "squashfs";
+          options = [
+            "loop"
+          ]
+          ++ lib.optional (lib.versionAtLeast kernelPackages.kernel.version "6.2") "threads=multi";
+          neededForBoot = true;
+        };
+        "/nix/.rw-store" = {
+          fsType = "tmpfs";
+          options = [ "mode=0755" ];
+          neededForBoot = true;
+        };
+        "/nix/store" = {
+          device = "overlay";
+          fsType = "overlay";
+          options = [
+            "lowerdir=/nix/.ro-store"
+            "upperdir=/nix/.rw-store/store"
+            "workdir=/nix/.rw-store/work"
+          ];
+          depends = [
+            "/nix/.ro-store"
+            "/nix/.rw-store"
+          ];
+          neededForBoot = true;
+        };
       };
-      "/iso" = {
-        device = "/dev/disk/by-label/FINIX_ISO";
-        fsType = "iso9660";
-        neededForBoot = true;
-        noCheck = true;
+
+      boot.initrd.finit.tasks.prepare-overlay-store = {
+        conditions = [ "task/mount-${utils.escapePath "/nix/.rw-store"}/success" ];
+        script = ''
+          mkdir -p /sysroot/nix/.rw-store/store /sysroot/nix/.rw-store/work
+        '';
       };
-      "/nix/.ro-store" = {
-        device = "/iso/nix-store.squashfs";
-        fsType = "squashfs";
-        options = [
-          "loop"
-        ]
-        ++ lib.optional (lib.versionAtLeast kernelPackages.kernel.version "6.2") "threads=multi";
-        neededForBoot = true;
+
+      boot.initrd.finit.tasks."mount-${utils.escapePath "/nix/store"}".conditions = lib.mkAfter [
+        "task/prepare-overlay-store/success"
+      ];
+
+      # An overlay is already writable with the overlay
+      finit.tasks.remount-nix-store.enable = false;
+
+      # Hybrid ISOs booted from a USB stick need USB storage in the initrd
+      boot.initrd.availableKernelModules = [
+        "usb_storage"
+        "uas"
+      ];
+
+      finit.tasks.register-nix-store = {
+        description = "register the Nix store from the iso image";
+        runlevel = "S";
+        script = ''
+          ${lib.getExe' (config.services.nix-daemon.package or pkgs.nix) "nix-store"} \
+            --load-db < /nix/store/nix-path-registration
+        '';
       };
-      "/nix/.rw-store" = {
-        fsType = "tmpfs";
-        options = [ "mode=0755" ];
-        neededForBoot = true;
+
+      system.build.image = lib.recursiveUpdate biosIso {
+        passthru.filePath = config.image.filePath;
       };
-      "/nix/store" = {
-        device = "overlay";
-        fsType = "overlay";
-        options = [
-          "lowerdir=/nix/.ro-store"
-          "upperdir=/nix/.rw-store/store"
-          "workdir=/nix/.rw-store/work"
-        ];
-        depends = [
-          "/nix/.ro-store"
-          "/nix/.rw-store"
-        ];
-        neededForBoot = true;
-      };
-    };
-
-    boot.initrd.finit.tasks.prepare-overlay-store = {
-      conditions = [ "task/mount-${utils.escapePath "/nix/.rw-store"}/success" ];
-      script = ''
-        mkdir -p /sysroot/nix/.rw-store/store /sysroot/nix/.rw-store/work
-      '';
-    };
-
-    boot.initrd.finit.tasks."mount-${utils.escapePath "/nix/store"}".conditions = lib.mkAfter [
-      "task/prepare-overlay-store/success"
-    ];
-
-    # An overlay is already writable with the overlay
-    finit.tasks.remount-nix-store.enable = false;
-
-    # Hybrid ISOs booted from a USB stick need USB storage in the initrd
-    boot.initrd.availableKernelModules = [
-      "usb_storage"
-      "uas"
-    ];
-
-    finit.tasks.register-nix-store = {
-      description = "register the Nix store from the iso image";
-      runlevel = "S";
-      script = ''
-        ${lib.getExe' (config.services.nix-daemon.package or pkgs.nix) "nix-store"} \
-          --load-db < /nix/store/nix-path-registration
-      '';
-    };
-
-    finit.services.nix-daemon.conditions = [ "task/register-nix-store/success" ];
-
-    system.build.image = lib.recursiveUpdate biosIso {
-      passthru.filePath = config.image.filePath;
-    };
-  };
+    }
+    (lib.mkIf (config.services.nix-daemon.enable or false) {
+      finit.services.nix-daemon.conditions = [ "task/register-nix-store/success" ];
+    })
+  ];
 }
