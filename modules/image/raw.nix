@@ -99,6 +99,8 @@ let
       '';
 in
 {
+  imports = [ ../programs/limine ];
+
   config = {
     image.extension = "raw";
 
