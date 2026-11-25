@@ -49,7 +49,7 @@ in
         type = lib.types.bool;
         default = false;
         description = ''
-          Enlarge the copied raw disk image and relocate the GPT backup header.
+          Enlarge the copied raw disk image before start.
         '';
       };
     };

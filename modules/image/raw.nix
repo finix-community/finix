@@ -14,7 +14,7 @@ let
 
   sectorSize = 512;
   biosBootMiB = 1;
-  espMiB = 64;
+  espMiB = 256;
   biosBootSectors = (biosBootMiB * mib) / sectorSize;
   espSectors = (espMiB * mib) / sectorSize;
   biosBootStart = biosBootSectors;
@@ -132,63 +132,70 @@ in
 {
   imports = [ ../programs/limine ];
 
-  config = {
-    image.extension = lib.mkDefault "raw";
+  config = lib.mkMerge [
+    {
+      image.extension = lib.mkDefault "raw";
 
-    assertions = [
-      {
-        assertion = pkgs.stdenv.hostPlatform.isx86_64;
-        message = "The raw image is currently x86_64 only (BOOTX64.EFI and limine BIOS).";
-      }
-      {
-        assertion = lib.any (name: config.services.${name}.enable) config.image.deviceManagers;
-        message = ''
-          The raw image needs a device manager to create /dev/disk/by-label/finix-root and ESP.
-          Enable one of: ${
-            lib.concatStringsSep ", " (lib.map (name: "services.${name}.enable") config.image.deviceManagers)
-          }.
+      assertions = [
+        {
+          assertion = pkgs.stdenv.hostPlatform.isx86_64;
+          message = "The raw image is currently x86_64 only (BOOTX64.EFI and limine BIOS).";
+        }
+        {
+          assertion = lib.any (name: config.services.${name}.enable) config.image.deviceManagers;
+          message = ''
+            The raw image needs a device manager to create /dev/disk/by-label/finix-root and ESP.
+            Enable one of: ${
+              lib.concatStringsSep ", " (lib.map (name: "services.${name}.enable") config.image.deviceManagers)
+            }.
+          '';
+        }
+      ];
+
+      fileSystems = lib.mkImageMediaOverride {
+        "/" = {
+          device = "/dev/disk/by-label/finix-root";
+          fsType = "ext4";
+          neededForBoot = true;
+        };
+        "/boot" = {
+          device = "/dev/disk/by-label/ESP";
+          fsType = "vfat";
+        };
+      };
+
+      programs.limine.enable = true;
+
+      finit.tasks.grow-root-fs = {
+        description = "grow the root filesystem to fill the disk";
+        runlevel = "S";
+        command = growRootFs;
+      };
+
+      finit.tasks.register-nix-store = {
+        description = "register the Nix store and set the system profile";
+        runlevel = "S";
+        script = ''
+          # The manifest is removed after the first successful registration
+          [ -e /nix-path-registration ] || exit 0
+          ${lib.getExe' (config.services.nix-daemon.package or pkgs.nix) "nix-store"} \
+            --load-db < /nix-path-registration \
+            && ${lib.getExe' config.programs.coreutils.package "rm"} -f /nix-path-registration
+          ${lib.getExe' (config.services.nix-daemon.package or pkgs.nix) "nix-env"} \
+            -p /nix/var/nix/profiles/system --set "${lib.getExe' config.programs.coreutils.package "readlink"} -f /run/current-system"
         '';
-      }
-    ];
-
-    fileSystems = lib.mkImageMediaOverride {
-      "/" = {
-        device = "/dev/disk/by-label/finix-root";
-        fsType = "ext4";
-        neededForBoot = true;
       };
-      "/boot" = {
-        device = "/dev/disk/by-label/ESP";
-        fsType = "vfat";
-      };
-    };
 
-    programs.limine.enable = true;
+      system.build.rawImage = biosRawImage;
 
-    finit.tasks.grow-root-fs = {
-      description = "grow the root filesystem to fill the disk";
-      runlevel = "S";
-      command = growRootFs;
-    };
-
-    finit.tasks.register-nix-store = {
-      description = "register the Nix store and set the system profile";
-      runlevel = "S";
-      script = ''
-        ${lib.getExe' (config.services.nix-daemon.package or pkgs.nix) "nix-store"} \
-          --load-db < /nix-path-registration \
-          && ${lib.getExe' config.programs.coreutils.package "rm"} -f /nix-path-registration
-        ${lib.getExe' (config.services.nix-daemon.package or pkgs.nix) "nix-env"} \
-          -p /nix/var/nix/profiles/system --set "$(${lib.getExe' config.programs.coreutils.package "readlink"} -f /run/current-system)"
-      '';
-    };
-
-    system.build.rawImage = biosRawImage;
-
-    system.build.image = lib.mkDefault (
-      lib.recursiveUpdate biosRawImage {
-        passthru.filePath = config.image.filePath;
-      }
-    );
-  };
+      system.build.image = lib.mkDefault (
+        lib.recursiveUpdate biosRawImage {
+          passthru.filePath = config.image.filePath;
+        }
+      );
+    }
+    (lib.mkIf (config.services.nix-daemon.enable or false) {
+      finit.services.nix-daemon.conditions = [ "task/register-nix-store/success" ];
+    })
+  ];
 }

@@ -77,7 +77,6 @@ let
       ${lib.optionalString config.virtualisation.qemu.growDiskImage ''
         # emulate installing the raw image on a larger disk
         ${lib.getExe' pkgs.coreutils "truncate"} -s +1G disk.img
-        ${lib.getExe' pkgs.util-linuxMinimal "sfdisk"} --relocate gpt-bak-std disk.img
       ''}
 
       exec ${lib.escapeShellArgs qemuArgs} \
