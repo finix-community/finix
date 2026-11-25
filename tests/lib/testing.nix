@@ -36,6 +36,24 @@ in
   ];
 
   options = {
+    virtualisation.qemu = {
+      diskImage = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = null;
+        description = ''
+          Image copied to the VM working directory by the test start script.
+        '';
+      };
+
+      growDiskImage = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Enlarge the copied raw disk image before start.
+        '';
+      };
+    };
+
     testing.enable = lib.mkEnableOption "test instrumentation";
 
     testing.graphics.enable = lib.mkEnableOption "graphic devices";

@@ -23,7 +23,7 @@ let
         secureBoot
         ;
 
-      nixPath = config.services.nix-daemon.package;
+      nixPath = config.services.nix-daemon.package or pkgs.nix;
       efiBootMgrPath = pkgs.efibootmgr;
       liminePath = cfg.package;
       efiMountPoint = config.boot.loader.efi.efiSysMountPoint;

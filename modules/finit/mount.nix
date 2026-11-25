@@ -6,8 +6,29 @@
 }:
 let
   cfg = config.boot.initrd;
+  targetRoot = "/sysroot";
+
+  # overlay options are paths relative to the final root in stage 2, but the initrd mounts them under /sysroot
+  overlayOptionKeys = [
+    "lowerdir"
+    "upperdir"
+    "workdir"
+  ];
+
+  # Stage 2 uses paths relative to /, stage 1 mounts them under /sysroot.
+  # lowerdir may hold several colon-separated paths:
+  #   lowerdir=/a:/b -> lowerdir=/sysroot/a:/sysroot/b
+  prefixOverlayOption =
+    option:
+    let
+      key = lib.findFirst (k: lib.hasPrefix (k + "=") option) null overlayOptionKeys;
+      value = if key == null then option else lib.removePrefix (key + "=") option;
+      paths = map (path: "${targetRoot}${path}") (lib.splitString ":" value);
+    in
+    if key == null then option else "${key}=${lib.concatStringsSep ":" paths}";
 
   isBind = fs: lib.elem "bind" fs.options;
+  isLoop = fs: lib.elem "loop" fs.options;
   isZfs = fs: fs.fsType == "zfs";
   isSpecial =
     fs:
@@ -28,7 +49,12 @@ let
 
   needsWaitDev =
     fs:
-    !(isBind fs) && !(isSpecial fs) && !(isZfs fs) && fs.device != null && lib.hasPrefix "/" fs.device;
+    !(isBind fs)
+    && !(isLoop fs)
+    && !(isSpecial fs)
+    && !(isZfs fs)
+    && fs.device != null
+    && lib.hasPrefix "/" fs.device;
 
   poolOf = fs: lib.head (lib.splitString "/" fs.device);
 
@@ -37,8 +63,9 @@ let
 
   mountable = lib.filter (fs: fs.neededForBoot && !(isPseudo fs)) (lib.attrValues config.fileSystems);
 
-  # a bind mount's source must be mounted before the bind itself
-  parentPaths = fs: fs.depends ++ lib.optional (isBind fs) fs.device;
+  # a bind or loop mount's source must be mounted before the mount itself
+  parentPaths =
+    fs: fs.depends ++ lib.optional (isBind fs) fs.device ++ lib.optional (isLoop fs) fs.device;
 
   parentConditions =
     fs:
@@ -104,11 +131,13 @@ in
           conditions = readinessConditions fs ++ parentConditions fs;
           command =
             let
-              targetRoot = "/sysroot";
-              opts = lib.concatStringsSep "," (fs.options ++ [ "X-mount.mkdir" ]);
+              options = if fs.fsType == "overlay" then map prefixOverlayOption fs.options else fs.options;
+              opts = lib.concatStringsSep "," (options ++ [ "X-mount.mkdir" ]);
             in
             if isBind fs then
               "mount -o ${opts} ${targetRoot}${fs.device} ${targetRoot}${fs.mountPoint}"
+            else if isLoop fs then
+              "mount -t ${fs.fsType} -o ${opts} ${targetRoot}${fs.device} ${targetRoot}${fs.mountPoint}"
             else
               "mount -t ${fs.fsType} -o ${opts} ${fs.device} ${targetRoot}${fs.mountPoint}";
         }

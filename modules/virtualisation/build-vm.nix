@@ -47,6 +47,10 @@ let
             mkdir -p $out/bin
             ln -s ${config.system.topLevel} $out/system
             ln -s ${pkgs.writeShellScript startScript ''
+              ${lib.optionalString (cfg.bootMode == "uefi") ''
+                cp ${pkgs.OVMF.variables} ${hostName}-efi-vars.fd
+                chmod 0644 ${hostName}-efi-vars.fd
+              ''}
               exec ${lib.escapeShellArgs cfg.argv} -name ${lib.escapeShellArg hostName} "$@"
             ''} $out/bin/${startScript}
           '';

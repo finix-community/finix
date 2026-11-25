@@ -64,6 +64,21 @@ let
         mkdir -p "$SHARED_DIR"
       fi
 
+      ${lib.optionalString (config.virtualisation.qemu.bootMode == "uefi") ''
+        cp ${pkgs.OVMF.variables} ${config.networking.hostName}-efi-vars.fd
+        chmod 0644 ${config.networking.hostName}-efi-vars.fd
+      ''}
+
+      ${lib.optionalString (config.virtualisation.qemu.diskImage != null) ''
+        cp ${config.virtualisation.qemu.diskImage} disk.img
+        chmod 0644 disk.img
+      ''}
+
+      ${lib.optionalString config.virtualisation.qemu.growDiskImage ''
+        # emulate installing the raw image on a larger disk
+        ${lib.getExe' pkgs.coreutils "truncate"} -s +1G disk.img
+      ''}
+
       exec ${lib.escapeShellArgs qemuArgs} \
         -name "${name}" \
         -device "virtio-net-pci,netdev=vlan${toString vlan},mac=${mac}" \

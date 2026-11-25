@@ -46,6 +46,7 @@ in
       ./fonts
       ./hardware
       ./i18n
+      ./image
       ./lib
       ./misc
       ./networking
