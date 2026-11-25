@@ -128,10 +128,7 @@ let
     };
 
   bootModeArgs = {
-    bios = [
-      "-boot"
-      "order=d"
-    ];
+    bios = [ ];
     kernel = [
       "-kernel"
       "${config.boot.kernelPackages.kernel}/${
@@ -158,23 +155,6 @@ in
   options = {
     virtualisation.qemu = {
       package = lib.mkPackageOption pkgs [ "qemu" ] { };
-
-      diskImage = lib.mkOption {
-        type = lib.types.nullOr lib.types.str;
-        default = null;
-        description = ''
-          Image copied to the VM working directory before start.
-        '';
-      };
-
-      growDiskImage = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = ''
-          Enlarge the copied disk image and relocate the GPT backup header.
-          Only valid for raw images.
-        '';
-      };
 
       bootMode = lib.mkOption {
         type = lib.types.enum [
@@ -306,7 +286,14 @@ in
   config = {
 
     # limine needs more low memory to load the kernel than the kernel boot path does.
-    virtualisation.memorySize = lib.mkIf (cfg.bootMode == "uefi") (lib.mkOverride 50 2048);
+    virtualisation.memorySize = lib.mkIf (cfg.bootMode == "uefi") (lib.mkDefault 2048);
+
+    assertions = [
+      {
+        assertion = cfg.bootMode != "uefi" || config.virtualisation.memorySize >= 2048;
+        message = "UEFI boot via limine needs at least 2048 MiB of guest memory.";
+      }
+    ];
 
     boot.kernelParams = [ "console=${cfg.serialDevice},115200n8" ];
 

@@ -5,7 +5,7 @@
     let
       isoNode =
         bootMode:
-        { config, ... }:
+        { config, lib, ... }:
         {
           # build the same image the `iso` variant produces
           imports = [ ../../modules/image/iso.nix ];
@@ -18,6 +18,10 @@
           virtualisation.qemu.extraArgs = [
             "-drive"
             "file=${config.system.build.image}/${config.image.filePath},media=cdrom,readonly=on"
+          ]
+          ++ lib.optionals (bootMode == "bios") [
+            "-boot"
+            "order=d"
           ];
         };
     in

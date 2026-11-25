@@ -5,7 +5,7 @@
     let
       rawNode =
         bootMode:
-        { config, lib, ... }:
+        { config, ... }:
         {
           # build the same image the `raw` variant produces
           imports = [ ../../modules/image/raw.nix ];
@@ -19,10 +19,6 @@
           virtualisation.qemu.extraArgs = [
             "-drive"
             "file=disk.img,format=raw"
-          ]
-          ++ lib.optionals (bootMode == "bios") [
-            "-boot"
-            "order=c"
           ];
         };
     in
