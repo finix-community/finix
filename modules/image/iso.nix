@@ -69,7 +69,7 @@ let
     squashfsContents = [ config.system.topLevel ];
 
     efiBootable = true;
-    efiBootImage = "boot/limine/limine-uefi-cd.bin";
+    efiBootImage = "/boot/limine/limine-uefi-cd.bin";
 
     bootable = true;
     bootImage = "/boot/limine/limine-bios-cd.bin";
@@ -88,7 +88,7 @@ let
         mkdir -p $out/iso
         cp ${iso}/${config.image.filePath} $out/iso/${config.image.fileName}
         chmod u+w $out/iso/${config.image.fileName}
-        ${lib.getExe' limine "limine"} bios-install $out/iso/${config.image.fileName} --force
+        limine bios-install $out/iso/${config.image.fileName} --force
       '';
 in
 {
@@ -96,6 +96,22 @@ in
     {
       image.extension = "iso";
       image.filePath = "iso/${config.image.fileName}";
+
+      assertions = [
+        {
+          assertion = pkgs.stdenv.hostPlatform.isx86_64;
+          message = "The iso image is currently x86_64 only (BOOTX64.EFI and limine BIOS).";
+        }
+        {
+          assertion = lib.any (name: config.services.${name}.enable) config.image.deviceManagers;
+          message = ''
+            The iso image needs a device manager to create /dev/disk/by-label/FINIX_ISO.
+            Enable one of: ${
+              lib.concatStringsSep ", " (lib.map (name: "services.${name}.enable") config.image.deviceManagers)
+            }.
+          '';
+        }
+      ];
 
       fileSystems = lib.mkImageMediaOverride {
         "/" = {
@@ -149,7 +165,8 @@ in
         "task/prepare-overlay-store/success"
       ];
 
-      # An overlay is already writable with the overlay
+      # /nix/store is an overlay with a tmpfs upperdir on the live ISO.
+      # Nix needs to create /nix/store/.links at startup so the generic read-only bind would break nix-store
       finit.tasks.remount-nix-store.enable = false;
 
       # Hybrid ISOs booted from a USB stick need USB storage in the initrd

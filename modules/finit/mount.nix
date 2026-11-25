@@ -9,25 +9,23 @@ let
   targetRoot = "/sysroot";
 
   # overlay options are paths relative to the final root in stage 2, but the initrd mounts them under /sysroot
-  prefixOverlayPath = path: "${targetRoot}${path}";
+  overlayOptionKeys = [
+    "lowerdir"
+    "upperdir"
+    "workdir"
+  ];
 
+  # Stage 2 uses paths relative to /, stage 1 mounts them under /sysroot.
+  # lowerdir may hold several colon-separated paths:
+  #   lowerdir=/a:/b -> lowerdir=/sysroot/a:/sysroot/b
   prefixOverlayOption =
     option:
     let
-      key = lib.findFirst (k: lib.hasPrefix (k + "=") option) null [
-        "lowerdir"
-        "upperdir"
-        "workdir"
-      ];
+      key = lib.findFirst (k: lib.hasPrefix (k + "=") option) null overlayOptionKeys;
+      value = if key == null then option else lib.removePrefix (key + "=") option;
+      paths = map (path: "${targetRoot}${path}") (lib.splitString ":" value);
     in
-    if key == null then
-      option
-    else
-      "${key}=${
-        lib.concatStringsSep ":" (
-          map prefixOverlayPath (lib.splitString ":" (lib.removePrefix (key + "=") option))
-        )
-      }";
+    if key == null then option else "${key}=${lib.concatStringsSep ":" paths}";
 
   isBind = fs: lib.elem "bind" fs.options;
   isLoop = fs: lib.elem "loop" fs.options;

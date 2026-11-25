@@ -12,13 +12,6 @@ let
     raw = ./raw.nix;
   };
 
-  deviceManagers = [
-    "mdevd"
-    "gardendevd"
-    "udev"
-    "keventd"
-  ];
-
   # A variant must not re-enter image.modules
   noNestedImageModules = {
     options.image.modules = lib.mkOption {
@@ -79,6 +72,20 @@ in
         Path of the image, relative to `$out` in `system.build.image`.
       '';
     };
+
+    deviceManagers = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [
+        "mdevd"
+        "gardendevd"
+        "udev"
+        "keventd"
+      ];
+      internal = true;
+      description = ''
+        Device managers that create /dev/disk/by-label for image block devices.
+      '';
+    };
   };
 
   options.system.build.images = lib.mkOption {
@@ -91,18 +98,6 @@ in
 
   config = {
     image.modules = imageModules;
-
-    assertions = [
-      {
-        assertion = lib.any (name: config.services.${name}.enable) deviceManagers;
-        message = ''
-          Image blocks are found by /dev/disk/by-label, which needs a device manager.
-          Enable one of: ${
-            lib.concatStringsSep ", " (lib.map (name: "services.${name}.enable") deviceManagers)
-          }.
-        '';
-      }
-    ];
 
     system.build.images = lib.mapAttrs (
       _: imageConfig: imageConfig.config.system.build.image

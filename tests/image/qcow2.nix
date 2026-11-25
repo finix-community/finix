@@ -9,7 +9,7 @@
     services.mdevd.enable = true;
 
     virtualisation.qemu.bootMode = "uefi";
-    virtualisation.qemu.diskImage = toString config.system.build.image;
+    virtualisation.qemu.diskImage = "${config.system.build.image}/${config.image.filePath}";
     virtualisation.qemu.extraArgs = [
       "-drive"
       "file=disk.img,format=qcow2"

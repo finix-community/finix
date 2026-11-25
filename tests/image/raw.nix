@@ -14,7 +14,7 @@
           services.mdevd.enable = true;
 
           virtualisation.qemu.bootMode = bootMode;
-          virtualisation.qemu.diskImage = toString config.system.build.image;
+          virtualisation.qemu.diskImage = "${config.system.build.image}/${config.image.filePath}";
           virtualisation.qemu.growDiskImage = true;
           virtualisation.qemu.extraArgs = [
             "-drive"
