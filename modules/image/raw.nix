@@ -182,7 +182,7 @@ in
             --load-db < /nix-path-registration \
             && ${lib.getExe' config.programs.coreutils.package "rm"} -f /nix-path-registration
           ${lib.getExe' (config.services.nix-daemon.package or pkgs.nix) "nix-env"} \
-            -p /nix/var/nix/profiles/system --set "${lib.getExe' config.programs.coreutils.package "readlink"} -f /run/current-system"
+            -p /nix/var/nix/profiles/system --set "$(${lib.getExe' config.programs.coreutils.package "readlink"} -f /run/current-system)"
         '';
       };
 
